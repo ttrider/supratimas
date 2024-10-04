@@ -18,6 +18,7 @@ ConcatType
 RemoteType
 RemoteQueryType
 ScalarExpressionType
+ExternalDistributedComputationType
 StmtBlockType
 StmtSimpleType
 StmtUseDbType
@@ -41,12 +42,14 @@ DefinedValuesListType
 SpillToTempDbType
 SortSpillDetailsType
 HashSpillDetailsType
+ExchangeSpillDetailsType
 WaitWarningType
 WaitStatType
 WaitStatListType
 QueryExecTimeType
 AffectingConvertWarningType
 WarningsType
+SpillOccurredType
 MemoryFractionsType
 MemoryGrantType
 MemoryGrantWarningInfo
@@ -62,6 +65,7 @@ RollupInfoType
 RollupLevelType
 StarJoinInfoType
 InternalInfoType
+OptimizationReplayType
 ThreadStatType
 ThreadReservationType
 MissingIndexesType
@@ -81,6 +85,7 @@ SimpleIteratorOneChildType
 FilterType
 ConstantScanType
 TableScanType
+XcsScanType
 IndexScanType
 TableValuedFunctionType
 HashType
@@ -112,6 +117,20 @@ RemoteRangeType
 RemoteFetchType
 RemoteModifyType
 GenericType
+ResourceEstimateType
+MoveType
+ExternalSelectType
+ProjectType
+JoinType
+GbApplyType
+GbAggType
+GroupingSetReferenceType
+GroupingSetListType
+LocalCubeType
+DMLOpType
+AssignmentMapType
+GetType
+OutputColumnsType
 ScalarType
 ScalarExpressionListType
 ConstType
@@ -131,6 +150,8 @@ UDFType
 UDTMethodType
 CLRFunctionType
 SubqueryType
+DispatcherType
+ParameterSensitivePredicateType
 SetOptionsType
 BatchSequence
 Batch
@@ -153,7 +174,7 @@ ShowPlanXML
 # Classes by reference
 - BaseStmtInfoType - [0]
 
-- StmtSimpleType - [1]
+- StmtSimpleType - [2]
 
 - StmtUseDbType - [1]
 
@@ -165,7 +186,7 @@ ShowPlanXML
 
 - FunctionType - [4]
 
-- RelOpType - [34]
+- RelOpType - [44]
 
 - StmtCondTypeThen - [1]
 
@@ -183,6 +204,7 @@ statement node
 - StatementCompId
 - StatementEstRows
 - StatementId
+- QueryCompilationReplay
 - StatementOptmLevel
 - StatementOptmEarlyAbortReason
 - CardinalityEstimationModelVersion
@@ -204,6 +226,11 @@ statement node
 - BatchSqlHandle
 - StatementParameterizationType
 - SecurityPolicyApplied
+- BatchModeOnRowStoreUsed
+- QueryStoreStatementHintId
+- QueryStoreStatementHintText
+- QueryStoreStatementHintSource
+- ContainsLedgerTables
 - StatementSetOptions (obj)
 
 ## RelOpBaseType
@@ -240,8 +267,14 @@ statement node
 
 - ScalarOperator (obj)
 
+## ExternalDistributedComputationType
+
+- EdcShowplanXml
+- StmtSimple (obj)
+
 ## StmtBlockType
 
+- ExternalDistributedComputation (obj)
 - StmtSimple (obj)
 - StmtCond (obj)
 - StmtCursor (obj)
@@ -250,6 +283,7 @@ statement node
 
 ## StmtSimpleType (BaseStmtInfoType)
 statement node
+- Dispatcher (obj)
 - QueryPlan (obj)
 - UDF (obj[])
 - StoredProc (obj)
@@ -349,11 +383,15 @@ node
 - Table
 - Index
 - Filtered
+- OnlineInbuildIndex
+- OnlineIndexBuildMappingIndex
 - Alias
 - TableReferenceId
 - IndexKind
 - CloneAccessScope
 - Storage
+- GraphWorkTableType
+- GraphWorkTableIdentifier
 
 ## OrderByType
 
@@ -382,6 +420,10 @@ node
 - WritesToTempDb
 - ReadsFromTempDb
 
+## ExchangeSpillDetailsType
+
+- WritesToTempDb
+
 ## WaitWarningType
 
 - WaitType
@@ -401,6 +443,8 @@ node
 
 - CpuTime
 - ElapsedTime
+- UdfCpuTime
+- UdfElapsedTime
 
 ## AffectingConvertWarningType
 
@@ -413,13 +457,20 @@ node
 - SpatialGuess
 - UnmatchedIndexes
 - FullUpdateForOnlineIndexBuild
+- SpillOccurred (obj)
 - ColumnsWithNoStatistics (obj)
+- ColumnsWithStaleStatistics (obj)
 - SpillToTempDb (obj[])
 - Wait (obj[])
 - PlanAffectingConvert (obj[])
 - SortSpillDetails (obj[])
 - HashSpillDetails (obj[])
+- ExchangeSpillDetails (obj[])
 - MemoryGrantWarning (obj)
+
+## SpillOccurredType
+
+- Detail
 
 ## MemoryFractionsType
 
@@ -437,6 +488,8 @@ node
 - GrantedMemory
 - MaxUsedMemory
 - MaxQueryMemory
+- LastRequestedMemory
+- IsMemoryGrantFeedbackAdjusted
 
 ## MemoryGrantWarningInfo
 
@@ -464,6 +517,7 @@ node
 
 ## StatsInfoType
 
+- Database
 - Database
 - Schema
 - Table
@@ -504,6 +558,10 @@ node
 
 ## InternalInfoType
 
+
+## OptimizationReplayType
+
+- Script
 
 ## ThreadStatType
 
@@ -547,6 +605,7 @@ node
 - DegreeOfParallelism
 - EffectiveDegreeOfParallelism
 - NonParallelPlanReason
+- DOPFeedbackAdjusted
 - MemoryGrant
 - CachedPlanSize
 - CompileTime
@@ -554,7 +613,12 @@ node
 - CompileMemory
 - UsePlan
 - ContainsInterleavedExecutionCandidates
+- ContainsInlineScalarTsqlUdfs
+- QueryVariantID
+- DispatcherPlanHandle
+- ExclusiveProfileTimeActive
 - InternalInfo (obj)
+- OptimizationReplay (obj)
 - ThreadStat (obj)
 - MissingIndexes (obj)
 - GuessedSelectivity (obj)
@@ -591,6 +655,7 @@ node
 - EstimatedExecutionMode
 - GroupExecuted
 - EstimateRows
+- EstimateRowsWithoutRowGoal
 - EstimatedRowsRead
 - LogicalOp (subTitle)
 - NodeId
@@ -601,10 +666,14 @@ node
 - IsAdaptive
 - AdaptiveThresholdRows
 - EstimatedTotalSubtreeCost
+- TableCardinality
 - StatsCollectionId
 - EstimatedJoinType
-- TableCardinality
+- HyperScaleOptimizedQueryProcessing
+- HyperScaleOptimizedQueryProcessingUnusedReason
+- PDWAccumulativeCost
 - AdaptiveJoin (obj)
+- Apply (obj)
 - Assert (obj)
 - BatchHashTableBuild (obj)
 - Bitmap (obj)
@@ -612,23 +681,35 @@ node
 - ComputeScalar (obj)
 - Concat (obj)
 - ConstantScan (obj)
+- ConstTableGet (obj)
 - CreateIndex (obj)
+- Delete (obj)
 - DeletedScan (obj)
 - Extension (obj)
+- ExternalSelect (obj)
+- ExtExtractScan (obj)
 - Filter (obj)
 - ForeignKeyReferencesCheck (obj)
+- GbAgg (obj)
+- GbApply (obj)
 - Generic (obj)
+- Get (obj)
 - Hash (obj)
 - IndexScan (obj)
 - InsertedScan (obj)
+- Insert (obj)
+- Join (obj)
+- LocalCube (obj)
 - LogRowScan (obj)
 - Merge (obj)
 - MergeInterval (obj)
+- Move (obj)
 - NestedLoops (obj)
 - OnlineIndex (obj)
 - Parallelism (obj)
 - ParameterTableScan (obj)
 - PrintDataflow (obj)
+- Project (obj)
 - Put (obj)
 - RemoteFetch (obj)
 - RemoteModify (obj)
@@ -651,8 +732,12 @@ node
 - Top (obj)
 - TopSort (obj)
 - Update (obj)
+- Update (obj)
+- Union (obj)
+- UnionAll (obj)
 - WindowSpool (obj)
 - WindowAggregate (obj)
+- XcsScan (obj)
 - OutputList (obj)
 - Warnings (obj)
 - MemoryFractions (obj)
@@ -664,6 +749,8 @@ node
 
 - BitmapCreator
 - Optimized
+- WithOrderedPrefetch
+- WithUnorderedPrefetch
 - HashKeysBuild (obj)
 - HashKeysProbe (obj)
 - BuildResidual (obj)
@@ -712,6 +799,18 @@ node
 - PartitionId (obj)
 - IndexedViewInfo (obj)
 
+## XcsScanType (RowsetType)
+
+- Ordered
+- ForcedIndex
+- ForceScan
+- NoExpandHint
+- Storage
+- Predicate (obj)
+- PartitionId (obj)
+- IndexedViewInfo (obj)
+- RelOp (obj)
+
 ## IndexScanType (RowsetType)
 
 - Lookup
@@ -724,6 +823,7 @@ node
 - NoExpandHint
 - Storage
 - DynamicSeek
+- SBSFileUrl
 - SeekPredicates (obj)
 - Predicate (obj)
 - PartitionId (obj)
@@ -817,6 +917,8 @@ node
 
 ## SequenceType (RelOpBaseType)
 
+- IsGraphDBTransitiveClosure
+- GraphSequenceIdentifier
 - RelOp (obj[])
 
 ## SplitType (RelOpBaseType)
@@ -830,6 +932,7 @@ node
 - Rows
 - IsPercent
 - WithTies
+- TopLocation
 - TieColumns (obj)
 - OffsetExpression (obj)
 - TopExpression (obj)
@@ -851,6 +954,7 @@ node
 
 ## PutType (RemoteQueryType)
 
+- IsExternallyComputed
 - ShuffleType
 - ShuffleColumn
 - RelOp (obj)
@@ -875,6 +979,9 @@ node
 - ProbeColumn (obj)
 - ActionColumn (obj)
 - OriginalActionColumn (obj)
+- AssignmentMap (obj)
+- SourceTable (obj)
+- TargetTable (obj)
 - RelOp (obj)
 
 ## CreateIndexType (RowsetType)
@@ -920,6 +1027,105 @@ node
 ## GenericType (RelOpBaseType)
 
 - RelOp (obj[])
+
+## ResourceEstimateType
+
+- NodeCount
+- Dop
+- MemoryInBytes
+- DiskWrittenInBytes
+- Scalable
+
+## MoveType (RelOpBaseType)
+
+- MoveType
+- DistributionType
+- IsDistributed
+- IsExternal
+- IsFull
+- DistributionKey (obj)
+- ResourceEstimate (obj)
+- RelOp (obj[])
+
+## ExternalSelectType (RelOpBaseType)
+
+- MaterializeOperation
+- DistributionType
+- IsDistributed
+- IsExternal
+- IsFull
+- RelOp (obj[])
+
+## ProjectType (RelOpBaseType)
+
+- IsNoOp
+- RelOp (obj[])
+
+## JoinType (RelOpBaseType)
+
+- Predicate (obj[])
+- Probe (obj[])
+- RelOp (obj[])
+
+## GbApplyType (RelOpBaseType)
+
+- JoinType
+- AggType
+- Predicate (obj[])
+- AggFunctions (obj)
+- RelOp (obj[])
+
+## GbAggType (RelOpBaseType)
+
+- IsScalar
+- AggType
+- HintType
+- GroupBy (obj)
+- AggFunctions (obj)
+- RelOp (obj[])
+
+## GroupingSetReferenceType
+
+- Value
+
+## GroupingSetListType
+
+- GroupingSet (obj[])
+
+## LocalCubeType (RelOpBaseType)
+
+- GroupBy (obj)
+- GroupingSets (obj)
+- RelOp (obj[])
+
+## DMLOpType (RelOpBaseType)
+
+- AssignmentMap (obj)
+- SourceTable (obj)
+- TargetTable (obj)
+- RelOp (obj[])
+
+## AssignmentMapType
+
+- Assign (obj[])
+
+## GetType (RelOpBaseType)
+
+- NumRows
+- IsExternal
+- IsDistributed
+- IsHashDistributed
+- IsReplicated
+- IsRoundRobin
+- Bookmarks (obj)
+- OutputColumns (obj)
+- GeneratedData (obj)
+- RelOp (obj[])
+
+## OutputColumnsType
+
+- DefinedValues (obj)
+- Object (obj[])
 
 ## ScalarType
 
@@ -998,6 +1204,8 @@ node
 
 - ColumnReference (obj)
 - ScalarOperator (obj)
+- SourceColumn (obj[])
+- TargetColumn (obj[])
 
 ## MultAssignType
 
@@ -1042,6 +1250,17 @@ node
 - ScalarOperator (obj)
 - RelOp (obj)
 
+## DispatcherType
+
+- ParameterSensitivePredicate (obj[])
+
+## ParameterSensitivePredicateType
+
+- LowBoundary
+- HighBoundary
+- StatisticsInfo (obj[])
+- Predicate (obj)
+
 ## SetOptionsType
 
 - ANSI_NULLS
@@ -1076,6 +1295,7 @@ node
 ## CursorPlanTypeOperation
 node
 - OperationType (subTitle)
+- Dispatcher (obj)
 - QueryPlan (obj)
 - UDF (obj[])
 
@@ -1092,7 +1312,7 @@ node
 ## DefinedValuesListTypeDefinedValue
 
 - ValueVector (obj)
-- ColumnReference (obj[])
+- ColumnReference (obj)
 - ScalarOperator (obj)
 
 ## DefinedValuesListTypeValueVector
@@ -1106,6 +1326,7 @@ node
 - ActualRebinds
 - ActualRewinds
 - ActualRows
+- RowRequalifications
 - ActualRowsRead
 - Batches
 - ActualEndOfScans
@@ -1124,10 +1345,14 @@ node
 - ActualScans
 - ActualLogicalReads
 - ActualPhysicalReads
+- ActualPageServerReads
 - ActualReadAheads
+- ActualPageServerReadAheads
 - ActualLobLogicalReads
 - ActualLobPhysicalReads
+- ActualLobPageServerReads
 - ActualLobReadAheads
+- ActualLobPageServerReadAheads
 - SegmentReads
 - SegmentSkips
 - ActualLocallyAggregatedRows
@@ -1136,6 +1361,14 @@ node
 - UsedMemoryGrant
 - IsInterleavedExecuted
 - ActualJoinType
+- HpcRowCount
+- HpcKernelElapsedUs
+- HpcHostToDeviceBytes
+- HpcDeviceToHostBytes
+- ActualPageServerPushedPageIDs
+- ActualPageServerRowsReturned
+- ActualPageServerRowsRead
+- ActualPageServerPushedReads
 
 ## RunTimePartitionSummaryTypePartitionsAccessed
 

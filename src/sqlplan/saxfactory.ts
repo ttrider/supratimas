@@ -137,6 +137,12 @@ function logicalOpType(data: string): string {
     
     if (data) {
         switch (data) { 
+            case "GbAgg": return "Gb Agg";
+
+            case "GbApply": return "Gb Apply";
+
+            case "LocalCube": return "Local Cube";
+
             case "Table-valued function": return "Table-valued Function";
 
             case "TopN Sort": return "Top N Sort";
@@ -149,6 +155,12 @@ function physicalOpType(data: string): string {
     
     if (data) {
         switch (data) { 
+            case "GbAgg": return "Gb Agg";
+
+            case "GbApply": return "Gb Apply";
+
+            case "LocalCube": return "Local Cube";
+
             case "Table-valued function": return "Table-valued Function";
         }
     } 
@@ -227,12 +239,16 @@ function BaseStmtInfoTypeFactory(context: ParserContext, element: InputElement) 
     item.StatementCompId = int(element.attributes.StatementCompId);
     item.StatementEstRows = float(element.attributes.StatementEstRows);
     item.StatementId = int(element.attributes.StatementId);
+    item.QueryCompilationReplay = int(element.attributes.QueryCompilationReplay);
     item.StatementOptmEarlyAbortReason = baseStmtInfoTypeStatementOptmEarlyAbortReasonEnum(element.attributes.StatementOptmEarlyAbortReason);
     item.StatementSubTreeCost = float(element.attributes.StatementSubTreeCost);
     item.DatabaseContextSettingsId = int(element.attributes.DatabaseContextSettingsId);
     item.ParentObjectId = int(element.attributes.ParentObjectId);
     item.StatementParameterizationType = int(element.attributes.StatementParameterizationType);
     item.SecurityPolicyApplied = bool(element.attributes.SecurityPolicyApplied);
+    item.BatchModeOnRowStoreUsed = bool(element.attributes.BatchModeOnRowStoreUsed);
+    item.QueryStoreStatementHintId = int(element.attributes.QueryStoreStatementHintId);
+    item.ContainsLedgerTables = bool(element.attributes.ContainsLedgerTables);
 
     context.startElement({
         
@@ -253,6 +269,7 @@ function BaseStmtInfoTypeFactory(context: ParserContext, element: InputElement) 
                 planNode.metrics.add("General", "Statement Comp Id", item.StatementCompId, 0);
                 planNode.metrics.add("General", "Statement Est Rows", item.StatementEstRows);
                 planNode.metrics.add("General", "Statement Id", item.StatementId, 0);
+                planNode.metrics.add("General", "Query Compilation Replay", item.QueryCompilationReplay, 0);
                 planNode.metrics.add("General", `Optimization Level`, item.StatementOptmLevel, 0);
                 planNode.metrics.add("General", `Early Abort Reason`, item.StatementOptmEarlyAbortReason, 0);
                 planNode.metrics.add("General", "Cardinality Estimation Model Version", item.CardinalityEstimationModelVersion, 0);
@@ -273,6 +290,11 @@ function BaseStmtInfoTypeFactory(context: ParserContext, element: InputElement) 
                 planNode.metrics.add("General", "Batch Sql Handle", item.BatchSqlHandle, 0);
                 planNode.metrics.add("General", "Statement Parameterization Type", item.StatementParameterizationType, 0);
                 planNode.metrics.add("General", "Security Policy Applied", item.SecurityPolicyApplied, 0);
+                planNode.metrics.add("General", "Batch Mode On Row Store Used", item.BatchModeOnRowStoreUsed, 0);
+                planNode.metrics.add("General", "Query Store Statement Hint Id", item.QueryStoreStatementHintId, 0);
+                planNode.metrics.add("General", "Query Store Statement Hint Text", item.QueryStoreStatementHintText, 0);
+                planNode.metrics.add("General", "Query Store Statement Hint Source", item.QueryStoreStatementHintSource, 0);
+                planNode.metrics.add("General", "Contains Ledger Tables", item.ContainsLedgerTables, 0);
             }
             if (context.currentStatement) {
                 const statement = context.currentStatement;
@@ -491,8 +513,26 @@ function ScalarExpressionTypeFactory(context: ParserContext, element: InputEleme
         }
     });
 }
+function ExternalDistributedComputationTypeFactory(context: ParserContext, element: InputElement) {
+    const item = <any>element.attributes as ExternalDistributedComputationType;
+
+    context.startElement({
+        
+        item: item,
+        element: element,
+        childElements: {
+            "StmtSimple": {
+                initializer: StmtSimpleTypeFactory,
+                setter: (value)=> { item.StmtSimple = value; }
+            },
+        },
+        finalize: (self, context) => {
+        }
+    });
+}
 function StmtBlockTypeFactory(context: ParserContext, element: InputElement) {
     const item = <any>element.attributes as StmtBlockType;
+
 
 
 
@@ -503,6 +543,10 @@ function StmtBlockTypeFactory(context: ParserContext, element: InputElement) {
         item: item,
         element: element,
         childElements: {
+            "ExternalDistributedComputation": {
+                initializer: ExternalDistributedComputationTypeFactory,
+                setter: (value)=> { item.ExternalDistributedComputation = value; }
+            },
             "StmtSimple": {
                 initializer: StmtSimpleTypeFactory,
                 setter: (value)=> { item.StmtSimple = value; }
@@ -533,12 +577,17 @@ function StmtSimpleTypeFactory(context: ParserContext, element: InputElement) {
     item.StatementCompId = int(element.attributes.StatementCompId);
     item.StatementEstRows = float(element.attributes.StatementEstRows);
     item.StatementId = int(element.attributes.StatementId);
+    item.QueryCompilationReplay = int(element.attributes.QueryCompilationReplay);
     item.StatementOptmEarlyAbortReason = baseStmtInfoTypeStatementOptmEarlyAbortReasonEnum(element.attributes.StatementOptmEarlyAbortReason);
     item.StatementSubTreeCost = float(element.attributes.StatementSubTreeCost);
     item.DatabaseContextSettingsId = int(element.attributes.DatabaseContextSettingsId);
     item.ParentObjectId = int(element.attributes.ParentObjectId);
     item.StatementParameterizationType = int(element.attributes.StatementParameterizationType);
     item.SecurityPolicyApplied = bool(element.attributes.SecurityPolicyApplied);
+    item.BatchModeOnRowStoreUsed = bool(element.attributes.BatchModeOnRowStoreUsed);
+    item.QueryStoreStatementHintId = int(element.attributes.QueryStoreStatementHintId);
+    item.ContainsLedgerTables = bool(element.attributes.ContainsLedgerTables);
+
 
     item.UDF = [];
 
@@ -550,6 +599,10 @@ function StmtSimpleTypeFactory(context: ParserContext, element: InputElement) {
         item: item,
         element: element,
         childElements: {
+            "Dispatcher": {
+                initializer: DispatcherTypeFactory,
+                setter: (value)=> { item.Dispatcher = value; }
+            },
             "QueryPlan": {
                 initializer: QueryPlanTypeFactory,
                 setter: (value)=> { item.QueryPlan = value; }
@@ -574,6 +627,7 @@ function StmtSimpleTypeFactory(context: ParserContext, element: InputElement) {
                 planNode.metrics.add("General", "Statement Comp Id", item.StatementCompId, 0);
                 planNode.metrics.add("General", "Statement Est Rows", item.StatementEstRows);
                 planNode.metrics.add("General", "Statement Id", item.StatementId, 0);
+                planNode.metrics.add("General", "Query Compilation Replay", item.QueryCompilationReplay, 0);
                 planNode.metrics.add("General", `Optimization Level`, item.StatementOptmLevel, 0);
                 planNode.metrics.add("General", `Early Abort Reason`, item.StatementOptmEarlyAbortReason, 0);
                 planNode.metrics.add("General", "Cardinality Estimation Model Version", item.CardinalityEstimationModelVersion, 0);
@@ -594,6 +648,11 @@ function StmtSimpleTypeFactory(context: ParserContext, element: InputElement) {
                 planNode.metrics.add("General", "Batch Sql Handle", item.BatchSqlHandle, 0);
                 planNode.metrics.add("General", "Statement Parameterization Type", item.StatementParameterizationType, 0);
                 planNode.metrics.add("General", "Security Policy Applied", item.SecurityPolicyApplied, 0);
+                planNode.metrics.add("General", "Batch Mode On Row Store Used", item.BatchModeOnRowStoreUsed, 0);
+                planNode.metrics.add("General", "Query Store Statement Hint Id", item.QueryStoreStatementHintId, 0);
+                planNode.metrics.add("General", "Query Store Statement Hint Text", item.QueryStoreStatementHintText, 0);
+                planNode.metrics.add("General", "Query Store Statement Hint Source", item.QueryStoreStatementHintSource, 0);
+                planNode.metrics.add("General", "Contains Ledger Tables", item.ContainsLedgerTables, 0);
             }
             if (context.currentStatement) {
                 const statement = context.currentStatement;
@@ -608,12 +667,16 @@ function StmtUseDbTypeFactory(context: ParserContext, element: InputElement) {
     item.StatementCompId = int(element.attributes.StatementCompId);
     item.StatementEstRows = float(element.attributes.StatementEstRows);
     item.StatementId = int(element.attributes.StatementId);
+    item.QueryCompilationReplay = int(element.attributes.QueryCompilationReplay);
     item.StatementOptmEarlyAbortReason = baseStmtInfoTypeStatementOptmEarlyAbortReasonEnum(element.attributes.StatementOptmEarlyAbortReason);
     item.StatementSubTreeCost = float(element.attributes.StatementSubTreeCost);
     item.DatabaseContextSettingsId = int(element.attributes.DatabaseContextSettingsId);
     item.ParentObjectId = int(element.attributes.ParentObjectId);
     item.StatementParameterizationType = int(element.attributes.StatementParameterizationType);
     item.SecurityPolicyApplied = bool(element.attributes.SecurityPolicyApplied);
+    item.BatchModeOnRowStoreUsed = bool(element.attributes.BatchModeOnRowStoreUsed);
+    item.QueryStoreStatementHintId = int(element.attributes.QueryStoreStatementHintId);
+    item.ContainsLedgerTables = bool(element.attributes.ContainsLedgerTables);
 
     context.startElement({
         
@@ -634,6 +697,7 @@ function StmtUseDbTypeFactory(context: ParserContext, element: InputElement) {
                 planNode.metrics.add("General", "Statement Comp Id", item.StatementCompId, 0);
                 planNode.metrics.add("General", "Statement Est Rows", item.StatementEstRows);
                 planNode.metrics.add("General", "Statement Id", item.StatementId, 0);
+                planNode.metrics.add("General", "Query Compilation Replay", item.QueryCompilationReplay, 0);
                 planNode.metrics.add("General", `Optimization Level`, item.StatementOptmLevel, 0);
                 planNode.metrics.add("General", `Early Abort Reason`, item.StatementOptmEarlyAbortReason, 0);
                 planNode.metrics.add("General", "Cardinality Estimation Model Version", item.CardinalityEstimationModelVersion, 0);
@@ -654,6 +718,11 @@ function StmtUseDbTypeFactory(context: ParserContext, element: InputElement) {
                 planNode.metrics.add("General", "Batch Sql Handle", item.BatchSqlHandle, 0);
                 planNode.metrics.add("General", "Statement Parameterization Type", item.StatementParameterizationType, 0);
                 planNode.metrics.add("General", "Security Policy Applied", item.SecurityPolicyApplied, 0);
+                planNode.metrics.add("General", "Batch Mode On Row Store Used", item.BatchModeOnRowStoreUsed, 0);
+                planNode.metrics.add("General", "Query Store Statement Hint Id", item.QueryStoreStatementHintId, 0);
+                planNode.metrics.add("General", "Query Store Statement Hint Text", item.QueryStoreStatementHintText, 0);
+                planNode.metrics.add("General", "Query Store Statement Hint Source", item.QueryStoreStatementHintSource, 0);
+                planNode.metrics.add("General", "Contains Ledger Tables", item.ContainsLedgerTables, 0);
             }
             if (context.currentStatement) {
                 const statement = context.currentStatement;
@@ -668,12 +737,16 @@ function StmtCondTypeFactory(context: ParserContext, element: InputElement) {
     item.StatementCompId = int(element.attributes.StatementCompId);
     item.StatementEstRows = float(element.attributes.StatementEstRows);
     item.StatementId = int(element.attributes.StatementId);
+    item.QueryCompilationReplay = int(element.attributes.QueryCompilationReplay);
     item.StatementOptmEarlyAbortReason = baseStmtInfoTypeStatementOptmEarlyAbortReasonEnum(element.attributes.StatementOptmEarlyAbortReason);
     item.StatementSubTreeCost = float(element.attributes.StatementSubTreeCost);
     item.DatabaseContextSettingsId = int(element.attributes.DatabaseContextSettingsId);
     item.ParentObjectId = int(element.attributes.ParentObjectId);
     item.StatementParameterizationType = int(element.attributes.StatementParameterizationType);
     item.SecurityPolicyApplied = bool(element.attributes.SecurityPolicyApplied);
+    item.BatchModeOnRowStoreUsed = bool(element.attributes.BatchModeOnRowStoreUsed);
+    item.QueryStoreStatementHintId = int(element.attributes.QueryStoreStatementHintId);
+    item.ContainsLedgerTables = bool(element.attributes.ContainsLedgerTables);
 
 
 
@@ -709,6 +782,7 @@ function StmtCondTypeFactory(context: ParserContext, element: InputElement) {
                 planNode.metrics.add("General", "Statement Comp Id", item.StatementCompId, 0);
                 planNode.metrics.add("General", "Statement Est Rows", item.StatementEstRows);
                 planNode.metrics.add("General", "Statement Id", item.StatementId, 0);
+                planNode.metrics.add("General", "Query Compilation Replay", item.QueryCompilationReplay, 0);
                 planNode.metrics.add("General", `Optimization Level`, item.StatementOptmLevel, 0);
                 planNode.metrics.add("General", `Early Abort Reason`, item.StatementOptmEarlyAbortReason, 0);
                 planNode.metrics.add("General", "Cardinality Estimation Model Version", item.CardinalityEstimationModelVersion, 0);
@@ -729,6 +803,11 @@ function StmtCondTypeFactory(context: ParserContext, element: InputElement) {
                 planNode.metrics.add("General", "Batch Sql Handle", item.BatchSqlHandle, 0);
                 planNode.metrics.add("General", "Statement Parameterization Type", item.StatementParameterizationType, 0);
                 planNode.metrics.add("General", "Security Policy Applied", item.SecurityPolicyApplied, 0);
+                planNode.metrics.add("General", "Batch Mode On Row Store Used", item.BatchModeOnRowStoreUsed, 0);
+                planNode.metrics.add("General", "Query Store Statement Hint Id", item.QueryStoreStatementHintId, 0);
+                planNode.metrics.add("General", "Query Store Statement Hint Text", item.QueryStoreStatementHintText, 0);
+                planNode.metrics.add("General", "Query Store Statement Hint Source", item.QueryStoreStatementHintSource, 0);
+                planNode.metrics.add("General", "Contains Ledger Tables", item.ContainsLedgerTables, 0);
             }
             if (context.currentStatement) {
                 const statement = context.currentStatement;
@@ -743,12 +822,16 @@ function StmtCursorTypeFactory(context: ParserContext, element: InputElement) {
     item.StatementCompId = int(element.attributes.StatementCompId);
     item.StatementEstRows = float(element.attributes.StatementEstRows);
     item.StatementId = int(element.attributes.StatementId);
+    item.QueryCompilationReplay = int(element.attributes.QueryCompilationReplay);
     item.StatementOptmEarlyAbortReason = baseStmtInfoTypeStatementOptmEarlyAbortReasonEnum(element.attributes.StatementOptmEarlyAbortReason);
     item.StatementSubTreeCost = float(element.attributes.StatementSubTreeCost);
     item.DatabaseContextSettingsId = int(element.attributes.DatabaseContextSettingsId);
     item.ParentObjectId = int(element.attributes.ParentObjectId);
     item.StatementParameterizationType = int(element.attributes.StatementParameterizationType);
     item.SecurityPolicyApplied = bool(element.attributes.SecurityPolicyApplied);
+    item.BatchModeOnRowStoreUsed = bool(element.attributes.BatchModeOnRowStoreUsed);
+    item.QueryStoreStatementHintId = int(element.attributes.QueryStoreStatementHintId);
+    item.ContainsLedgerTables = bool(element.attributes.ContainsLedgerTables);
 
 
     context.startElement({
@@ -774,6 +857,7 @@ function StmtCursorTypeFactory(context: ParserContext, element: InputElement) {
                 planNode.metrics.add("General", "Statement Comp Id", item.StatementCompId, 0);
                 planNode.metrics.add("General", "Statement Est Rows", item.StatementEstRows);
                 planNode.metrics.add("General", "Statement Id", item.StatementId, 0);
+                planNode.metrics.add("General", "Query Compilation Replay", item.QueryCompilationReplay, 0);
                 planNode.metrics.add("General", `Optimization Level`, item.StatementOptmLevel, 0);
                 planNode.metrics.add("General", `Early Abort Reason`, item.StatementOptmEarlyAbortReason, 0);
                 planNode.metrics.add("General", "Cardinality Estimation Model Version", item.CardinalityEstimationModelVersion, 0);
@@ -794,6 +878,11 @@ function StmtCursorTypeFactory(context: ParserContext, element: InputElement) {
                 planNode.metrics.add("General", "Batch Sql Handle", item.BatchSqlHandle, 0);
                 planNode.metrics.add("General", "Statement Parameterization Type", item.StatementParameterizationType, 0);
                 planNode.metrics.add("General", "Security Policy Applied", item.SecurityPolicyApplied, 0);
+                planNode.metrics.add("General", "Batch Mode On Row Store Used", item.BatchModeOnRowStoreUsed, 0);
+                planNode.metrics.add("General", "Query Store Statement Hint Id", item.QueryStoreStatementHintId, 0);
+                planNode.metrics.add("General", "Query Store Statement Hint Text", item.QueryStoreStatementHintText, 0);
+                planNode.metrics.add("General", "Query Store Statement Hint Source", item.QueryStoreStatementHintSource, 0);
+                planNode.metrics.add("General", "Contains Ledger Tables", item.ContainsLedgerTables, 0);
             }
             if (context.currentStatement) {
                 const statement = context.currentStatement;
@@ -808,12 +897,16 @@ function StmtReceiveTypeFactory(context: ParserContext, element: InputElement) {
     item.StatementCompId = int(element.attributes.StatementCompId);
     item.StatementEstRows = float(element.attributes.StatementEstRows);
     item.StatementId = int(element.attributes.StatementId);
+    item.QueryCompilationReplay = int(element.attributes.QueryCompilationReplay);
     item.StatementOptmEarlyAbortReason = baseStmtInfoTypeStatementOptmEarlyAbortReasonEnum(element.attributes.StatementOptmEarlyAbortReason);
     item.StatementSubTreeCost = float(element.attributes.StatementSubTreeCost);
     item.DatabaseContextSettingsId = int(element.attributes.DatabaseContextSettingsId);
     item.ParentObjectId = int(element.attributes.ParentObjectId);
     item.StatementParameterizationType = int(element.attributes.StatementParameterizationType);
     item.SecurityPolicyApplied = bool(element.attributes.SecurityPolicyApplied);
+    item.BatchModeOnRowStoreUsed = bool(element.attributes.BatchModeOnRowStoreUsed);
+    item.QueryStoreStatementHintId = int(element.attributes.QueryStoreStatementHintId);
+    item.ContainsLedgerTables = bool(element.attributes.ContainsLedgerTables);
 
 
     context.startElement({
@@ -839,6 +932,7 @@ function StmtReceiveTypeFactory(context: ParserContext, element: InputElement) {
                 planNode.metrics.add("General", "Statement Comp Id", item.StatementCompId, 0);
                 planNode.metrics.add("General", "Statement Est Rows", item.StatementEstRows);
                 planNode.metrics.add("General", "Statement Id", item.StatementId, 0);
+                planNode.metrics.add("General", "Query Compilation Replay", item.QueryCompilationReplay, 0);
                 planNode.metrics.add("General", `Optimization Level`, item.StatementOptmLevel, 0);
                 planNode.metrics.add("General", `Early Abort Reason`, item.StatementOptmEarlyAbortReason, 0);
                 planNode.metrics.add("General", "Cardinality Estimation Model Version", item.CardinalityEstimationModelVersion, 0);
@@ -859,6 +953,11 @@ function StmtReceiveTypeFactory(context: ParserContext, element: InputElement) {
                 planNode.metrics.add("General", "Batch Sql Handle", item.BatchSqlHandle, 0);
                 planNode.metrics.add("General", "Statement Parameterization Type", item.StatementParameterizationType, 0);
                 planNode.metrics.add("General", "Security Policy Applied", item.SecurityPolicyApplied, 0);
+                planNode.metrics.add("General", "Batch Mode On Row Store Used", item.BatchModeOnRowStoreUsed, 0);
+                planNode.metrics.add("General", "Query Store Statement Hint Id", item.QueryStoreStatementHintId, 0);
+                planNode.metrics.add("General", "Query Store Statement Hint Text", item.QueryStoreStatementHintText, 0);
+                planNode.metrics.add("General", "Query Store Statement Hint Source", item.QueryStoreStatementHintSource, 0);
+                planNode.metrics.add("General", "Contains Ledger Tables", item.ContainsLedgerTables, 0);
             }
             if (context.currentStatement) {
                 const statement = context.currentStatement;
@@ -1043,11 +1142,6 @@ function SeekPredicateTypeFactory(context: ParserContext, element: InputElement)
             },
         },
         finalize: (self, context) => {
-            if (self.planNode) {
-                const planNode = self.planNode;
-                binders.nameSetTitle(planNode, null, null);
-                binders.SingleColumnReferenceTypeBinder(planNode, "seek_predicate", item.IsNotNull);
-            }
         }
     });
 }
@@ -1111,10 +1205,14 @@ function SeekPredicatesTypeFactory(context: ParserContext, element: InputElement
 function ObjectTypeFactory(context: ParserContext, element: InputElement) {
     const item = <any>element.attributes as ObjectType;
     item.Filtered = bool(element.attributes.Filtered);
+    item.OnlineInbuildIndex = int(element.attributes.OnlineInbuildIndex);
+    item.OnlineIndexBuildMappingIndex = int(element.attributes.OnlineIndexBuildMappingIndex);
     item.TableReferenceId = int(element.attributes.TableReferenceId);
     item.IndexKind = indexKindType(element.attributes.IndexKind);
     item.CloneAccessScope = cloneAccessScopeType(element.attributes.CloneAccessScope);
     item.Storage = storageType(element.attributes.Storage);
+    item.GraphWorkTableType = int(element.attributes.GraphWorkTableType);
+    item.GraphWorkTableIdentifier = int(element.attributes.GraphWorkTableIdentifier);
     context.startElement({
         
         item: item,
@@ -1193,6 +1291,17 @@ function HashSpillDetailsTypeFactory(context: ParserContext, element: InputEleme
         }
     });
 }
+function ExchangeSpillDetailsTypeFactory(context: ParserContext, element: InputElement) {
+    const item = <any>element.attributes as ExchangeSpillDetailsType;
+    item.WritesToTempDb = int(element.attributes.WritesToTempDb);
+    context.startElement({
+        
+        item: item,
+        element: element,
+        finalize: (self, context) => {
+        }
+    });
+}
 function WaitWarningTypeFactory(context: ParserContext, element: InputElement) {
     const item = <any>element.attributes as WaitWarningType;
     item.WaitTime = int(element.attributes.WaitTime);
@@ -1235,6 +1344,8 @@ function QueryExecTimeTypeFactory(context: ParserContext, element: InputElement)
     const item = <any>element.attributes as QueryExecTimeType;
     item.CpuTime = int(element.attributes.CpuTime);
     item.ElapsedTime = int(element.attributes.ElapsedTime);
+    item.UdfCpuTime = int(element.attributes.UdfCpuTime);
+    item.UdfElapsedTime = int(element.attributes.UdfElapsedTime);
     context.startElement({
         
         item: item,
@@ -1245,6 +1356,8 @@ function QueryExecTimeTypeFactory(context: ParserContext, element: InputElement)
                 binders.nameSetTitle(planNode, null, null);
                 planNode.metrics.add("Query Execution", `CPU Time`, item.CpuTime, 0);
                 planNode.metrics.add("Query Execution", "Elapsed Time", item.ElapsedTime, 0);
+                planNode.metrics.add("Query Execution", "Udf Cpu Time", item.UdfCpuTime, 0);
+                planNode.metrics.add("Query Execution", "Udf Elapsed Time", item.UdfElapsedTime, 0);
             }
         }
     });
@@ -1266,20 +1379,31 @@ function WarningsTypeFactory(context: ParserContext, element: InputElement) {
     item.UnmatchedIndexes = bool(element.attributes.UnmatchedIndexes);
     item.FullUpdateForOnlineIndexBuild = bool(element.attributes.FullUpdateForOnlineIndexBuild);
 
+
+
     item.SpillToTempDb = [];
     item.Wait = [];
     item.PlanAffectingConvert = [];
     item.SortSpillDetails = [];
     item.HashSpillDetails = [];
+    item.ExchangeSpillDetails = [];
 
     context.startElement({
         
         item: item,
         element: element,
         childElements: {
+            "SpillOccurred": {
+                initializer: SpillOccurredTypeFactory,
+                setter: (value)=> { item.SpillOccurred = value; }
+            },
             "ColumnsWithNoStatistics": {
                 initializer: ColumnReferenceListTypeFactory,
                 setter: (value)=> { item.ColumnsWithNoStatistics = value; }
+            },
+            "ColumnsWithStaleStatistics": {
+                initializer: ColumnReferenceListTypeFactory,
+                setter: (value)=> { item.ColumnsWithStaleStatistics = value; }
             },
             "SpillToTempDb": {
                 initializer: SpillToTempDbTypeFactory,
@@ -1301,6 +1425,10 @@ function WarningsTypeFactory(context: ParserContext, element: InputElement) {
                 initializer: HashSpillDetailsTypeFactory,
                 setter: (value)=> { item.HashSpillDetails.push(value);  }
             },
+            "ExchangeSpillDetails": {
+                initializer: ExchangeSpillDetailsTypeFactory,
+                setter: (value)=> { item.ExchangeSpillDetails.push(value);  }
+            },
             "MemoryGrantWarning": {
                 initializer: MemoryGrantWarningInfoFactory,
                 setter: (value)=> { item.MemoryGrantWarning = value; }
@@ -1310,14 +1438,28 @@ function WarningsTypeFactory(context: ParserContext, element: InputElement) {
             if (self.planNode) {
                 const planNode = self.planNode;
                 binders.nameSetTitle(planNode, null, null);
+                binders.SpillOccurredTypeBinder(planNode, "warning", item.SpillOccurred);
                 binders.ColumnReferenceListTypeBinder(planNode, "warning_no_statistics", item.ColumnsWithNoStatistics);
+                binders.ColumnReferenceListTypeBinder(planNode, "warning_no_statistics", item.ColumnsWithStaleStatistics);
                 binders.SpillToTempDbTypeBinder(planNode, "warning", item.SpillToTempDb);
                 binders.WaitWarningTypeBinder(planNode, "warning", item.Wait);
                 binders.AffectingConvertWarningTypeBinder(planNode, "warning", item.PlanAffectingConvert);
                 binders.SortSpillDetailsTypeBinder(planNode, "warning", item.SortSpillDetails);
                 binders.HashSpillDetailsTypeBinder(planNode, "warning", item.HashSpillDetails);
+                binders.ExchangeSpillDetailsTypeBinder(planNode, "warning", item.ExchangeSpillDetails);
                 binders.MemoryGrantWarningInfoBinder(planNode, "warning", item.MemoryGrantWarning);
             }
+        }
+    });
+}
+function SpillOccurredTypeFactory(context: ParserContext, element: InputElement) {
+    const item = <any>element.attributes as SpillOccurredType;
+    item.Detail = bool(element.attributes.Detail);
+    context.startElement({
+        
+        item: item,
+        element: element,
+        finalize: (self, context) => {
         }
     });
 }
@@ -1350,6 +1492,7 @@ function MemoryGrantTypeFactory(context: ParserContext, element: InputElement) {
     item.GrantedMemory = int(element.attributes.GrantedMemory);
     item.MaxUsedMemory = int(element.attributes.MaxUsedMemory);
     item.MaxQueryMemory = int(element.attributes.MaxQueryMemory);
+    item.LastRequestedMemory = int(element.attributes.LastRequestedMemory);
     context.startElement({
         
         item: item,
@@ -1367,6 +1510,8 @@ function MemoryGrantTypeFactory(context: ParserContext, element: InputElement) {
                 planNode.metrics.add("Memory", "Granted Memory", item.GrantedMemory, 0);
                 planNode.metrics.add("Memory", "Max Used Memory", item.MaxUsedMemory, 0);
                 planNode.metrics.add("Memory", "Max Query Memory", item.MaxQueryMemory, 0);
+                planNode.metrics.add("Memory", "Last Requested Memory", item.LastRequestedMemory, 0);
+                planNode.metrics.add("Memory", "Is Memory Grant Feedback Adjusted", item.IsMemoryGrantFeedbackAdjusted, 0);
             }
         }
     });
@@ -1559,6 +1704,16 @@ function InternalInfoTypeFactory(context: ParserContext, element: InputElement) 
         }
     });
 }
+function OptimizationReplayTypeFactory(context: ParserContext, element: InputElement) {
+    const item = <any>element.attributes as OptimizationReplayType;
+    context.startElement({
+        
+        item: item,
+        element: element,
+        finalize: (self, context) => {
+        }
+    });
+}
 function ThreadStatTypeFactory(context: ParserContext, element: InputElement) {
     const item = <any>element.attributes as ThreadStatType;
     item.Branches = int(element.attributes.Branches);
@@ -1679,6 +1834,10 @@ function QueryPlanTypeFactory(context: ParserContext, element: InputElement) {
     item.CompileMemory = int(element.attributes.CompileMemory);
     item.UsePlan = bool(element.attributes.UsePlan);
     item.ContainsInterleavedExecutionCandidates = bool(element.attributes.ContainsInterleavedExecutionCandidates);
+    item.ContainsInlineScalarTsqlUdfs = bool(element.attributes.ContainsInlineScalarTsqlUdfs);
+    item.QueryVariantID = int(element.attributes.QueryVariantID);
+    item.ExclusiveProfileTimeActive = bool(element.attributes.ExclusiveProfileTimeActive);
+
 
 
 
@@ -1701,6 +1860,10 @@ function QueryPlanTypeFactory(context: ParserContext, element: InputElement) {
             "InternalInfo": {
                 initializer: InternalInfoTypeFactory,
                 setter: (value)=> { item.InternalInfo = value; }
+            },
+            "OptimizationReplay": {
+                initializer: OptimizationReplayTypeFactory,
+                setter: (value)=> { item.OptimizationReplay = value; }
             },
             "ThreadStat": {
                 initializer: ThreadStatTypeFactory,
@@ -1762,6 +1925,7 @@ function QueryPlanTypeFactory(context: ParserContext, element: InputElement) {
                 planNode.metrics.add("Common", "Degree Of Parallelism", item.DegreeOfParallelism, 0);
                 planNode.metrics.add("Common", "Effective Degree Of Parallelism", item.EffectiveDegreeOfParallelism, 0);
                 planNode.metrics.add("Common", "Non Parallel Plan Reason", item.NonParallelPlanReason, 0);
+                planNode.metrics.add("Common", "DOPFeedback Adjusted", item.DOPFeedbackAdjusted, 0);
                 planNode.metrics.add("Metrics", `Memory Grant`, item.MemoryGrant, 0);
                 planNode.metrics.add("Common", "Cached Plan Size", item.CachedPlanSize, 0);
                 planNode.metrics.add("Compile", "Compile Time", item.CompileTime, 0);
@@ -1769,6 +1933,10 @@ function QueryPlanTypeFactory(context: ParserContext, element: InputElement) {
                 planNode.metrics.add("Compile", "Compile Memory", item.CompileMemory, 0);
                 planNode.metrics.add("Common", "Use Plan", item.UsePlan, 0);
                 planNode.metrics.add("Common", "Contains Interleaved Execution Candidates", item.ContainsInterleavedExecutionCandidates, 0);
+                planNode.metrics.add("Common", "Contains Inline Scalar Tsql Udfs", item.ContainsInlineScalarTsqlUdfs, 0);
+                planNode.metrics.add("Common", "Query Variant ID", item.QueryVariantID, 0);
+                planNode.metrics.add("Common", "Dispatcher Plan Handle", item.DispatcherPlanHandle, 0);
+                planNode.metrics.add("Common", "Exclusive Profile Time Active", item.ExclusiveProfileTimeActive, 0);
                 binders.ThreadStatTypeBinder(planNode, "true", item.ThreadStat);
                 binders.GuessedSelectivityTypeBinder(planNode, "true", item.GuessedSelectivity);
                 binders.UnmatchedIndexesTypeBinder(planNode, "true", item.UnmatchedIndexes);
@@ -1848,6 +2016,7 @@ function RelOpTypeFactory(context: ParserContext, element: InputElement) {
     item.EstimateRewinds = float(element.attributes.EstimateRewinds);
     item.GroupExecuted = bool(element.attributes.GroupExecuted);
     item.EstimateRows = float(element.attributes.EstimateRows);
+    item.EstimateRowsWithoutRowGoal = float(element.attributes.EstimateRowsWithoutRowGoal);
     item.EstimatedRowsRead = float(element.attributes.EstimatedRowsRead);
     item.LogicalOp = logicalOpType(element.attributes.LogicalOp);
     item.NodeId = int(element.attributes.NodeId);
@@ -1858,9 +2027,27 @@ function RelOpTypeFactory(context: ParserContext, element: InputElement) {
     item.IsAdaptive = bool(element.attributes.IsAdaptive);
     item.AdaptiveThresholdRows = float(element.attributes.AdaptiveThresholdRows);
     item.EstimatedTotalSubtreeCost = float(element.attributes.EstimatedTotalSubtreeCost);
+    item.TableCardinality = float(element.attributes.TableCardinality);
     item.StatsCollectionId = int(element.attributes.StatsCollectionId);
     item.EstimatedJoinType = physicalOpType(element.attributes.EstimatedJoinType);
-    item.TableCardinality = float(element.attributes.TableCardinality);
+    item.PDWAccumulativeCost = float(element.attributes.PDWAccumulativeCost);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1926,6 +2113,10 @@ function RelOpTypeFactory(context: ParserContext, element: InputElement) {
                 initializer: AdaptiveJoinTypeFactory,
                 setter: (value)=> { item.AdaptiveJoin = value; }
             },
+            "Apply": {
+                initializer: JoinTypeFactory,
+                setter: (value)=> { item.Apply = value; }
+            },
             "Assert": {
                 initializer: FilterTypeFactory,
                 setter: (value)=> { item.Assert = value; }
@@ -1954,9 +2145,17 @@ function RelOpTypeFactory(context: ParserContext, element: InputElement) {
                 initializer: ConstantScanTypeFactory,
                 setter: (value)=> { item.ConstantScan = value; }
             },
+            "ConstTableGet": {
+                initializer: GetTypeFactory,
+                setter: (value)=> { item.ConstTableGet = value; }
+            },
             "CreateIndex": {
                 initializer: CreateIndexTypeFactory,
                 setter: (value)=> { item.CreateIndex = value; }
+            },
+            "Delete": {
+                initializer: DMLOpTypeFactory,
+                setter: (value)=> { item.Delete = value; }
             },
             "DeletedScan": {
                 initializer: RowsetTypeFactory,
@@ -1966,6 +2165,14 @@ function RelOpTypeFactory(context: ParserContext, element: InputElement) {
                 initializer: UDXTypeFactory,
                 setter: (value)=> { item.Extension = value; }
             },
+            "ExternalSelect": {
+                initializer: ExternalSelectTypeFactory,
+                setter: (value)=> { item.ExternalSelect = value; }
+            },
+            "ExtExtractScan": {
+                initializer: RemoteTypeFactory,
+                setter: (value)=> { item.ExtExtractScan = value; }
+            },
             "Filter": {
                 initializer: FilterTypeFactory,
                 setter: (value)=> { item.Filter = value; }
@@ -1974,9 +2181,21 @@ function RelOpTypeFactory(context: ParserContext, element: InputElement) {
                 initializer: ForeignKeyReferencesCheckTypeFactory,
                 setter: (value)=> { item.ForeignKeyReferencesCheck = value; }
             },
+            "GbAgg": {
+                initializer: GbAggTypeFactory,
+                setter: (value)=> { item.GbAgg = value; }
+            },
+            "GbApply": {
+                initializer: GbApplyTypeFactory,
+                setter: (value)=> { item.GbApply = value; }
+            },
             "Generic": {
                 initializer: GenericTypeFactory,
                 setter: (value)=> { item.Generic = value; }
+            },
+            "Get": {
+                initializer: GetTypeFactory,
+                setter: (value)=> { item.Get = value; }
             },
             "Hash": {
                 initializer: HashTypeFactory,
@@ -1990,6 +2209,18 @@ function RelOpTypeFactory(context: ParserContext, element: InputElement) {
                 initializer: RowsetTypeFactory,
                 setter: (value)=> { item.InsertedScan = value; }
             },
+            "Insert": {
+                initializer: DMLOpTypeFactory,
+                setter: (value)=> { item.Insert = value; }
+            },
+            "Join": {
+                initializer: JoinTypeFactory,
+                setter: (value)=> { item.Join = value; }
+            },
+            "LocalCube": {
+                initializer: LocalCubeTypeFactory,
+                setter: (value)=> { item.LocalCube = value; }
+            },
             "LogRowScan": {
                 initializer: RelOpBaseTypeFactory,
                 setter: (value)=> { item.LogRowScan = value; }
@@ -2001,6 +2232,10 @@ function RelOpTypeFactory(context: ParserContext, element: InputElement) {
             "MergeInterval": {
                 initializer: SimpleIteratorOneChildTypeFactory,
                 setter: (value)=> { item.MergeInterval = value; }
+            },
+            "Move": {
+                initializer: MoveTypeFactory,
+                setter: (value)=> { item.Move = value; }
             },
             "NestedLoops": {
                 initializer: NestedLoopsTypeFactory,
@@ -2021,6 +2256,10 @@ function RelOpTypeFactory(context: ParserContext, element: InputElement) {
             "PrintDataflow": {
                 initializer: RelOpBaseTypeFactory,
                 setter: (value)=> { item.PrintDataflow = value; }
+            },
+            "Project": {
+                initializer: ProjectTypeFactory,
+                setter: (value)=> { item.Project = value; }
             },
             "Put": {
                 initializer: PutTypeFactory,
@@ -2110,6 +2349,18 @@ function RelOpTypeFactory(context: ParserContext, element: InputElement) {
                 initializer: UpdateTypeFactory,
                 setter: (value)=> { item.Update = value; }
             },
+            "Update": {
+                initializer: UpdateTypeFactory,
+                setter: (value)=> { item.Update = value; }
+            },
+            "Union": {
+                initializer: ConcatTypeFactory,
+                setter: (value)=> { item.Union = value; }
+            },
+            "UnionAll": {
+                initializer: ConcatTypeFactory,
+                setter: (value)=> { item.UnionAll = value; }
+            },
             "WindowSpool": {
                 initializer: WindowTypeFactory,
                 setter: (value)=> { item.WindowSpool = value; }
@@ -2117,6 +2368,10 @@ function RelOpTypeFactory(context: ParserContext, element: InputElement) {
             "WindowAggregate": {
                 initializer: WindowAggregateTypeFactory,
                 setter: (value)=> { item.WindowAggregate = value; }
+            },
+            "XcsScan": {
+                initializer: XcsScanTypeFactory,
+                setter: (value)=> { item.XcsScan = value; }
             },
             "OutputList": {
                 initializer: ColumnReferenceListTypeFactory,
@@ -2159,19 +2414,24 @@ function RelOpTypeFactory(context: ParserContext, element: InputElement) {
                 planNode.metrics.add("Metrics", `Rewinds`, item.EstimateRewinds);
                 planNode.metrics.add("Metrics", `Execution Mode`, item.EstimatedExecutionMode);
                 planNode.metrics.add("Metrics", `Rows`, item.EstimateRows);
+                planNode.metrics.add("Metrics", `Rows`, item.EstimateRowsWithoutRowGoal);
                 planNode.metrics.add("Metrics", `Rows Read`, item.EstimatedRowsRead);
                 planNode.metrics.add("General", `Logical Operation`, item.LogicalOp, 0);
                 planNode.metrics.add("General", "Node Id", item.NodeId, 0);
                 planNode.metrics.add("General", `Physical Operation`, item.PhysicalOp, 0);
                 planNode.metrics.add("General", "Adaptive Threshold Rows", item.AdaptiveThresholdRows, 0);
                 planNode.metrics.add("Metrics", `Total Subtree Cost`, item.EstimatedTotalSubtreeCost);
+                planNode.metrics.add("Metrics", "Table Cardinality", item.TableCardinality, 0);
                 planNode.metrics.add("General", "Stats Collection Id", item.StatsCollectionId, 0);
                 planNode.metrics.add("Metrics", `Join Type`, item.EstimatedJoinType);
-                planNode.metrics.add("Metrics", "Table Cardinality", item.TableCardinality, 0);
+                planNode.metrics.add("Metrics", `Hyper Scale Optimized Query Processing`, item.HyperScaleOptimizedQueryProcessing);
+                planNode.metrics.add("Metrics", `Hyper Scale Optimized Query Processing Unused Reason`, item.HyperScaleOptimizedQueryProcessingUnusedReason);
+                planNode.metrics.add("Metrics", `PDW Accumulative Cost`, item.PDWAccumulativeCost);
                 binders.FilterTypeBinder(planNode, "nameset", item.Assert);
                 binders.ConstantScanTypeBinder(planNode, "const", item.ConstantScan);
                 binders.FilterTypeBinder(planNode, "nameset", item.Filter);
                 binders.ParallelismTypeBinder(planNode, "parallelism", item.Parallelism);
+                binders.ProjectTypeBinder(planNode, "remote", item.Project);
                 binders.PutTypeBinder(planNode, "remote", item.Put);
                 binders.RemoteFetchTypeBinder(planNode, "remote", item.RemoteFetch);
                 binders.RemoteModifyTypeBinder(planNode, "remote", item.RemoteModify);
@@ -2203,6 +2463,8 @@ function AdaptiveJoinTypeFactory(context: ParserContext, element: InputElement) 
     const item = <any>element.attributes as AdaptiveJoinType;
     item.BitmapCreator = bool(element.attributes.BitmapCreator);
     item.Optimized = bool(element.attributes.Optimized);
+    item.WithOrderedPrefetch = bool(element.attributes.WithOrderedPrefetch);
+    item.WithUnorderedPrefetch = bool(element.attributes.WithUnorderedPrefetch);
 
 
 
@@ -2275,6 +2537,8 @@ function AdaptiveJoinTypeFactory(context: ParserContext, element: InputElement) 
                 binders.nameSetTitle(planNode, null, null);
                 if (item.BitmapCreator) { planNode.flags.push("Bitmap Creator"); }
                 if (item.Optimized) { planNode.flags.push("Optimized"); }
+                if (item.WithOrderedPrefetch) { planNode.flags.push("With Ordered Prefetch"); }
+                if (item.WithUnorderedPrefetch) { planNode.flags.push("With Unordered Prefetch"); }
                 binders.ColumnReferenceListTypeBinder(planNode, "build_hash", item.HashKeysBuild);
                 binders.ColumnReferenceListTypeBinder(planNode, "probe_hash", item.HashKeysProbe);
                 binders.ScalarExpressionTypeBinder(planNode, "build_hash", item.BuildResidual);
@@ -2513,6 +2777,71 @@ function TableScanTypeFactory(context: ParserContext, element: InputElement) {
         }
     });
 }
+function XcsScanTypeFactory(context: ParserContext, element: InputElement) {
+    const item = <any>element.attributes as XcsScanType;
+    item.Ordered = bool(element.attributes.Ordered);
+    item.ForcedIndex = bool(element.attributes.ForcedIndex);
+    item.ForceScan = bool(element.attributes.ForceScan);
+    item.NoExpandHint = bool(element.attributes.NoExpandHint);
+    item.Storage = storageType(element.attributes.Storage);
+
+
+
+
+    item.Object = [];
+
+
+    context.startElement({
+        
+        item: item,
+        element: element,
+        childElements: {
+            "Predicate": {
+                initializer: ScalarExpressionTypeFactory,
+                setter: (value)=> { item.Predicate = value; }
+            },
+            "PartitionId": {
+                initializer: SingleColumnReferenceTypeFactory,
+                setter: (value)=> { item.PartitionId = value; }
+            },
+            "IndexedViewInfo": {
+                initializer: IndexedViewInfoTypeFactory,
+                setter: (value)=> { item.IndexedViewInfo = value; }
+            },
+            "RelOp": {
+                initializer: RelOpTypeFactory,
+                setter: (value)=> { item.RelOp = value; }
+            },
+            "Object": {
+                initializer: ObjectTypeFactory,
+                setter: (value)=> { item.Object.push(value);  }
+            },
+            "DefinedValues": {
+                initializer: DefinedValuesListTypeFactory,
+                setter: (value)=> { item.DefinedValues = value; }
+            },
+            "InternalInfo": {
+                initializer: InternalInfoTypeFactory,
+                setter: (value)=> { item.InternalInfo = value; }
+            },
+        },
+        finalize: (self, context) => {
+            if (self.planNode) {
+                const planNode = self.planNode;
+                binders.nameSetTitle(planNode, null, null);
+                if (item.Ordered) { planNode.flags.push("Ordered"); }
+                if (item.ForcedIndex) { planNode.flags.push("Forced Index"); }
+                if (item.ForceScan) { planNode.flags.push("Force Scan"); }
+                if (item.NoExpandHint) { planNode.flags.push("No Expand Hint"); }
+                if (item.Storage) { planNode.flags.push("Storage"); }
+                binders.ScalarExpressionTypeBinder(planNode, "predicate", item.Predicate);
+                binders.SingleColumnReferenceTypeBinder(planNode, "partition", item.PartitionId);
+                binders.ObjectTypeBinder(planNode, "rowset", item.Object);
+                binders.DefinedValuesListTypeBinder(planNode, "defined_values", item.DefinedValues);
+            }
+        }
+    });
+}
 function IndexScanTypeFactory(context: ParserContext, element: InputElement) {
     const item = <any>element.attributes as IndexScanType;
     item.Lookup = bool(element.attributes.Lookup);
@@ -2578,6 +2907,7 @@ function IndexScanTypeFactory(context: ParserContext, element: InputElement) {
                 if (item.NoExpandHint) { planNode.flags.push("No Expand Hint"); }
                 if (item.Storage) { planNode.flags.push(`${item.Storage}`); }
                 if (item.DynamicSeek) { planNode.flags.push(`${item.DynamicSeek}`); }
+                if (item.SBSFileUrl) { planNode.flags.push("SBSFile Url"); }
                 binders.SeekPredicatesTypeBinder(planNode, "seek_predicate", item.SeekPredicates);
                 binders.ScalarExpressionTypeBinder(planNode, "predicate", item.Predicate);
                 binders.SingleColumnReferenceTypeBinder(planNode, "partition", item.PartitionId);
@@ -3155,6 +3485,8 @@ function SegmentTypeFactory(context: ParserContext, element: InputElement) {
 }
 function SequenceTypeFactory(context: ParserContext, element: InputElement) {
     const item = <any>element.attributes as SequenceType;
+    item.IsGraphDBTransitiveClosure = bool(element.attributes.IsGraphDBTransitiveClosure);
+    item.GraphSequenceIdentifier = int(element.attributes.GraphSequenceIdentifier);
     item.RelOp = [];
 
 
@@ -3380,6 +3712,7 @@ function WindowAggregateTypeFactory(context: ParserContext, element: InputElemen
 }
 function PutTypeFactory(context: ParserContext, element: InputElement) {
     const item = <any>element.attributes as PutType;
+    item.IsExternallyComputed = bool(element.attributes.IsExternallyComputed);
 
 
 
@@ -3490,6 +3823,9 @@ function UpdateTypeFactory(context: ParserContext, element: InputElement) {
 
 
 
+
+
+
     item.Object = [];
 
 
@@ -3513,6 +3849,18 @@ function UpdateTypeFactory(context: ParserContext, element: InputElement) {
             "OriginalActionColumn": {
                 initializer: SingleColumnReferenceTypeFactory,
                 setter: (value)=> { item.OriginalActionColumn = value; }
+            },
+            "AssignmentMap": {
+                initializer: AssignmentMapTypeFactory,
+                setter: (value)=> { item.AssignmentMap = value; }
+            },
+            "SourceTable": {
+                initializer: ParameterizationTypeFactory,
+                setter: (value)=> { item.SourceTable = value; }
+            },
+            "TargetTable": {
+                initializer: ParameterizationTypeFactory,
+                setter: (value)=> { item.TargetTable = value; }
             },
             "RelOp": {
                 initializer: RelOpTypeFactory,
@@ -3889,6 +4237,465 @@ function GenericTypeFactory(context: ParserContext, element: InputElement) {
         }
     });
 }
+function ResourceEstimateTypeFactory(context: ParserContext, element: InputElement) {
+    const item = <any>element.attributes as ResourceEstimateType;
+    item.NodeCount = int(element.attributes.NodeCount);
+    item.Dop = float(element.attributes.Dop);
+    item.MemoryInBytes = float(element.attributes.MemoryInBytes);
+    item.DiskWrittenInBytes = float(element.attributes.DiskWrittenInBytes);
+    item.Scalable = bool(element.attributes.Scalable);
+    context.startElement({
+        
+        item: item,
+        element: element,
+        finalize: (self, context) => {
+        }
+    });
+}
+function MoveTypeFactory(context: ParserContext, element: InputElement) {
+    const item = <any>element.attributes as MoveType;
+    item.IsDistributed = bool(element.attributes.IsDistributed);
+    item.IsExternal = bool(element.attributes.IsExternal);
+    item.IsFull = bool(element.attributes.IsFull);
+
+
+    item.RelOp = [];
+
+
+    context.startElement({
+        
+        item: item,
+        element: element,
+        childElements: {
+            "DistributionKey": {
+                initializer: ColumnReferenceListTypeFactory,
+                setter: (value)=> { item.DistributionKey = value; }
+            },
+            "ResourceEstimate": {
+                initializer: ResourceEstimateTypeFactory,
+                setter: (value)=> { item.ResourceEstimate = value; }
+            },
+            "RelOp": {
+                initializer: RelOpTypeFactory,
+                setter: (value)=> { item.RelOp.push(value);  }
+            },
+            "DefinedValues": {
+                initializer: DefinedValuesListTypeFactory,
+                setter: (value)=> { item.DefinedValues = value; }
+            },
+            "InternalInfo": {
+                initializer: InternalInfoTypeFactory,
+                setter: (value)=> { item.InternalInfo = value; }
+            },
+        },
+        finalize: (self, context) => {
+            if (self.planNode) {
+                const planNode = self.planNode;
+                binders.nameSetTitle(planNode, null, null);
+                binders.DefinedValuesListTypeBinder(planNode, "defined_values", item.DefinedValues);
+            }
+        }
+    });
+}
+function ExternalSelectTypeFactory(context: ParserContext, element: InputElement) {
+    const item = <any>element.attributes as ExternalSelectType;
+    item.IsDistributed = bool(element.attributes.IsDistributed);
+    item.IsExternal = bool(element.attributes.IsExternal);
+    item.IsFull = bool(element.attributes.IsFull);
+    item.RelOp = [];
+
+
+    context.startElement({
+        
+        item: item,
+        element: element,
+        childElements: {
+            "RelOp": {
+                initializer: RelOpTypeFactory,
+                setter: (value)=> { item.RelOp.push(value);  }
+            },
+            "DefinedValues": {
+                initializer: DefinedValuesListTypeFactory,
+                setter: (value)=> { item.DefinedValues = value; }
+            },
+            "InternalInfo": {
+                initializer: InternalInfoTypeFactory,
+                setter: (value)=> { item.InternalInfo = value; }
+            },
+        },
+        finalize: (self, context) => {
+            if (self.planNode) {
+                const planNode = self.planNode;
+                binders.nameSetTitle(planNode, null, null);
+                binders.DefinedValuesListTypeBinder(planNode, "defined_values", item.DefinedValues);
+            }
+        }
+    });
+}
+function ProjectTypeFactory(context: ParserContext, element: InputElement) {
+    const item = <any>element.attributes as ProjectType;
+    item.IsNoOp = bool(element.attributes.IsNoOp);
+    item.RelOp = [];
+
+
+    context.startElement({
+        
+        item: item,
+        element: element,
+        childElements: {
+            "RelOp": {
+                initializer: RelOpTypeFactory,
+                setter: (value)=> { item.RelOp.push(value);  }
+            },
+            "DefinedValues": {
+                initializer: DefinedValuesListTypeFactory,
+                setter: (value)=> { item.DefinedValues = value; }
+            },
+            "InternalInfo": {
+                initializer: InternalInfoTypeFactory,
+                setter: (value)=> { item.InternalInfo = value; }
+            },
+        },
+        finalize: (self, context) => {
+            if (self.planNode) {
+                const planNode = self.planNode;
+                binders.nameSetTitle(planNode, null, null);
+                binders.DefinedValuesListTypeBinder(planNode, "defined_values", item.DefinedValues);
+            }
+        }
+    });
+}
+function JoinTypeFactory(context: ParserContext, element: InputElement) {
+    const item = <any>element.attributes as JoinType;
+    item.Predicate = [];
+    item.Probe = [];
+    item.RelOp = [];
+
+
+    context.startElement({
+        
+        item: item,
+        element: element,
+        childElements: {
+            "Predicate": {
+                initializer: ScalarExpressionTypeFactory,
+                setter: (value)=> { item.Predicate.push(value);  }
+            },
+            "Probe": {
+                initializer: SingleColumnReferenceTypeFactory,
+                setter: (value)=> { item.Probe.push(value);  }
+            },
+            "RelOp": {
+                initializer: RelOpTypeFactory,
+                setter: (value)=> { item.RelOp.push(value);  }
+            },
+            "DefinedValues": {
+                initializer: DefinedValuesListTypeFactory,
+                setter: (value)=> { item.DefinedValues = value; }
+            },
+            "InternalInfo": {
+                initializer: InternalInfoTypeFactory,
+                setter: (value)=> { item.InternalInfo = value; }
+            },
+        },
+        finalize: (self, context) => {
+            if (self.planNode) {
+                const planNode = self.planNode;
+                binders.nameSetTitle(planNode, null, null);
+                binders.DefinedValuesListTypeBinder(planNode, "defined_values", item.DefinedValues);
+            }
+        }
+    });
+}
+function GbApplyTypeFactory(context: ParserContext, element: InputElement) {
+    const item = <any>element.attributes as GbApplyType;
+    item.Predicate = [];
+
+    item.RelOp = [];
+
+
+    context.startElement({
+        
+        item: item,
+        element: element,
+        childElements: {
+            "Predicate": {
+                initializer: ScalarExpressionTypeFactory,
+                setter: (value)=> { item.Predicate.push(value);  }
+            },
+            "AggFunctions": {
+                initializer: DefinedValuesListTypeFactory,
+                setter: (value)=> { item.AggFunctions = value; }
+            },
+            "RelOp": {
+                initializer: RelOpTypeFactory,
+                setter: (value)=> { item.RelOp.push(value);  }
+            },
+            "DefinedValues": {
+                initializer: DefinedValuesListTypeFactory,
+                setter: (value)=> { item.DefinedValues = value; }
+            },
+            "InternalInfo": {
+                initializer: InternalInfoTypeFactory,
+                setter: (value)=> { item.InternalInfo = value; }
+            },
+        },
+        finalize: (self, context) => {
+            if (self.planNode) {
+                const planNode = self.planNode;
+                binders.nameSetTitle(planNode, null, null);
+                binders.DefinedValuesListTypeBinder(planNode, "defined_values", item.DefinedValues);
+            }
+        }
+    });
+}
+function GbAggTypeFactory(context: ParserContext, element: InputElement) {
+    const item = <any>element.attributes as GbAggType;
+    item.IsScalar = bool(element.attributes.IsScalar);
+
+
+    item.RelOp = [];
+
+
+    context.startElement({
+        
+        item: item,
+        element: element,
+        childElements: {
+            "GroupBy": {
+                initializer: ColumnReferenceListTypeFactory,
+                setter: (value)=> { item.GroupBy = value; }
+            },
+            "AggFunctions": {
+                initializer: DefinedValuesListTypeFactory,
+                setter: (value)=> { item.AggFunctions = value; }
+            },
+            "RelOp": {
+                initializer: RelOpTypeFactory,
+                setter: (value)=> { item.RelOp.push(value);  }
+            },
+            "DefinedValues": {
+                initializer: DefinedValuesListTypeFactory,
+                setter: (value)=> { item.DefinedValues = value; }
+            },
+            "InternalInfo": {
+                initializer: InternalInfoTypeFactory,
+                setter: (value)=> { item.InternalInfo = value; }
+            },
+        },
+        finalize: (self, context) => {
+            if (self.planNode) {
+                const planNode = self.planNode;
+                binders.nameSetTitle(planNode, null, null);
+                binders.DefinedValuesListTypeBinder(planNode, "defined_values", item.DefinedValues);
+            }
+        }
+    });
+}
+function GroupingSetReferenceTypeFactory(context: ParserContext, element: InputElement) {
+    const item = <any>element.attributes as GroupingSetReferenceType;
+    context.startElement({
+        
+        item: item,
+        element: element,
+        finalize: (self, context) => {
+        }
+    });
+}
+function GroupingSetListTypeFactory(context: ParserContext, element: InputElement) {
+    const items: GroupingSetReferenceType[] = [];
+
+    context.startElement({
+        
+        item: items,
+        element: element,
+        childElements: {
+            "GroupingSet": {
+                initializer: GroupingSetReferenceTypeFactory,
+                setter: (value)=> { items.push(value); }
+            },
+        },
+    });
+}
+function LocalCubeTypeFactory(context: ParserContext, element: InputElement) {
+    const item = <any>element.attributes as LocalCubeType;
+
+
+    item.RelOp = [];
+
+
+    context.startElement({
+        
+        item: item,
+        element: element,
+        childElements: {
+            "GroupBy": {
+                initializer: ColumnReferenceListTypeFactory,
+                setter: (value)=> { item.GroupBy = value; }
+            },
+            "GroupingSets": {
+                initializer: GroupingSetListTypeFactory,
+                setter: (value)=> { item.GroupingSets = value; }
+            },
+            "RelOp": {
+                initializer: RelOpTypeFactory,
+                setter: (value)=> { item.RelOp.push(value);  }
+            },
+            "DefinedValues": {
+                initializer: DefinedValuesListTypeFactory,
+                setter: (value)=> { item.DefinedValues = value; }
+            },
+            "InternalInfo": {
+                initializer: InternalInfoTypeFactory,
+                setter: (value)=> { item.InternalInfo = value; }
+            },
+        },
+        finalize: (self, context) => {
+            if (self.planNode) {
+                const planNode = self.planNode;
+                binders.nameSetTitle(planNode, null, null);
+                binders.DefinedValuesListTypeBinder(planNode, "defined_values", item.DefinedValues);
+            }
+        }
+    });
+}
+function DMLOpTypeFactory(context: ParserContext, element: InputElement) {
+    const item = <any>element.attributes as DMLOpType;
+
+
+
+    item.RelOp = [];
+
+
+    context.startElement({
+        
+        item: item,
+        element: element,
+        childElements: {
+            "AssignmentMap": {
+                initializer: AssignmentMapTypeFactory,
+                setter: (value)=> { item.AssignmentMap = value; }
+            },
+            "SourceTable": {
+                initializer: ParameterizationTypeFactory,
+                setter: (value)=> { item.SourceTable = value; }
+            },
+            "TargetTable": {
+                initializer: ParameterizationTypeFactory,
+                setter: (value)=> { item.TargetTable = value; }
+            },
+            "RelOp": {
+                initializer: RelOpTypeFactory,
+                setter: (value)=> { item.RelOp.push(value);  }
+            },
+            "DefinedValues": {
+                initializer: DefinedValuesListTypeFactory,
+                setter: (value)=> { item.DefinedValues = value; }
+            },
+            "InternalInfo": {
+                initializer: InternalInfoTypeFactory,
+                setter: (value)=> { item.InternalInfo = value; }
+            },
+        },
+        finalize: (self, context) => {
+            if (self.planNode) {
+                const planNode = self.planNode;
+                binders.nameSetTitle(planNode, null, null);
+                binders.DefinedValuesListTypeBinder(planNode, "defined_values", item.DefinedValues);
+            }
+        }
+    });
+}
+function AssignmentMapTypeFactory(context: ParserContext, element: InputElement) {
+    const items: AssignType[] = [];
+
+    context.startElement({
+        
+        item: items,
+        element: element,
+        childElements: {
+            "Assign": {
+                initializer: AssignTypeFactory,
+                setter: (value)=> { items.push(value); }
+            },
+        },
+    });
+}
+function GetTypeFactory(context: ParserContext, element: InputElement) {
+    const item = <any>element.attributes as GetType;
+    item.NumRows = int(element.attributes.NumRows);
+    item.IsExternal = bool(element.attributes.IsExternal);
+    item.IsDistributed = bool(element.attributes.IsDistributed);
+    item.IsHashDistributed = bool(element.attributes.IsHashDistributed);
+    item.IsReplicated = bool(element.attributes.IsReplicated);
+    item.IsRoundRobin = bool(element.attributes.IsRoundRobin);
+
+
+
+    item.RelOp = [];
+
+
+    context.startElement({
+        
+        item: item,
+        element: element,
+        childElements: {
+            "Bookmarks": {
+                initializer: ColumnReferenceListTypeFactory,
+                setter: (value)=> { item.Bookmarks = value; }
+            },
+            "OutputColumns": {
+                initializer: OutputColumnsTypeFactory,
+                setter: (value)=> { item.OutputColumns = value; }
+            },
+            "GeneratedData": {
+                initializer: ScalarExpressionListTypeFactory,
+                setter: (value)=> { item.GeneratedData = value; }
+            },
+            "RelOp": {
+                initializer: RelOpTypeFactory,
+                setter: (value)=> { item.RelOp.push(value);  }
+            },
+            "DefinedValues": {
+                initializer: DefinedValuesListTypeFactory,
+                setter: (value)=> { item.DefinedValues = value; }
+            },
+            "InternalInfo": {
+                initializer: InternalInfoTypeFactory,
+                setter: (value)=> { item.InternalInfo = value; }
+            },
+        },
+        finalize: (self, context) => {
+            if (self.planNode) {
+                const planNode = self.planNode;
+                binders.nameSetTitle(planNode, null, null);
+                binders.DefinedValuesListTypeBinder(planNode, "defined_values", item.DefinedValues);
+            }
+        }
+    });
+}
+function OutputColumnsTypeFactory(context: ParserContext, element: InputElement) {
+    const item = <any>element.attributes as OutputColumnsType;
+
+    item.Object = [];
+    context.startElement({
+        
+        item: item,
+        element: element,
+        childElements: {
+            "DefinedValues": {
+                initializer: DefinedValuesListTypeFactory,
+                setter: (value)=> { item.DefinedValues = value; }
+            },
+            "Object": {
+                initializer: ObjectTypeFactory,
+                setter: (value)=> { item.Object.push(value);  }
+            },
+        },
+        finalize: (self, context) => {
+        }
+    });
+}
 function ScalarTypeFactory(context: ParserContext, element: InputElement) {
     const item = <any>element.attributes as ScalarType;
 
@@ -4162,6 +4969,8 @@ function AssignTypeFactory(context: ParserContext, element: InputElement) {
     const item = <any>element.attributes as AssignType;
 
 
+    item.SourceColumn = [];
+    item.TargetColumn = [];
     context.startElement({
         
         item: item,
@@ -4174,6 +4983,14 @@ function AssignTypeFactory(context: ParserContext, element: InputElement) {
             "ScalarOperator": {
                 initializer: ScalarTypeFactory,
                 setter: (value)=> { item.ScalarOperator = value; }
+            },
+            "SourceColumn": {
+                initializer: ColumnReferenceTypeFactory,
+                setter: (value)=> { item.SourceColumn.push(value);  }
+            },
+            "TargetColumn": {
+                initializer: ColumnReferenceTypeFactory,
+                setter: (value)=> { item.TargetColumn.push(value);  }
             },
         },
         finalize: (self, context) => {
@@ -4326,6 +5143,45 @@ function SubqueryTypeFactory(context: ParserContext, element: InputElement) {
         }
     });
 }
+function DispatcherTypeFactory(context: ParserContext, element: InputElement) {
+    const items: ParameterSensitivePredicateType[] = [];
+
+    context.startElement({
+        
+        item: items,
+        element: element,
+        childElements: {
+            "ParameterSensitivePredicate": {
+                initializer: ParameterSensitivePredicateTypeFactory,
+                setter: (value)=> { items.push(value); }
+            },
+        },
+    });
+}
+function ParameterSensitivePredicateTypeFactory(context: ParserContext, element: InputElement) {
+    const item = <any>element.attributes as ParameterSensitivePredicateType;
+    item.LowBoundary = float(element.attributes.LowBoundary);
+    item.HighBoundary = float(element.attributes.HighBoundary);
+    item.StatisticsInfo = [];
+
+    context.startElement({
+        
+        item: item,
+        element: element,
+        childElements: {
+            "StatisticsInfo": {
+                initializer: StatsInfoTypeFactory,
+                setter: (value)=> { item.StatisticsInfo.push(value);  }
+            },
+            "Predicate": {
+                initializer: ScalarExpressionTypeFactory,
+                setter: (value)=> { item.Predicate = value; }
+            },
+        },
+        finalize: (self, context) => {
+        }
+    });
+}
 function SetOptionsTypeFactory(context: ParserContext, element: InputElement) {
     const item = <any>element.attributes as SetOptionsType;
     context.startElement({
@@ -4438,6 +5294,7 @@ function CursorPlanTypeOperationFactory(context: ParserContext, element: InputEl
     const item = <any>element.attributes as CursorPlanTypeOperation;
     item.OperationType = cursorPlanTypeOperationOperationTypeEnum(element.attributes.OperationType);
 
+
     item.UDF = [];
     context.startElement({
         
@@ -4445,6 +5302,10 @@ function CursorPlanTypeOperationFactory(context: ParserContext, element: InputEl
         item: item,
         element: element,
         childElements: {
+            "Dispatcher": {
+                initializer: DispatcherTypeFactory,
+                setter: (value)=> { item.Dispatcher = value; }
+            },
             "QueryPlan": {
                 initializer: QueryPlanTypeFactory,
                 setter: (value)=> { item.QueryPlan = value; }
@@ -4508,7 +5369,7 @@ function OrderByTypeOrderByColumnFactory(context: ParserContext, element: InputE
 function DefinedValuesListTypeDefinedValueFactory(context: ParserContext, element: InputElement) {
     const item = <any>element.attributes as DefinedValuesListTypeDefinedValue;
 
-    item.ColumnReference = [];
+
 
     context.startElement({
         
@@ -4521,7 +5382,7 @@ function DefinedValuesListTypeDefinedValueFactory(context: ParserContext, elemen
             },
             "ColumnReference": {
                 initializer: ColumnReferenceTypeFactory,
-                setter: (value)=> { item.ColumnReference.push(value);  }
+                setter: (value)=> { item.ColumnReference = value; }
             },
             "ScalarOperator": {
                 initializer: ScalarTypeFactory,
@@ -4554,6 +5415,7 @@ function RunTimeInformationTypeRunTimeCountersPerThreadFactory(context: ParserCo
     item.ActualRebinds = int(element.attributes.ActualRebinds);
     item.ActualRewinds = int(element.attributes.ActualRewinds);
     item.ActualRows = int(element.attributes.ActualRows);
+    item.RowRequalifications = int(element.attributes.RowRequalifications);
     item.ActualRowsRead = int(element.attributes.ActualRowsRead);
     item.Batches = int(element.attributes.Batches);
     item.ActualEndOfScans = int(element.attributes.ActualEndOfScans);
@@ -4571,10 +5433,14 @@ function RunTimeInformationTypeRunTimeCountersPerThreadFactory(context: ParserCo
     item.ActualScans = int(element.attributes.ActualScans);
     item.ActualLogicalReads = int(element.attributes.ActualLogicalReads);
     item.ActualPhysicalReads = int(element.attributes.ActualPhysicalReads);
+    item.ActualPageServerReads = int(element.attributes.ActualPageServerReads);
     item.ActualReadAheads = int(element.attributes.ActualReadAheads);
+    item.ActualPageServerReadAheads = int(element.attributes.ActualPageServerReadAheads);
     item.ActualLobLogicalReads = int(element.attributes.ActualLobLogicalReads);
     item.ActualLobPhysicalReads = int(element.attributes.ActualLobPhysicalReads);
+    item.ActualLobPageServerReads = int(element.attributes.ActualLobPageServerReads);
     item.ActualLobReadAheads = int(element.attributes.ActualLobReadAheads);
+    item.ActualLobPageServerReadAheads = int(element.attributes.ActualLobPageServerReadAheads);
     item.SegmentReads = int(element.attributes.SegmentReads);
     item.SegmentSkips = int(element.attributes.SegmentSkips);
     item.ActualLocallyAggregatedRows = int(element.attributes.ActualLocallyAggregatedRows);
@@ -4583,6 +5449,14 @@ function RunTimeInformationTypeRunTimeCountersPerThreadFactory(context: ParserCo
     item.UsedMemoryGrant = int(element.attributes.UsedMemoryGrant);
     item.IsInterleavedExecuted = bool(element.attributes.IsInterleavedExecuted);
     item.ActualJoinType = physicalOpType(element.attributes.ActualJoinType);
+    item.HpcRowCount = int(element.attributes.HpcRowCount);
+    item.HpcKernelElapsedUs = int(element.attributes.HpcKernelElapsedUs);
+    item.HpcHostToDeviceBytes = int(element.attributes.HpcHostToDeviceBytes);
+    item.HpcDeviceToHostBytes = int(element.attributes.HpcDeviceToHostBytes);
+    item.ActualPageServerPushedPageIDs = int(element.attributes.ActualPageServerPushedPageIDs);
+    item.ActualPageServerRowsReturned = int(element.attributes.ActualPageServerRowsReturned);
+    item.ActualPageServerRowsRead = int(element.attributes.ActualPageServerRowsRead);
+    item.ActualPageServerPushedReads = int(element.attributes.ActualPageServerPushedReads);
     context.startElement({
         
         item: item,
@@ -4709,6 +5583,7 @@ export interface BaseStmtInfoType {
     StatementCompId?: number;
     StatementEstRows?: number;
     StatementId?: number;
+    QueryCompilationReplay?: number;
     StatementOptmLevel?: string;
     StatementOptmEarlyAbortReason?: any;
     CardinalityEstimationModelVersion?: string;
@@ -4730,6 +5605,11 @@ export interface BaseStmtInfoType {
     BatchSqlHandle?: string;
     StatementParameterizationType?: number;
     SecurityPolicyApplied?: boolean;
+    BatchModeOnRowStoreUsed?: boolean;
+    QueryStoreStatementHintId?: number;
+    QueryStoreStatementHintText?: string;
+    QueryStoreStatementHintSource?: string;
+    ContainsLedgerTables?: boolean;
     StatementSetOptions?: SetOptionsType;
 }
 
@@ -4767,7 +5647,13 @@ export interface ScalarExpressionType {
     ScalarOperator?: ScalarType;
 }
 
+export interface ExternalDistributedComputationType {
+    EdcShowplanXml?: string;
+    StmtSimple?: StmtSimpleType;
+}
+
 export interface StmtBlockType {
+    ExternalDistributedComputation?: ExternalDistributedComputationType;
     StmtSimple?: StmtSimpleType;
     StmtCond?: StmtCondType;
     StmtCursor?: StmtCursorType;
@@ -4776,6 +5662,7 @@ export interface StmtBlockType {
 }
 
 export interface StmtSimpleType extends BaseStmtInfoType {
+    Dispatcher?: DispatcherType;
     QueryPlan?: QueryPlanType;
     UDF: FunctionType[];
     StoredProc?: FunctionType;
@@ -4863,11 +5750,15 @@ export interface ObjectType {
     Table?: string;
     Index?: string;
     Filtered?: boolean;
+    OnlineInbuildIndex?: number;
+    OnlineIndexBuildMappingIndex?: number;
     Alias?: string;
     TableReferenceId?: number;
     IndexKind?: any;
     CloneAccessScope?: any;
     Storage?: any;
+    GraphWorkTableType?: number;
+    GraphWorkTableIdentifier?: number;
 }
 
 export declare type OrderByType = OrderByTypeOrderByColumn[];
@@ -4891,6 +5782,10 @@ export interface HashSpillDetailsType {
     ReadsFromTempDb?: number;
 }
 
+export interface ExchangeSpillDetailsType {
+    WritesToTempDb?: number;
+}
+
 export interface WaitWarningType {
     WaitType?: any;
     WaitTime?: number;
@@ -4906,6 +5801,8 @@ export declare type WaitStatListType = WaitStatType[];
 export interface QueryExecTimeType {
     CpuTime?: number;
     ElapsedTime?: number;
+    UdfCpuTime?: number;
+    UdfElapsedTime?: number;
 }
 
 export interface AffectingConvertWarningType {
@@ -4918,13 +5815,20 @@ export interface WarningsType {
     SpatialGuess?: boolean;
     UnmatchedIndexes?: boolean;
     FullUpdateForOnlineIndexBuild?: boolean;
+    SpillOccurred?: SpillOccurredType;
     ColumnsWithNoStatistics?: ColumnReferenceListType;
+    ColumnsWithStaleStatistics?: ColumnReferenceListType;
     SpillToTempDb: SpillToTempDbType[];
     Wait: WaitWarningType[];
     PlanAffectingConvert: AffectingConvertWarningType[];
     SortSpillDetails: SortSpillDetailsType[];
     HashSpillDetails: HashSpillDetailsType[];
+    ExchangeSpillDetails: ExchangeSpillDetailsType[];
     MemoryGrantWarning?: MemoryGrantWarningInfo;
+}
+
+export interface SpillOccurredType {
+    Detail?: boolean;
 }
 
 export interface MemoryFractionsType {
@@ -4942,6 +5846,8 @@ export interface MemoryGrantType {
     GrantedMemory?: number;
     MaxUsedMemory?: number;
     MaxQueryMemory?: number;
+    LastRequestedMemory?: number;
+    IsMemoryGrantFeedbackAdjusted?: any;
 }
 
 export interface MemoryGrantWarningInfo {
@@ -4969,6 +5875,7 @@ export interface OptimizerHardwareDependentPropertiesType {
 }
 
 export interface StatsInfoType {
+    Database?: string;
     Database?: string;
     Schema?: string;
     Table?: string;
@@ -5000,6 +5907,10 @@ export interface StarJoinInfoType {
 }
 
 export interface InternalInfoType {
+}
+
+export interface OptimizationReplayType {
+    Script?: string;
 }
 
 export interface ThreadStatType {
@@ -5040,6 +5951,7 @@ export interface QueryPlanType {
     DegreeOfParallelism?: number;
     EffectiveDegreeOfParallelism?: number;
     NonParallelPlanReason?: string;
+    DOPFeedbackAdjusted?: any;
     MemoryGrant?: number;
     CachedPlanSize?: number;
     CompileTime?: number;
@@ -5047,7 +5959,12 @@ export interface QueryPlanType {
     CompileMemory?: number;
     UsePlan?: boolean;
     ContainsInterleavedExecutionCandidates?: boolean;
+    ContainsInlineScalarTsqlUdfs?: boolean;
+    QueryVariantID?: number;
+    DispatcherPlanHandle?: string;
+    ExclusiveProfileTimeActive?: boolean;
     InternalInfo?: InternalInfoType;
+    OptimizationReplay?: OptimizationReplayType;
     ThreadStat?: ThreadStatType;
     MissingIndexes?: MissingIndexesType;
     GuessedSelectivity?: GuessedSelectivityType;
@@ -5081,6 +5998,7 @@ export interface RelOpType {
     EstimatedExecutionMode?: any;
     GroupExecuted?: boolean;
     EstimateRows?: number;
+    EstimateRowsWithoutRowGoal?: number;
     EstimatedRowsRead?: number;
     LogicalOp?: any;
     NodeId?: number;
@@ -5091,10 +6009,14 @@ export interface RelOpType {
     IsAdaptive?: boolean;
     AdaptiveThresholdRows?: number;
     EstimatedTotalSubtreeCost?: number;
+    TableCardinality?: number;
     StatsCollectionId?: number;
     EstimatedJoinType?: any;
-    TableCardinality?: number;
+    HyperScaleOptimizedQueryProcessing?: string;
+    HyperScaleOptimizedQueryProcessingUnusedReason?: string;
+    PDWAccumulativeCost?: number;
     AdaptiveJoin?: AdaptiveJoinType;
+    Apply?: JoinType;
     Assert?: FilterType;
     BatchHashTableBuild?: BatchHashTableBuildType;
     Bitmap?: BitmapType;
@@ -5102,23 +6024,35 @@ export interface RelOpType {
     ComputeScalar?: ComputeScalarType;
     Concat?: ConcatType;
     ConstantScan?: ConstantScanType;
+    ConstTableGet?: GetType;
     CreateIndex?: CreateIndexType;
+    Delete?: DMLOpType;
     DeletedScan?: RowsetType;
     Extension?: UDXType;
+    ExternalSelect?: ExternalSelectType;
+    ExtExtractScan?: RemoteType;
     Filter?: FilterType;
     ForeignKeyReferencesCheck?: ForeignKeyReferencesCheckType;
+    GbAgg?: GbAggType;
+    GbApply?: GbApplyType;
     Generic?: GenericType;
+    Get?: GetType;
     Hash?: HashType;
     IndexScan?: IndexScanType;
     InsertedScan?: RowsetType;
+    Insert?: DMLOpType;
+    Join?: JoinType;
+    LocalCube?: LocalCubeType;
     LogRowScan?: RelOpBaseType;
     Merge?: MergeType;
     MergeInterval?: SimpleIteratorOneChildType;
+    Move?: MoveType;
     NestedLoops?: NestedLoopsType;
     OnlineIndex?: CreateIndexType;
     Parallelism?: ParallelismType;
     ParameterTableScan?: RelOpBaseType;
     PrintDataflow?: RelOpBaseType;
+    Project?: ProjectType;
     Put?: PutType;
     RemoteFetch?: RemoteFetchType;
     RemoteModify?: RemoteModifyType;
@@ -5141,8 +6075,12 @@ export interface RelOpType {
     Top?: TopType;
     TopSort?: TopSortType;
     Update?: UpdateType;
+    Update?: UpdateType;
+    Union?: ConcatType;
+    UnionAll?: ConcatType;
     WindowSpool?: WindowType;
     WindowAggregate?: WindowAggregateType;
+    XcsScan?: XcsScanType;
     OutputList?: ColumnReferenceListType;
     Warnings?: WarningsType;
     MemoryFractions?: MemoryFractionsType;
@@ -5154,6 +6092,8 @@ export interface RelOpType {
 export interface AdaptiveJoinType extends RelOpBaseType {
     BitmapCreator?: boolean;
     Optimized?: boolean;
+    WithOrderedPrefetch?: boolean;
+    WithUnorderedPrefetch?: boolean;
     HashKeysBuild?: ColumnReferenceListType;
     HashKeysProbe?: ColumnReferenceListType;
     BuildResidual?: ScalarExpressionType;
@@ -5203,6 +6143,18 @@ export interface TableScanType extends RowsetType {
     IndexedViewInfo?: IndexedViewInfoType;
 }
 
+export interface XcsScanType extends RowsetType {
+    Ordered?: boolean;
+    ForcedIndex?: boolean;
+    ForceScan?: boolean;
+    NoExpandHint?: boolean;
+    Storage?: any;
+    Predicate?: ScalarExpressionType;
+    PartitionId?: SingleColumnReferenceType;
+    IndexedViewInfo?: IndexedViewInfoType;
+    RelOp?: RelOpType;
+}
+
 export interface IndexScanType extends RowsetType {
     Lookup?: boolean;
     Ordered?: boolean;
@@ -5214,6 +6166,7 @@ export interface IndexScanType extends RowsetType {
     NoExpandHint?: boolean;
     Storage?: any;
     DynamicSeek?: boolean;
+    SBSFileUrl?: string;
     SeekPredicates?: SeekPredicatesType;
     Predicate?: ScalarExpressionType;
     PartitionId?: SingleColumnReferenceType;
@@ -5307,6 +6260,8 @@ export interface SegmentType extends RelOpBaseType {
 }
 
 export interface SequenceType extends RelOpBaseType {
+    IsGraphDBTransitiveClosure?: boolean;
+    GraphSequenceIdentifier?: number;
     RelOp: RelOpType[];
 }
 
@@ -5320,6 +6275,7 @@ export interface TopType extends RelOpBaseType {
     Rows?: number;
     IsPercent?: boolean;
     WithTies?: boolean;
+    TopLocation?: string;
     TieColumns?: ColumnReferenceListType;
     OffsetExpression?: ScalarExpressionType;
     TopExpression?: ScalarExpressionType;
@@ -5341,6 +6297,7 @@ export interface WindowAggregateType extends RelOpBaseType {
 }
 
 export interface PutType extends RemoteQueryType {
+    IsExternallyComputed?: boolean;
     ShuffleType?: string;
     ShuffleColumn?: string;
     RelOp?: RelOpType;
@@ -5365,6 +6322,9 @@ export interface UpdateType extends RowsetType {
     ProbeColumn?: SingleColumnReferenceType;
     ActionColumn?: SingleColumnReferenceType;
     OriginalActionColumn?: SingleColumnReferenceType;
+    AssignmentMap?: AssignmentMapType;
+    SourceTable?: ParameterizationType;
+    TargetTable?: ParameterizationType;
     RelOp?: RelOpType;
 }
 
@@ -5410,6 +6370,99 @@ export interface RemoteModifyType extends RemoteType {
 
 export interface GenericType extends RelOpBaseType {
     RelOp: RelOpType[];
+}
+
+export interface ResourceEstimateType {
+    NodeCount?: number;
+    Dop?: number;
+    MemoryInBytes?: number;
+    DiskWrittenInBytes?: number;
+    Scalable?: boolean;
+}
+
+export interface MoveType extends RelOpBaseType {
+    MoveType?: string;
+    DistributionType?: string;
+    IsDistributed?: boolean;
+    IsExternal?: boolean;
+    IsFull?: boolean;
+    DistributionKey?: ColumnReferenceListType;
+    ResourceEstimate?: ResourceEstimateType;
+    RelOp: RelOpType[];
+}
+
+export interface ExternalSelectType extends RelOpBaseType {
+    MaterializeOperation?: string;
+    DistributionType?: string;
+    IsDistributed?: boolean;
+    IsExternal?: boolean;
+    IsFull?: boolean;
+    RelOp: RelOpType[];
+}
+
+export interface ProjectType extends RelOpBaseType {
+    IsNoOp?: boolean;
+    RelOp: RelOpType[];
+}
+
+export interface JoinType extends RelOpBaseType {
+    Predicate: ScalarExpressionType[];
+    Probe: SingleColumnReferenceType[];
+    RelOp: RelOpType[];
+}
+
+export interface GbApplyType extends RelOpBaseType {
+    JoinType?: string;
+    AggType?: string;
+    Predicate: ScalarExpressionType[];
+    AggFunctions?: DefinedValuesListType;
+    RelOp: RelOpType[];
+}
+
+export interface GbAggType extends RelOpBaseType {
+    IsScalar?: boolean;
+    AggType?: string;
+    HintType?: string;
+    GroupBy?: ColumnReferenceListType;
+    AggFunctions?: DefinedValuesListType;
+    RelOp: RelOpType[];
+}
+
+export interface GroupingSetReferenceType {
+    Value?: string;
+}
+
+export declare type GroupingSetListType = GroupingSetReferenceType[];
+export interface LocalCubeType extends RelOpBaseType {
+    GroupBy?: ColumnReferenceListType;
+    GroupingSets?: GroupingSetListType;
+    RelOp: RelOpType[];
+}
+
+export interface DMLOpType extends RelOpBaseType {
+    AssignmentMap?: AssignmentMapType;
+    SourceTable?: ParameterizationType;
+    TargetTable?: ParameterizationType;
+    RelOp: RelOpType[];
+}
+
+export declare type AssignmentMapType = AssignType[];
+export interface GetType extends RelOpBaseType {
+    NumRows?: number;
+    IsExternal?: boolean;
+    IsDistributed?: boolean;
+    IsHashDistributed?: boolean;
+    IsReplicated?: boolean;
+    IsRoundRobin?: boolean;
+    Bookmarks?: ColumnReferenceListType;
+    OutputColumns?: OutputColumnsType;
+    GeneratedData?: ScalarExpressionListType;
+    RelOp: RelOpType[];
+}
+
+export interface OutputColumnsType {
+    DefinedValues?: DefinedValuesListType;
+    Object: ObjectType[];
 }
 
 export interface ScalarType {
@@ -5485,6 +6538,8 @@ export interface AggregateType {
 export interface AssignType {
     ColumnReference?: ColumnReferenceType;
     ScalarOperator?: ScalarType;
+    SourceColumn: ColumnReferenceType[];
+    TargetColumn: ColumnReferenceType[];
 }
 
 export declare type MultAssignType = AssignType[];
@@ -5527,6 +6582,14 @@ export interface SubqueryType {
     RelOp?: RelOpType;
 }
 
+export declare type DispatcherType = ParameterSensitivePredicateType[];
+export interface ParameterSensitivePredicateType {
+    LowBoundary?: number;
+    HighBoundary?: number;
+    StatisticsInfo: StatsInfoType[];
+    Predicate?: ScalarExpressionType;
+}
+
 export interface SetOptionsType {
     ANSI_NULLS?: any;
     ANSI_PADDING?: any;
@@ -5554,6 +6617,7 @@ export interface StmtCondTypeElse {
 
 export interface CursorPlanTypeOperation {
     OperationType?: any;
+    Dispatcher?: DispatcherType;
     QueryPlan?: QueryPlanType;
     UDF: FunctionType[];
 }
@@ -5570,7 +6634,7 @@ export interface OrderByTypeOrderByColumn {
 
 export interface DefinedValuesListTypeDefinedValue {
     ValueVector?: DefinedValuesListTypeValueVector;
-    ColumnReference: ColumnReferenceType[];
+    ColumnReference?: ColumnReferenceType;
     ScalarOperator?: ScalarType;
 }
 
@@ -5581,6 +6645,7 @@ export interface RunTimeInformationTypeRunTimeCountersPerThread {
     ActualRebinds?: number;
     ActualRewinds?: number;
     ActualRows?: number;
+    RowRequalifications?: number;
     ActualRowsRead?: number;
     Batches?: number;
     ActualEndOfScans?: number;
@@ -5599,10 +6664,14 @@ export interface RunTimeInformationTypeRunTimeCountersPerThread {
     ActualScans?: number;
     ActualLogicalReads?: number;
     ActualPhysicalReads?: number;
+    ActualPageServerReads?: number;
     ActualReadAheads?: number;
+    ActualPageServerReadAheads?: number;
     ActualLobLogicalReads?: number;
     ActualLobPhysicalReads?: number;
+    ActualLobPageServerReads?: number;
     ActualLobReadAheads?: number;
+    ActualLobPageServerReadAheads?: number;
     SegmentReads?: number;
     SegmentSkips?: number;
     ActualLocallyAggregatedRows?: number;
@@ -5611,6 +6680,14 @@ export interface RunTimeInformationTypeRunTimeCountersPerThread {
     UsedMemoryGrant?: number;
     IsInterleavedExecuted?: boolean;
     ActualJoinType?: any;
+    HpcRowCount?: number;
+    HpcKernelElapsedUs?: number;
+    HpcHostToDeviceBytes?: number;
+    HpcDeviceToHostBytes?: number;
+    ActualPageServerPushedPageIDs?: number;
+    ActualPageServerRowsReturned?: number;
+    ActualPageServerRowsRead?: number;
+    ActualPageServerPushedReads?: number;
 }
 
 export interface RunTimePartitionSummaryTypePartitionsAccessed {
