@@ -1,0 +1,1409 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="CREATE PROCEDURE [dbo].[Web_AddComment]&#xD;&#xA;@ElementId INT, @ElementType NVARCHAR (50), @Comments NVARCHAR (1000), @AddedBy NVARCHAR (50)&#xD;&#xA;AS&#xD;&#xA;BEGIN&#xD;&#xA;&#x9;-- SET NOCOUNT ON added to prevent extra result sets from&#xD;&#xA;&#x9;-- interfering with SELECT statements.&#xD;&#xA;&#x9;SET NOCOUNT ON;&#xD;&#xA;" StatementId="1" StatementCompId="2" StatementType="SET ON/OFF" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;DECLARE @tmpComments nvarchar(1000)&#xD;&#xA;&#x9;DECLARE @tmpAddedBy nvarchar(50)&#xD;&#xA;&#x9;DECLARE @tmpUpdateDate datetime&#xD;&#xA;&#x9;&#xD;&#xA;&#x9;SET @tmpComments = NULL&#xD;&#xA;" StatementId="2" StatementCompId="3" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;SET @tmpAddedBy = NULL&#xD;&#xA;" StatementId="3" StatementCompId="4" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;SET @tmpUpdateDate = NULL&#xD;&#xA;&#x9;&#xD;&#xA;" StatementId="4" StatementCompId="5" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtCond StatementText="&#x9;IF (@ElementType = 'Schedule')&#xD;&#xA;" StatementId="5" StatementCompId="6" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtCond StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;IF EXISTS (SELECT sch.Id&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;   FROM dbo.Schedule AS sch&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;   WHERE sch.Id = @ElementId)&#xD;&#xA;&#x9;" StatementId="6" StatementCompId="7" StatementType="COND WITH QUERY" RetrievedFromCache="true" StatementSubTreeCost="0.00328854" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x78497BD87B1CEC91" QueryPlanHash="0x6A95A9097DB46953" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+                <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <Condition>
+                  <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="2" CompileCPU="2" CompileMemory="408">
+                    <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                    <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                    <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328854" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Column="Expr1002" />
+                      </OutputList>
+                      <ComputeScalar>
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1002" />
+                            <ScalarOperator ScalarString="CASE WHEN [Expr1003] THEN (1) ELSE (0) END">
+                              <IF>
+                                <Condition>
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Expr1003" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Condition>
+                                <Then>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(1)" />
+                                  </ScalarOperator>
+                                </Then>
+                                <Else>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(0)" />
+                                  </ScalarOperator>
+                                </Else>
+                              </IF>
+                            </ScalarOperator>
+                          </DefinedValue>
+                        </DefinedValues>
+                        <RelOp NodeId="1" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.00328844" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Column="Expr1003" />
+                          </OutputList>
+                          <NestedLoops Optimized="0">
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Column="Expr1003" />
+                              </DefinedValue>
+                            </DefinedValues>
+                            <ProbeColumn>
+                              <ColumnReference Column="Expr1003" />
+                            </ProbeColumn>
+                            <RelOp NodeId="2" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList />
+                              <ConstantScan />
+                            </RelOp>
+                            <RelOp NodeId="3" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.44031e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList />
+                              <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                <DefinedValues />
+                                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Index="[Schedule_PK]" Alias="[sch]" IndexKind="Clustered" />
+                                <SeekPredicates>
+                                  <SeekPredicateNew>
+                                    <SeekKeys>
+                                      <Prefix ScanType="EQ">
+                                        <RangeColumns>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Alias="[sch]" Column="Id" />
+                                        </RangeColumns>
+                                        <RangeExpressions>
+                                          <ScalarOperator ScalarString="[@ElementId]">
+                                            <Identifier>
+                                              <ColumnReference Column="@ElementId" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </RangeExpressions>
+                                      </Prefix>
+                                    </SeekKeys>
+                                  </SeekPredicateNew>
+                                </SeekPredicates>
+                              </IndexScan>
+                            </RelOp>
+                          </NestedLoops>
+                        </RelOp>
+                      </ComputeScalar>
+                    </RelOp>
+                    <ParameterList>
+                      <ColumnReference Column="@ElementId" ParameterCompiledValue="(1482441)" />
+                    </ParameterList>
+                  </QueryPlan>
+                </Condition>
+                <Then>
+                  <Statements>
+                    <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;&#x9;-- Find out if there are any comments currently&#xD;&#xA;&#x9;&#x9;&#x9;-- if not, update the main table&#xD;&#xA;&#x9;&#x9;&#x9;SELECT @tmpComments = sch.Comments,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;   @tmpAddedBy = sch.CommentAddedBy,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;   @tmpUpdateDate = sch.CommentUpdateTime&#xD;&#xA;&#x9;&#x9;&#x9;FROM dbo.Schedule AS sch&#xD;&#xA;&#x9;&#x9;&#x9;WHERE sch.Id = @ElementId&#xD;&#xA;&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;" StatementId="7" StatementCompId="8" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032831" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x7F8F4AAF7B529A89" QueryPlanHash="0xE7549CA345882323">
+                      <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                      <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="1" CompileCPU="1" CompileMemory="344">
+                        <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                        <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                        <RelOp NodeId="0" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="1071" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.44031e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Alias="[sch]" Column="Comments" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Alias="[sch]" Column="CommentAddedBy" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Alias="[sch]" Column="CommentUpdateTime" />
+                          </OutputList>
+                          <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Alias="[sch]" Column="Comments" />
+                              </DefinedValue>
+                              <DefinedValue>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Alias="[sch]" Column="CommentAddedBy" />
+                              </DefinedValue>
+                              <DefinedValue>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Alias="[sch]" Column="CommentUpdateTime" />
+                              </DefinedValue>
+                            </DefinedValues>
+                            <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Index="[Schedule_PK]" Alias="[sch]" IndexKind="Clustered" />
+                            <SeekPredicates>
+                              <SeekPredicateNew>
+                                <SeekKeys>
+                                  <Prefix ScanType="EQ">
+                                    <RangeColumns>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Alias="[sch]" Column="Id" />
+                                    </RangeColumns>
+                                    <RangeExpressions>
+                                      <ScalarOperator ScalarString="[@ElementId]">
+                                        <Identifier>
+                                          <ColumnReference Column="@ElementId" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </RangeExpressions>
+                                  </Prefix>
+                                </SeekKeys>
+                              </SeekPredicateNew>
+                            </SeekPredicates>
+                          </IndexScan>
+                        </RelOp>
+                        <ParameterList>
+                          <ColumnReference Column="@ElementId" ParameterCompiledValue="(1482441)" />
+                        </ParameterList>
+                      </QueryPlan>
+                    </StmtSimple>
+                    <StmtCond StatementText="&#x9;IF (@tmpComments IS NOT NULL)&#xD;&#xA;&#x9;&#x9;" StatementId="8" StatementCompId="9" StatementType="COND" RetrievedFromCache="true">
+                      <Condition />
+                      <Then>
+                        <Statements>
+                          <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;--Write the current comments to the history table&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;INSERT INTO dbo.ScheduleCommentHistory &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;(&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; Comments, &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; ScheduleId,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; AddedBy, &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; UpdateTime&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;)&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;VALUES&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;(&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;@tmpComments,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;@ElementId,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;@tmpAddedBy,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;@tmpUpdateDate&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9; )&#xD;&#xA;&#x9;&#x9;" StatementId="9" StatementCompId="10" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.0200033" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0xE6E1F7011C1A2260" QueryPlanHash="0xAC9979B0C5BC8775">
+                            <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                            <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="0" CompileCPU="0" CompileMemory="320">
+                              <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                              <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                              <RelOp NodeId="0" PhysicalOp="Clustered Index Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.02" EstimateCPU="2e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0200033" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList />
+                                <Update DMLRequestSort="0">
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[ScheduleCommentHistory]" Index="[PK_ScheduleCommentHistory]" IndexKind="Clustered" />
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[ScheduleCommentHistory]" Index="[ScheduleCommentHistory_IX_ScheduleId_INC_Comments_AddedBy_UpdateTime]" IndexKind="NonClustered" />
+                                  <SetPredicate>
+                                    <ScalarOperator ScalarString="[OurLabReporting].[dbo].[ScheduleCommentHistory].[Comments] = [@tmpComments],[OurLabReporting].[dbo].[ScheduleCommentHistory].[ScheduleId] = RaiseIfNullInsert([@ElementId]),[OurLabReporting].[dbo].[ScheduleCommentHistory].[AddedBy] = RaiseIfNullInsert([@tmpAddedBy]),[OurLabReporting].[dbo].[ScheduleCommentHistory].[UpdateTime] = RaiseIfNullInsert([@tmpUpdateDate]),[OurLabReporting].[dbo].[ScheduleCommentHistory].[Id] = [Expr1003]">
+                                      <ScalarExpressionList>
+                                        <ScalarOperator>
+                                          <MultipleAssign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ScheduleCommentHistory]" Column="Comments" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@tmpComments" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ScheduleCommentHistory]" Column="ScheduleId" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@ElementId" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ScheduleCommentHistory]" Column="AddedBy" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@tmpAddedBy" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ScheduleCommentHistory]" Column="UpdateTime" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@tmpUpdateDate" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ScheduleCommentHistory]" Column="Id" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="Expr1003" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                          </MultipleAssign>
+                                        </ScalarOperator>
+                                      </ScalarExpressionList>
+                                    </ScalarOperator>
+                                  </SetPredicate>
+                                  <RelOp NodeId="1" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="1.257e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                    <OutputList>
+                                      <ColumnReference Column="Expr1003" />
+                                    </OutputList>
+                                    <ComputeScalar ComputeSequence="1">
+                                      <DefinedValues>
+                                        <DefinedValue>
+                                          <ColumnReference Column="Expr1003" />
+                                          <ScalarOperator ScalarString="getidentity((722101613),(6),NULL)">
+                                            <Intrinsic FunctionName="getidentity">
+                                              <ScalarOperator>
+                                                <Const ConstValue="(722101613)" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="(6)" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="NULL" />
+                                              </ScalarOperator>
+                                            </Intrinsic>
+                                          </ScalarOperator>
+                                        </DefinedValue>
+                                      </DefinedValues>
+                                      <RelOp NodeId="2" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                        <OutputList />
+                                        <ConstantScan />
+                                      </RelOp>
+                                    </ComputeScalar>
+                                  </RelOp>
+                                </Update>
+                              </RelOp>
+                              <ParameterList>
+                                <ColumnReference Column="@ElementId" ParameterCompiledValue="(1482441)" />
+                              </ParameterList>
+                            </QueryPlan>
+                          </StmtSimple>
+                        </Statements>
+                      </Then>
+                    </StmtCond>
+                    <StmtSimple StatementText="&#x9;END&#xD;&#xA;&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;&#x9;-- Update the table itself &#xD;&#xA;&#x9;&#x9;&#x9;UPDATE dbo.Schedule&#xD;&#xA;&#x9;&#x9;&#x9;SET Comments = @Comments,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;CommentAddedBy = @AddedBy,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;CommentUpdateTime = GETDATE()&#xD;&#xA;&#x9;&#x9;&#x9;WHERE dbo.Schedule.Id = @ElementId&#xD;&#xA;&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;" StatementId="10" StatementCompId="12" StatementType="UPDATE" RetrievedFromCache="true" StatementSubTreeCost="0.0132842" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0xE5DA1E23938CD11A" QueryPlanHash="0xAE22663E13A2F3D0">
+                      <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                      <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="3" CompileCPU="3" CompileMemory="504">
+                        <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                        <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                        <RelOp NodeId="0" PhysicalOp="Clustered Index Update" LogicalOp="Update" EstimateRows="1" EstimateIO="0.01" EstimateCPU="1e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0132842" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList />
+                          <SimpleUpdate DMLRequestSort="0">
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Column="Expr1003" />
+                                <ScalarOperator ScalarString="getdate()">
+                                  <Identifier>
+                                    <ColumnReference Column="ConstExpr1010">
+                                      <ScalarOperator>
+                                        <Intrinsic FunctionName="getdate" />
+                                      </ScalarOperator>
+                                    </ColumnReference>
+                                  </Identifier>
+                                </ScalarOperator>
+                              </DefinedValue>
+                            </DefinedValues>
+                            <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Index="[Schedule_PK]" IndexKind="Clustered" />
+                            <SeekPredicateNew>
+                              <SeekKeys>
+                                <Prefix ScanType="EQ">
+                                  <RangeColumns>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="Id" />
+                                  </RangeColumns>
+                                  <RangeExpressions>
+                                    <ScalarOperator ScalarString="[@ElementId]">
+                                      <Identifier>
+                                        <ColumnReference Column="@ElementId" />
+                                      </Identifier>
+                                    </ScalarOperator>
+                                  </RangeExpressions>
+                                </Prefix>
+                              </SeekKeys>
+                            </SeekPredicateNew>
+                            <SetPredicate>
+                              <ScalarOperator ScalarString="[OurLabReporting].[dbo].[Schedule].[Comments] = [@Comments],[OurLabReporting].[dbo].[Schedule].[CommentAddedBy] = [@AddedBy],[OurLabReporting].[dbo].[Schedule].[CommentUpdateTime] = [Expr1003]">
+                                <ScalarExpressionList>
+                                  <ScalarOperator>
+                                    <MultipleAssign>
+                                      <Assign>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="Comments" />
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="@Comments" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Assign>
+                                      <Assign>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="CommentAddedBy" />
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="@AddedBy" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Assign>
+                                      <Assign>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="CommentUpdateTime" />
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="Expr1003" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Assign>
+                                    </MultipleAssign>
+                                  </ScalarOperator>
+                                </ScalarExpressionList>
+                              </ScalarOperator>
+                            </SetPredicate>
+                          </SimpleUpdate>
+                        </RelOp>
+                        <ParameterList>
+                          <ColumnReference Column="@AddedBy" ParameterCompiledValue="N'v-mabhau'" />
+                          <ColumnReference Column="@Comments" ParameterCompiledValue="N'Investigating Incident 1509763:Production: MIXID: 1482441- EnvironmentSetup for 2 machines'" />
+                          <ColumnReference Column="@ElementId" ParameterCompiledValue="(1482441)" />
+                        </ParameterList>
+                      </QueryPlan>
+                    </StmtSimple>
+                  </Statements>
+                </Then>
+              </StmtCond>
+            </Statements>
+          </Then>
+          <Else>
+            <Statements>
+              <StmtCond StatementText="&#x9;END &#x9;&#xD;&#xA;&#x9;END&#xD;&#xA;&#x9;ELSE IF (@ElementType = 'Mix')&#xD;&#xA;" StatementId="11" StatementCompId="16" StatementType="COND" RetrievedFromCache="true">
+                <Condition />
+                <Then>
+                  <Statements>
+                    <StmtCond StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;IF EXISTS (SELECT mix.Id&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;   FROM dbo.Mix AS mix&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;   WHERE mix.Id = @ElementId)&#xD;&#xA;&#x9;" StatementId="12" StatementCompId="17" StatementType="COND WITH QUERY" RetrievedFromCache="true" StatementSubTreeCost="0.00328854" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0xB99A20C899622BBC" QueryPlanHash="0x41D472095409B6FE" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+                      <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                      <Condition>
+                        <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="2" CompileCPU="2" CompileMemory="440">
+                          <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                          <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                          <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328854" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList>
+                              <ColumnReference Column="Expr1002" />
+                            </OutputList>
+                            <ComputeScalar>
+                              <DefinedValues>
+                                <DefinedValue>
+                                  <ColumnReference Column="Expr1002" />
+                                  <ScalarOperator ScalarString="CASE WHEN [Expr1003] THEN (1) ELSE (0) END">
+                                    <IF>
+                                      <Condition>
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="Expr1003" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Condition>
+                                      <Then>
+                                        <ScalarOperator>
+                                          <Const ConstValue="(1)" />
+                                        </ScalarOperator>
+                                      </Then>
+                                      <Else>
+                                        <ScalarOperator>
+                                          <Const ConstValue="(0)" />
+                                        </ScalarOperator>
+                                      </Else>
+                                    </IF>
+                                  </ScalarOperator>
+                                </DefinedValue>
+                              </DefinedValues>
+                              <RelOp NodeId="1" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.00328844" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList>
+                                  <ColumnReference Column="Expr1003" />
+                                </OutputList>
+                                <NestedLoops Optimized="0">
+                                  <DefinedValues>
+                                    <DefinedValue>
+                                      <ColumnReference Column="Expr1003" />
+                                    </DefinedValue>
+                                  </DefinedValues>
+                                  <ProbeColumn>
+                                    <ColumnReference Column="Expr1003" />
+                                  </ProbeColumn>
+                                  <RelOp NodeId="2" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                    <OutputList />
+                                    <ConstantScan />
+                                  </RelOp>
+                                  <RelOp NodeId="3" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.48176e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                    <OutputList />
+                                    <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                      <DefinedValues />
+                                      <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Index="[Mix_PK]" Alias="[mix]" IndexKind="Clustered" />
+                                      <SeekPredicates>
+                                        <SeekPredicateNew>
+                                          <SeekKeys>
+                                            <Prefix ScanType="EQ">
+                                              <RangeColumns>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Alias="[mix]" Column="Id" />
+                                              </RangeColumns>
+                                              <RangeExpressions>
+                                                <ScalarOperator ScalarString="[@ElementId]">
+                                                  <Identifier>
+                                                    <ColumnReference Column="@ElementId" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                              </RangeExpressions>
+                                            </Prefix>
+                                          </SeekKeys>
+                                        </SeekPredicateNew>
+                                      </SeekPredicates>
+                                    </IndexScan>
+                                  </RelOp>
+                                </NestedLoops>
+                              </RelOp>
+                            </ComputeScalar>
+                          </RelOp>
+                          <ParameterList>
+                            <ColumnReference Column="@ElementId" ParameterCompiledValue="(1482441)" />
+                          </ParameterList>
+                        </QueryPlan>
+                      </Condition>
+                      <Then>
+                        <Statements>
+                          <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;&#x9;-- Find out if there are any comments currently&#xD;&#xA;&#x9;&#x9;&#x9;-- if not, update the main table&#xD;&#xA;&#x9;&#x9;&#x9;SELECT @tmpComments = mix.Comments,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;   @tmpAddedBy = mix.CommentAddedBy,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;   @tmpUpdateDate = mix.CommentUpdateTime&#xD;&#xA;&#x9;&#x9;&#x9;FROM dbo.Mix AS mix&#xD;&#xA;&#x9;&#x9;&#x9;WHERE mix.Id = @ElementId&#xD;&#xA;&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;" StatementId="13" StatementCompId="18" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032831" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x21B024446F61A0CD" QueryPlanHash="0x7499602292B10BC9">
+                            <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                            <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="0" CompileCPU="0" CompileMemory="368">
+                              <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                              <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                              <RelOp NodeId="0" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="1071" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.48176e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Alias="[mix]" Column="Comments" />
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Alias="[mix]" Column="CommentAddedBy" />
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Alias="[mix]" Column="CommentUpdateTime" />
+                                </OutputList>
+                                <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                  <DefinedValues>
+                                    <DefinedValue>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Alias="[mix]" Column="Comments" />
+                                    </DefinedValue>
+                                    <DefinedValue>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Alias="[mix]" Column="CommentAddedBy" />
+                                    </DefinedValue>
+                                    <DefinedValue>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Alias="[mix]" Column="CommentUpdateTime" />
+                                    </DefinedValue>
+                                  </DefinedValues>
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Index="[Mix_PK]" Alias="[mix]" IndexKind="Clustered" />
+                                  <SeekPredicates>
+                                    <SeekPredicateNew>
+                                      <SeekKeys>
+                                        <Prefix ScanType="EQ">
+                                          <RangeColumns>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Alias="[mix]" Column="Id" />
+                                          </RangeColumns>
+                                          <RangeExpressions>
+                                            <ScalarOperator ScalarString="[@ElementId]">
+                                              <Identifier>
+                                                <ColumnReference Column="@ElementId" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </RangeExpressions>
+                                        </Prefix>
+                                      </SeekKeys>
+                                    </SeekPredicateNew>
+                                  </SeekPredicates>
+                                </IndexScan>
+                              </RelOp>
+                              <ParameterList>
+                                <ColumnReference Column="@ElementId" ParameterCompiledValue="(1482441)" />
+                              </ParameterList>
+                            </QueryPlan>
+                          </StmtSimple>
+                          <StmtCond StatementText="&#x9;IF (@tmpComments IS NOT NULL)&#xD;&#xA;&#x9;&#x9;" StatementId="14" StatementCompId="19" StatementType="COND" RetrievedFromCache="true">
+                            <Condition />
+                            <Then>
+                              <Statements>
+                                <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;--Write the current comments to the history table&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;INSERT INTO dbo.MixCommentHistory &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;(&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; Comments, &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; MixId,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; AddedBy, &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; UpdateTime&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;)&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;VALUES&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;(&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;@tmpComments,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;@ElementId,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;@tmpAddedBy,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;@tmpUpdateDate&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9; )&#xD;&#xA;&#x9;&#x9;" StatementId="15" StatementCompId="20" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.0200033" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x27B31F384CFD43E" QueryPlanHash="0xA785E573EA2BAAFF">
+                                  <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                                  <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="0" CompileCPU="0" CompileMemory="320">
+                                    <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                                    <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                                    <RelOp NodeId="0" PhysicalOp="Clustered Index Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.02" EstimateCPU="2e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0200033" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList />
+                                      <Update DMLRequestSort="0">
+                                        <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[MixCommentHistory]" Index="[PK_MixCommentHistory]" IndexKind="Clustered" />
+                                        <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[MixCommentHistory]" Index="[MixCommentHistory_IX_MixId_INC_Comments_AddedBy_UpdateTime]" IndexKind="NonClustered" />
+                                        <SetPredicate>
+                                          <ScalarOperator ScalarString="[OurLabReporting].[dbo].[MixCommentHistory].[Comments] = [@tmpComments],[OurLabReporting].[dbo].[MixCommentHistory].[MixId] = RaiseIfNullInsert([@ElementId]),[OurLabReporting].[dbo].[MixCommentHistory].[AddedBy] = RaiseIfNullInsert([@tmpAddedBy]),[OurLabReporting].[dbo].[MixCommentHistory].[UpdateTime] = RaiseIfNullInsert([@tmpUpdateDate]),[OurLabReporting].[dbo].[MixCommentHistory].[Id] = [Expr1003]">
+                                            <ScalarExpressionList>
+                                              <ScalarOperator>
+                                                <MultipleAssign>
+                                                  <Assign>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MixCommentHistory]" Column="Comments" />
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Column="@tmpComments" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                  </Assign>
+                                                  <Assign>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MixCommentHistory]" Column="MixId" />
+                                                    <ScalarOperator>
+                                                      <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                        <ScalarOperator>
+                                                          <Identifier>
+                                                            <ColumnReference Column="@ElementId" />
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                      </Intrinsic>
+                                                    </ScalarOperator>
+                                                  </Assign>
+                                                  <Assign>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MixCommentHistory]" Column="AddedBy" />
+                                                    <ScalarOperator>
+                                                      <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                        <ScalarOperator>
+                                                          <Identifier>
+                                                            <ColumnReference Column="@tmpAddedBy" />
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                      </Intrinsic>
+                                                    </ScalarOperator>
+                                                  </Assign>
+                                                  <Assign>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MixCommentHistory]" Column="UpdateTime" />
+                                                    <ScalarOperator>
+                                                      <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                        <ScalarOperator>
+                                                          <Identifier>
+                                                            <ColumnReference Column="@tmpUpdateDate" />
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                      </Intrinsic>
+                                                    </ScalarOperator>
+                                                  </Assign>
+                                                  <Assign>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MixCommentHistory]" Column="Id" />
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Column="Expr1003" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                  </Assign>
+                                                </MultipleAssign>
+                                              </ScalarOperator>
+                                            </ScalarExpressionList>
+                                          </ScalarOperator>
+                                        </SetPredicate>
+                                        <RelOp NodeId="1" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="1.257e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                          <OutputList>
+                                            <ColumnReference Column="Expr1003" />
+                                          </OutputList>
+                                          <ComputeScalar ComputeSequence="1">
+                                            <DefinedValues>
+                                              <DefinedValue>
+                                                <ColumnReference Column="Expr1003" />
+                                                <ScalarOperator ScalarString="getidentity((1989582126),(6),NULL)">
+                                                  <Intrinsic FunctionName="getidentity">
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="(1989582126)" />
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="(6)" />
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="NULL" />
+                                                    </ScalarOperator>
+                                                  </Intrinsic>
+                                                </ScalarOperator>
+                                              </DefinedValue>
+                                            </DefinedValues>
+                                            <RelOp NodeId="2" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                              <OutputList />
+                                              <ConstantScan />
+                                            </RelOp>
+                                          </ComputeScalar>
+                                        </RelOp>
+                                      </Update>
+                                    </RelOp>
+                                    <ParameterList>
+                                      <ColumnReference Column="@ElementId" ParameterCompiledValue="(1482441)" />
+                                    </ParameterList>
+                                  </QueryPlan>
+                                </StmtSimple>
+                              </Statements>
+                            </Then>
+                          </StmtCond>
+                          <StmtSimple StatementText="&#x9;END&#xD;&#xA;&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;&#x9;-- Update the table itself &#xD;&#xA;&#x9;&#x9;&#x9;UPDATE dbo.Mix&#xD;&#xA;&#x9;&#x9;&#x9;SET Comments = @Comments,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;CommentAddedBy = @AddedBy,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;CommentUpdateTime = GETDATE()&#xD;&#xA;&#x9;&#x9;&#x9;WHERE dbo.Mix.Id = @ElementId&#xD;&#xA;&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;" StatementId="16" StatementCompId="22" StatementType="UPDATE" RetrievedFromCache="true" StatementSubTreeCost="0.0132842" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x421EABE0F4DE9F49" QueryPlanHash="0x3409E5A178EDDFD5">
+                            <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                            <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="24" CompileTime="7" CompileCPU="7" CompileMemory="1072">
+                              <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                              <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                              <RelOp NodeId="0" PhysicalOp="Clustered Index Update" LogicalOp="Update" EstimateRows="1" EstimateIO="0.01" EstimateCPU="1e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0132842" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList />
+                                <SimpleUpdate DMLRequestSort="0">
+                                  <DefinedValues>
+                                    <DefinedValue>
+                                      <ColumnReference Column="Expr1003" />
+                                      <ScalarOperator ScalarString="getdate()">
+                                        <Identifier>
+                                          <ColumnReference Column="ConstExpr1041">
+                                            <ScalarOperator>
+                                              <Intrinsic FunctionName="getdate" />
+                                            </ScalarOperator>
+                                          </ColumnReference>
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </DefinedValue>
+                                  </DefinedValues>
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Index="[Mix_PK]" IndexKind="Clustered" />
+                                  <SeekPredicateNew>
+                                    <SeekKeys>
+                                      <Prefix ScanType="EQ">
+                                        <RangeColumns>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Column="Id" />
+                                        </RangeColumns>
+                                        <RangeExpressions>
+                                          <ScalarOperator ScalarString="[@ElementId]">
+                                            <Identifier>
+                                              <ColumnReference Column="@ElementId" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </RangeExpressions>
+                                      </Prefix>
+                                    </SeekKeys>
+                                  </SeekPredicateNew>
+                                  <SetPredicate>
+                                    <ScalarOperator ScalarString="[OurLabReporting].[dbo].[Mix].[Comments] = [@Comments],[OurLabReporting].[dbo].[Mix].[CommentAddedBy] = [@AddedBy],[OurLabReporting].[dbo].[Mix].[CommentUpdateTime] = [Expr1003]">
+                                      <ScalarExpressionList>
+                                        <ScalarOperator>
+                                          <MultipleAssign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Column="Comments" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@Comments" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Column="CommentAddedBy" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@AddedBy" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Column="CommentUpdateTime" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="Expr1003" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                          </MultipleAssign>
+                                        </ScalarOperator>
+                                      </ScalarExpressionList>
+                                    </ScalarOperator>
+                                  </SetPredicate>
+                                </SimpleUpdate>
+                              </RelOp>
+                              <ParameterList>
+                                <ColumnReference Column="@AddedBy" ParameterCompiledValue="N'v-mabhau'" />
+                                <ColumnReference Column="@Comments" ParameterCompiledValue="N'Investigating Incident 1509763:Production: MIXID: 1482441- EnvironmentSetup for 2 machines'" />
+                                <ColumnReference Column="@ElementId" ParameterCompiledValue="(1482441)" />
+                              </ParameterList>
+                            </QueryPlan>
+                          </StmtSimple>
+                        </Statements>
+                      </Then>
+                    </StmtCond>
+                  </Statements>
+                </Then>
+                <Else>
+                  <Statements>
+                    <StmtCond StatementText="&#x9;END &#x9;&#xD;&#xA;&#xD;&#xA;&#x9;END&#xD;&#xA;&#x9;ELSE IF (@ElementType = 'Environment' OR @ElementType = 'ResolvedTED')&#xD;&#xA;" StatementId="17" StatementCompId="26" StatementType="COND" RetrievedFromCache="true">
+                      <Condition />
+                      <Then>
+                        <Statements>
+                          <StmtCond StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;IF EXISTS (SELECT rTED.Id&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;   FROM dbo.ResolvedTED AS rTED&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;   WHERE rTED.Id = @ElementId)&#xD;&#xA;&#x9;" StatementId="18" StatementCompId="27" StatementType="COND WITH QUERY" RetrievedFromCache="true" StatementSubTreeCost="0.00328854" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x4C1D767D94ED681B" QueryPlanHash="0x3A76A6312A7265DD" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+                            <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                            <Condition>
+                              <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="1" CompileCPU="1" CompileMemory="400">
+                                <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                                <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                                <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328854" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Column="Expr1002" />
+                                  </OutputList>
+                                  <ComputeScalar>
+                                    <DefinedValues>
+                                      <DefinedValue>
+                                        <ColumnReference Column="Expr1002" />
+                                        <ScalarOperator ScalarString="CASE WHEN [Expr1003] THEN (1) ELSE (0) END">
+                                          <IF>
+                                            <Condition>
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="Expr1003" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Condition>
+                                            <Then>
+                                              <ScalarOperator>
+                                                <Const ConstValue="(1)" />
+                                              </ScalarOperator>
+                                            </Then>
+                                            <Else>
+                                              <ScalarOperator>
+                                                <Const ConstValue="(0)" />
+                                              </ScalarOperator>
+                                            </Else>
+                                          </IF>
+                                        </ScalarOperator>
+                                      </DefinedValue>
+                                    </DefinedValues>
+                                    <RelOp NodeId="1" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.00328844" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList>
+                                        <ColumnReference Column="Expr1003" />
+                                      </OutputList>
+                                      <NestedLoops Optimized="0">
+                                        <DefinedValues>
+                                          <DefinedValue>
+                                            <ColumnReference Column="Expr1003" />
+                                          </DefinedValue>
+                                        </DefinedValues>
+                                        <ProbeColumn>
+                                          <ColumnReference Column="Expr1003" />
+                                        </ProbeColumn>
+                                        <RelOp NodeId="2" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                          <OutputList />
+                                          <ConstantScan />
+                                        </RelOp>
+                                        <RelOp NodeId="3" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.37084e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                          <OutputList />
+                                          <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                            <DefinedValues />
+                                            <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Index="[ResolvedTED_PK]" Alias="[rTED]" IndexKind="Clustered" />
+                                            <SeekPredicates>
+                                              <SeekPredicateNew>
+                                                <SeekKeys>
+                                                  <Prefix ScanType="EQ">
+                                                    <RangeColumns>
+                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Alias="[rTED]" Column="Id" />
+                                                    </RangeColumns>
+                                                    <RangeExpressions>
+                                                      <ScalarOperator ScalarString="[@ElementId]">
+                                                        <Identifier>
+                                                          <ColumnReference Column="@ElementId" />
+                                                        </Identifier>
+                                                      </ScalarOperator>
+                                                    </RangeExpressions>
+                                                  </Prefix>
+                                                </SeekKeys>
+                                              </SeekPredicateNew>
+                                            </SeekPredicates>
+                                          </IndexScan>
+                                        </RelOp>
+                                      </NestedLoops>
+                                    </RelOp>
+                                  </ComputeScalar>
+                                </RelOp>
+                                <ParameterList>
+                                  <ColumnReference Column="@ElementId" ParameterCompiledValue="(1482441)" />
+                                </ParameterList>
+                              </QueryPlan>
+                            </Condition>
+                            <Then>
+                              <Statements>
+                                <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;&#x9;-- Find out if there are any comments currently&#xD;&#xA;&#x9;&#x9;&#x9;-- if not, update the main table&#xD;&#xA;&#x9;&#x9;&#x9;SELECT @tmpComments = rTED.Comments,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;   @tmpAddedBy = rTED.CommentAddedBy,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;   @tmpUpdateDate = rTED.CommentUpdateTime&#xD;&#xA;&#x9;&#x9;&#x9;FROM dbo.ResolvedTED AS rTED&#xD;&#xA;&#x9;&#x9;&#x9;WHERE rTED.Id = @ElementId&#xD;&#xA;&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;" StatementId="19" StatementCompId="28" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032831" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x648A4D215339CC82" QueryPlanHash="0x4D49E6E42134DE0C">
+                                  <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                                  <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="0" CompileCPU="0" CompileMemory="344">
+                                    <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                                    <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                                    <RelOp NodeId="0" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="1071" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.37084e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Alias="[rTED]" Column="Comments" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Alias="[rTED]" Column="CommentAddedBy" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Alias="[rTED]" Column="CommentUpdateTime" />
+                                      </OutputList>
+                                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                        <DefinedValues>
+                                          <DefinedValue>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Alias="[rTED]" Column="Comments" />
+                                          </DefinedValue>
+                                          <DefinedValue>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Alias="[rTED]" Column="CommentAddedBy" />
+                                          </DefinedValue>
+                                          <DefinedValue>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Alias="[rTED]" Column="CommentUpdateTime" />
+                                          </DefinedValue>
+                                        </DefinedValues>
+                                        <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Index="[ResolvedTED_PK]" Alias="[rTED]" IndexKind="Clustered" />
+                                        <SeekPredicates>
+                                          <SeekPredicateNew>
+                                            <SeekKeys>
+                                              <Prefix ScanType="EQ">
+                                                <RangeColumns>
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Alias="[rTED]" Column="Id" />
+                                                </RangeColumns>
+                                                <RangeExpressions>
+                                                  <ScalarOperator ScalarString="[@ElementId]">
+                                                    <Identifier>
+                                                      <ColumnReference Column="@ElementId" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </RangeExpressions>
+                                              </Prefix>
+                                            </SeekKeys>
+                                          </SeekPredicateNew>
+                                        </SeekPredicates>
+                                      </IndexScan>
+                                    </RelOp>
+                                    <ParameterList>
+                                      <ColumnReference Column="@ElementId" ParameterCompiledValue="(1482441)" />
+                                    </ParameterList>
+                                  </QueryPlan>
+                                </StmtSimple>
+                                <StmtCond StatementText="&#x9;IF (@tmpComments IS NOT NULL)&#xD;&#xA;&#x9;&#x9;" StatementId="20" StatementCompId="29" StatementType="COND" RetrievedFromCache="true">
+                                  <Condition />
+                                  <Then>
+                                    <Statements>
+                                      <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;--Write the current comments to the history table&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;INSERT INTO dbo.ResolvedTEDCommentHistory &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;(&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; Comments, &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; ResolvedTEDId,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; AddedBy, &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; UpdateTime&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;)&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;VALUES&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;(&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;@tmpComments,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;@ElementId,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;@tmpAddedBy,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;@tmpUpdateDate&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9; )&#xD;&#xA;&#x9;&#x9;" StatementId="21" StatementCompId="30" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.0200033" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x8F022FFC1AD06AF" QueryPlanHash="0xF942E186379544E1">
+                                        <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                                        <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="0" CompileCPU="0" CompileMemory="320">
+                                          <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                                          <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                                          <RelOp NodeId="0" PhysicalOp="Clustered Index Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.02" EstimateCPU="2e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0200033" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                            <OutputList />
+                                            <Update DMLRequestSort="0">
+                                              <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTEDCommentHistory]" Index="[PK_ResolvedTEDCommentHistory]" IndexKind="Clustered" />
+                                              <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTEDCommentHistory]" Index="[ResolvedTEDCommentHistory_IX_ResolvedTEDId_INC_Comments_AddedBy_UpdateTime]" IndexKind="NonClustered" />
+                                              <SetPredicate>
+                                                <ScalarOperator ScalarString="[OurLabReporting].[dbo].[ResolvedTEDCommentHistory].[Comments] = [@tmpComments],[OurLabReporting].[dbo].[ResolvedTEDCommentHistory].[ResolvedTEDId] = RaiseIfNullInsert([@ElementId]),[OurLabReporting].[dbo].[ResolvedTEDCommentHistory].[AddedBy] = RaiseIfNullInsert([@tmpAddedBy]),[OurLabReporting].[dbo].[ResolvedTEDCommentHistory].[UpdateTime] = RaiseIfNullInsert([@tmpUpdateDate]),[OurLabReporting].[dbo].[ResolvedTEDCommentHistory].[Id] = [Expr1003]">
+                                                  <ScalarExpressionList>
+                                                    <ScalarOperator>
+                                                      <MultipleAssign>
+                                                        <Assign>
+                                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTEDCommentHistory]" Column="Comments" />
+                                                          <ScalarOperator>
+                                                            <Identifier>
+                                                              <ColumnReference Column="@tmpComments" />
+                                                            </Identifier>
+                                                          </ScalarOperator>
+                                                        </Assign>
+                                                        <Assign>
+                                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTEDCommentHistory]" Column="ResolvedTEDId" />
+                                                          <ScalarOperator>
+                                                            <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Column="@ElementId" />
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                            </Intrinsic>
+                                                          </ScalarOperator>
+                                                        </Assign>
+                                                        <Assign>
+                                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTEDCommentHistory]" Column="AddedBy" />
+                                                          <ScalarOperator>
+                                                            <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Column="@tmpAddedBy" />
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                            </Intrinsic>
+                                                          </ScalarOperator>
+                                                        </Assign>
+                                                        <Assign>
+                                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTEDCommentHistory]" Column="UpdateTime" />
+                                                          <ScalarOperator>
+                                                            <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Column="@tmpUpdateDate" />
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                            </Intrinsic>
+                                                          </ScalarOperator>
+                                                        </Assign>
+                                                        <Assign>
+                                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTEDCommentHistory]" Column="Id" />
+                                                          <ScalarOperator>
+                                                            <Identifier>
+                                                              <ColumnReference Column="Expr1003" />
+                                                            </Identifier>
+                                                          </ScalarOperator>
+                                                        </Assign>
+                                                      </MultipleAssign>
+                                                    </ScalarOperator>
+                                                  </ScalarExpressionList>
+                                                </ScalarOperator>
+                                              </SetPredicate>
+                                              <RelOp NodeId="1" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="1.257e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                <OutputList>
+                                                  <ColumnReference Column="Expr1003" />
+                                                </OutputList>
+                                                <ComputeScalar ComputeSequence="1">
+                                                  <DefinedValues>
+                                                    <DefinedValue>
+                                                      <ColumnReference Column="Expr1003" />
+                                                      <ScalarOperator ScalarString="getidentity((530100929),(6),NULL)">
+                                                        <Intrinsic FunctionName="getidentity">
+                                                          <ScalarOperator>
+                                                            <Const ConstValue="(530100929)" />
+                                                          </ScalarOperator>
+                                                          <ScalarOperator>
+                                                            <Const ConstValue="(6)" />
+                                                          </ScalarOperator>
+                                                          <ScalarOperator>
+                                                            <Const ConstValue="NULL" />
+                                                          </ScalarOperator>
+                                                        </Intrinsic>
+                                                      </ScalarOperator>
+                                                    </DefinedValue>
+                                                  </DefinedValues>
+                                                  <RelOp NodeId="2" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                    <OutputList />
+                                                    <ConstantScan />
+                                                  </RelOp>
+                                                </ComputeScalar>
+                                              </RelOp>
+                                            </Update>
+                                          </RelOp>
+                                          <ParameterList>
+                                            <ColumnReference Column="@ElementId" ParameterCompiledValue="(1482441)" />
+                                          </ParameterList>
+                                        </QueryPlan>
+                                      </StmtSimple>
+                                    </Statements>
+                                  </Then>
+                                </StmtCond>
+                                <StmtSimple StatementText="&#x9;END&#xD;&#xA;&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;&#x9;-- Update the table itself &#xD;&#xA;&#x9;&#x9;&#x9;UPDATE dbo.ResolvedTED&#xD;&#xA;&#x9;&#x9;&#x9;SET Comments = @Comments,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;CommentAddedBy = @AddedBy,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;CommentUpdateTime = GETDATE()&#xD;&#xA;&#x9;&#x9;&#x9;WHERE dbo.ResolvedTED.Id = @ElementId&#xD;&#xA;&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;" StatementId="22" StatementCompId="32" StatementType="UPDATE" RetrievedFromCache="true" StatementSubTreeCost="0.0132842" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0xA125F1AA4D63C61" QueryPlanHash="0xD985373F73117C69">
+                                  <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                                  <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="2" CompileCPU="2" CompileMemory="496">
+                                    <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                                    <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                                    <RelOp NodeId="0" PhysicalOp="Clustered Index Update" LogicalOp="Update" EstimateRows="1" EstimateIO="0.01" EstimateCPU="1e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0132842" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList />
+                                      <SimpleUpdate DMLRequestSort="0">
+                                        <DefinedValues>
+                                          <DefinedValue>
+                                            <ColumnReference Column="Expr1003" />
+                                            <ScalarOperator ScalarString="getdate()">
+                                              <Identifier>
+                                                <ColumnReference Column="ConstExpr1010">
+                                                  <ScalarOperator>
+                                                    <Intrinsic FunctionName="getdate" />
+                                                  </ScalarOperator>
+                                                </ColumnReference>
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </DefinedValue>
+                                        </DefinedValues>
+                                        <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Index="[ResolvedTED_PK]" IndexKind="Clustered" />
+                                        <SeekPredicateNew>
+                                          <SeekKeys>
+                                            <Prefix ScanType="EQ">
+                                              <RangeColumns>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Column="Id" />
+                                              </RangeColumns>
+                                              <RangeExpressions>
+                                                <ScalarOperator ScalarString="[@ElementId]">
+                                                  <Identifier>
+                                                    <ColumnReference Column="@ElementId" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                              </RangeExpressions>
+                                            </Prefix>
+                                          </SeekKeys>
+                                        </SeekPredicateNew>
+                                        <SetPredicate>
+                                          <ScalarOperator ScalarString="[OurLabReporting].[dbo].[ResolvedTED].[Comments] = [@Comments],[OurLabReporting].[dbo].[ResolvedTED].[CommentAddedBy] = [@AddedBy],[OurLabReporting].[dbo].[ResolvedTED].[CommentUpdateTime] = [Expr1003]">
+                                            <ScalarExpressionList>
+                                              <ScalarOperator>
+                                                <MultipleAssign>
+                                                  <Assign>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Column="Comments" />
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Column="@Comments" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                  </Assign>
+                                                  <Assign>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Column="CommentAddedBy" />
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Column="@AddedBy" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                  </Assign>
+                                                  <Assign>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Column="CommentUpdateTime" />
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Column="Expr1003" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                  </Assign>
+                                                </MultipleAssign>
+                                              </ScalarOperator>
+                                            </ScalarExpressionList>
+                                          </ScalarOperator>
+                                        </SetPredicate>
+                                      </SimpleUpdate>
+                                    </RelOp>
+                                    <ParameterList>
+                                      <ColumnReference Column="@AddedBy" ParameterCompiledValue="N'v-mabhau'" />
+                                      <ColumnReference Column="@Comments" ParameterCompiledValue="N'Investigating Incident 1509763:Production: MIXID: 1482441- EnvironmentSetup for 2 machines'" />
+                                      <ColumnReference Column="@ElementId" ParameterCompiledValue="(1482441)" />
+                                    </ParameterList>
+                                  </QueryPlan>
+                                </StmtSimple>
+                              </Statements>
+                            </Then>
+                          </StmtCond>
+                        </Statements>
+                      </Then>
+                      <Else>
+                        <Statements>
+                          <StmtCond StatementText="&#x9;END &#x9;&#xD;&#xA;&#xD;&#xA;&#x9;END&#xD;&#xA;&#x9;ELSE IF (@ElementType = 'MachineSet')&#xD;&#xA;" StatementId="23" StatementCompId="36" StatementType="COND" RetrievedFromCache="true">
+                            <Condition />
+                            <Then>
+                              <Statements>
+                                <StmtCond StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;IF EXISTS (SELECT ms.Id&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;   FROM dbo.MachineSet AS ms&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;   WHERE ms.Id = @ElementId)&#xD;&#xA;&#x9;" StatementId="24" StatementCompId="37" StatementType="COND WITH QUERY" RetrievedFromCache="true" StatementSubTreeCost="0.00328854" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0xFAE368D6289C0508" QueryPlanHash="0x6BB57FD2930E15CC" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+                                  <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                                  <Condition>
+                                    <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="1" CompileCPU="1" CompileMemory="408">
+                                      <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                                      <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                                      <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328854" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                        <OutputList>
+                                          <ColumnReference Column="Expr1002" />
+                                        </OutputList>
+                                        <ComputeScalar>
+                                          <DefinedValues>
+                                            <DefinedValue>
+                                              <ColumnReference Column="Expr1002" />
+                                              <ScalarOperator ScalarString="CASE WHEN [Expr1003] THEN (1) ELSE (0) END">
+                                                <IF>
+                                                  <Condition>
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Column="Expr1003" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                  </Condition>
+                                                  <Then>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="(1)" />
+                                                    </ScalarOperator>
+                                                  </Then>
+                                                  <Else>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="(0)" />
+                                                    </ScalarOperator>
+                                                  </Else>
+                                                </IF>
+                                              </ScalarOperator>
+                                            </DefinedValue>
+                                          </DefinedValues>
+                                          <RelOp NodeId="1" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.00328844" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                            <OutputList>
+                                              <ColumnReference Column="Expr1003" />
+                                            </OutputList>
+                                            <NestedLoops Optimized="0">
+                                              <DefinedValues>
+                                                <DefinedValue>
+                                                  <ColumnReference Column="Expr1003" />
+                                                </DefinedValue>
+                                              </DefinedValues>
+                                              <ProbeColumn>
+                                                <ColumnReference Column="Expr1003" />
+                                              </ProbeColumn>
+                                              <RelOp NodeId="2" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                <OutputList />
+                                                <ConstantScan />
+                                              </RelOp>
+                                              <RelOp NodeId="3" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.23247e+007" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                <OutputList />
+                                                <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                                  <DefinedValues />
+                                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Index="[MachineSet_PK]" Alias="[ms]" IndexKind="Clustered" />
+                                                  <SeekPredicates>
+                                                    <SeekPredicateNew>
+                                                      <SeekKeys>
+                                                        <Prefix ScanType="EQ">
+                                                          <RangeColumns>
+                                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[ms]" Column="Id" />
+                                                          </RangeColumns>
+                                                          <RangeExpressions>
+                                                            <ScalarOperator ScalarString="[@ElementId]">
+                                                              <Identifier>
+                                                                <ColumnReference Column="@ElementId" />
+                                                              </Identifier>
+                                                            </ScalarOperator>
+                                                          </RangeExpressions>
+                                                        </Prefix>
+                                                      </SeekKeys>
+                                                    </SeekPredicateNew>
+                                                  </SeekPredicates>
+                                                </IndexScan>
+                                              </RelOp>
+                                            </NestedLoops>
+                                          </RelOp>
+                                        </ComputeScalar>
+                                      </RelOp>
+                                      <ParameterList>
+                                        <ColumnReference Column="@ElementId" ParameterCompiledValue="(1482441)" />
+                                      </ParameterList>
+                                    </QueryPlan>
+                                  </Condition>
+                                  <Then>
+                                    <Statements>
+                                      <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;&#x9;-- Find out if there are any comments currently&#xD;&#xA;&#x9;&#x9;&#x9;-- if not, update the main table&#xD;&#xA;&#x9;&#x9;&#x9;SELECT @tmpComments = ms.Comments,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;   @tmpAddedBy = ms.CommentAddedBy,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;   @tmpUpdateDate = ms.CommentUpdateTime&#xD;&#xA;&#x9;&#x9;&#x9;FROM dbo.MachineSet AS ms&#xD;&#xA;&#x9;&#x9;&#x9;WHERE ms.Id = @ElementId&#xD;&#xA;&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;" StatementId="25" StatementCompId="38" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032831" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x6DFF27123EAE9291" QueryPlanHash="0x6F3C712BCB9FD94B">
+                                        <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                                        <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="0" CompileCPU="0" CompileMemory="352">
+                                          <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                                          <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                                          <RelOp NodeId="0" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="1071" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.23247e+007" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                            <OutputList>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[ms]" Column="Comments" />
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[ms]" Column="CommentAddedBy" />
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[ms]" Column="CommentUpdateTime" />
+                                            </OutputList>
+                                            <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                              <DefinedValues>
+                                                <DefinedValue>
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[ms]" Column="Comments" />
+                                                </DefinedValue>
+                                                <DefinedValue>
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[ms]" Column="CommentAddedBy" />
+                                                </DefinedValue>
+                                                <DefinedValue>
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[ms]" Column="CommentUpdateTime" />
+                                                </DefinedValue>
+                                              </DefinedValues>
+                                              <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Index="[MachineSet_PK]" Alias="[ms]" IndexKind="Clustered" />
+                                              <SeekPredicates>
+                                                <SeekPredicateNew>
+                                                  <SeekKeys>
+                                                    <Prefix ScanType="EQ">
+                                                      <RangeColumns>
+                                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[ms]" Column="Id" />
+                                                      </RangeColumns>
+                                                      <RangeExpressions>
+                                                        <ScalarOperator ScalarString="[@ElementId]">
+                                                          <Identifier>
+                                                            <ColumnReference Column="@ElementId" />
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                      </RangeExpressions>
+                                                    </Prefix>
+                                                  </SeekKeys>
+                                                </SeekPredicateNew>
+                                              </SeekPredicates>
+                                            </IndexScan>
+                                          </RelOp>
+                                          <ParameterList>
+                                            <ColumnReference Column="@ElementId" ParameterCompiledValue="(1482441)" />
+                                          </ParameterList>
+                                        </QueryPlan>
+                                      </StmtSimple>
+                                      <StmtCond StatementText="&#x9;IF (@tmpComments IS NOT NULL)&#xD;&#xA;&#x9;&#x9;" StatementId="26" StatementCompId="39" StatementType="COND" RetrievedFromCache="true">
+                                        <Condition />
+                                        <Then>
+                                          <Statements>
+                                            <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;--Write the current comments to the history table&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;INSERT INTO dbo.MachineSetCommentHistory &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;(&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; Comments, &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; MachineSetId,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; AddedBy, &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; UpdateTime&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;)&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;VALUES&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;(&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;@tmpComments,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;@ElementId,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;@tmpAddedBy,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;@tmpUpdateDate&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9; )&#xD;&#xA;&#x9;&#x9;" StatementId="27" StatementCompId="40" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.0200033" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0xFED97DCA1F3A55F" QueryPlanHash="0x16B1465A9B73A03B">
+                                              <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                                              <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="0" CompileCPU="0" CompileMemory="320">
+                                                <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                                                <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                                                <RelOp NodeId="0" PhysicalOp="Clustered Index Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.02" EstimateCPU="2e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0200033" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                  <OutputList />
+                                                  <Update DMLRequestSort="0">
+                                                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSetCommentHistory]" Index="[PK_MachineSetCommentHistory]" IndexKind="Clustered" />
+                                                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSetCommentHistory]" Index="[MachineSetCommentHistory_IX_MachineSetId_INC_Comments_AddedBy_UpdateTime]" IndexKind="NonClustered" />
+                                                    <SetPredicate>
+                                                      <ScalarOperator ScalarString="[OurLabReporting].[dbo].[MachineSetCommentHistory].[Comments] = [@tmpComments],[OurLabReporting].[dbo].[MachineSetCommentHistory].[MachineSetId] = RaiseIfNullInsert([@ElementId]),[OurLabReporting].[dbo].[MachineSetCommentHistory].[AddedBy] = RaiseIfNullInsert([@tmpAddedBy]),[OurLabReporting].[dbo].[MachineSetCommentHistory].[UpdateTime] = RaiseIfNullInsert([@tmpUpdateDate]),[OurLabReporting].[dbo].[MachineSetCommentHistory].[Id] = [Expr1003]">
+                                                        <ScalarExpressionList>
+                                                          <ScalarOperator>
+                                                            <MultipleAssign>
+                                                              <Assign>
+                                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSetCommentHistory]" Column="Comments" />
+                                                                <ScalarOperator>
+                                                                  <Identifier>
+                                                                    <ColumnReference Column="@tmpComments" />
+                                                                  </Identifier>
+                                                                </ScalarOperator>
+                                                              </Assign>
+                                                              <Assign>
+                                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSetCommentHistory]" Column="MachineSetId" />
+                                                                <ScalarOperator>
+                                                                  <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                                    <ScalarOperator>
+                                                                      <Identifier>
+                                                                        <ColumnReference Column="@ElementId" />
+                                                                      </Identifier>
+                                                                    </ScalarOperator>
+                                                                  </Intrinsic>
+                                                                </ScalarOperator>
+                                                              </Assign>
+                                                              <Assign>
+                                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSetCommentHistory]" Column="AddedBy" />
+                                                                <ScalarOperator>
+                                                                  <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                                    <ScalarOperator>
+                                                                      <Identifier>
+                                                                        <ColumnReference Column="@tmpAddedBy" />
+                                                                      </Identifier>
+                                                                    </ScalarOperator>
+                                                                  </Intrinsic>
+                                                                </ScalarOperator>
+                                                              </Assign>
+                                                              <Assign>
+                                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSetCommentHistory]" Column="UpdateTime" />
+                                                                <ScalarOperator>
+                                                                  <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                                    <ScalarOperator>
+                                                                      <Identifier>
+                                                                        <ColumnReference Column="@tmpUpdateDate" />
+                                                                      </Identifier>
+                                                                    </ScalarOperator>
+                                                                  </Intrinsic>
+                                                                </ScalarOperator>
+                                                              </Assign>
+                                                              <Assign>
+                                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSetCommentHistory]" Column="Id" />
+                                                                <ScalarOperator>
+                                                                  <Identifier>
+                                                                    <ColumnReference Column="Expr1003" />
+                                                                  </Identifier>
+                                                                </ScalarOperator>
+                                                              </Assign>
+                                                            </MultipleAssign>
+                                                          </ScalarOperator>
+                                                        </ScalarExpressionList>
+                                                      </ScalarOperator>
+                                                    </SetPredicate>
+                                                    <RelOp NodeId="1" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="1.257e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                      <OutputList>
+                                                        <ColumnReference Column="Expr1003" />
+                                                      </OutputList>
+                                                      <ComputeScalar ComputeSequence="1">
+                                                        <DefinedValues>
+                                                          <DefinedValue>
+                                                            <ColumnReference Column="Expr1003" />
+                                                            <ScalarOperator ScalarString="getidentity((1829581556),(6),NULL)">
+                                                              <Intrinsic FunctionName="getidentity">
+                                                                <ScalarOperator>
+                                                                  <Const ConstValue="(1829581556)" />
+                                                                </ScalarOperator>
+                                                                <ScalarOperator>
+                                                                  <Const ConstValue="(6)" />
+                                                                </ScalarOperator>
+                                                                <ScalarOperator>
+                                                                  <Const ConstValue="NULL" />
+                                                                </ScalarOperator>
+                                                              </Intrinsic>
+                                                            </ScalarOperator>
+                                                          </DefinedValue>
+                                                        </DefinedValues>
+                                                        <RelOp NodeId="2" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                          <OutputList />
+                                                          <ConstantScan />
+                                                        </RelOp>
+                                                      </ComputeScalar>
+                                                    </RelOp>
+                                                  </Update>
+                                                </RelOp>
+                                                <ParameterList>
+                                                  <ColumnReference Column="@ElementId" ParameterCompiledValue="(1482441)" />
+                                                </ParameterList>
+                                              </QueryPlan>
+                                            </StmtSimple>
+                                          </Statements>
+                                        </Then>
+                                      </StmtCond>
+                                      <StmtSimple StatementText="&#x9;END&#xD;&#xA;&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;&#x9;-- Update the table itself &#xD;&#xA;&#x9;&#x9;&#x9;UPDATE dbo.MachineSet&#xD;&#xA;&#x9;&#x9;&#x9;SET Comments = @Comments,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;CommentAddedBy = @AddedBy,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;CommentUpdateTime = GETDATE()&#xD;&#xA;&#x9;&#x9;&#x9;WHERE dbo.MachineSet.Id = @ElementId&#xD;&#xA;&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;" StatementId="28" StatementCompId="42" StatementType="UPDATE" RetrievedFromCache="true" StatementSubTreeCost="0.0132842" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x40518A7C5B19589F" QueryPlanHash="0x4C69ABDA7855823">
+                                        <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                                        <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="1" CompileCPU="1" CompileMemory="512">
+                                          <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                                          <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                                          <RelOp NodeId="0" PhysicalOp="Clustered Index Update" LogicalOp="Update" EstimateRows="1" EstimateIO="0.01" EstimateCPU="1e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0132842" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                            <OutputList />
+                                            <SimpleUpdate DMLRequestSort="0">
+                                              <DefinedValues>
+                                                <DefinedValue>
+                                                  <ColumnReference Column="Expr1003" />
+                                                  <ScalarOperator ScalarString="getdate()">
+                                                    <Identifier>
+                                                      <ColumnReference Column="ConstExpr1010">
+                                                        <ScalarOperator>
+                                                          <Intrinsic FunctionName="getdate" />
+                                                        </ScalarOperator>
+                                                      </ColumnReference>
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </DefinedValue>
+                                              </DefinedValues>
+                                              <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Index="[MachineSet_PK]" IndexKind="Clustered" />
+                                              <SeekPredicateNew>
+                                                <SeekKeys>
+                                                  <Prefix ScanType="EQ">
+                                                    <RangeColumns>
+                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="Id" />
+                                                    </RangeColumns>
+                                                    <RangeExpressions>
+                                                      <ScalarOperator ScalarString="[@ElementId]">
+                                                        <Identifier>
+                                                          <ColumnReference Column="@ElementId" />
+                                                        </Identifier>
+                                                      </ScalarOperator>
+                                                    </RangeExpressions>
+                                                  </Prefix>
+                                                </SeekKeys>
+                                              </SeekPredicateNew>
+                                              <SetPredicate>
+                                                <ScalarOperator ScalarString="[OurLabReporting].[dbo].[MachineSet].[Comments] = [@Comments],[OurLabReporting].[dbo].[MachineSet].[CommentAddedBy] = [@AddedBy],[OurLabReporting].[dbo].[MachineSet].[CommentUpdateTime] = [Expr1003]">
+                                                  <ScalarExpressionList>
+                                                    <ScalarOperator>
+                                                      <MultipleAssign>
+                                                        <Assign>
+                                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="Comments" />
+                                                          <ScalarOperator>
+                                                            <Identifier>
+                                                              <ColumnReference Column="@Comments" />
+                                                            </Identifier>
+                                                          </ScalarOperator>
+                                                        </Assign>
+                                                        <Assign>
+                                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="CommentAddedBy" />
+                                                          <ScalarOperator>
+                                                            <Identifier>
+                                                              <ColumnReference Column="@AddedBy" />
+                                                            </Identifier>
+                                                          </ScalarOperator>
+                                                        </Assign>
+                                                        <Assign>
+                                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="CommentUpdateTime" />
+                                                          <ScalarOperator>
+                                                            <Identifier>
+                                                              <ColumnReference Column="Expr1003" />
+                                                            </Identifier>
+                                                          </ScalarOperator>
+                                                        </Assign>
+                                                      </MultipleAssign>
+                                                    </ScalarOperator>
+                                                  </ScalarExpressionList>
+                                                </ScalarOperator>
+                                              </SetPredicate>
+                                            </SimpleUpdate>
+                                          </RelOp>
+                                          <ParameterList>
+                                            <ColumnReference Column="@AddedBy" ParameterCompiledValue="N'v-mabhau'" />
+                                            <ColumnReference Column="@Comments" ParameterCompiledValue="N'Investigating Incident 1509763:Production: MIXID: 1482441- EnvironmentSetup for 2 machines'" />
+                                            <ColumnReference Column="@ElementId" ParameterCompiledValue="(1482441)" />
+                                          </ParameterList>
+                                        </QueryPlan>
+                                      </StmtSimple>
+                                    </Statements>
+                                  </Then>
+                                </StmtCond>
+                              </Statements>
+                            </Then>
+                          </StmtCond>
+                        </Statements>
+                      </Else>
+                    </StmtCond>
+                  </Statements>
+                </Else>
+              </StmtCond>
+            </Statements>
+          </Else>
+        </StmtCond>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

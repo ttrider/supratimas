@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="CREATE FUNCTION [Reporting].[GetTEUsAreUploadedByTestpass]&#xD;&#xA;(&#xD;&#xA;    @TestpassId  INT&#xD;&#xA;)&#xD;&#xA;RETURNS BIT&#xD;&#xA;AS&#xD;&#xA;BEGIN&#xD;&#xA;    DECLARE @AllAreUploaded BIT = 0&#xD;&#xA;    &#xD;&#xA;   " StatementId="1" StatementCompId="136" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtCond StatementText=" IF (&#xD;&#xA;        1 = ALL&#xD;&#xA;            (&#xD;&#xA;                    SELECT M.TeusUploaded &#xD;&#xA;                    FROM [Reporting].[Mixes] AS M WITH (NOLOCK) &#xD;&#xA;                    WHERE M.TestpassId = @TestpassId&#xD;&#xA;            )&#xD;&#xA;        )&#xD;&#xA;   " StatementId="2" StatementCompId="137" StatementType="COND WITH QUERY" RetrievedFromCache="true" StatementSubTreeCost="0.00328949" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x2AB1810AE4CEC10C" QueryPlanHash="0x6B9A51AD7FF1429E" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <Condition>
+            <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="24" CompileTime="5" CompileCPU="5" CompileMemory="648">
+              <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+              <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+              <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328949" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                <OutputList>
+                  <ColumnReference Column="Expr1003" />
+                </OutputList>
+                <ComputeScalar>
+                  <DefinedValues>
+                    <DefinedValue>
+                      <ColumnReference Column="Expr1003" />
+                      <ScalarOperator ScalarString="CASE WHEN [Expr1004] IS NULL THEN (1) ELSE (0) END">
+                        <IF>
+                          <Condition>
+                            <ScalarOperator>
+                              <Compare CompareOp="IS">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="Expr1004" />
+                                  </Identifier>
+                                </ScalarOperator>
+                                <ScalarOperator>
+                                  <Const ConstValue="NULL" />
+                                </ScalarOperator>
+                              </Compare>
+                            </ScalarOperator>
+                          </Condition>
+                          <Then>
+                            <ScalarOperator>
+                              <Const ConstValue="(1)" />
+                            </ScalarOperator>
+                          </Then>
+                          <Else>
+                            <ScalarOperator>
+                              <Const ConstValue="(0)" />
+                            </ScalarOperator>
+                          </Else>
+                        </IF>
+                      </ScalarOperator>
+                    </DefinedValue>
+                  </DefinedValues>
+                  <RelOp NodeId="1" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.00328939" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList>
+                      <ColumnReference Column="Expr1004" />
+                    </OutputList>
+                    <NestedLoops Optimized="0">
+                      <DefinedValues>
+                        <DefinedValue>
+                          <ColumnReference Column="Expr1004" />
+                        </DefinedValue>
+                      </DefinedValues>
+                      <ProbeColumn>
+                        <ColumnReference Column="Expr1004" />
+                      </ProbeColumn>
+                      <RelOp NodeId="2" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList />
+                        <ConstantScan />
+                      </RelOp>
+                      <RelOp NodeId="3" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.000158139" AvgRowSize="9" EstimatedTotalSubtreeCost="0.00328314" TableCardinality="1.48763e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList />
+                        <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                          <DefinedValues />
+                          <Object Database="[OurLabReporting]" Schema="[Reporting]" Table="[Mixes]" Index="[IX_Mixes_Testpass]" Alias="[M]" IndexKind="NonClustered" />
+                          <SeekPredicates>
+                            <SeekPredicateNew>
+                              <SeekKeys>
+                                <Prefix ScanType="EQ">
+                                  <RangeColumns>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Mixes]" Alias="[M]" Column="TestpassId" />
+                                  </RangeColumns>
+                                  <RangeExpressions>
+                                    <ScalarOperator ScalarString="[@TestpassId]">
+                                      <Identifier>
+                                        <ColumnReference Column="@TestpassId" />
+                                      </Identifier>
+                                    </ScalarOperator>
+                                  </RangeExpressions>
+                                </Prefix>
+                              </SeekKeys>
+                            </SeekPredicateNew>
+                          </SeekPredicates>
+                          <Predicate>
+                            <ScalarOperator ScalarString="[OurLabReporting].[Reporting].[Mixes].[TeusUploaded] as [M].[TeusUploaded] IS NULL OR [OurLabReporting].[Reporting].[Mixes].[TeusUploaded] as [M].[TeusUploaded]&lt;&gt;(1)">
+                              <Logical Operation="OR">
+                                <ScalarOperator>
+                                  <Compare CompareOp="IS">
+                                    <ScalarOperator>
+                                      <Identifier>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Mixes]" Alias="[M]" Column="TeusUploaded" />
+                                      </Identifier>
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Const ConstValue="NULL" />
+                                    </ScalarOperator>
+                                  </Compare>
+                                </ScalarOperator>
+                                <ScalarOperator>
+                                  <Compare CompareOp="NE">
+                                    <ScalarOperator>
+                                      <Identifier>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Mixes]" Alias="[M]" Column="TeusUploaded" />
+                                      </Identifier>
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Const ConstValue="(1)" />
+                                    </ScalarOperator>
+                                  </Compare>
+                                </ScalarOperator>
+                              </Logical>
+                            </ScalarOperator>
+                          </Predicate>
+                        </IndexScan>
+                      </RelOp>
+                    </NestedLoops>
+                  </RelOp>
+                </ComputeScalar>
+              </RelOp>
+              <ParameterList>
+                <ColumnReference Column="@TestpassId" ParameterCompiledValue="(1405601)" />
+              </ParameterList>
+            </QueryPlan>
+          </Condition>
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;        SET @AllAreUploaded = 1&#xD;&#xA;   " StatementId="3" StatementCompId="138" StatementType="ASSIGN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtSimple StatementText=" END&#xD;&#xA;&#xD;&#xA;    RETURN @AllAreUploaded&#xD;" StatementId="4" StatementCompId="140" StatementType="RETURN" RetrievedFromCache="true" />
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

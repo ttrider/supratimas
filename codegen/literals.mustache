@@ -1,0 +1,44 @@
+
+    {{#simpleTypes}}
+    {{#hasEnums}}
+function {{name.camelCase}}(data: string): string {
+    
+    if (data) {
+        switch (data) { {{#altEnums}}
+            case "{{value}}": return "{{humanized}}";
+        {{/altEnums}}
+        }
+    } 
+    
+    return data;
+}
+    {{/hasEnums}} 
+    {{/simpleTypes}}
+
+function int(data: string | undefined ): number | undefined { 
+    if (data !== undefined) {
+        return parseInt(data);
+    }
+}
+
+function float(data: string | undefined ): number | undefined { 
+    if (data !== undefined) {
+        return parseFloat(data);
+    }
+}
+
+
+function onoff(data: string): "ON" | "OFF" { return bool(data) ? "ON" : "OFF"; }
+
+function bool(data: string): boolean {
+    if (data) {
+        data = data.toLowerCase();
+        if (data === "yes") return true;
+        if (data === "true") return true;
+        if (data === "1") return true;
+    }
+    return false;
+}
+
+
+

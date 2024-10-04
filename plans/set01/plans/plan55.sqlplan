@@ -1,0 +1,790 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="CREATE PROCEDURE [dbo].[Uploader_AssignTEUToRole]&#xD;&#xA;@teuId UNIQUEIDENTIFIER, @roleId UNIQUEIDENTIFIER, @isNewAssignment BIT=NULL OUTPUT&#xD;&#xA;AS&#xD;&#xA;BEGIN&#xD;&#xA;&#x9;SET NOCOUNT ON;&#xD;&#xA;&#x9;&#xD;&#xA;   " StatementId="1" StatementCompId="2" StatementType="SET ON/OFF" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" DECLARE @stopwatchBeginTime datetime2 &#xD;&#xA;    SELECT @stopwatchBeginTime = [dbo].[fnBeginStopwatch]()&#xD;&#xA;&#xD;&#xA;   " StatementId="2" StatementCompId="3" StatementType="ASSIGN WITH QUERY" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" DECLARE @returnStatus int&#xD;&#xA;&#xD;&#xA;&#x9;DECLARE @TEUIntId INT&#xD;&#xA;&#x9;SELECT @TEUIntId = Id FROM dbo.TEU WITH (NOLOCK) WHERE Guid = @TEUId&#xD;&#xA;&#xD;&#xA;   " StatementId="3" StatementCompId="4" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032832" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x2C0CCDF9FF1E091F" QueryPlanHash="0xE72F02CE79D7A0C2">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="3" CompileCPU="3" CompileMemory="312">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032832" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Column="Expr1003" />
+              </OutputList>
+              <ComputeScalar>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1003" />
+                    <ScalarOperator ScalarString="CONVERT_IMPLICIT(int,[OurLabReporting].[dbo].[TEU].[Id],0)">
+                      <Convert DataType="int" Style="0" Implicit="1">
+                        <ScalarOperator>
+                          <Identifier>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="Id" />
+                          </Identifier>
+                        </ScalarOperator>
+                      </Convert>
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp NodeId="1" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="4.12024e+007" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="Id" />
+                  </OutputList>
+                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="Id" />
+                      </DefinedValue>
+                    </DefinedValues>
+                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Index="[Teu_IDX_Guid]" IndexKind="NonClustered" />
+                    <SeekPredicates>
+                      <SeekPredicateNew>
+                        <SeekKeys>
+                          <Prefix ScanType="EQ">
+                            <RangeColumns>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="Guid" />
+                            </RangeColumns>
+                            <RangeExpressions>
+                              <ScalarOperator ScalarString="[@teuId]">
+                                <Identifier>
+                                  <ColumnReference Column="@teuId" />
+                                </Identifier>
+                              </ScalarOperator>
+                            </RangeExpressions>
+                          </Prefix>
+                        </SeekKeys>
+                      </SeekPredicateNew>
+                    </SeekPredicates>
+                  </IndexScan>
+                </RelOp>
+              </ComputeScalar>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@teuId" ParameterCompiledValue="{guid'E092816B-FC82-4BAA-A5D1-9EEB0FDF05DD'}" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtCond StatementText=" IF @TEUIntId IS NULL&#xD;&#xA;   " StatementId="4" StatementCompId="5" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;        RAISERROR ('The TEU cannot be assigned because specified TEU does not exist.', 15, 1);&#xD;&#xA;       " StatementId="5" StatementCompId="6" StatementType="RAISERROR" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" GOTO ProcErrorExit&#xD;&#xA;" StatementId="6" StatementCompId="7" StatementType="GOTO" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtSimple StatementText="&#x9;END&#xD;&#xA;&#xD;&#xA;&#x9;DECLARE @RoleIntId INT&#xD;&#xA;&#x9;SELECT @RoleIntId = Id FROM dbo.Role WITH (NOLOCK) WHERE Guid = @RoleId&#xD;&#xA;&#x9;&#xD;&#xA;   " StatementId="7" StatementCompId="9" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032831" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x130E937D3CF7411F" QueryPlanHash="0x5D443D64C08D4483">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="1" CompileCPU="1" CompileMemory="232">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.2143e+007" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Column="Id" />
+              </OutputList>
+              <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Column="Id" />
+                  </DefinedValue>
+                </DefinedValues>
+                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Index="[Role_IDX_Guid]" IndexKind="NonClustered" />
+                <SeekPredicates>
+                  <SeekPredicateNew>
+                    <SeekKeys>
+                      <Prefix ScanType="EQ">
+                        <RangeColumns>
+                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Column="Guid" />
+                        </RangeColumns>
+                        <RangeExpressions>
+                          <ScalarOperator ScalarString="[@roleId]">
+                            <Identifier>
+                              <ColumnReference Column="@roleId" />
+                            </Identifier>
+                          </ScalarOperator>
+                        </RangeExpressions>
+                      </Prefix>
+                    </SeekKeys>
+                  </SeekPredicateNew>
+                </SeekPredicates>
+              </IndexScan>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@roleId" ParameterCompiledValue="{guid'82BC78A3-AE7D-415B-95BF-AF9506A283FA'}" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtCond StatementText=" IF @RoleIntId IS NULL&#xD;&#xA;   " StatementId="8" StatementCompId="10" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;        RAISERROR ('The TEU cannot be assigned because specified role has not been uploaded.', 15, 1);&#xD;&#xA;       " StatementId="9" StatementCompId="11" StatementType="RAISERROR" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" GOTO ProcErrorExit&#xD;&#xA;" StatementId="10" StatementCompId="12" StatementType="GOTO" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtSimple StatementText="&#x9;END&#xD;&#xA;&#xD;&#xA;&#x9;SELECT @isNewAssignment = 0&#xD;&#xA;&#x9;FROM [dbo].[RoleAssignments] WITH (NOLOCK)&#xD;&#xA;&#x9;WHERE RoleId = @RoleIntId&#xD;&#xA;&#x9;AND TEUId = @TEUIntId&#xD;&#xA;&#xD;&#xA;" StatementId="11" StatementCompId="14" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032832" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x1EA038D7556EEB00" QueryPlanHash="0xE63175B56832B02B">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="3" CompileCPU="3" CompileMemory="280">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032832" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Column="Expr1003" />
+              </OutputList>
+              <ComputeScalar>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1003" />
+                    <ScalarOperator ScalarString="(0)">
+                      <Const ConstValue="(0)" />
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp NodeId="1" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="3.83765e+007" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList />
+                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                    <DefinedValues />
+                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[RoleAssignments]" Index="[RoleAssignments_PK]" IndexKind="Clustered" />
+                    <SeekPredicates>
+                      <SeekPredicateNew>
+                        <SeekKeys>
+                          <Prefix ScanType="EQ">
+                            <RangeColumns>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[RoleAssignments]" Column="RoleId" />
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[RoleAssignments]" Column="TEUId" />
+                            </RangeColumns>
+                            <RangeExpressions>
+                              <ScalarOperator ScalarString="[@RoleIntId]">
+                                <Identifier>
+                                  <ColumnReference Column="@RoleIntId" />
+                                </Identifier>
+                              </ScalarOperator>
+                              <ScalarOperator ScalarString="CONVERT_IMPLICIT(bigint,[@TEUIntId],0)">
+                                <Convert DataType="bigint" Style="0" Implicit="1">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="@TEUIntId" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Convert>
+                              </ScalarOperator>
+                            </RangeExpressions>
+                          </Prefix>
+                        </SeekKeys>
+                      </SeekPredicateNew>
+                    </SeekPredicates>
+                  </IndexScan>
+                </RelOp>
+              </ComputeScalar>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@isNewAssignment" ParameterCompiledValue="NULL" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtCond StatementText="&#x9;IF @isNewAssignment IS NULL&#x9;&#xD;&#xA;" StatementId="12" StatementCompId="15" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;SET @isNewAssignment = 1&#xD;&#xA;&#xD;&#xA;&#x9;" StatementId="13" StatementCompId="16" StatementType="ASSIGN" RetrievedFromCache="true" />
+              <StmtSimple StatementText="&#x9;INSERT INTO [dbo].[RoleAssignments]&#xD;&#xA;           ([RoleId]&#xD;&#xA;           ,[TEUId])&#xD;&#xA;&#x9;&#x9;VALUES&#xD;&#xA;           (@roleIntId&#xD;&#xA;           ,@teuIntId)&#xD;&#xA;" StatementId="14" StatementCompId="17" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.0265779" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0xC3B72E7DEF098DD2" QueryPlanHash="0x6F44C1C43D195D67">
+                <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="32" CompileTime="3" CompileCPU="3" CompileMemory="336">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="1" PhysicalOp="Assert" LogicalOp="Assert" EstimateRows="1" EstimateIO="0" EstimateCPU="1.8e-007" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0265779" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList />
+                    <Assert StartupExpression="0">
+                      <RelOp NodeId="2" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0265777" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList>
+                          <ColumnReference Column="Expr1010" />
+                          <ColumnReference Column="Expr1011" />
+                        </OutputList>
+                        <NestedLoops Optimized="0">
+                          <DefinedValues>
+                            <DefinedValue>
+                              <ColumnReference Column="Expr1011" />
+                            </DefinedValue>
+                          </DefinedValues>
+                          <OuterReferences>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[RoleAssignments]" Column="TEUId" />
+                          </OuterReferences>
+                          <ProbeColumn>
+                            <ColumnReference Column="Expr1011" />
+                          </ProbeColumn>
+                          <RelOp NodeId="3" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="16" EstimatedTotalSubtreeCost="0.0232904" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[RoleAssignments]" Column="TEUId" />
+                              <ColumnReference Column="Expr1010" />
+                            </OutputList>
+                            <NestedLoops Optimized="0">
+                              <DefinedValues>
+                                <DefinedValue>
+                                  <ColumnReference Column="Expr1010" />
+                                </DefinedValue>
+                              </DefinedValues>
+                              <OuterReferences>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[RoleAssignments]" Column="RoleId" />
+                              </OuterReferences>
+                              <ProbeColumn>
+                                <ColumnReference Column="Expr1010" />
+                              </ProbeColumn>
+                              <RelOp NodeId="4" PhysicalOp="Clustered Index Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.02" EstimateCPU="2e-006" AvgRowSize="19" EstimatedTotalSubtreeCost="0.0200032" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[RoleAssignments]" Column="RoleId" />
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[RoleAssignments]" Column="TEUId" />
+                                </OutputList>
+                                <ScalarInsert DMLRequestSort="0">
+                                  <DefinedValues>
+                                    <DefinedValue>
+                                      <ColumnReference Column="Expr1003" />
+                                      <ScalarOperator ScalarString="CONVERT_IMPLICIT(bigint,[@TEUIntId],0)">
+                                        <Convert DataType="bigint" Style="0" Implicit="1">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Column="@TEUIntId" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </Convert>
+                                      </ScalarOperator>
+                                    </DefinedValue>
+                                  </DefinedValues>
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[RoleAssignments]" Index="[RoleAssignments_PK]" IndexKind="Clustered" />
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[RoleAssignments]" Index="[RoleAssignments_IDX_Teu]" IndexKind="NonClustered" />
+                                  <SetPredicate>
+                                    <ScalarOperator ScalarString="[OurLabReporting].[dbo].[RoleAssignments].[RoleId] = RaiseIfNullInsert([@RoleIntId]),[OurLabReporting].[dbo].[RoleAssignments].[TEUId] = RaiseIfNullInsert([Expr1003])">
+                                      <ScalarExpressionList>
+                                        <ScalarOperator>
+                                          <MultipleAssign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[RoleAssignments]" Column="RoleId" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@RoleIntId" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[RoleAssignments]" Column="TEUId" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="Expr1003" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                          </MultipleAssign>
+                                        </ScalarOperator>
+                                      </ScalarExpressionList>
+                                    </ScalarOperator>
+                                  </SetPredicate>
+                                </ScalarInsert>
+                              </RelOp>
+                              <RelOp NodeId="5" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.2143e+007" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList />
+                                <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                  <DefinedValues />
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Index="[Role_PK]" IndexKind="Clustered" />
+                                  <SeekPredicates>
+                                    <SeekPredicateNew>
+                                      <SeekKeys>
+                                        <Prefix ScanType="EQ">
+                                          <RangeColumns>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Column="Id" />
+                                          </RangeColumns>
+                                          <RangeExpressions>
+                                            <ScalarOperator ScalarString="[OurLabReporting].[dbo].[RoleAssignments].[RoleId]">
+                                              <Identifier>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[RoleAssignments]" Column="RoleId" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </RangeExpressions>
+                                        </Prefix>
+                                      </SeekKeys>
+                                    </SeekPredicateNew>
+                                  </SeekPredicates>
+                                </IndexScan>
+                              </RelOp>
+                            </NestedLoops>
+                          </RelOp>
+                          <RelOp NodeId="6" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="4.12024e+007" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList />
+                            <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                              <DefinedValues />
+                              <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Index="[Teu_PK]" IndexKind="Clustered" />
+                              <SeekPredicates>
+                                <SeekPredicateNew>
+                                  <SeekKeys>
+                                    <Prefix ScanType="EQ">
+                                      <RangeColumns>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="Id" />
+                                      </RangeColumns>
+                                      <RangeExpressions>
+                                        <ScalarOperator ScalarString="[OurLabReporting].[dbo].[RoleAssignments].[TEUId]">
+                                          <Identifier>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[RoleAssignments]" Column="TEUId" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </RangeExpressions>
+                                    </Prefix>
+                                  </SeekKeys>
+                                </SeekPredicateNew>
+                              </SeekPredicates>
+                            </IndexScan>
+                          </RelOp>
+                        </NestedLoops>
+                      </RelOp>
+                      <Predicate>
+                        <ScalarOperator ScalarString="CASE WHEN [Expr1010] IS NULL THEN (0) ELSE CASE WHEN [Expr1011] IS NULL THEN (1) ELSE NULL END END">
+                          <IF>
+                            <Condition>
+                              <ScalarOperator>
+                                <Logical Operation="IS NULL">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Expr1010" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Logical>
+                              </ScalarOperator>
+                            </Condition>
+                            <Then>
+                              <ScalarOperator>
+                                <Const ConstValue="(0)" />
+                              </ScalarOperator>
+                            </Then>
+                            <Else>
+                              <ScalarOperator>
+                                <IF>
+                                  <Condition>
+                                    <ScalarOperator>
+                                      <Logical Operation="IS NULL">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="Expr1011" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Logical>
+                                    </ScalarOperator>
+                                  </Condition>
+                                  <Then>
+                                    <ScalarOperator>
+                                      <Const ConstValue="(1)" />
+                                    </ScalarOperator>
+                                  </Then>
+                                  <Else>
+                                    <ScalarOperator>
+                                      <Const ConstValue="NULL" />
+                                    </ScalarOperator>
+                                  </Else>
+                                </IF>
+                              </ScalarOperator>
+                            </Else>
+                          </IF>
+                        </ScalarOperator>
+                      </Predicate>
+                    </Assert>
+                  </RelOp>
+                </QueryPlan>
+              </StmtSimple>
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtSimple StatementText="&#x9;END&#xD;&#xA;&#xD;&#xA;    DECLARE @PrimaryRoleId int&#xD;&#xA;    &#xD;&#xA;    SELECT @PrimaryRoleId = PrimaryRoleId&#xD;&#xA;    FROM dbo.Teu WITH (NOLOCK)&#xD;&#xA;    WHERE  [Id] = @teuIntId&#xD;&#xA;    &#xD;&#xA;   " StatementId="15" StatementCompId="19" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032831" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x6F2CF1A2CC2F29A" QueryPlanHash="0x5E09C6B479B3AA9B">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="3" CompileCPU="3" CompileMemory="312">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="4.12024e+007" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="PrimaryRoleId" />
+              </OutputList>
+              <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="PrimaryRoleId" />
+                  </DefinedValue>
+                </DefinedValues>
+                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Index="[Teu_PK]" IndexKind="Clustered" />
+                <SeekPredicates>
+                  <SeekPredicateNew>
+                    <SeekKeys>
+                      <Prefix ScanType="EQ">
+                        <RangeColumns>
+                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="Id" />
+                        </RangeColumns>
+                        <RangeExpressions>
+                          <ScalarOperator ScalarString="CONVERT_IMPLICIT(bigint,[@TEUIntId],0)">
+                            <Convert DataType="bigint" Style="0" Implicit="1">
+                              <ScalarOperator>
+                                <Identifier>
+                                  <ColumnReference Column="@TEUIntId" />
+                                </Identifier>
+                              </ScalarOperator>
+                            </Convert>
+                          </ScalarOperator>
+                        </RangeExpressions>
+                      </Prefix>
+                    </SeekKeys>
+                  </SeekPredicateNew>
+                </SeekPredicates>
+              </IndexScan>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtCond StatementText=" IF @PrimaryRoleId IS NULL OR @RoleIntId &lt;&gt; [dbo].[Function_GetInvalidRoleId]()&#xD;&#xA;   " StatementId="16" StatementCompId="20" StatementType="COND WITH QUERY" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;&#x9;    UPDATE [dbo].[TEU]&#xD;&#xA;&#x9;    SET [PrimaryRoleId] = @roleIntId&#xD;&#xA;&#x9;    WHERE [Id] = @teuIntId&#xD;&#xA;" StatementId="17" StatementCompId="21" StatementType="UPDATE" RetrievedFromCache="true" StatementSubTreeCost="0.0265728" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0xB1FB8FB8D5A96781" QueryPlanHash="0x5C5437EF698B456A">
+                <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="32" CompileTime="10" CompileCPU="10" CompileMemory="544">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="1" PhysicalOp="Assert" LogicalOp="Assert" EstimateRows="1" EstimateIO="0" EstimateCPU="1.8e-007" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0265728" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList />
+                    <Assert StartupExpression="0">
+                      <RelOp NodeId="2" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0265726" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList>
+                          <ColumnReference Column="Expr1014" />
+                          <ColumnReference Column="Pass1015" />
+                        </OutputList>
+                        <NestedLoops Optimized="0">
+                          <DefinedValues>
+                            <DefinedValue>
+                              <ColumnReference Column="Expr1014" />
+                            </DefinedValue>
+                            <DefinedValue>
+                              <ColumnReference Column="Pass1015" />
+                            </DefinedValue>
+                          </DefinedValues>
+                          <PassThru>
+                            <ScalarOperator ScalarString="[OurLabReporting].[dbo].[TEU].[PrimaryRoleId] IS NULL">
+                              <Logical Operation="IS NULL">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="PrimaryRoleId" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Logical>
+                            </ScalarOperator>
+                          </PassThru>
+                          <OuterReferences>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="PrimaryRoleId" />
+                          </OuterReferences>
+                          <ProbeColumn>
+                            <ColumnReference Column="Expr1014" />
+                          </ProbeColumn>
+                          <RelOp NodeId="3" PhysicalOp="Clustered Index Update" LogicalOp="Update" EstimateRows="1" EstimateIO="0.02" EstimateCPU="2e-006" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0232853" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="PrimaryRoleId" />
+                            </OutputList>
+                            <Update DMLRequestSort="0">
+                              <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Index="[Teu_PK]" IndexKind="Clustered" />
+                              <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Index="[Teu_IDX_Role]" IndexKind="NonClustered" />
+                              <SetPredicate>
+                                <ScalarOperator ScalarString="[OurLabReporting].[dbo].[TEU].[PrimaryRoleId] = [@RoleIntId]">
+                                  <ScalarExpressionList>
+                                    <ScalarOperator>
+                                      <MultipleAssign>
+                                        <Assign>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="PrimaryRoleId" />
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Column="@RoleIntId" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </Assign>
+                                      </MultipleAssign>
+                                    </ScalarOperator>
+                                  </ScalarExpressionList>
+                                </ScalarOperator>
+                              </SetPredicate>
+                              <RelOp NodeId="4" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="19" EstimatedTotalSubtreeCost="0.0032833" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="Id" />
+                                  <ColumnReference Column="Expr1012" />
+                                </OutputList>
+                                <ComputeScalar>
+                                  <DefinedValues>
+                                    <DefinedValue>
+                                      <ColumnReference Column="Expr1012" />
+                                      <ScalarOperator ScalarString="[Expr1012]">
+                                        <Identifier>
+                                          <ColumnReference Column="Expr1012" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </DefinedValue>
+                                  </DefinedValues>
+                                  <RelOp NodeId="5" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="19" EstimatedTotalSubtreeCost="0.0032833" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                    <OutputList>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="Id" />
+                                      <ColumnReference Column="Expr1012" />
+                                    </OutputList>
+                                    <ComputeScalar>
+                                      <DefinedValues>
+                                        <DefinedValue>
+                                          <ColumnReference Column="Expr1012" />
+                                          <ScalarOperator ScalarString="CASE WHEN CASE WHEN [OurLabReporting].[dbo].[TEU].[PrimaryRoleId] = [@RoleIntId] THEN (1) ELSE (0) END THEN (0) ELSE (1) END">
+                                            <IF>
+                                              <Condition>
+                                                <ScalarOperator>
+                                                  <IF>
+                                                    <Condition>
+                                                      <ScalarOperator>
+                                                        <Compare CompareOp="BINARY IS">
+                                                          <ScalarOperator>
+                                                            <Identifier>
+                                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="PrimaryRoleId" />
+                                                            </Identifier>
+                                                          </ScalarOperator>
+                                                          <ScalarOperator>
+                                                            <Identifier>
+                                                              <ColumnReference Column="@RoleIntId" />
+                                                            </Identifier>
+                                                          </ScalarOperator>
+                                                        </Compare>
+                                                      </ScalarOperator>
+                                                    </Condition>
+                                                    <Then>
+                                                      <ScalarOperator>
+                                                        <Const ConstValue="(1)" />
+                                                      </ScalarOperator>
+                                                    </Then>
+                                                    <Else>
+                                                      <ScalarOperator>
+                                                        <Const ConstValue="(0)" />
+                                                      </ScalarOperator>
+                                                    </Else>
+                                                  </IF>
+                                                </ScalarOperator>
+                                              </Condition>
+                                              <Then>
+                                                <ScalarOperator>
+                                                  <Const ConstValue="(0)" />
+                                                </ScalarOperator>
+                                              </Then>
+                                              <Else>
+                                                <ScalarOperator>
+                                                  <Const ConstValue="(1)" />
+                                                </ScalarOperator>
+                                              </Else>
+                                            </IF>
+                                          </ScalarOperator>
+                                        </DefinedValue>
+                                      </DefinedValues>
+                                      <RelOp NodeId="6" PhysicalOp="Top" LogicalOp="Top" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="19" EstimatedTotalSubtreeCost="0.0032832" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                        <OutputList>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="Id" />
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="PrimaryRoleId" />
+                                        </OutputList>
+                                        <Top RowCount="0" IsPercent="0" WithTies="0">
+                                          <TopExpression>
+                                            <ScalarOperator ScalarString="(1)">
+                                              <Const ConstValue="(1)" />
+                                            </ScalarOperator>
+                                          </TopExpression>
+                                          <RelOp NodeId="7" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="19" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="4.12024e+007" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                            <OutputList>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="Id" />
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="PrimaryRoleId" />
+                                            </OutputList>
+                                            <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                              <DefinedValues>
+                                                <DefinedValue>
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="Id" />
+                                                </DefinedValue>
+                                                <DefinedValue>
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="PrimaryRoleId" />
+                                                </DefinedValue>
+                                              </DefinedValues>
+                                              <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Index="[Teu_PK]" IndexKind="Clustered" />
+                                              <SeekPredicates>
+                                                <SeekPredicateNew>
+                                                  <SeekKeys>
+                                                    <Prefix ScanType="EQ">
+                                                      <RangeColumns>
+                                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="Id" />
+                                                      </RangeColumns>
+                                                      <RangeExpressions>
+                                                        <ScalarOperator ScalarString="CONVERT_IMPLICIT(bigint,[@TEUIntId],0)">
+                                                          <Convert DataType="bigint" Style="0" Implicit="1">
+                                                            <ScalarOperator>
+                                                              <Identifier>
+                                                                <ColumnReference Column="@TEUIntId" />
+                                                              </Identifier>
+                                                            </ScalarOperator>
+                                                          </Convert>
+                                                        </ScalarOperator>
+                                                      </RangeExpressions>
+                                                    </Prefix>
+                                                  </SeekKeys>
+                                                </SeekPredicateNew>
+                                              </SeekPredicates>
+                                            </IndexScan>
+                                          </RelOp>
+                                        </Top>
+                                      </RelOp>
+                                    </ComputeScalar>
+                                  </RelOp>
+                                </ComputeScalar>
+                              </RelOp>
+                            </Update>
+                          </RelOp>
+                          <RelOp NodeId="15" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.2143e+007" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList />
+                            <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                              <DefinedValues />
+                              <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Index="[Role_PK]" IndexKind="Clustered" />
+                              <SeekPredicates>
+                                <SeekPredicateNew>
+                                  <SeekKeys>
+                                    <Prefix ScanType="EQ">
+                                      <RangeColumns>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Column="Id" />
+                                      </RangeColumns>
+                                      <RangeExpressions>
+                                        <ScalarOperator ScalarString="[OurLabReporting].[dbo].[TEU].[PrimaryRoleId]">
+                                          <Identifier>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="PrimaryRoleId" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </RangeExpressions>
+                                    </Prefix>
+                                  </SeekKeys>
+                                </SeekPredicateNew>
+                              </SeekPredicates>
+                            </IndexScan>
+                          </RelOp>
+                        </NestedLoops>
+                      </RelOp>
+                      <Predicate>
+                        <ScalarOperator ScalarString="CASE WHEN NOT [Pass1015] AND [Expr1014] IS NULL THEN (0) ELSE NULL END">
+                          <IF>
+                            <Condition>
+                              <ScalarOperator>
+                                <Logical Operation="AND">
+                                  <ScalarOperator>
+                                    <Logical Operation="NOT">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="Pass1015" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Logical>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Logical Operation="IS NULL">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="Expr1014" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Logical>
+                                  </ScalarOperator>
+                                </Logical>
+                              </ScalarOperator>
+                            </Condition>
+                            <Then>
+                              <ScalarOperator>
+                                <Const ConstValue="(0)" />
+                              </ScalarOperator>
+                            </Then>
+                            <Else>
+                              <ScalarOperator>
+                                <Const ConstValue="NULL" />
+                              </ScalarOperator>
+                            </Else>
+                          </IF>
+                        </ScalarOperator>
+                      </Predicate>
+                    </Assert>
+                  </RelOp>
+                </QueryPlan>
+              </StmtSimple>
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtSimple StatementText="&#x9;END&#xD;&#xA;&#xD;&#xA;    GOTO ProcExit&#xD;" StatementId="18" StatementCompId="23" StatementType="GOTO" RetrievedFromCache="true" />
+        <StmtCond StatementText="&#xA;ProcErrorExit:&#xD;&#xA;    IF @returnStatus IS NULL" StatementId="19" StatementCompId="25" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" SET @returnStatus = 1&#xD;" StatementId="20" StatementCompId="26" StatementType="ASSIGN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtCond StatementText="&#xA;ProcExit:&#xD;&#xA;    IF @returnStatus IS NULL" StatementId="21" StatementCompId="29" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" SET @returnStatus = 0&#xD;&#xA;&#xD;&#xA;   " StatementId="22" StatementCompId="30" StatementType="ASSIGN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtSimple StatementText=" DECLARE @objectName varchar(128) = (SELECT OBJECT_NAME(@@PROCID))&#xD;&#xA;   " StatementId="23" StatementCompId="32" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="1.257e-006" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x830C952D7490168E" QueryPlanHash="0x3B1EAEC0618BFE3F" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="2" CompileCPU="2" CompileMemory="248">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="75" EstimatedTotalSubtreeCost="1.257e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Column="Expr1001" />
+              </OutputList>
+              <ComputeScalar>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1001" />
+                    <ScalarOperator ScalarString="CONVERT_IMPLICIT(varchar(128),[Expr1000],0)">
+                      <Convert DataType="varchar" Length="128" Style="0" Implicit="1">
+                        <ScalarOperator>
+                          <Identifier>
+                            <ColumnReference Column="Expr1000" />
+                          </Identifier>
+                        </ScalarOperator>
+                      </Convert>
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp NodeId="1" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="139" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Expr1000" />
+                  </OutputList>
+                  <ConstantScan>
+                    <Values>
+                      <Row>
+                        <ScalarOperator ScalarString="object_name(@@procid)">
+                          <Intrinsic FunctionName="object_name">
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="@@procid" />
+                            </ScalarOperator>
+                            <ScalarOperator>
+                              <Const ConstValue="" />
+                            </ScalarOperator>
+                          </Intrinsic>
+                        </ScalarOperator>
+                      </Row>
+                    </Values>
+                  </ConstantScan>
+                </RelOp>
+              </ComputeScalar>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText=" EXEC [dbo].[spEndStopwatch] @objectName, @stopwatchBeginTime&#xD;&#xA;&#xD;&#xA;   " StatementId="24" StatementCompId="33" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" RETURN @returnStatus&#xD;" StatementId="25" StatementCompId="34" StatementType="RETURN" RetrievedFromCache="true" />
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

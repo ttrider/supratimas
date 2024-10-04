@@ -1,0 +1,191 @@
+﻿<?xml version="1.0" encoding="utf-16"?>
+<ShowPlanXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="1.2" Build="11.0.2100.60" xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementCompId="1" StatementEstRows="1" StatementId="1" StatementOptmLevel="TRIVIAL" StatementSubTreeCost="0.0100022" StatementText="insert into @p1 values(N'[AmalgaSourceData].[RAD_ORU0].[OBR_Derived]',N'24439781-efb6-8210-0a96-6394bc9d0d51|1|7bf0831d-4107-9e93-4ea0-971b7371ad34|7a58eab4-3759-2396-b544-0d7a0d6d10d5',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)&#xD;&#xA;/*&#xD;&#xA;insert into @p1 values(N'[AmalgaSourceData].[RAD_ORU0].[OBR_Derived]',N'489af421-2342-dbd1-8e34-f34c6cdaea13|1|0a6e2dc7-2cdb-9b02-a8d8-d3b55df60c27|62178d41-8ca7-9e3f-4d73-f1545615ae95',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)&#xD;&#xA;insert into @p1 values(N'[AmalgaSourceData].[RAD_ORU0].[OBR_Derived]',N'4ee1728d-432a-347b-7f91-143ee1b2551a|1|3c55d018-fefc-82d7-e951-9dbef3a44be8|2fa873bd-0b5a-95b3-9193-41af88e59791',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)&#xD;&#xA;insert into @p1 values(N'[AmalgaSourceData].[RAD_ORU0].[OBR_Derived]',N'baba19b7-0ec6-aee5-b471-ad7309a69e28|1|d6c664f4-56e2-c373-af3d-c690c906f8b1|6f0ebcf5-38fc-2b17-ebf5-d5b40d40ab9c',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)&#xD;&#xA;insert into @p1 values(N'[AmalgaSourceData].[RAD_ORU0].[OBR_Derived]',N'4f9c9b06-f741-991a-0ba7-e9271962272d|1|07f2b659-68ad-30d4-2e52-76b486cf7d39|74fb0a38-82fe-ff26-f79d-2b09817e6a97',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)&#xD;&#xA;insert into @p1 values(N'[AmalgaSourceData].[RAD_ORU0].[OBR_Derived]',N'60469199-9aa9-9b8f-0880-9c1aa3ab3582|1|ae0a1c96-9bb6-b563-686e-c26c060e65fd|96c3f7df-c9a3-f6c4-7e63-1a2451ff10ac',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)&#xD;&#xA;insert into @p1 values(N'[AmalgaSourceData].[RAD_ORU0].[OBR_Derived]',N'764a4b25-80d4-7ae2-0005-a1a0d8106be0|1|9d6cecb0-4ba6-fc67-6c32-009dbb82bc5d|01e7680c-139b-be71-9de2-08dd678f1a9f',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)&#xD;&#xA;insert into @p1 values(N'[AmalgaSourceData].[RAD_ORU0].[OBR_Derived]',N'e1419ac6-d6de-11bb-eee7-83d547e8cd82|1|1d43d1ac-bd6e-cf7c-31df-60bd6b4d5f5c|01e7680c-139b-be71-9de2-08dd678f1a9f',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)&#xD;&#xA;insert into @p1 values(N'[AmalgaSourceData].[RAD_ORU0].[OBR_Derived]',N'5980f2e3-a970-f397-3cfc-12b89f69efda|1|a14790cf-a566-c331-add0-7842121799b8|e6d41742-b6ac-e492-1d48-e24e2f06c6e8',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)&#xD;&#xA;insert into @p1 values(N'[AmalgaSourceData].[RAD_ORU0].[OBR_Derived]',N'90958bd5-a510-f540-1e1a-9959e3b3009d|1|17edaee2-8859-ab87-22a0-2fe177ec69f8|4bfb86c1-cd60-5eef-9653-4ff0ac77482d',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)&#xD;&#xA;insert into @p1 values(N'[AmalgaSourceData].[RAD_ORU0].[OBR_Derived]',N'bb8bbf43-5c42-8ab5-7997-2ec06e65d785|1|4d22588c-e4d4-752d-69bf-6e9703bfe4c1|e6d41742-b6ac-e492-1d48-e24e2f06c6e8',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)&#xD;&#xA;insert into @p1 values(N'[AmalgaSourceData].[RAD_ORU0].[OBR_Derived]',N'ff55948c-5fac-6dc7-0d46-49478db6d920|1|7ead3fbd-f8b0-d361-923f-5f65df7e4cd3|489539cb-469e-f65e-fd63-19bd6d16e892',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)&#xD;&#xA;insert into @p1 values(N'[AmalgaSourceData].[RAD_ORU0].[OBR_Derived]',N'24439781-efb6-8210-0a96-6394bc9d0d51|1|c8bc7197-173e-17d2-5fa6-1490c815d4b0|37fdfd19-cb6b-3b22-f2bf-1389cfbc5ee1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)&#xD;&#xA;insert into @p1 values(N'[AmalgaSourceData].[RAD_ORU0].[OBR_Derived]',N'3551bf0b-14a3-4100-d0ee-f3b1ed3970be|1|ab4bac75-a0a9-c887-ab0b-e21df5238250|e32db991-558c-1fb5-d69e-49837f97e532',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)&#xD;&#xA;insert into @p1 values(N'[AmalgaSourceData].[RAD_ORU0].[OBR_Derived]',N'775c5f9b-3558-7106-daa3-ce7d8c7da341|1|4339beed-d8d0-f6aa-0f68-d6af46d608d8|264304d4-595a-3a61-2795-434d52564b2f',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)&#xD;&#xA;insert into @p1 values(N'[AmalgaSourceData].[RAD_ORU0].[OBR_Derived]',N'92e9dcb8-8e6f-ef8a-0152-4d8ac5d188ea|1|9b0aff36-b4a5-1541-f7be-3468423d935c|01e7680c-139b-be71-9de2-08dd678f1a9f',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)&#xD;&#xA;insert into @p1 values(N'[AmalgaSourceData].[RAD_ORU0].[OBR_Derived]',N'3551bf0b-14a3-4100-d0ee-f3b1ed3970be|1|107621e2-3a96-9fce-df1e-1155656fe816|af19c193-992e-5dcb-d5c3-eb96e13e8041',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)&#xD;&#xA;insert into @p1 values(N'[AmalgaSo" StatementType="INSERT" QueryHash="0x3A78A2717E57B980" QueryPlanHash="0xBB369EA5A09D31E4" RetrievedFromCache="true">
+          <StatementSetOptions ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" NUMERIC_ROUNDABORT="false" QUOTED_IDENTIFIER="true" />
+          <QueryPlan DegreeOfParallelism="0" NonParallelPlanReason="CouldNotGenerateValidParallelPlan" CachedPlanSize="24" CompileTime="15" CompileCPU="1" CompileMemory="160">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="655360" EstimatedPagesCached="655360" EstimatedAvailableDegreeOfParallelism="8" />
+            <RelOp AvgRowSize="9" EstimateCPU="1E-06" EstimateIO="0.01" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="1" LogicalOp="Insert" NodeId="0" Parallel="false" PhysicalOp="Table Insert" EstimatedTotalSubtreeCost="0.0100022">
+              <OutputList />
+              <RunTimeInformation>
+                <RunTimeCountersPerThread Thread="0" ActualRows="1" ActualEndOfScans="1" ActualExecutions="1" />
+              </RunTimeInformation>
+              <ScalarInsert DMLRequestSort="false">
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1004" />
+                    <ScalarOperator ScalarString="N'[AmalgaSourceData].[RAD_ORU0].[OBR_Derived]'">
+                      <Const ConstValue="N'[AmalgaSourceData].[RAD_ORU0].[OBR_Derived]'" />
+                    </ScalarOperator>
+                  </DefinedValue>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1005" />
+                    <ScalarOperator ScalarString="N'24439781-efb6-8210-0a96-6394bc9d0d51|1|7bf0831d-4107-9e93-4ea0-971b7371ad34|7a58eab4-3759-2396-b544-0d7a0d6d10d5'">
+                      <Const ConstValue="N'24439781-efb6-8210-0a96-6394bc9d0d51|1|7bf0831d-4107-9e93-4ea0-971b7371ad34|7a58eab4-3759-2396-b544-0d7a0d6d10d5'" />
+                    </ScalarOperator>
+                  </DefinedValue>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1006" />
+                    <ScalarOperator ScalarString="NULL">
+                      <Const ConstValue="NULL" />
+                    </ScalarOperator>
+                  </DefinedValue>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1007" />
+                    <ScalarOperator ScalarString="NULL">
+                      <Const ConstValue="NULL" />
+                    </ScalarOperator>
+                  </DefinedValue>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1008" />
+                    <ScalarOperator ScalarString="NULL">
+                      <Const ConstValue="NULL" />
+                    </ScalarOperator>
+                  </DefinedValue>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1009" />
+                    <ScalarOperator ScalarString="NULL">
+                      <Const ConstValue="NULL" />
+                    </ScalarOperator>
+                  </DefinedValue>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1010" />
+                    <ScalarOperator ScalarString="NULL">
+                      <Const ConstValue="NULL" />
+                    </ScalarOperator>
+                  </DefinedValue>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1011" />
+                    <ScalarOperator ScalarString="NULL">
+                      <Const ConstValue="NULL" />
+                    </ScalarOperator>
+                  </DefinedValue>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1012" />
+                    <ScalarOperator ScalarString="NULL">
+                      <Const ConstValue="NULL" />
+                    </ScalarOperator>
+                  </DefinedValue>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1013" />
+                    <ScalarOperator ScalarString="NULL">
+                      <Const ConstValue="NULL" />
+                    </ScalarOperator>
+                  </DefinedValue>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1014" />
+                    <ScalarOperator ScalarString="NULL">
+                      <Const ConstValue="NULL" />
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <Object Table="[@p1]" />
+                <SetPredicate>
+                  <ScalarOperator ScalarString="[BaseTableName] = [Expr1004],[PrimaryKey0Value] = [Expr1005],[PrimaryKey1Value] = [Expr1006],[PrimaryKey2Value] = [Expr1007],[PrimaryKey3Value] = [Expr1008],[PrimaryKey4Value] = [Expr1009],[PrimaryKey5Value] = [Expr1010],[PrimaryKey6Value] = [Expr1011],[PrimaryKey7Value] = [Expr1012],[PrimaryKey8Value] = [Expr1013],[PrimaryKey9Value] = [Expr1014]">
+                    <ScalarExpressionList>
+                      <ScalarOperator>
+                        <MultipleAssign>
+                          <Assign>
+                            <ColumnReference Column="BaseTableName" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1004" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Column="PrimaryKey0Value" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1005" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Column="PrimaryKey1Value" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1006" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Column="PrimaryKey2Value" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1007" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Column="PrimaryKey3Value" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1008" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Column="PrimaryKey4Value" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1009" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Column="PrimaryKey5Value" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1010" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Column="PrimaryKey6Value" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1011" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Column="PrimaryKey7Value" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1012" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Column="PrimaryKey8Value" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1013" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Column="PrimaryKey9Value" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1014" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                        </MultipleAssign>
+                      </ScalarOperator>
+                    </ScalarExpressionList>
+                  </ScalarOperator>
+                </SetPredicate>
+              </ScalarInsert>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

@@ -1,0 +1,304 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="CREATE PROCEDURE [upload].[TeuResult_UploadComplete]&#xD;&#xA;&#x9;@groupId uniqueidentifier&#xD;&#xA;    ,@teuId uniqueidentifier&#xD;&#xA;AS&#xD;&#xA;&#x9;DECLARE @resultCount int, @failureCount int&#xD;&#xA;&#xD;&#xA;&#x9;/*&#xD;&#xA;&#x9;** Get our counts&#xD;&#xA;&#x9;*/&#xD;&#xA;&#x9;SELECT @resultCount = COUNT(*) FROM upload.TestCaseResult AS TCR WHERE TCR.GroupId = @groupId&#xD;&#xA;" StatementId="1" StatementCompId="2" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.144702" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x53ECEA4744C4D0C5" QueryPlanHash="0xE1F49622926E97A4">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="7" CompileCPU="3" CompileMemory="224">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="0.000104001" AvgRowSize="11" EstimatedTotalSubtreeCost="0.144702" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Column="Expr1003" />
+              </OutputList>
+              <ComputeScalar>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1003" />
+                    <ScalarOperator ScalarString="CONVERT_IMPLICIT(int,[Expr1004],0)">
+                      <Convert DataType="int" Style="0" Implicit="1">
+                        <ScalarOperator>
+                          <Identifier>
+                            <ColumnReference Column="Expr1004" />
+                          </Identifier>
+                        </ScalarOperator>
+                      </Convert>
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp NodeId="1" PhysicalOp="Stream Aggregate" LogicalOp="Aggregate" EstimateRows="1" EstimateIO="0" EstimateCPU="0.000104001" AvgRowSize="11" EstimatedTotalSubtreeCost="0.144702" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Expr1004" />
+                  </OutputList>
+                  <StreamAggregate>
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1004" />
+                        <ScalarOperator ScalarString="Count(*)">
+                          <Aggregate AggType="countstar" Distinct="0" />
+                        </ScalarOperator>
+                      </DefinedValue>
+                    </DefinedValues>
+                    <RelOp NodeId="2" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="172.501" EstimateIO="0.1375" EstimateCPU="0.00709775" AvgRowSize="9" EstimatedTotalSubtreeCost="0.144598" TableCardinality="1.70158e+006" Parallel="0" Partitioned="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList />
+                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                        <DefinedValues />
+                        <Object Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Index="[IX_TestCaseResult_GroupId]" Alias="[TCR]" IndexKind="NonClustered" />
+                        <SeekPredicates>
+                          <SeekPredicateNew>
+                            <SeekKeys>
+                              <StartRange ScanType="GE">
+                                <RangeColumns>
+                                  <ColumnReference Column="PtnId1000" />
+                                </RangeColumns>
+                                <RangeExpressions>
+                                  <ScalarOperator ScalarString="(1)">
+                                    <Const ConstValue="(1)" />
+                                  </ScalarOperator>
+                                </RangeExpressions>
+                              </StartRange>
+                              <EndRange ScanType="LE">
+                                <RangeColumns>
+                                  <ColumnReference Column="PtnId1000" />
+                                </RangeColumns>
+                                <RangeExpressions>
+                                  <ScalarOperator ScalarString="(44)">
+                                    <Const ConstValue="(44)" />
+                                  </ScalarOperator>
+                                </RangeExpressions>
+                              </EndRange>
+                            </SeekKeys>
+                            <SeekKeys>
+                              <Prefix ScanType="EQ">
+                                <RangeColumns>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="GroupId" />
+                                </RangeColumns>
+                                <RangeExpressions>
+                                  <ScalarOperator ScalarString="[@groupId]">
+                                    <Identifier>
+                                      <ColumnReference Column="@groupId" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </RangeExpressions>
+                              </Prefix>
+                            </SeekKeys>
+                          </SeekPredicateNew>
+                        </SeekPredicates>
+                      </IndexScan>
+                    </RelOp>
+                  </StreamAggregate>
+                </RelOp>
+              </ComputeScalar>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@groupId" ParameterCompiledValue="{guid'2AEEEDC4-8FD7-441E-9B68-3050F897886B'}" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText="&#x9;SELECT @failureCount = COUNT(*) FROM upload.Failure AS F WHERE F.GroupId = @groupId&#xD;&#xA;&#xD;&#xA;&#x9;/*&#xD;&#xA;&#x9;** Create our group record&#xD;&#xA;&#x9;*/&#xD;&#xA;" StatementId="2" StatementCompId="3" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.164125" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x6496F0756C0D770B" QueryPlanHash="0xEA2D9ECAADCE1981">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="3" CompileCPU="3" CompileMemory="232">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="9.25138e-006" AvgRowSize="11" EstimatedTotalSubtreeCost="0.164125" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Column="Expr1003" />
+              </OutputList>
+              <ComputeScalar>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1003" />
+                    <ScalarOperator ScalarString="CONVERT_IMPLICIT(int,[Expr1004],0)">
+                      <Convert DataType="int" Style="0" Implicit="1">
+                        <ScalarOperator>
+                          <Identifier>
+                            <ColumnReference Column="Expr1004" />
+                          </Identifier>
+                        </ScalarOperator>
+                      </Convert>
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp NodeId="1" PhysicalOp="Stream Aggregate" LogicalOp="Aggregate" EstimateRows="1" EstimateIO="0" EstimateCPU="9.25138e-006" AvgRowSize="11" EstimatedTotalSubtreeCost="0.164125" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Expr1004" />
+                  </OutputList>
+                  <StreamAggregate>
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1004" />
+                        <ScalarOperator ScalarString="Count(*)">
+                          <Aggregate AggType="countstar" Distinct="0" />
+                        </ScalarOperator>
+                      </DefinedValue>
+                    </DefinedValues>
+                    <RelOp NodeId="2" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="14.5856" EstimateIO="0.15625" EstimateCPU="0.00786604" AvgRowSize="9" EstimatedTotalSubtreeCost="0.164116" TableCardinality="229087" Parallel="0" Partitioned="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList />
+                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                        <DefinedValues />
+                        <Object Database="[OurLabReporting]" Schema="[upload]" Table="[Failure]" Index="[IX_Failure_GroupId]" Alias="[F]" IndexKind="NonClustered" />
+                        <SeekPredicates>
+                          <SeekPredicateNew>
+                            <SeekKeys>
+                              <StartRange ScanType="GE">
+                                <RangeColumns>
+                                  <ColumnReference Column="PtnId1000" />
+                                </RangeColumns>
+                                <RangeExpressions>
+                                  <ScalarOperator ScalarString="(1)">
+                                    <Const ConstValue="(1)" />
+                                  </ScalarOperator>
+                                </RangeExpressions>
+                              </StartRange>
+                              <EndRange ScanType="LE">
+                                <RangeColumns>
+                                  <ColumnReference Column="PtnId1000" />
+                                </RangeColumns>
+                                <RangeExpressions>
+                                  <ScalarOperator ScalarString="(50)">
+                                    <Const ConstValue="(50)" />
+                                  </ScalarOperator>
+                                </RangeExpressions>
+                              </EndRange>
+                            </SeekKeys>
+                            <SeekKeys>
+                              <Prefix ScanType="EQ">
+                                <RangeColumns>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[Failure]" Alias="[F]" Column="GroupId" />
+                                </RangeColumns>
+                                <RangeExpressions>
+                                  <ScalarOperator ScalarString="[@groupId]">
+                                    <Identifier>
+                                      <ColumnReference Column="@groupId" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </RangeExpressions>
+                              </Prefix>
+                            </SeekKeys>
+                          </SeekPredicateNew>
+                        </SeekPredicates>
+                      </IndexScan>
+                    </RelOp>
+                  </StreamAggregate>
+                </RelOp>
+              </ComputeScalar>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@groupId" ParameterCompiledValue="{guid'CF8E867D-608A-4AE0-A8AC-5E3456F8950B'}" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText="&#x9;INSERT INTO upload.TeuResult (Id, TeuId, TestCaseResultCount, FailureCount)&#xD;&#xA;&#x9;VALUES (@groupId, @teuId, @resultCount, @failureCount)&#xD;" StatementId="3" StatementCompId="4" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.0200032" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0xD12CC5EBBDCDCCB1" QueryPlanHash="0x55B989A6944F8F18">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="1" CompileCPU="1" CompileMemory="128">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Clustered Index Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.02" EstimateCPU="2e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0200032" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <ScalarInsert DMLRequestSort="0">
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1003" />
+                    <ScalarOperator ScalarString="getdate()">
+                      <Identifier>
+                        <ColumnReference Column="ConstExpr1004">
+                          <ScalarOperator>
+                            <Intrinsic FunctionName="getdate" />
+                          </ScalarOperator>
+                        </ColumnReference>
+                      </Identifier>
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <Object Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResult]" Index="[TeuResult_PK]" IndexKind="Clustered" />
+                <Object Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResult]" Index="[TeuResult_AgentLog]" IndexKind="NonClustered" />
+                <SetPredicate>
+                  <ScalarOperator ScalarString="[OurLabReporting].[upload].[TeuResult].[Id] = RaiseIfNullInsert([@groupId]),[OurLabReporting].[upload].[TeuResult].[TeuId] = RaiseIfNullInsert([@teuId]),[OurLabReporting].[upload].[TeuResult].[TestCaseResultCount] = RaiseIfNullInsert([@resultCount]),[OurLabReporting].[upload].[TeuResult].[FailureCount] = RaiseIfNullInsert([@failureCount]),[OurLabReporting].[upload].[TeuResult].[UploadedDate] = RaiseIfNullInsert([Expr1003]),[OurLabReporting].[upload].[TeuResult].[TeuResultLogId] = NULL">
+                    <ScalarExpressionList>
+                      <ScalarOperator>
+                        <MultipleAssign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResult]" Column="Id" />
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="RaiseIfNullInsert">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="@groupId" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResult]" Column="TeuId" />
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="RaiseIfNullInsert">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="@teuId" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResult]" Column="TestCaseResultCount" />
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="RaiseIfNullInsert">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="@resultCount" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResult]" Column="FailureCount" />
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="RaiseIfNullInsert">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="@failureCount" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResult]" Column="UploadedDate" />
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="RaiseIfNullInsert">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="Expr1003" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResult]" Column="TeuResultLogId" />
+                            <ScalarOperator>
+                              <Const ConstValue="NULL" />
+                            </ScalarOperator>
+                          </Assign>
+                        </MultipleAssign>
+                      </ScalarOperator>
+                    </ScalarExpressionList>
+                  </ScalarOperator>
+                </SetPredicate>
+              </ScalarInsert>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@teuId" ParameterCompiledValue="{guid'528BB30B-02B7-4C2E-9020-DA42E799FBD0'}" />
+              <ColumnReference Column="@groupId" ParameterCompiledValue="{guid'292DF328-364F-422E-9160-C392A66B8902'}" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText="&#xA;RETURN 0" StatementId="4" StatementCompId="5" StatementType="RETURN" RetrievedFromCache="true" />
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

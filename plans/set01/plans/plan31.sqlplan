@@ -1,0 +1,1480 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="CREATE PROCEDURE [dbo].[Uploader_AddMachineSetToMix]&#xD;&#xA;@mixId UNIQUEIDENTIFIER, @machineSetId UNIQUEIDENTIFIER, @frTedId UNIQUEIDENTIFIER, @implementation XML=NULL, @startDate DATETIME, @endDate DATETIME=NULL, @status VARCHAR (200), @isNewMachineSet BIT=1 OUTPUT, @executionStatusLink NVARCHAR (1024)=NULL, @runLogDirectory NVARCHAR (260)=NULL, @customExecutionFilePath NVARCHAR (1024)=NULL, @setupWtqFilePath NVARCHAR (1024)=NULL, @setupDtwInstanceWtqFilePath NVARCHAR (1024)=NULL, @targetPoolWtqFilePath NVARCHAR (1024)=NULL, @machineSetTeusWtqFilePath NVARCHAR (1024)=NULL, @environmentSetupStarted BIT=NULL, @testExecutionStarted BIT=NULL, @environmentSetupFailure BIT=NULL, @reclaimedBeforeCompletion BIT=NULL&#xD;&#xA;AS&#xD;&#xA;BEGIN&#xD;&#xA;    &#xD;&#xA;    DECLARE @stopwatchBeginTime datetime2 &#xD;&#xA;    SELECT @stopwatchBeginTime = [dbo].[fnBeginStopwatch]()&#xD;&#xA;&#xD;&#xA;   " StatementId="1" StatementCompId="2" StatementType="ASSIGN WITH QUERY" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" DECLARE @statusId int&#xD;&#xA;    DECLARE @statusType varchar(50)&#xD;&#xA;    DECLARE @ErrorMsg varchar(1024)&#xD;&#xA;    &#xD;&#xA;    SET @statusType = 'MachineSet'&#xD;&#xA;&#xD;&#xA;   " StatementId="2" StatementCompId="3" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" EXEC dbo.Uploader_GetOrCreateStatusId @status, @statusType, @statusId OUTPUT&#xD;&#xA;&#xD;&#xA;   " StatementId="3" StatementCompId="4" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" DECLARE @ResolvedTEDIntId INT&#xD;&#xA;    SELECT @ResolvedTEDIntId = Id FROM dbo.ResolvedTED WITH (NOLOCK) WHERE Guid = @frTedId&#xD;&#xA;&#xD;&#xA;   " StatementId="4" StatementCompId="5" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032831" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0xC77ACB628516748A" QueryPlanHash="0xAE0239E3CA342451">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="2" CompileCPU="2" CompileMemory="328">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.37084e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Column="Id" />
+              </OutputList>
+              <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Column="Id" />
+                  </DefinedValue>
+                </DefinedValues>
+                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Index="[ResolvedTED_IDX_Guid]" IndexKind="NonClustered" />
+                <SeekPredicates>
+                  <SeekPredicateNew>
+                    <SeekKeys>
+                      <Prefix ScanType="EQ">
+                        <RangeColumns>
+                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Column="Guid" />
+                        </RangeColumns>
+                        <RangeExpressions>
+                          <ScalarOperator ScalarString="[@frTedId]">
+                            <Identifier>
+                              <ColumnReference Column="@frTedId" />
+                            </Identifier>
+                          </ScalarOperator>
+                        </RangeExpressions>
+                      </Prefix>
+                    </SeekKeys>
+                  </SeekPredicateNew>
+                </SeekPredicates>
+              </IndexScan>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@frTedId" ParameterCompiledValue="{guid'19DEDE32-E542-41DB-8E51-5F10DDD1E1ED'}" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtCond StatementText=" IF (@ResolvedTEDIntId IS NULL)&#xD;&#xA;   " StatementId="5" StatementCompId="6" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;        SET @ErrorMsg = 'Unable to find FrTed Id for FrTed Guid ' + CAST(@frTedId as varchar(255))&#xD;&#xA;       " StatementId="6" StatementCompId="7" StatementType="ASSIGN" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" RAISERROR(@ErrorMsg, 11, 1)&#xD;&#xA;       " StatementId="7" StatementCompId="8" StatementType="RAISERROR" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" GOTO ProcExit&#xD;&#xA;   " StatementId="8" StatementCompId="9" StatementType="GOTO" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtSimple StatementText=" END&#xD;&#xA;&#xD;&#xA;    DECLARE @MixIntId INT&#xD;&#xA;    SELECT @MixIntId = Id FROM dbo.Mix WITH (NOLOCK) WHERE [Guid] = @MixId&#xD;&#xA;&#xD;&#xA;   " StatementId="9" StatementCompId="11" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032831" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x2E00E2E43412D73C" QueryPlanHash="0x4B5AFA0B241BB59C">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="2" CompileCPU="2" CompileMemory="328">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.48176e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Column="Id" />
+              </OutputList>
+              <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Column="Id" />
+                  </DefinedValue>
+                </DefinedValues>
+                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Index="[Mix_IDX_Guid]" IndexKind="NonClustered" />
+                <SeekPredicates>
+                  <SeekPredicateNew>
+                    <SeekKeys>
+                      <Prefix ScanType="EQ">
+                        <RangeColumns>
+                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Column="Guid" />
+                        </RangeColumns>
+                        <RangeExpressions>
+                          <ScalarOperator ScalarString="[@mixId]">
+                            <Identifier>
+                              <ColumnReference Column="@mixId" />
+                            </Identifier>
+                          </ScalarOperator>
+                        </RangeExpressions>
+                      </Prefix>
+                    </SeekKeys>
+                  </SeekPredicateNew>
+                </SeekPredicates>
+              </IndexScan>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@mixId" ParameterCompiledValue="{guid'D8ED0ADC-86C5-4227-9C8D-F023DA7E3C07'}" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtCond StatementText=" IF (@MixIntId IS NULL)&#xD;&#xA;   " StatementId="10" StatementCompId="12" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;        SET @ErrorMsg = 'Unable to find Mix Id for Mix Guid ' + CAST(@MixId as varchar(255))&#xD;&#xA;       " StatementId="11" StatementCompId="13" StatementType="ASSIGN" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" RAISERROR(@ErrorMsg, 11, 1)&#xD;&#xA;       " StatementId="12" StatementCompId="14" StatementType="RAISERROR" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" GOTO ProcExit&#xD;&#xA;   " StatementId="13" StatementCompId="15" StatementType="GOTO" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtSimple StatementText=" END&#xD;&#xA;&#xD;&#xA;    DECLARE @MachineSetIntId INT&#xD;&#xA;&#xD;&#xA;    SELECT @isNewMachineSet = 0, @MachineSetIntId = Id &#xD;&#xA;    FROM [dbo].[MachineSet]&#xD;&#xA;    WHERE @machineSetId = Guid&#xD;&#xA;&#xD;&#xA;   " StatementId="14" StatementCompId="17" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032832" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x64A873089DABB2F4" QueryPlanHash="0x9A4C1F584A5156AD">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="4" CompileCPU="4" CompileMemory="344">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="12" EstimatedTotalSubtreeCost="0.0032832" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="Id" />
+                <ColumnReference Column="Expr1003" />
+              </OutputList>
+              <ComputeScalar>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1003" />
+                    <ScalarOperator ScalarString="(0)">
+                      <Const ConstValue="(0)" />
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp NodeId="1" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.23247e+007" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="Id" />
+                  </OutputList>
+                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="Id" />
+                      </DefinedValue>
+                    </DefinedValues>
+                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Index="[MachineSet_IDX_Guid]" IndexKind="NonClustered" />
+                    <SeekPredicates>
+                      <SeekPredicateNew>
+                        <SeekKeys>
+                          <Prefix ScanType="EQ">
+                            <RangeColumns>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="Guid" />
+                            </RangeColumns>
+                            <RangeExpressions>
+                              <ScalarOperator ScalarString="[@machineSetId]">
+                                <Identifier>
+                                  <ColumnReference Column="@machineSetId" />
+                                </Identifier>
+                              </ScalarOperator>
+                            </RangeExpressions>
+                          </Prefix>
+                        </SeekKeys>
+                      </SeekPredicateNew>
+                    </SeekPredicates>
+                  </IndexScan>
+                </RelOp>
+              </ComputeScalar>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@isNewMachineSet" ParameterCompiledValue="NULL" />
+              <ColumnReference Column="@machineSetId" ParameterCompiledValue="{guid'667C98F3-D80B-485E-8AC9-5FFB298AD27A'}" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtCond StatementText=" IF @environmentSetupStarted is null&#xD;&#xA;   " StatementId="15" StatementCompId="18" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;        SET @environmentSetupStarted = 0&#xD;&#xA;   " StatementId="16" StatementCompId="19" StatementType="ASSIGN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtCond StatementText=" END        &#xD;&#xA;&#xD;&#xA;    IF @testExecutionStarted is null&#xD;&#xA;   " StatementId="17" StatementCompId="21" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;        SET @testExecutionStarted = 0&#xD;&#xA;   " StatementId="18" StatementCompId="22" StatementType="ASSIGN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtCond StatementText=" END        &#xD;&#xA;&#xD;&#xA;    IF @environmentSetupFailure is null&#xD;&#xA;   " StatementId="19" StatementCompId="24" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;        SET @environmentSetupFailure = 0&#xD;&#xA;   " StatementId="20" StatementCompId="25" StatementType="ASSIGN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtCond StatementText=" END        &#xD;&#xA;&#xD;&#xA;    IF @reclaimedBeforeCompletion is null&#xD;&#xA;   " StatementId="21" StatementCompId="27" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;        SET @reclaimedBeforeCompletion = 0&#xD;&#xA;   " StatementId="22" StatementCompId="28" StatementType="ASSIGN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtCond StatementText=" END        &#xD;&#xA;&#xD;&#xA;&#xD;&#xA;    IF @isNewMachineSet = 0&#xD;&#xA;   " StatementId="23" StatementCompId="30" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;        UPDATE [dbo].[MachineSet]&#xD;&#xA;        SET     [MixId] = @MixIntId&#xD;&#xA;                ,[ResolvedTEDId] = @ResolvedTEDIntId&#xD;&#xA;                ,[StartDate] = @startDate&#xD;&#xA;                ,[EndDate] = @endDate&#xD;&#xA;                ,[StatusId] = @statusId&#xD;&#xA;                ,[ExecutionStatusLink] = @executionStatusLink&#xD;&#xA;                ,[ImplementationDetails] = @implementation&#xD;&#xA;                ,[RunLogDirectory] = @runLogDirectory&#xD;&#xA;                ,[CustomExecutionFilePath] = @customExecutionFilePath&#xD;&#xA;                ,[SetupWtqFilePath] = @setupWtqFilePath&#xD;&#xA;                ,[SetupDtwInstanceWtqFilePath] = @setupDtwInstanceWtqFilePath&#xD;&#xA;                ,[TargetPoolWtqFilePath] = @targetPoolWtqFilePath&#xD;&#xA;                ,[TEUListWtqFilePath] = @machineSetTeusWtqFilePath&#xD;&#xA;                ,[EnvironmentSetupStarted] = @environmentSetupStarted&#xD;&#xA;                ,[TestExecutionStarted] = @testExecutionStarted&#xD;&#xA;                ,[EnvironmentSetupFailure] = @environmentSetupFailure&#xD;&#xA;                ,[ReclaimedBeforeCompletion] = @reclaimedBeforeCompletion&#xD;&#xA;        WHERE @MachineSetIntId = Id&#xD;&#xA;   " StatementId="24" StatementCompId="31" StatementType="UPDATE" RetrievedFromCache="true" StatementSubTreeCost="0.039861" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x70BC4A71D944B9CD" QueryPlanHash="0x87B8B9C213CF5ED">
+                <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="72" CompileTime="19" CompileCPU="19" CompileMemory="872">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="1" PhysicalOp="Assert" LogicalOp="Assert" EstimateRows="1" EstimateIO="0" EstimateCPU="1.8e-007" AvgRowSize="9" EstimatedTotalSubtreeCost="0.039861" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList />
+                    <Assert StartupExpression="0">
+                      <RelOp NodeId="2" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0398609" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList>
+                          <ColumnReference Column="Expr1064" />
+                          <ColumnReference Column="Expr1065" />
+                        </OutputList>
+                        <NestedLoops Optimized="0">
+                          <DefinedValues>
+                            <DefinedValue>
+                              <ColumnReference Column="Expr1065" />
+                            </DefinedValue>
+                          </DefinedValues>
+                          <OuterReferences>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StatusId" />
+                          </OuterReferences>
+                          <ProbeColumn>
+                            <ColumnReference Column="Expr1065" />
+                          </ProbeColumn>
+                          <RelOp NodeId="3" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="12" EstimatedTotalSubtreeCost="0.0365736" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StatusId" />
+                              <ColumnReference Column="Expr1064" />
+                            </OutputList>
+                            <NestedLoops Optimized="0">
+                              <DefinedValues>
+                                <DefinedValue>
+                                  <ColumnReference Column="Expr1064" />
+                                </DefinedValue>
+                              </DefinedValues>
+                              <OuterReferences>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ResolvedTEDId" />
+                              </OuterReferences>
+                              <ProbeColumn>
+                                <ColumnReference Column="Expr1064" />
+                              </ProbeColumn>
+                              <RelOp NodeId="4" PhysicalOp="Clustered Index Update" LogicalOp="Update" EstimateRows="1" EstimateIO="0.03" EstimateCPU="3e-006" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0332863" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ResolvedTEDId" />
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StatusId" />
+                                </OutputList>
+                                <Update DMLRequestSort="0">
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Index="[MachineSet_PK]" IndexKind="Clustered" />
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Index="[MachineSet_IDX_MixId]" IndexKind="NonClustered" />
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Index="[MachineSet_IDX_ResolvedTEDId]" IndexKind="NonClustered" />
+                                  <SetPredicate>
+                                    <ScalarOperator ScalarString="[OurLabReporting].[dbo].[MachineSet].[MixId] = RaiseIfNullUpdate([@MixIntId]),[OurLabReporting].[dbo].[MachineSet].[ResolvedTEDId] = RaiseIfNullUpdate([@ResolvedTEDIntId]),[OurLabReporting].[dbo].[MachineSet].[StartDate] = RaiseIfNullUpdate([@startDate]),[OurLabReporting].[dbo].[MachineSet].[EndDate] = [@endDate],[OurLabReporting].[dbo].[MachineSet].[StatusId] = RaiseIfNullUpdate([@statusId]),[OurLabReporting].[dbo].[MachineSet].[ExecutionStatusLink] = [@executionStatusLink],[OurLabReporting].[dbo].[MachineSet].[ImplementationDetails] = [@implementation],[OurLabReporting].[dbo].[MachineSet].[RunLogDirectory] = [@runLogDirectory],[OurLabReporting].[dbo].[MachineSet].[CustomExecutionFilePath] = [@customExecutionFilePath],[OurLabReporting].[dbo].[MachineSet].[SetupWtqFilePath] = [@setupWtqFilePath],[OurLabReporting].[dbo].[MachineSet].[SetupDtwInstanceWtqFilePath] = [@setupDtwInstanceWtqFilePath],[OurLabReporting].[dbo].[MachineSet].[TargetPoolWtqFilePath] = [@targetPoolWtqFilePath],[OurLabReporting].[dbo].[MachineSet].[TEUListWtqFilePath] = [@machineSetTeusWtqFilePath],[OurLabReporting].[dbo].[MachineSet].[EnvironmentSetupStarted] = RaiseIfNullUpdate([@environmentSetupStarted]),[OurLabReporting].[dbo].[MachineSet].[TestExecutionStarted] = RaiseIfNullUpdate([@testExecutionStarted]),[OurLabReporting].[dbo].[MachineSet].[EnvironmentSetupFailure] = RaiseIfNullUpdate([@environmentSetupFailure]),[OurLabReporting].[dbo].[MachineSet].[ReclaimedBeforeCompletion] = RaiseIfNullUpdate([@reclaimedBeforeCompletion])">
+                                      <ScalarExpressionList>
+                                        <ScalarOperator>
+                                          <MultipleAssign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="MixId" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullUpdate">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@MixIntId" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ResolvedTEDId" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullUpdate">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@ResolvedTEDIntId" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StartDate" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullUpdate">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@startDate" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="EndDate" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@endDate" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StatusId" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullUpdate">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@statusId" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ExecutionStatusLink" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@executionStatusLink" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ImplementationDetails" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@implementation" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="RunLogDirectory" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@runLogDirectory" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="CustomExecutionFilePath" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@customExecutionFilePath" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="SetupWtqFilePath" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@setupWtqFilePath" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="SetupDtwInstanceWtqFilePath" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@setupDtwInstanceWtqFilePath" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="TargetPoolWtqFilePath" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@targetPoolWtqFilePath" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="TEUListWtqFilePath" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@machineSetTeusWtqFilePath" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="EnvironmentSetupStarted" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullUpdate">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@environmentSetupStarted" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="TestExecutionStarted" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullUpdate">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@testExecutionStarted" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="EnvironmentSetupFailure" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullUpdate">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@environmentSetupFailure" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ReclaimedBeforeCompletion" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullUpdate">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@reclaimedBeforeCompletion" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                          </MultipleAssign>
+                                        </ScalarOperator>
+                                      </ScalarExpressionList>
+                                    </ScalarOperator>
+                                  </SetPredicate>
+                                  <RelOp NodeId="5" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="19" EstimatedTotalSubtreeCost="0.0032833" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                    <OutputList>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="Id" />
+                                      <ColumnReference Column="Expr1060" />
+                                      <ColumnReference Column="Expr1061" />
+                                    </OutputList>
+                                    <ComputeScalar>
+                                      <DefinedValues>
+                                        <DefinedValue>
+                                          <ColumnReference Column="Expr1060" />
+                                          <ScalarOperator ScalarString="[Expr1060]">
+                                            <Identifier>
+                                              <ColumnReference Column="Expr1060" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </DefinedValue>
+                                        <DefinedValue>
+                                          <ColumnReference Column="Expr1061" />
+                                          <ScalarOperator ScalarString="[Expr1061]">
+                                            <Identifier>
+                                              <ColumnReference Column="Expr1061" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </DefinedValue>
+                                      </DefinedValues>
+                                      <RelOp NodeId="6" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="19" EstimatedTotalSubtreeCost="0.0032833" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                        <OutputList>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="Id" />
+                                          <ColumnReference Column="Expr1060" />
+                                          <ColumnReference Column="Expr1061" />
+                                        </OutputList>
+                                        <ComputeScalar>
+                                          <DefinedValues>
+                                            <DefinedValue>
+                                              <ColumnReference Column="Expr1060" />
+                                              <ScalarOperator ScalarString="CASE WHEN CASE WHEN [OurLabReporting].[dbo].[MachineSet].[MixId] = [@MixIntId] THEN (1) ELSE (0) END AND CASE WHEN [OurLabReporting].[dbo].[MachineSet].[StartDate] = [@startDate] THEN (1) ELSE (0) END AND CASE WHEN [OurLabReporting].[dbo].[MachineSet].[EndDate] = [@endDate] THEN (1) ELSE (0) END AND CASE WHEN [OurLabReporting].[dbo].[MachineSet].[ExecutionStatusLink] = [@executionStatusLink] THEN (1) ELSE (0) END AND CASE WHEN [OurLabReporting].[dbo].[MachineSet].[CustomExecutionFilePath] = [@customExecutionFilePath] THEN (1) ELSE (0) END AND CASE WHEN [OurLabReporting].[dbo].[MachineSet].[StatusId] = [@statusId] THEN (1) ELSE (0) END THEN (0) ELSE (1) END">
+                                                <IF>
+                                                  <Condition>
+                                                    <ScalarOperator>
+                                                      <Logical Operation="AND">
+                                                        <ScalarOperator>
+                                                          <IF>
+                                                            <Condition>
+                                                              <ScalarOperator>
+                                                                <Compare CompareOp="BINARY IS">
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="MixId" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Column="@MixIntId" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                </Compare>
+                                                              </ScalarOperator>
+                                                            </Condition>
+                                                            <Then>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(1)" />
+                                                              </ScalarOperator>
+                                                            </Then>
+                                                            <Else>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(0)" />
+                                                              </ScalarOperator>
+                                                            </Else>
+                                                          </IF>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator>
+                                                          <IF>
+                                                            <Condition>
+                                                              <ScalarOperator>
+                                                                <Compare CompareOp="BINARY IS">
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StartDate" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Column="@startDate" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                </Compare>
+                                                              </ScalarOperator>
+                                                            </Condition>
+                                                            <Then>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(1)" />
+                                                              </ScalarOperator>
+                                                            </Then>
+                                                            <Else>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(0)" />
+                                                              </ScalarOperator>
+                                                            </Else>
+                                                          </IF>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator>
+                                                          <IF>
+                                                            <Condition>
+                                                              <ScalarOperator>
+                                                                <Compare CompareOp="BINARY IS">
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="EndDate" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Column="@endDate" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                </Compare>
+                                                              </ScalarOperator>
+                                                            </Condition>
+                                                            <Then>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(1)" />
+                                                              </ScalarOperator>
+                                                            </Then>
+                                                            <Else>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(0)" />
+                                                              </ScalarOperator>
+                                                            </Else>
+                                                          </IF>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator>
+                                                          <IF>
+                                                            <Condition>
+                                                              <ScalarOperator>
+                                                                <Compare CompareOp="BINARY IS">
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ExecutionStatusLink" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Column="@executionStatusLink" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                </Compare>
+                                                              </ScalarOperator>
+                                                            </Condition>
+                                                            <Then>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(1)" />
+                                                              </ScalarOperator>
+                                                            </Then>
+                                                            <Else>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(0)" />
+                                                              </ScalarOperator>
+                                                            </Else>
+                                                          </IF>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator>
+                                                          <IF>
+                                                            <Condition>
+                                                              <ScalarOperator>
+                                                                <Compare CompareOp="BINARY IS">
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="CustomExecutionFilePath" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Column="@customExecutionFilePath" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                </Compare>
+                                                              </ScalarOperator>
+                                                            </Condition>
+                                                            <Then>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(1)" />
+                                                              </ScalarOperator>
+                                                            </Then>
+                                                            <Else>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(0)" />
+                                                              </ScalarOperator>
+                                                            </Else>
+                                                          </IF>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator>
+                                                          <IF>
+                                                            <Condition>
+                                                              <ScalarOperator>
+                                                                <Compare CompareOp="BINARY IS">
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StatusId" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Column="@statusId" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                </Compare>
+                                                              </ScalarOperator>
+                                                            </Condition>
+                                                            <Then>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(1)" />
+                                                              </ScalarOperator>
+                                                            </Then>
+                                                            <Else>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(0)" />
+                                                              </ScalarOperator>
+                                                            </Else>
+                                                          </IF>
+                                                        </ScalarOperator>
+                                                      </Logical>
+                                                    </ScalarOperator>
+                                                  </Condition>
+                                                  <Then>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="(0)" />
+                                                    </ScalarOperator>
+                                                  </Then>
+                                                  <Else>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="(1)" />
+                                                    </ScalarOperator>
+                                                  </Else>
+                                                </IF>
+                                              </ScalarOperator>
+                                            </DefinedValue>
+                                            <DefinedValue>
+                                              <ColumnReference Column="Expr1061" />
+                                              <ScalarOperator ScalarString="CASE WHEN CASE WHEN [OurLabReporting].[dbo].[MachineSet].[ResolvedTEDId] = [@ResolvedTEDIntId] THEN (1) ELSE (0) END AND CASE WHEN [OurLabReporting].[dbo].[MachineSet].[StatusId] = [@statusId] THEN (1) ELSE (0) END THEN (0) ELSE (1) END">
+                                                <IF>
+                                                  <Condition>
+                                                    <ScalarOperator>
+                                                      <Logical Operation="AND">
+                                                        <ScalarOperator>
+                                                          <IF>
+                                                            <Condition>
+                                                              <ScalarOperator>
+                                                                <Compare CompareOp="BINARY IS">
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ResolvedTEDId" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Column="@ResolvedTEDIntId" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                </Compare>
+                                                              </ScalarOperator>
+                                                            </Condition>
+                                                            <Then>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(1)" />
+                                                              </ScalarOperator>
+                                                            </Then>
+                                                            <Else>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(0)" />
+                                                              </ScalarOperator>
+                                                            </Else>
+                                                          </IF>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator>
+                                                          <IF>
+                                                            <Condition>
+                                                              <ScalarOperator>
+                                                                <Compare CompareOp="BINARY IS">
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StatusId" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Column="@statusId" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                </Compare>
+                                                              </ScalarOperator>
+                                                            </Condition>
+                                                            <Then>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(1)" />
+                                                              </ScalarOperator>
+                                                            </Then>
+                                                            <Else>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(0)" />
+                                                              </ScalarOperator>
+                                                            </Else>
+                                                          </IF>
+                                                        </ScalarOperator>
+                                                      </Logical>
+                                                    </ScalarOperator>
+                                                  </Condition>
+                                                  <Then>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="(0)" />
+                                                    </ScalarOperator>
+                                                  </Then>
+                                                  <Else>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="(1)" />
+                                                    </ScalarOperator>
+                                                  </Else>
+                                                </IF>
+                                              </ScalarOperator>
+                                            </DefinedValue>
+                                          </DefinedValues>
+                                          <RelOp NodeId="7" PhysicalOp="Top" LogicalOp="Top" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="2093" EstimatedTotalSubtreeCost="0.0032832" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                            <OutputList>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="Id" />
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="MixId" />
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ResolvedTEDId" />
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StartDate" />
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="EndDate" />
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ExecutionStatusLink" />
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="CustomExecutionFilePath" />
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StatusId" />
+                                            </OutputList>
+                                            <Top RowCount="0" IsPercent="0" WithTies="0">
+                                              <TopExpression>
+                                                <ScalarOperator ScalarString="(1)">
+                                                  <Const ConstValue="(1)" />
+                                                </ScalarOperator>
+                                              </TopExpression>
+                                              <RelOp NodeId="8" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="2093" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.23247e+007" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                <OutputList>
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="Id" />
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="MixId" />
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ResolvedTEDId" />
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StartDate" />
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="EndDate" />
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ExecutionStatusLink" />
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="CustomExecutionFilePath" />
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StatusId" />
+                                                </OutputList>
+                                                <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                                  <DefinedValues>
+                                                    <DefinedValue>
+                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="Id" />
+                                                    </DefinedValue>
+                                                    <DefinedValue>
+                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="MixId" />
+                                                    </DefinedValue>
+                                                    <DefinedValue>
+                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ResolvedTEDId" />
+                                                    </DefinedValue>
+                                                    <DefinedValue>
+                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StartDate" />
+                                                    </DefinedValue>
+                                                    <DefinedValue>
+                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="EndDate" />
+                                                    </DefinedValue>
+                                                    <DefinedValue>
+                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ExecutionStatusLink" />
+                                                    </DefinedValue>
+                                                    <DefinedValue>
+                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="CustomExecutionFilePath" />
+                                                    </DefinedValue>
+                                                    <DefinedValue>
+                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StatusId" />
+                                                    </DefinedValue>
+                                                  </DefinedValues>
+                                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Index="[MachineSet_PK]" IndexKind="Clustered" />
+                                                  <SeekPredicates>
+                                                    <SeekPredicateNew>
+                                                      <SeekKeys>
+                                                        <Prefix ScanType="EQ">
+                                                          <RangeColumns>
+                                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="Id" />
+                                                          </RangeColumns>
+                                                          <RangeExpressions>
+                                                            <ScalarOperator ScalarString="[@MachineSetIntId]">
+                                                              <Identifier>
+                                                                <ColumnReference Column="@MachineSetIntId" />
+                                                              </Identifier>
+                                                            </ScalarOperator>
+                                                          </RangeExpressions>
+                                                        </Prefix>
+                                                      </SeekKeys>
+                                                    </SeekPredicateNew>
+                                                  </SeekPredicates>
+                                                </IndexScan>
+                                              </RelOp>
+                                            </Top>
+                                          </RelOp>
+                                        </ComputeScalar>
+                                      </RelOp>
+                                    </ComputeScalar>
+                                  </RelOp>
+                                </Update>
+                              </RelOp>
+                              <RelOp NodeId="20" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.37084e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList />
+                                <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                  <DefinedValues />
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Index="[ResolvedTED_PK]" IndexKind="Clustered" />
+                                  <SeekPredicates>
+                                    <SeekPredicateNew>
+                                      <SeekKeys>
+                                        <Prefix ScanType="EQ">
+                                          <RangeColumns>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Column="Id" />
+                                          </RangeColumns>
+                                          <RangeExpressions>
+                                            <ScalarOperator ScalarString="[OurLabReporting].[dbo].[MachineSet].[ResolvedTEDId]">
+                                              <Identifier>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ResolvedTEDId" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </RangeExpressions>
+                                        </Prefix>
+                                      </SeekKeys>
+                                    </SeekPredicateNew>
+                                  </SeekPredicates>
+                                </IndexScan>
+                              </RelOp>
+                            </NestedLoops>
+                          </RelOp>
+                          <RelOp NodeId="21" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="96" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList />
+                            <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                              <DefinedValues />
+                              <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Index="[Status_PK]" IndexKind="Clustered" />
+                              <SeekPredicates>
+                                <SeekPredicateNew>
+                                  <SeekKeys>
+                                    <Prefix ScanType="EQ">
+                                      <RangeColumns>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Column="Id" />
+                                      </RangeColumns>
+                                      <RangeExpressions>
+                                        <ScalarOperator ScalarString="[OurLabReporting].[dbo].[MachineSet].[StatusId]">
+                                          <Identifier>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StatusId" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </RangeExpressions>
+                                    </Prefix>
+                                  </SeekKeys>
+                                </SeekPredicateNew>
+                              </SeekPredicates>
+                            </IndexScan>
+                          </RelOp>
+                        </NestedLoops>
+                      </RelOp>
+                      <Predicate>
+                        <ScalarOperator ScalarString="CASE WHEN [Expr1064] IS NULL THEN (0) ELSE CASE WHEN [Expr1065] IS NULL THEN (1) ELSE NULL END END">
+                          <IF>
+                            <Condition>
+                              <ScalarOperator>
+                                <Logical Operation="IS NULL">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Expr1064" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Logical>
+                              </ScalarOperator>
+                            </Condition>
+                            <Then>
+                              <ScalarOperator>
+                                <Const ConstValue="(0)" />
+                              </ScalarOperator>
+                            </Then>
+                            <Else>
+                              <ScalarOperator>
+                                <IF>
+                                  <Condition>
+                                    <ScalarOperator>
+                                      <Logical Operation="IS NULL">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="Expr1065" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Logical>
+                                    </ScalarOperator>
+                                  </Condition>
+                                  <Then>
+                                    <ScalarOperator>
+                                      <Const ConstValue="(1)" />
+                                    </ScalarOperator>
+                                  </Then>
+                                  <Else>
+                                    <ScalarOperator>
+                                      <Const ConstValue="NULL" />
+                                    </ScalarOperator>
+                                  </Else>
+                                </IF>
+                              </ScalarOperator>
+                            </Else>
+                          </IF>
+                        </ScalarOperator>
+                      </Predicate>
+                    </Assert>
+                  </RelOp>
+                  <ParameterList>
+                    <ColumnReference Column="@reclaimedBeforeCompletion" ParameterCompiledValue="(0)" />
+                    <ColumnReference Column="@environmentSetupFailure" ParameterCompiledValue="(0)" />
+                    <ColumnReference Column="@testExecutionStarted" ParameterCompiledValue="(1)" />
+                    <ColumnReference Column="@environmentSetupStarted" ParameterCompiledValue="(1)" />
+                    <ColumnReference Column="@machineSetTeusWtqFilePath" ParameterCompiledValue="N'\\osgt3tsvc04\rld\150129\schedule_1f018efd-95b9-4016-9612-81c7fce5f34d\mix_0\ted_0\fr_ted_0\MachineSet_3\MachineSetRS_1845187.wtq'" />
+                    <ColumnReference Column="@targetPoolWtqFilePath" ParameterCompiledValue="N'\\osgt3tsvc04\rld\150129\schedule_1f018efd-95b9-4016-9612-81c7fce5f34d\mix_0\ted_0\fr_ted_0\machineset_3\MSPool_1845187_Threshold~Updateability_P1~HV_x86FRE_QPS-PLOC_768x1280_OSGThreshold_EDS11.wtq'" />
+                    <ColumnReference Column="@setupDtwInstanceWtqFilePath" ParameterCompiledValue="N'\\osgt3tsvc04\rld\150129\schedule_1f018efd-95b9-4016-9612-81c7fce5f34d\mix_0\ted_0\fr_ted_0\machineset_3\SetupDtwInstance_OSGThreshold_EDS11_717050.wtq'" />
+                    <ColumnReference Column="@setupWtqFilePath" ParameterCompiledValue="N'\\osgt3tsvc04\rld\150129\schedule_1f018efd-95b9-4016-9612-81c7fce5f34d\mix_0\ted_0\fr_ted_0\MachineSet_3\MachineSetSetupRS_1845187.wtq'" />
+                    <ColumnReference Column="@customExecutionFilePath" ParameterCompiledValue="N'\\osgt3tsvc04\rld\150129\schedule_1f018efd-95b9-4016-9612-81c7fce5f34d\mix_0\ted_0\fr_ted_0\MachineSet_3\MachineSetRS_1845187.wtq'" />
+                    <ColumnReference Column="@runLogDirectory" ParameterCompiledValue="N'\\osgt3tsvc04\rld\150129\schedule_1f018efd-95b9-4016-9612-81c7fce5f34d\mix_0\ted_0\fr_ted_0\machineset_3'" />
+                    <ColumnReference Column="@implementation" ParameterCompiledValue="N'&lt;Implementation xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; QuiverVersion=&quot;1.7.1.9&quot; GUID=&quot;667c98f3-d80b-485e-8ac9-5ffb298ad27a&quot; type=&quot;SkulWtt&quot; CustomExecutionUrl=&quot;http://OSGT3TSVC04/CoreLabWebUInew/Ins'" />
+                    <ColumnReference Column="@executionStatusLink" ParameterCompiledValue="N'http://OSGT3TSVC04/CoreLabWebUInew/InstanceMonitor.aspx?InstanceId=1845187&amp;Status=All'" />
+                    <ColumnReference Column="@endDate" ParameterCompiledValue="'2015-01-29 18:39:43.443'" />
+                    <ColumnReference Column="@startDate" ParameterCompiledValue="'2015-01-29 17:48:24.967'" />
+                  </ParameterList>
+                </QueryPlan>
+              </StmtSimple>
+            </Statements>
+          </Then>
+          <Else>
+            <Statements>
+              <StmtSimple StatementText=" END&#xD;&#xA;    ELSE&#xD;&#xA;    BEGIN&#xD;&#xA;        SET @isNewMachineSet = 1&#xD;&#xA;&#xD;&#xA;       " StatementId="25" StatementCompId="34" StatementType="ASSIGN" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" INSERT INTO [dbo].[MachineSet]&#xD;&#xA;            ([Guid]&#xD;&#xA;            ,[MixId]&#xD;&#xA;            ,[ResolvedTEDId]&#xD;&#xA;            ,[StartDate]&#xD;&#xA;            ,[EndDate]&#xD;&#xA;            ,[StatusId]&#xD;&#xA;            ,[ExecutionStatusLink]&#xD;&#xA;            ,[ImplementationDetails]&#xD;&#xA;            ,[RunLogDirectory]&#xD;&#xA;            ,[CustomExecutionFilePath]&#xD;&#xA;            ,[SetupWtqFilePath]&#xD;&#xA;            ,[SetupDtwInstanceWtqFilePath]&#xD;&#xA;            ,[TargetPoolWtqFilePath]&#xD;&#xA;            ,[TEUListWtqFilePath]&#xD;&#xA;            ,[EnvironmentSetupStarted]&#xD;&#xA;            ,[TestExecutionStarted]&#xD;&#xA;            ,[EnvironmentSetupFailure]&#xD;&#xA;            ,[ReclaimedBeforeCompletion]&#xD;&#xA;            )&#xD;&#xA;     VALUES&#xD;&#xA;            (@machineSetId&#xD;&#xA;            ,@MixIntId&#xD;&#xA;            ,@ResolvedTEDIntId&#xD;&#xA;            ,@startDate&#xD;&#xA;            ,@endDate&#xD;&#xA;            ,@statusId&#xD;&#xA;            ,@executionStatusLink&#xD;&#xA;            ,@implementation&#xD;&#xA;            ,@runLogDirectory&#xD;&#xA;            ,@customExecutionFilePath&#xD;&#xA;            ,@setupWtqFilePath&#xD;&#xA;            ,@setupDtwInstanceWtqFilePath&#xD;&#xA;            ,@targetPoolWtqFilePath&#xD;&#xA;            ,@machineSetTeusWtqFilePath&#xD;&#xA;            ,@environmentSetupStarted&#xD;&#xA;            ,@testExecutionStarted&#xD;&#xA;            ,@environmentSetupFailure&#xD;&#xA;            ,@reclaimedBeforeCompletion&#xD;&#xA;            )&#xD;&#xA;   " StatementId="26" StatementCompId="35" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.0565811" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0xA769981C4E94A45A" QueryPlanHash="0x269484B6FB35D6AE">
+                <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="56" CompileTime="5" CompileCPU="5" CompileMemory="424">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="1" PhysicalOp="Assert" LogicalOp="Assert" EstimateRows="1" EstimateIO="0" EstimateCPU="1.8e-007" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0565811" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList />
+                    <Assert StartupExpression="0">
+                      <RelOp NodeId="2" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0565809" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList>
+                          <ColumnReference Column="Expr1012" />
+                          <ColumnReference Column="Expr1013" />
+                        </OutputList>
+                        <NestedLoops Optimized="0">
+                          <DefinedValues>
+                            <DefinedValue>
+                              <ColumnReference Column="Expr1013" />
+                            </DefinedValue>
+                          </DefinedValues>
+                          <OuterReferences>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StatusId" />
+                          </OuterReferences>
+                          <ProbeColumn>
+                            <ColumnReference Column="Expr1013" />
+                          </ProbeColumn>
+                          <RelOp NodeId="3" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="12" EstimatedTotalSubtreeCost="0.0532936" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StatusId" />
+                              <ColumnReference Column="Expr1012" />
+                            </OutputList>
+                            <NestedLoops Optimized="0">
+                              <DefinedValues>
+                                <DefinedValue>
+                                  <ColumnReference Column="Expr1012" />
+                                </DefinedValue>
+                              </DefinedValues>
+                              <OuterReferences>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ResolvedTEDId" />
+                              </OuterReferences>
+                              <ProbeColumn>
+                                <ColumnReference Column="Expr1012" />
+                              </ProbeColumn>
+                              <RelOp NodeId="4" PhysicalOp="Clustered Index Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.05" EstimateCPU="5e-006" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0500064" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ResolvedTEDId" />
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StatusId" />
+                                </OutputList>
+                                <Update DMLRequestSort="0">
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Index="[MachineSet_PK]" IndexKind="Clustered" />
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Index="[MachineSet_IDX_Guid]" IndexKind="NonClustered" />
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Index="[MachineSet_IDX_MixId]" IndexKind="NonClustered" />
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Index="[MachineSet_IDX_ResolvedTEDId]" IndexKind="NonClustered" />
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Index="[MachineSet_IDX_DbTimestamp_Guid]" IndexKind="NonClustered" />
+                                  <SetPredicate>
+                                    <ScalarOperator ScalarString="[OurLabReporting].[dbo].[MachineSet].[Guid] = RaiseIfNullInsert([@machineSetId]),[OurLabReporting].[dbo].[MachineSet].[MixId] = RaiseIfNullInsert([@MixIntId]),[OurLabReporting].[dbo].[MachineSet].[ResolvedTEDId] = RaiseIfNullInsert([@ResolvedTEDIntId]),[OurLabReporting].[dbo].[MachineSet].[StartDate] = RaiseIfNullInsert([@startDate]),[OurLabReporting].[dbo].[MachineSet].[EndDate] = [@endDate],[OurLabReporting].[dbo].[MachineSet].[StatusId] = RaiseIfNullInsert([@statusId]),[OurLabReporting].[dbo].[MachineSet].[ExecutionStatusLink] = [@executionStatusLink],[OurLabReporting].[dbo].[MachineSet].[ImplementationDetails] = [@implementation],[OurLabReporting].[dbo].[MachineSet].[RunLogDirectory] = [@runLogDirectory],[OurLabReporting].[dbo].[MachineSet].[CustomExecutionFilePath] = [@customExecutionFilePath],[OurLabReporting].[dbo].[MachineSet].[SetupWtqFilePath] = [@setupWtqFilePath],[OurLabReporting].[dbo].[MachineSet].[SetupDtwInstanceWtqFilePath] = [@setupDtwInstanceWtqFilePath],[OurLabReporting].[dbo].[MachineSet].[TargetPoolWtqFilePath] = [@targetPoolWtqFilePath],[OurLabReporting].[dbo].[MachineSet].[TEUListWtqFilePath] = [@machineSetTeusWtqFilePath],[OurLabReporting].[dbo].[MachineSet].[EnvironmentSetupStarted] = RaiseIfNullInsert([@environmentSetupStarted]),[OurLabReporting].[dbo].[MachineSet].[TestExecutionStarted] = RaiseIfNullInsert([@testExecutionStarted]),[OurLabReporting].[dbo].[MachineSet].[EnvironmentSetupFailure] = RaiseIfNullInsert([@environmentSetupFailure]),[OurLabReporting].[dbo].[MachineSet].[ReclaimedBeforeCompletion] = RaiseIfNullInsert([@reclaimedBeforeCompletion]),[OurLabReporting].[dbo].[MachineSet].[Id] = [Expr1003],[OurLabReporting].[dbo].[MachineSet].[DbTimestamp] = [Expr1004],[OurLabReporting].[dbo].[MachineSet].[Comments] = NULL,[OurLabReporting].[dbo].[MachineSet].[CommentAddedBy] = NULL,[OurLabReporting].[dbo].[MachineSet].[CommentUpdateTime] = NULL">
+                                      <ScalarExpressionList>
+                                        <ScalarOperator>
+                                          <MultipleAssign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="Guid" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@machineSetId" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="MixId" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@MixIntId" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ResolvedTEDId" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@ResolvedTEDIntId" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StartDate" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@startDate" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="EndDate" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@endDate" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StatusId" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@statusId" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ExecutionStatusLink" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@executionStatusLink" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ImplementationDetails" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@implementation" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="RunLogDirectory" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@runLogDirectory" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="CustomExecutionFilePath" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@customExecutionFilePath" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="SetupWtqFilePath" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@setupWtqFilePath" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="SetupDtwInstanceWtqFilePath" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@setupDtwInstanceWtqFilePath" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="TargetPoolWtqFilePath" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@targetPoolWtqFilePath" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="TEUListWtqFilePath" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@machineSetTeusWtqFilePath" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="EnvironmentSetupStarted" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@environmentSetupStarted" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="TestExecutionStarted" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@testExecutionStarted" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="EnvironmentSetupFailure" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@environmentSetupFailure" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ReclaimedBeforeCompletion" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@reclaimedBeforeCompletion" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="Id" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="Expr1003" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="DbTimestamp" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="Expr1004" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="Comments" />
+                                              <ScalarOperator>
+                                                <Const ConstValue="NULL" />
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="CommentAddedBy" />
+                                              <ScalarOperator>
+                                                <Const ConstValue="NULL" />
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="CommentUpdateTime" />
+                                              <ScalarOperator>
+                                                <Const ConstValue="NULL" />
+                                              </ScalarOperator>
+                                            </Assign>
+                                          </MultipleAssign>
+                                        </ScalarOperator>
+                                      </ScalarExpressionList>
+                                    </ScalarOperator>
+                                  </SetPredicate>
+                                  <RelOp NodeId="5" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="19" EstimatedTotalSubtreeCost="1.357e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                    <OutputList>
+                                      <ColumnReference Column="Expr1003" />
+                                      <ColumnReference Column="Expr1004" />
+                                    </OutputList>
+                                    <ComputeScalar>
+                                      <DefinedValues>
+                                        <DefinedValue>
+                                          <ColumnReference Column="Expr1004" />
+                                          <ScalarOperator ScalarString="CONVERT_IMPLICIT(datetime2(7),getutcdate(),0)">
+                                            <Identifier>
+                                              <ColumnReference Column="ConstExpr1011">
+                                                <ScalarOperator>
+                                                  <Convert DataType="datetime2" Style="0" Implicit="1">
+                                                    <ScalarOperator>
+                                                      <Intrinsic FunctionName="getutcdate" />
+                                                    </ScalarOperator>
+                                                  </Convert>
+                                                </ScalarOperator>
+                                              </ColumnReference>
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </DefinedValue>
+                                      </DefinedValues>
+                                      <RelOp NodeId="6" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="1.257e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                        <OutputList>
+                                          <ColumnReference Column="Expr1003" />
+                                        </OutputList>
+                                        <ComputeScalar ComputeSequence="1">
+                                          <DefinedValues>
+                                            <DefinedValue>
+                                              <ColumnReference Column="Expr1003" />
+                                              <ScalarOperator ScalarString="getidentity((1733581214),(6),NULL)">
+                                                <Intrinsic FunctionName="getidentity">
+                                                  <ScalarOperator>
+                                                    <Const ConstValue="(1733581214)" />
+                                                  </ScalarOperator>
+                                                  <ScalarOperator>
+                                                    <Const ConstValue="(6)" />
+                                                  </ScalarOperator>
+                                                  <ScalarOperator>
+                                                    <Const ConstValue="NULL" />
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </DefinedValue>
+                                          </DefinedValues>
+                                          <RelOp NodeId="7" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                            <OutputList />
+                                            <ConstantScan />
+                                          </RelOp>
+                                        </ComputeScalar>
+                                      </RelOp>
+                                    </ComputeScalar>
+                                  </RelOp>
+                                </Update>
+                              </RelOp>
+                              <RelOp NodeId="14" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.37084e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList />
+                                <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                  <DefinedValues />
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Index="[ResolvedTED_PK]" IndexKind="Clustered" />
+                                  <SeekPredicates>
+                                    <SeekPredicateNew>
+                                      <SeekKeys>
+                                        <Prefix ScanType="EQ">
+                                          <RangeColumns>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Column="Id" />
+                                          </RangeColumns>
+                                          <RangeExpressions>
+                                            <ScalarOperator ScalarString="[OurLabReporting].[dbo].[MachineSet].[ResolvedTEDId]">
+                                              <Identifier>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ResolvedTEDId" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </RangeExpressions>
+                                        </Prefix>
+                                      </SeekKeys>
+                                    </SeekPredicateNew>
+                                  </SeekPredicates>
+                                </IndexScan>
+                              </RelOp>
+                            </NestedLoops>
+                          </RelOp>
+                          <RelOp NodeId="15" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="96" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList />
+                            <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                              <DefinedValues />
+                              <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Index="[Status_PK]" IndexKind="Clustered" />
+                              <SeekPredicates>
+                                <SeekPredicateNew>
+                                  <SeekKeys>
+                                    <Prefix ScanType="EQ">
+                                      <RangeColumns>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Column="Id" />
+                                      </RangeColumns>
+                                      <RangeExpressions>
+                                        <ScalarOperator ScalarString="[OurLabReporting].[dbo].[MachineSet].[StatusId]">
+                                          <Identifier>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StatusId" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </RangeExpressions>
+                                    </Prefix>
+                                  </SeekKeys>
+                                </SeekPredicateNew>
+                              </SeekPredicates>
+                            </IndexScan>
+                          </RelOp>
+                        </NestedLoops>
+                      </RelOp>
+                      <Predicate>
+                        <ScalarOperator ScalarString="CASE WHEN [Expr1012] IS NULL THEN (0) ELSE CASE WHEN [Expr1013] IS NULL THEN (1) ELSE NULL END END">
+                          <IF>
+                            <Condition>
+                              <ScalarOperator>
+                                <Logical Operation="IS NULL">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Expr1012" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Logical>
+                              </ScalarOperator>
+                            </Condition>
+                            <Then>
+                              <ScalarOperator>
+                                <Const ConstValue="(0)" />
+                              </ScalarOperator>
+                            </Then>
+                            <Else>
+                              <ScalarOperator>
+                                <IF>
+                                  <Condition>
+                                    <ScalarOperator>
+                                      <Logical Operation="IS NULL">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="Expr1013" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Logical>
+                                    </ScalarOperator>
+                                  </Condition>
+                                  <Then>
+                                    <ScalarOperator>
+                                      <Const ConstValue="(1)" />
+                                    </ScalarOperator>
+                                  </Then>
+                                  <Else>
+                                    <ScalarOperator>
+                                      <Const ConstValue="NULL" />
+                                    </ScalarOperator>
+                                  </Else>
+                                </IF>
+                              </ScalarOperator>
+                            </Else>
+                          </IF>
+                        </ScalarOperator>
+                      </Predicate>
+                    </Assert>
+                  </RelOp>
+                  <ParameterList>
+                    <ColumnReference Column="@reclaimedBeforeCompletion" ParameterCompiledValue="(0)" />
+                    <ColumnReference Column="@environmentSetupFailure" ParameterCompiledValue="(0)" />
+                    <ColumnReference Column="@testExecutionStarted" ParameterCompiledValue="(1)" />
+                    <ColumnReference Column="@environmentSetupStarted" ParameterCompiledValue="(1)" />
+                    <ColumnReference Column="@machineSetTeusWtqFilePath" ParameterCompiledValue="N'\\osgt3tsvc04\rld\150129\schedule_1f018efd-95b9-4016-9612-81c7fce5f34d\mix_0\ted_0\fr_ted_0\MachineSet_3\MachineSetRS_1845187.wtq'" />
+                    <ColumnReference Column="@targetPoolWtqFilePath" ParameterCompiledValue="N'\\osgt3tsvc04\rld\150129\schedule_1f018efd-95b9-4016-9612-81c7fce5f34d\mix_0\ted_0\fr_ted_0\machineset_3\MSPool_1845187_Threshold~Updateability_P1~HV_x86FRE_QPS-PLOC_768x1280_OSGThreshold_EDS11.wtq'" />
+                    <ColumnReference Column="@setupDtwInstanceWtqFilePath" ParameterCompiledValue="N'\\osgt3tsvc04\rld\150129\schedule_1f018efd-95b9-4016-9612-81c7fce5f34d\mix_0\ted_0\fr_ted_0\machineset_3\SetupDtwInstance_OSGThreshold_EDS11_717050.wtq'" />
+                    <ColumnReference Column="@setupWtqFilePath" ParameterCompiledValue="N'\\osgt3tsvc04\rld\150129\schedule_1f018efd-95b9-4016-9612-81c7fce5f34d\mix_0\ted_0\fr_ted_0\MachineSet_3\MachineSetSetupRS_1845187.wtq'" />
+                    <ColumnReference Column="@customExecutionFilePath" ParameterCompiledValue="N'\\osgt3tsvc04\rld\150129\schedule_1f018efd-95b9-4016-9612-81c7fce5f34d\mix_0\ted_0\fr_ted_0\MachineSet_3\MachineSetRS_1845187.wtq'" />
+                    <ColumnReference Column="@runLogDirectory" ParameterCompiledValue="N'\\osgt3tsvc04\rld\150129\schedule_1f018efd-95b9-4016-9612-81c7fce5f34d\mix_0\ted_0\fr_ted_0\machineset_3'" />
+                    <ColumnReference Column="@implementation" ParameterCompiledValue="N'&lt;Implementation xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; QuiverVersion=&quot;1.7.1.9&quot; GUID=&quot;667c98f3-d80b-485e-8ac9-5ffb298ad27a&quot; type=&quot;SkulWtt&quot; CustomExecutionUrl=&quot;http://OSGT3TSVC04/CoreLabWebUInew/Ins'" />
+                    <ColumnReference Column="@executionStatusLink" ParameterCompiledValue="N'http://OSGT3TSVC04/CoreLabWebUInew/InstanceMonitor.aspx?InstanceId=1845187&amp;Status=All'" />
+                    <ColumnReference Column="@endDate" ParameterCompiledValue="'2015-01-29 18:39:43.443'" />
+                    <ColumnReference Column="@startDate" ParameterCompiledValue="'2015-01-29 17:48:24.967'" />
+                    <ColumnReference Column="@machineSetId" ParameterCompiledValue="{guid'667C98F3-D80B-485E-8AC9-5FFB298AD27A'}" />
+                  </ParameterList>
+                </QueryPlan>
+              </StmtSimple>
+            </Statements>
+          </Else>
+        </StmtCond>
+        <StmtSimple StatementText=" END&#xD;&#xA;&#xD;&#xA;    ProcExit:&#xD;&#xA;&#xD;&#xA;    DECLARE @objectName varchar(128) = (SELECT OBJECT_NAME(@@PROCID))&#xD;&#xA;   " StatementId="27" StatementCompId="38" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="1.257e-006" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x830C952D7490168E" QueryPlanHash="0x3B1EAEC0618BFE3F" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="2" CompileCPU="2" CompileMemory="328">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="75" EstimatedTotalSubtreeCost="1.257e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Column="Expr1001" />
+              </OutputList>
+              <ComputeScalar>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1001" />
+                    <ScalarOperator ScalarString="CONVERT_IMPLICIT(varchar(128),[Expr1000],0)">
+                      <Convert DataType="varchar" Length="128" Style="0" Implicit="1">
+                        <ScalarOperator>
+                          <Identifier>
+                            <ColumnReference Column="Expr1000" />
+                          </Identifier>
+                        </ScalarOperator>
+                      </Convert>
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp NodeId="1" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="139" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Expr1000" />
+                  </OutputList>
+                  <ConstantScan>
+                    <Values>
+                      <Row>
+                        <ScalarOperator ScalarString="object_name(@@procid)">
+                          <Intrinsic FunctionName="object_name">
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="@@procid" />
+                            </ScalarOperator>
+                            <ScalarOperator>
+                              <Const ConstValue="" />
+                            </ScalarOperator>
+                          </Intrinsic>
+                        </ScalarOperator>
+                      </Row>
+                    </Values>
+                  </ConstantScan>
+                </RelOp>
+              </ComputeScalar>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText=" EXEC [dbo].[spEndStopwatch] @objectName, @stopwatchBeginTime&#xD;" StatementId="28" StatementCompId="39" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

@@ -1,0 +1,192 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="&#xD;&#xA;SELECT &#xD;&#xA;RS.Id, &#xD;&#xA;DS.Guid, &#xD;&#xA;DS.RunLogDirectory,&#xD;&#xA;RS.Name,&#xD;&#xA;RS.TestpassId,&#xD;&#xA;SM.ParentScheduleId &#xD;&#xA;FROM  reporting.Schedules RS with (nolock) &#xD;&#xA;INNER JOIN dbo.Schedule DS with (nolock) on RS.id = DS.id &#xD;&#xA;FULL OUTER JOIN dbo.ScheduleMapping SM with (nolock) on SM.ChildScheduleId = DS.id &#xD;&#xA;WHERE RS.testpassId in (1382589,1382779,1382662) &#xD;&#xA;" StatementId="1" StatementCompId="1" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="13.2274" StatementEstRows="3.33356" StatementOptmLevel="FULL" QueryHash="0x89E096B7BBFB60E1" QueryPlanHash="0x672613483F9E456B">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="40" CompileTime="7" CompileCPU="7" CompileMemory="592">
+            <MissingIndexes>
+              <MissingIndexGroup Impact="52.8097">
+                <MissingIndex Database="[OurLabReporting]" Schema="[Reporting]" Table="[Schedules]">
+                  <ColumnGroup Usage="INEQUALITY">
+                    <Column Name="[TestpassId]" ColumnId="3" />
+                  </ColumnGroup>
+                  <ColumnGroup Usage="INCLUDE">
+                    <Column Name="[Id]" ColumnId="1" />
+                    <Column Name="[Name]" ColumnId="4" />
+                  </ColumnGroup>
+                </MissingIndex>
+              </MissingIndexGroup>
+            </MissingIndexes>
+            <MemoryGrantInfo SerialRequiredMemory="512" SerialDesiredMemory="281592" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Nested Loops" LogicalOp="Left Outer Join" EstimateRows="3.33356" EstimateIO="0" EstimateCPU="1.39343e-005" AvgRowSize="271" EstimatedTotalSubtreeCost="13.2274" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Schedules]" Alias="[RS]" Column="Id" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Schedules]" Alias="[RS]" Column="TestpassId" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Schedules]" Alias="[RS]" Column="Name" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Alias="[DS]" Column="Guid" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Alias="[DS]" Column="RunLogDirectory" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ScheduleMapping]" Alias="[SM]" Column="ParentScheduleId" />
+              </OutputList>
+              <NestedLoops Optimized="0">
+                <OuterReferences>
+                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Alias="[DS]" Column="Id" />
+                </OuterReferences>
+                <RelOp NodeId="1" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="3.33356" EstimateIO="0" EstimateCPU="1.39343e-005" AvgRowSize="271" EstimatedTotalSubtreeCost="13.2237" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Schedules]" Alias="[RS]" Column="Id" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Schedules]" Alias="[RS]" Column="TestpassId" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Schedules]" Alias="[RS]" Column="Name" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Alias="[DS]" Column="Id" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Alias="[DS]" Column="Guid" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Alias="[DS]" Column="RunLogDirectory" />
+                  </OutputList>
+                  <NestedLoops Optimized="1">
+                    <OuterReferences>
+                      <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Schedules]" Alias="[RS]" Column="Id" />
+                    </OuterReferences>
+                    <RelOp NodeId="3" PhysicalOp="Clustered Index Scan" LogicalOp="Clustered Index Scan" EstimateRows="3.33356" EstimateIO="9.89243" EstimateCPU="1.61633" AvgRowSize="119" EstimatedTotalSubtreeCost="11.5088" TableCardinality="1.4467e+006" Parallel="0" Partitioned="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Schedules]" Alias="[RS]" Column="Id" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Schedules]" Alias="[RS]" Column="TestpassId" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Schedules]" Alias="[RS]" Column="Name" />
+                      </OutputList>
+                      <IndexScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Schedules]" Alias="[RS]" Column="Id" />
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Schedules]" Alias="[RS]" Column="TestpassId" />
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Schedules]" Alias="[RS]" Column="Name" />
+                          </DefinedValue>
+                        </DefinedValues>
+                        <Object Database="[OurLabReporting]" Schema="[Reporting]" Table="[Schedules]" Index="[PK_Schedules]" Alias="[RS]" IndexKind="Clustered" />
+                        <Predicate>
+                          <ScalarOperator ScalarString="[OurLabReporting].[Reporting].[Schedules].[TestpassId] as [RS].[TestpassId]=(1382589) OR [OurLabReporting].[Reporting].[Schedules].[TestpassId] as [RS].[TestpassId]=(1382662) OR [OurLabReporting].[Reporting].[Schedules].[TestpassId] as [RS].[TestpassId]=(1382779)">
+                            <Logical Operation="OR">
+                              <ScalarOperator>
+                                <Compare CompareOp="EQ">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Schedules]" Alias="[RS]" Column="TestpassId" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(1382589)" />
+                                  </ScalarOperator>
+                                </Compare>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Compare CompareOp="EQ">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Schedules]" Alias="[RS]" Column="TestpassId" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(1382662)" />
+                                  </ScalarOperator>
+                                </Compare>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Compare CompareOp="EQ">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Schedules]" Alias="[RS]" Column="TestpassId" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(1382779)" />
+                                  </ScalarOperator>
+                                </Compare>
+                              </ScalarOperator>
+                            </Logical>
+                          </ScalarOperator>
+                        </Predicate>
+                      </IndexScan>
+                    </RelOp>
+                    <RelOp NodeId="4" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="161" EstimatedTotalSubtreeCost="0.00781941" TableCardinality="1.44031e+006" Parallel="0" EstimateRebinds="2.33356" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Alias="[DS]" Column="Id" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Alias="[DS]" Column="Guid" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Alias="[DS]" Column="RunLogDirectory" />
+                      </OutputList>
+                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Alias="[DS]" Column="Id" />
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Alias="[DS]" Column="Guid" />
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Alias="[DS]" Column="RunLogDirectory" />
+                          </DefinedValue>
+                        </DefinedValues>
+                        <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Index="[Schedule_PK]" Alias="[DS]" IndexKind="Clustered" />
+                        <SeekPredicates>
+                          <SeekPredicateNew>
+                            <SeekKeys>
+                              <Prefix ScanType="EQ">
+                                <RangeColumns>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Alias="[DS]" Column="Id" />
+                                </RangeColumns>
+                                <RangeExpressions>
+                                  <ScalarOperator ScalarString="[OurLabReporting].[Reporting].[Schedules].[Id] as [RS].[Id]">
+                                    <Identifier>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Schedules]" Alias="[RS]" Column="Id" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </RangeExpressions>
+                              </Prefix>
+                            </SeekKeys>
+                          </SeekPredicateNew>
+                        </SeekPredicates>
+                      </IndexScan>
+                    </RelOp>
+                  </NestedLoops>
+                </RelOp>
+                <RelOp NodeId="5" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00365204" TableCardinality="109" Parallel="0" EstimateRebinds="2.33356" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ScheduleMapping]" Alias="[SM]" Column="ParentScheduleId" />
+                  </OutputList>
+                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ScheduleMapping]" Alias="[SM]" Column="ParentScheduleId" />
+                      </DefinedValue>
+                    </DefinedValues>
+                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[ScheduleMapping]" Index="[ScheduleMapping_PK]" Alias="[SM]" IndexKind="Clustered" />
+                    <SeekPredicates>
+                      <SeekPredicateNew>
+                        <SeekKeys>
+                          <Prefix ScanType="EQ">
+                            <RangeColumns>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ScheduleMapping]" Alias="[SM]" Column="ChildScheduleId" />
+                            </RangeColumns>
+                            <RangeExpressions>
+                              <ScalarOperator ScalarString="[OurLabReporting].[dbo].[Schedule].[Id] as [DS].[Id]">
+                                <Identifier>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Alias="[DS]" Column="Id" />
+                                </Identifier>
+                              </ScalarOperator>
+                            </RangeExpressions>
+                          </Prefix>
+                        </SeekKeys>
+                      </SeekPredicateNew>
+                    </SeekPredicates>
+                  </IndexScan>
+                </RelOp>
+              </NestedLoops>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

@@ -1,0 +1,169 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="SET NOCOUNT ON &#xD;&#xA;" StatementId="1" StatementCompId="1" StatementType="SET ON/OFF" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" SELECT fg.name as fileGroupName, &#xD;&#xA; fg.data_space_id as fileGroupId, &#xD;&#xA; fg.is_read_only as fileGroupReadOnly &#xD;&#xA; FROM sys.filegroups fg WHERE type = 'FG' AND fg.is_read_only = 0 " StatementId="2" StatementCompId="2" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.00328913" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x5D9846D2963E8B52" QueryPlanHash="0x3BC64FBFDC75DD3F" StatementOptmEarlyAbortReason="GoodEnoughPlanFound" ParameterizedText="(@1 varchar(8000),@2 tinyint)SELECT [fg].[name] [fileGroupName],[fg].[data_space_id] [fileGroupId],[fg].[is_read_only] [fileGroupReadOnly] FROM [sys].[filegroups] [fg] WHERE [type]=@1 AND [fg].[is_read_only]=@2">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="false" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="24" CompileTime="6" CompileCPU="6" CompileMemory="464">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="144" EstimatedTotalSubtreeCost="0.00328913" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Database="[master]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="id" />
+                <ColumnReference Database="[master]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="name" />
+                <ColumnReference Column="Expr1010" />
+              </OutputList>
+              <ComputeScalar>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1010" />
+                    <ScalarOperator ScalarString="CONVERT(bit,[master].[sys].[sysclsobjs].[status] as [o].[status]&amp;(2),0)">
+                      <Convert DataType="bit" Style="0" Implicit="0">
+                        <ScalarOperator>
+                          <Arithmetic Operation="BIT_AND">
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Database="[master]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="status" />
+                              </Identifier>
+                            </ScalarOperator>
+                            <ScalarOperator>
+                              <Const ConstValue="(2)" />
+                            </ScalarOperator>
+                          </Arithmetic>
+                        </ScalarOperator>
+                      </Convert>
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp NodeId="1" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.000159357" AvgRowSize="149" EstimatedTotalSubtreeCost="0.00328436" TableCardinality="30" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Database="[master]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="id" />
+                    <ColumnReference Database="[master]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="name" />
+                    <ColumnReference Database="[master]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="status" />
+                  </OutputList>
+                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Database="[master]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="id" />
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Database="[master]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="name" />
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Database="[master]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="status" />
+                      </DefinedValue>
+                    </DefinedValues>
+                    <Object Database="[master]" Schema="[sys]" Table="[sysclsobjs]" Index="[clst]" Alias="[o]" IndexKind="Clustered" />
+                    <SeekPredicates>
+                      <SeekPredicateNew>
+                        <SeekKeys>
+                          <Prefix ScanType="EQ">
+                            <RangeColumns>
+                              <ColumnReference Database="[master]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="class" />
+                            </RangeColumns>
+                            <RangeExpressions>
+                              <ScalarOperator ScalarString="(31)">
+                                <Const ConstValue="(31)" />
+                              </ScalarOperator>
+                            </RangeExpressions>
+                          </Prefix>
+                        </SeekKeys>
+                      </SeekPredicateNew>
+                    </SeekPredicates>
+                    <Predicate>
+                      <ScalarOperator ScalarString="[master].[sys].[sysclsobjs].[type] as [o].[type]='FG' AND CONVERT(bit,[master].[sys].[sysclsobjs].[status] as [o].[status]&amp;(2),0)=(0) AND ([master].[sys].[sysclsobjs].[type] as [o].[type]='FD' OR [master].[sys].[sysclsobjs].[type] as [o].[type]='FG' OR [master].[sys].[sysclsobjs].[type] as [o].[type]='FL')">
+                        <Logical Operation="AND">
+                          <ScalarOperator>
+                            <Compare CompareOp="EQ">
+                              <ScalarOperator>
+                                <Identifier>
+                                  <ColumnReference Database="[master]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="type" />
+                                </Identifier>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Const ConstValue="'FG'" />
+                              </ScalarOperator>
+                            </Compare>
+                          </ScalarOperator>
+                          <ScalarOperator>
+                            <Compare CompareOp="EQ">
+                              <ScalarOperator>
+                                <Convert DataType="bit" Style="0" Implicit="0">
+                                  <ScalarOperator>
+                                    <Arithmetic Operation="BIT_AND">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[master]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="status" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(2)" />
+                                      </ScalarOperator>
+                                    </Arithmetic>
+                                  </ScalarOperator>
+                                </Convert>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Const ConstValue="(0)" />
+                              </ScalarOperator>
+                            </Compare>
+                          </ScalarOperator>
+                          <ScalarOperator>
+                            <Logical Operation="OR">
+                              <ScalarOperator>
+                                <Compare CompareOp="EQ">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[master]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="type" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="'FD'" />
+                                  </ScalarOperator>
+                                </Compare>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Compare CompareOp="EQ">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[master]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="type" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="'FG'" />
+                                  </ScalarOperator>
+                                </Compare>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Compare CompareOp="EQ">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[master]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="type" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="'FL'" />
+                                  </ScalarOperator>
+                                </Compare>
+                              </ScalarOperator>
+                            </Logical>
+                          </ScalarOperator>
+                        </Logical>
+                      </ScalarOperator>
+                    </Predicate>
+                  </IndexScan>
+                </RelOp>
+              </ComputeScalar>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@2" ParameterCompiledValue="(0)" />
+              <ColumnReference Column="@1" ParameterCompiledValue="'FG'" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="CREATE FUNCTION [dbo].[Function_GetInvalidRoleId]&#xD;&#xA;( )&#xD;&#xA;RETURNS INT&#xD;&#xA;AS&#xD;&#xA;BEGIN&#xD;&#xA;    DECLARE @Id INT&#xD;&#xA;&#x9;SELECT @Id = Id FROM dbo.Role WITH (NOLOCK) WHERE Guid = '00000000-0000-0000-0000-000000000000'&#xD;&#xA;" StatementId="1" StatementCompId="36" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032831" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x130E937D3CF7411F" QueryPlanHash="0x5D443D64C08D4483">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="1" CompileCPU="1" CompileMemory="120">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.2143e+007" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Column="Id" />
+              </OutputList>
+              <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Column="Id" />
+                  </DefinedValue>
+                </DefinedValues>
+                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Index="[Role_IDX_Guid]" IndexKind="NonClustered" />
+                <SeekPredicates>
+                  <SeekPredicateNew>
+                    <SeekKeys>
+                      <Prefix ScanType="EQ">
+                        <RangeColumns>
+                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Column="Guid" />
+                        </RangeColumns>
+                        <RangeExpressions>
+                          <ScalarOperator ScalarString="{guid'00000000-0000-0000-0000-000000000000'}">
+                            <Const ConstValue="{guid'00000000-0000-0000-0000-000000000000'}" />
+                          </ScalarOperator>
+                        </RangeExpressions>
+                      </Prefix>
+                    </SeekKeys>
+                  </SeekPredicateNew>
+                </SeekPredicates>
+              </IndexScan>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText="&#x9;RETURN @Id&#xD;" StatementId="2" StatementCompId="37" StatementType="RETURN" RetrievedFromCache="true" />
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

@@ -1,0 +1,1854 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="CREATE FUNCTION [dbo].[Function_GetTeuCountsByTed]&#xD;&#xA;(&#xD;&#xA;    @shouldAggregateAllTeus bit,&#xD;&#xA;&#x9;@resolvedTedIntId int, &#xD;&#xA;    @isNewTeu bit,&#xD;&#xA;&#x9;@newStatusId int,&#xD;&#xA;    @oldStatusId int,&#xD;&#xA;    @newHasExecutionFailures bit,&#xD;&#xA;    @oldHasExecutionFailures bit&#xD;&#xA;)&#xD;&#xA;RETURNS @resolvedTedCount TABLE &#xD;&#xA;(&#xD;&#xA;    ResolvedTedId int PRIMARY KEY NOT NULL,&#xD;&#xA;&#x9;TEUsCancelled int NOT NULL,&#xD;&#xA;    TEUsFailed int NOT NULL,&#xD;&#xA;    TEUsCompleted int NOT NULL,&#xD;&#xA;    TEUsWaiting int NOT NULL,&#xD;&#xA;    TEUsInProgress int NOT NULL,&#xD;&#xA;    TEUsNotScheduled int NOT NULL,&#xD;&#xA;    TotalTEUs int NOT NULL&#xD;&#xA;)&#xD;&#xA;-- Function returns TEU counts of a resolved TED. When requested to aggregate all TEUs, it refreshes count for all TEUs of TED, otherwise returns incremental change in counts for specified inputs.&#xD;&#xA;AS&#xD;&#xA;BEGIN&#xD;&#xA;    DECLARE @statusCount table(Id int, Value int);&#xD;&#xA;&#xD;&#xA;    DECLARE @teuType varchar(64) = 'TEU';&#xD;&#xA;   " StatementId="1" StatementCompId="135" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" DECLARE @calculatedFailedStatusId int = 10000;&#xD;&#xA;   " StatementId="2" StatementCompId="136" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" DECLARE @cancelledStatusId int = dbo.Function_GetStatusId(@teuType, 'Cancelled');&#xD;&#xA;&#xD;&#xA;   " StatementId="3" StatementCompId="137" StatementType="ASSIGN WITH QUERY" RetrievedFromCache="true" />
+        <StmtCond StatementText=" IF @shouldAggregateAllTeus = 1&#xD;&#xA;   " StatementId="4" StatementCompId="138" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;        -- Recalculate all aggregated TEU counts on resolved TED. &#xD;&#xA;        INSERT INTO @statusCount(Id, Value)&#xD;&#xA;        SELECT S.Id, S.Value&#xD;&#xA;        FROM&#xD;&#xA;        (&#xD;&#xA;            -- Find uploaded status counts of 'primary' TEUs in TED.&#xD;&#xA;            SELECT P.StatusId AS Id, COUNT(1) AS Value&#xD;&#xA;            FROM dbo.View_PrimaryTeu AS P WITH (NOLOCK)&#xD;&#xA;            WHERE P.ResolvedTEDId = @resolvedTedIntId&#xD;&#xA;            GROUP BY P.StatusId&#xD;&#xA;&#xD;&#xA;            UNION&#xD;&#xA;&#xD;&#xA;            -- Calculate failed count of 'primary' TEUs in TED. Use an artificial Id for the calculated state.&#xD;&#xA;            SELECT @calculatedFailedStatusId AS Id, COUNT(1) AS Value&#xD;&#xA;            FROM dbo.View_PrimaryTeu AS P WITH (NOLOCK)&#xD;&#xA;            WHERE P.ResolvedTEDId = @resolvedTedIntId&#xD;&#xA;            AND &#xD;&#xA;            (&#xD;&#xA;                P.HasExecutionFailures = 1 &#xD;&#xA;                OR P.StatusId = @cancelledStatusId&#xD;&#xA;            )&#xD;&#xA;        ) AS S;&#xD;&#xA;   " StatementId="5" StatementCompId="139" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.0866587" StatementEstRows="5.94254" StatementOptmLevel="FULL" QueryHash="0x37DA11E911199302" QueryPlanHash="0xA3207A692779AD11" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+                <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="40" CompileTime="33" CompileCPU="33" CompileMemory="872">
+                  <MemoryGrantInfo SerialRequiredMemory="1536" SerialDesiredMemory="1584" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="0" PhysicalOp="Table Insert" LogicalOp="Insert" EstimateRows="5.94254" EstimateIO="0.01" EstimateCPU="5.94254e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0866587" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList />
+                    <Update DMLRequestSort="0">
+                      <Object Table="[@statusCount]" />
+                      <SetPredicate>
+                        <ScalarOperator ScalarString="[Id] = [Union1012],[Value] = [Union1013]">
+                          <ScalarExpressionList>
+                            <ScalarOperator>
+                              <MultipleAssign>
+                                <Assign>
+                                  <ColumnReference Column="Id" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Union1012" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Column="Value" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Union1013" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                              </MultipleAssign>
+                            </ScalarOperator>
+                          </ScalarExpressionList>
+                        </ScalarOperator>
+                      </SetPredicate>
+                      <RelOp NodeId="1" PhysicalOp="Sort" LogicalOp="Distinct Sort" EstimateRows="5.94254" EstimateIO="0.0112613" EstimateCPU="0.00012385" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0766527" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList>
+                          <ColumnReference Column="Union1012" />
+                          <ColumnReference Column="Union1013" />
+                        </OutputList>
+                        <MemoryFractions Input="0.666667" Output="1" />
+                        <Sort Distinct="1">
+                          <OrderBy>
+                            <OrderByColumn Ascending="1">
+                              <ColumnReference Column="Union1012" />
+                            </OrderByColumn>
+                            <OrderByColumn Ascending="1">
+                              <ColumnReference Column="Union1013" />
+                            </OrderByColumn>
+                          </OrderBy>
+                          <RelOp NodeId="2" PhysicalOp="Concatenation" LogicalOp="Concatenation" EstimateRows="5.94254" EstimateIO="0" EstimateCPU="5.94254e-007" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0652676" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList>
+                              <ColumnReference Column="Union1012" />
+                              <ColumnReference Column="Union1013" />
+                            </OutputList>
+                            <Concat>
+                              <DefinedValues>
+                                <DefinedValue>
+                                  <ColumnReference Column="Union1012" />
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="StatusId" />
+                                  <ColumnReference Column="@calculatedFailedStatusId" />
+                                </DefinedValue>
+                                <DefinedValue>
+                                  <ColumnReference Column="Union1013" />
+                                  <ColumnReference Column="Expr1007" />
+                                  <ColumnReference Column="Expr1011" />
+                                </DefinedValue>
+                              </DefinedValues>
+                              <RelOp NodeId="3" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="4.94254" EstimateIO="0" EstimateCPU="0.0231355" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0436241" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="StatusId" />
+                                  <ColumnReference Column="Expr1007" />
+                                </OutputList>
+                                <ComputeScalar>
+                                  <DefinedValues>
+                                    <DefinedValue>
+                                      <ColumnReference Column="Expr1007" />
+                                      <ScalarOperator ScalarString="CONVERT_IMPLICIT(int,[Expr1018],0)">
+                                        <Convert DataType="int" Style="0" Implicit="1">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Column="Expr1018" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </Convert>
+                                      </ScalarOperator>
+                                    </DefinedValue>
+                                  </DefinedValues>
+                                  <RelOp NodeId="4" PhysicalOp="Hash Match" LogicalOp="Aggregate" EstimateRows="4.94254" EstimateIO="0" EstimateCPU="0.0231355" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0436241" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                    <OutputList>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="StatusId" />
+                                      <ColumnReference Column="Expr1018" />
+                                    </OutputList>
+                                    <MemoryFractions Input="1" Output="0.333333" />
+                                    <Hash>
+                                      <DefinedValues>
+                                        <DefinedValue>
+                                          <ColumnReference Column="Expr1018" />
+                                          <ScalarOperator ScalarString="COUNT(*)">
+                                            <Aggregate Distinct="0" AggType="COUNT*" />
+                                          </ScalarOperator>
+                                        </DefinedValue>
+                                      </DefinedValues>
+                                      <HashKeysBuild>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="StatusId" />
+                                      </HashKeysBuild>
+                                      <RelOp NodeId="5" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1180.48" EstimateIO="0.0190331" EstimateCPU="0.00145553" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0204886" TableCardinality="4.12024e+007" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                        <OutputList>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="StatusId" />
+                                        </OutputList>
+                                        <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                          <DefinedValues>
+                                            <DefinedValue>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="StatusId" />
+                                            </DefinedValue>
+                                          </DefinedValues>
+                                          <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Index="[Teu_IDX_ResolvedTED]" TableReferenceId="1" IndexKind="NonClustered" />
+                                          <SeekPredicates>
+                                            <SeekPredicateNew>
+                                              <SeekKeys>
+                                                <Prefix ScanType="EQ">
+                                                  <RangeColumns>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="ResolvedTEDId" />
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="IsRerunPrimary" />
+                                                  </RangeColumns>
+                                                  <RangeExpressions>
+                                                    <ScalarOperator ScalarString="[@resolvedTedIntId]">
+                                                      <Identifier>
+                                                        <ColumnReference Column="@resolvedTedIntId" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator ScalarString="(1)">
+                                                      <Const ConstValue="(1)" />
+                                                    </ScalarOperator>
+                                                  </RangeExpressions>
+                                                </Prefix>
+                                              </SeekKeys>
+                                            </SeekPredicateNew>
+                                          </SeekPredicates>
+                                        </IndexScan>
+                                      </RelOp>
+                                    </Hash>
+                                  </RelOp>
+                                </ComputeScalar>
+                              </RelOp>
+                              <RelOp NodeId="12" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="0.000115553" AvgRowSize="11" EstimatedTotalSubtreeCost="0.021643" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList>
+                                  <ColumnReference Column="Expr1011" />
+                                </OutputList>
+                                <ComputeScalar>
+                                  <DefinedValues>
+                                    <DefinedValue>
+                                      <ColumnReference Column="Expr1011" />
+                                      <ScalarOperator ScalarString="CONVERT_IMPLICIT(int,[Expr1019],0)">
+                                        <Convert DataType="int" Style="0" Implicit="1">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Column="Expr1019" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </Convert>
+                                      </ScalarOperator>
+                                    </DefinedValue>
+                                  </DefinedValues>
+                                  <RelOp NodeId="13" PhysicalOp="Stream Aggregate" LogicalOp="Aggregate" EstimateRows="1" EstimateIO="0" EstimateCPU="0.000115553" AvgRowSize="11" EstimatedTotalSubtreeCost="0.021643" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                    <OutputList>
+                                      <ColumnReference Column="Expr1019" />
+                                    </OutputList>
+                                    <StreamAggregate>
+                                      <DefinedValues>
+                                        <DefinedValue>
+                                          <ColumnReference Column="Expr1019" />
+                                          <ScalarOperator ScalarString="Count(*)">
+                                            <Aggregate AggType="countstar" Distinct="0" />
+                                          </ScalarOperator>
+                                        </DefinedValue>
+                                      </DefinedValues>
+                                      <RelOp NodeId="14" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="191.756" EstimateIO="0.0190331" EstimateCPU="0.00145553" AvgRowSize="12" EstimatedTotalSubtreeCost="0.0204886" TableCardinality="4.12024e+007" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                        <OutputList />
+                                        <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                          <DefinedValues />
+                                          <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Index="[Teu_IDX_ResolvedTED]" TableReferenceId="2" IndexKind="NonClustered" />
+                                          <SeekPredicates>
+                                            <SeekPredicateNew>
+                                              <SeekKeys>
+                                                <Prefix ScanType="EQ">
+                                                  <RangeColumns>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="ResolvedTEDId" />
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="IsRerunPrimary" />
+                                                  </RangeColumns>
+                                                  <RangeExpressions>
+                                                    <ScalarOperator ScalarString="[@resolvedTedIntId]">
+                                                      <Identifier>
+                                                        <ColumnReference Column="@resolvedTedIntId" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator ScalarString="(1)">
+                                                      <Const ConstValue="(1)" />
+                                                    </ScalarOperator>
+                                                  </RangeExpressions>
+                                                </Prefix>
+                                              </SeekKeys>
+                                            </SeekPredicateNew>
+                                          </SeekPredicates>
+                                          <Predicate>
+                                            <ScalarOperator ScalarString="[OurLabReporting].[dbo].[TEU].[HasExecutionFailures]=(1) OR [OurLabReporting].[dbo].[TEU].[StatusId]=[@cancelledStatusId]">
+                                              <Logical Operation="OR">
+                                                <ScalarOperator>
+                                                  <Compare CompareOp="EQ">
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="HasExecutionFailures" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="(1)" />
+                                                    </ScalarOperator>
+                                                  </Compare>
+                                                </ScalarOperator>
+                                                <ScalarOperator>
+                                                  <Compare CompareOp="EQ">
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="StatusId" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Column="@cancelledStatusId" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                  </Compare>
+                                                </ScalarOperator>
+                                              </Logical>
+                                            </ScalarOperator>
+                                          </Predicate>
+                                        </IndexScan>
+                                      </RelOp>
+                                    </StreamAggregate>
+                                  </RelOp>
+                                </ComputeScalar>
+                              </RelOp>
+                            </Concat>
+                          </RelOp>
+                        </Sort>
+                      </RelOp>
+                    </Update>
+                  </RelOp>
+                  <ParameterList>
+                    <ColumnReference Column="@resolvedTedIntId" ParameterCompiledValue="(1381250)" />
+                  </ParameterList>
+                </QueryPlan>
+              </StmtSimple>
+            </Statements>
+          </Then>
+          <Else>
+            <Statements>
+              <StmtSimple StatementText=" END&#xD;&#xA;    ELSE BEGIN&#xD;&#xA;        -- Incrementally refresh the status. No change is required to test outcomes because primary TEU is same.&#xD;&#xA;        INSERT INTO @statusCount(Id, Value)&#xD;&#xA;        SELECT S.Id, S.Value&#xD;&#xA;        FROM&#xD;&#xA;        (&#xD;&#xA;            -- The new status is incremented by 1.&#xD;&#xA;            SELECT @newStatusId AS Id, 1 AS Value&#xD;&#xA;&#xD;&#xA;            UNION&#xD;&#xA;&#xD;&#xA;            -- The old status is decremented by 1.&#xD;&#xA;            SELECT @oldStatusId AS Id, -1 AS Value&#xD;&#xA;&#xD;&#xA;            UNION&#xD;&#xA;&#xD;&#xA;            -- Calculate failed count. Use an artificial Id for the calculated state.&#xD;&#xA;            SELECT @calculatedFailedStatusId AS Id, P.Value&#xD;&#xA;            FROM &#xD;&#xA;            (&#xD;&#xA;                SELECT @newHasExecutionFailures AS HasExecutionFailures, @newStatusId AS StatusId, 1 AS Value &#xD;&#xA;                UNION&#xD;&#xA;                SELECT @oldHasExecutionFailures AS HasExecutionFailures, @oldStatusId AS StatusId, -1 AS Value &#xD;&#xA;            ) AS P&#xD;&#xA;            WHERE &#xD;&#xA;            (&#xD;&#xA;                P.HasExecutionFailures = 1 &#xD;&#xA;                OR P.StatusId = @cancelledStatusId&#xD;&#xA;            )&#xD;&#xA;        ) AS S&#xD;&#xA;        WHERE S.Id IS NOT NULL;&#xD;&#xA;   " StatementId="6" StatementCompId="142" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.0212214" StatementEstRows="4" StatementOptmLevel="FULL" QueryHash="0xAB09F6E72CCDBAA4" QueryPlanHash="0x1DD83C8D724D9550" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+                <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="32" CompileTime="15" CompileCPU="15" CompileMemory="496">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="0" PhysicalOp="Table Insert" LogicalOp="Insert" EstimateRows="4" EstimateIO="0.01" EstimateCPU="4e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0212214" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList />
+                    <Update DMLRequestSort="0">
+                      <Object Table="[@statusCount]" />
+                      <SetPredicate>
+                        <ScalarOperator ScalarString="[Id] = [Union1011],[Value] = [Union1012]">
+                          <ScalarExpressionList>
+                            <ScalarOperator>
+                              <MultipleAssign>
+                                <Assign>
+                                  <ColumnReference Column="Id" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Union1011" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Column="Value" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Union1012" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                              </MultipleAssign>
+                            </ScalarOperator>
+                          </ScalarExpressionList>
+                        </ScalarOperator>
+                      </SetPredicate>
+                      <RelOp NodeId="1" PhysicalOp="Merge Join" LogicalOp="Union" EstimateRows="4" EstimateIO="0" EstimateCPU="0.0056046" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0112174" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList>
+                          <ColumnReference Column="Union1011" />
+                          <ColumnReference Column="Union1012" />
+                        </OutputList>
+                        <Merge>
+                          <DefinedValues>
+                            <DefinedValue>
+                              <ColumnReference Column="Union1011" />
+                              <ColumnReference Column="Union1011" />
+                              <ColumnReference Column="@calculatedFailedStatusId" />
+                            </DefinedValue>
+                            <DefinedValue>
+                              <ColumnReference Column="Union1012" />
+                              <ColumnReference Column="Union1012" />
+                              <ColumnReference Column="Union1010" />
+                            </DefinedValue>
+                          </DefinedValues>
+                          <RelOp NodeId="2" PhysicalOp="Merge Join" LogicalOp="Union" EstimateRows="4" EstimateIO="0" EstimateCPU="0.0056046" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0112174" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList>
+                              <ColumnReference Column="Union1011" />
+                              <ColumnReference Column="Union1012" />
+                            </OutputList>
+                            <Merge>
+                              <DefinedValues>
+                                <DefinedValue>
+                                  <ColumnReference Column="Union1011" />
+                                  <ColumnReference Column="@newStatusId" />
+                                  <ColumnReference Column="@oldStatusId" />
+                                </DefinedValue>
+                                <DefinedValue>
+                                  <ColumnReference Column="Union1012" />
+                                  <ColumnReference Column="Expr1004" />
+                                  <ColumnReference Column="Expr1005" />
+                                </DefinedValue>
+                              </DefinedValues>
+                              <RelOp NodeId="3" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="1.737e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList>
+                                  <ColumnReference Column="Expr1004" />
+                                </OutputList>
+                                <ComputeScalar>
+                                  <DefinedValues>
+                                    <DefinedValue>
+                                      <ColumnReference Column="Expr1004" />
+                                      <ScalarOperator ScalarString="(1)">
+                                        <Const ConstValue="(1)" />
+                                      </ScalarOperator>
+                                    </DefinedValue>
+                                  </DefinedValues>
+                                  <RelOp NodeId="4" PhysicalOp="Filter" LogicalOp="Filter" EstimateRows="1" EstimateIO="0" EstimateCPU="4.8e-007" AvgRowSize="9" EstimatedTotalSubtreeCost="1.637e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                    <OutputList />
+                                    <Filter StartupExpression="1">
+                                      <RelOp NodeId="5" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                        <OutputList />
+                                        <ConstantScan />
+                                      </RelOp>
+                                      <Predicate>
+                                        <ScalarOperator ScalarString="[@newStatusId] IS NOT NULL">
+                                          <Compare CompareOp="IS NOT">
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Column="@newStatusId" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                            <ScalarOperator>
+                                              <Const ConstValue="NULL" />
+                                            </ScalarOperator>
+                                          </Compare>
+                                        </ScalarOperator>
+                                      </Predicate>
+                                    </Filter>
+                                  </RelOp>
+                                </ComputeScalar>
+                              </RelOp>
+                              <RelOp NodeId="10" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="1.737e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList>
+                                  <ColumnReference Column="Expr1005" />
+                                </OutputList>
+                                <ComputeScalar>
+                                  <DefinedValues>
+                                    <DefinedValue>
+                                      <ColumnReference Column="Expr1005" />
+                                      <ScalarOperator ScalarString="(-1)">
+                                        <Const ConstValue="(-1)" />
+                                      </ScalarOperator>
+                                    </DefinedValue>
+                                  </DefinedValues>
+                                  <RelOp NodeId="11" PhysicalOp="Filter" LogicalOp="Filter" EstimateRows="1" EstimateIO="0" EstimateCPU="4.8e-007" AvgRowSize="9" EstimatedTotalSubtreeCost="1.637e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                    <OutputList />
+                                    <Filter StartupExpression="1">
+                                      <RelOp NodeId="12" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                        <OutputList />
+                                        <ConstantScan />
+                                      </RelOp>
+                                      <Predicate>
+                                        <ScalarOperator ScalarString="[@oldStatusId] IS NOT NULL">
+                                          <Compare CompareOp="IS NOT">
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Column="@oldStatusId" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                            <ScalarOperator>
+                                              <Const ConstValue="NULL" />
+                                            </ScalarOperator>
+                                          </Compare>
+                                        </ScalarOperator>
+                                      </Predicate>
+                                    </Filter>
+                                  </RelOp>
+                                </ComputeScalar>
+                              </RelOp>
+                            </Merge>
+                          </RelOp>
+                          <RelOp NodeId="17" PhysicalOp="Stream Aggregate" LogicalOp="Aggregate" EstimateRows="2" EstimateIO="0" EstimateCPU="2e-006" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00560937" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList>
+                              <ColumnReference Column="Union1010" />
+                            </OutputList>
+                            <StreamAggregate>
+                              <DefinedValues />
+                              <GroupBy>
+                                <ColumnReference Column="Union1010" />
+                              </GroupBy>
+                              <RelOp NodeId="18" PhysicalOp="Merge Join" LogicalOp="Union" EstimateRows="2" EstimateIO="0" EstimateCPU="0.0056023" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00560737" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList>
+                                  <ColumnReference Column="Union1010" />
+                                  <ColumnReference Column="Union1008" />
+                                  <ColumnReference Column="Union1009" />
+                                </OutputList>
+                                <Merge>
+                                  <DefinedValues>
+                                    <DefinedValue>
+                                      <ColumnReference Column="Union1010" />
+                                      <ColumnReference Column="Expr1006" />
+                                      <ColumnReference Column="Expr1007" />
+                                    </DefinedValue>
+                                    <DefinedValue>
+                                      <ColumnReference Column="Union1008" />
+                                      <ColumnReference Column="@newHasExecutionFailures" />
+                                      <ColumnReference Column="@oldHasExecutionFailures" />
+                                    </DefinedValue>
+                                    <DefinedValue>
+                                      <ColumnReference Column="Union1009" />
+                                      <ColumnReference Column="@newStatusId" />
+                                      <ColumnReference Column="@oldStatusId" />
+                                    </DefinedValue>
+                                  </DefinedValues>
+                                  <RelOp NodeId="19" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="2.537e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                    <OutputList>
+                                      <ColumnReference Column="Expr1006" />
+                                    </OutputList>
+                                    <ComputeScalar>
+                                      <DefinedValues>
+                                        <DefinedValue>
+                                          <ColumnReference Column="Expr1006" />
+                                          <ScalarOperator ScalarString="(1)">
+                                            <Const ConstValue="(1)" />
+                                          </ScalarOperator>
+                                        </DefinedValue>
+                                      </DefinedValues>
+                                      <RelOp NodeId="20" PhysicalOp="Filter" LogicalOp="Filter" EstimateRows="1" EstimateIO="0" EstimateCPU="1.28e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="2.437e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                        <OutputList />
+                                        <Filter StartupExpression="1">
+                                          <RelOp NodeId="21" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                            <OutputList />
+                                            <ConstantScan />
+                                          </RelOp>
+                                          <Predicate>
+                                            <ScalarOperator ScalarString="[@calculatedFailedStatusId] IS NOT NULL AND ([@newHasExecutionFailures]=(1) OR [@newStatusId]=[@cancelledStatusId])">
+                                              <Logical Operation="AND">
+                                                <ScalarOperator>
+                                                  <Compare CompareOp="IS NOT">
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Column="@calculatedFailedStatusId" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="NULL" />
+                                                    </ScalarOperator>
+                                                  </Compare>
+                                                </ScalarOperator>
+                                                <ScalarOperator>
+                                                  <Logical Operation="OR">
+                                                    <ScalarOperator>
+                                                      <Compare CompareOp="EQ">
+                                                        <ScalarOperator>
+                                                          <Identifier>
+                                                            <ColumnReference Column="@newHasExecutionFailures" />
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator>
+                                                          <Const ConstValue="(1)" />
+                                                        </ScalarOperator>
+                                                      </Compare>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Compare CompareOp="EQ">
+                                                        <ScalarOperator>
+                                                          <Identifier>
+                                                            <ColumnReference Column="@newStatusId" />
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator>
+                                                          <Identifier>
+                                                            <ColumnReference Column="@cancelledStatusId" />
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                      </Compare>
+                                                    </ScalarOperator>
+                                                  </Logical>
+                                                </ScalarOperator>
+                                              </Logical>
+                                            </ScalarOperator>
+                                          </Predicate>
+                                        </Filter>
+                                      </RelOp>
+                                    </ComputeScalar>
+                                  </RelOp>
+                                  <RelOp NodeId="26" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="2.537e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                    <OutputList>
+                                      <ColumnReference Column="Expr1007" />
+                                    </OutputList>
+                                    <ComputeScalar>
+                                      <DefinedValues>
+                                        <DefinedValue>
+                                          <ColumnReference Column="Expr1007" />
+                                          <ScalarOperator ScalarString="(-1)">
+                                            <Const ConstValue="(-1)" />
+                                          </ScalarOperator>
+                                        </DefinedValue>
+                                      </DefinedValues>
+                                      <RelOp NodeId="27" PhysicalOp="Filter" LogicalOp="Filter" EstimateRows="1" EstimateIO="0" EstimateCPU="1.28e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="2.437e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                        <OutputList />
+                                        <Filter StartupExpression="1">
+                                          <RelOp NodeId="28" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                            <OutputList />
+                                            <ConstantScan />
+                                          </RelOp>
+                                          <Predicate>
+                                            <ScalarOperator ScalarString="[@calculatedFailedStatusId] IS NOT NULL AND ([@oldHasExecutionFailures]=(1) OR [@oldStatusId]=[@cancelledStatusId])">
+                                              <Logical Operation="AND">
+                                                <ScalarOperator>
+                                                  <Compare CompareOp="IS NOT">
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Column="@calculatedFailedStatusId" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="NULL" />
+                                                    </ScalarOperator>
+                                                  </Compare>
+                                                </ScalarOperator>
+                                                <ScalarOperator>
+                                                  <Logical Operation="OR">
+                                                    <ScalarOperator>
+                                                      <Compare CompareOp="EQ">
+                                                        <ScalarOperator>
+                                                          <Identifier>
+                                                            <ColumnReference Column="@oldHasExecutionFailures" />
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator>
+                                                          <Const ConstValue="(1)" />
+                                                        </ScalarOperator>
+                                                      </Compare>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Compare CompareOp="EQ">
+                                                        <ScalarOperator>
+                                                          <Identifier>
+                                                            <ColumnReference Column="@oldStatusId" />
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator>
+                                                          <Identifier>
+                                                            <ColumnReference Column="@cancelledStatusId" />
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                      </Compare>
+                                                    </ScalarOperator>
+                                                  </Logical>
+                                                </ScalarOperator>
+                                              </Logical>
+                                            </ScalarOperator>
+                                          </Predicate>
+                                        </Filter>
+                                      </RelOp>
+                                    </ComputeScalar>
+                                  </RelOp>
+                                </Merge>
+                              </RelOp>
+                            </StreamAggregate>
+                          </RelOp>
+                        </Merge>
+                      </RelOp>
+                    </Update>
+                  </RelOp>
+                  <ParameterList>
+                    <ColumnReference Column="@oldHasExecutionFailures" ParameterCompiledValue="(0)" />
+                    <ColumnReference Column="@newHasExecutionFailures" ParameterCompiledValue="(1)" />
+                    <ColumnReference Column="@oldStatusId" ParameterCompiledValue="(51)" />
+                    <ColumnReference Column="@newStatusId" ParameterCompiledValue="(48)" />
+                  </ParameterList>
+                </QueryPlan>
+              </StmtSimple>
+            </Statements>
+          </Else>
+        </StmtCond>
+        <StmtSimple StatementText=" END;&#xD;&#xA;&#xD;&#xA;    INSERT INTO @resolvedTedCount(ResolvedTedId, TEUsCancelled, TEUsFailed, TEUsCompleted, TEUsWaiting, TEUsInProgress, TEUsNotScheduled, TotalTEUs)&#xD;&#xA;    SELECT &#xD;&#xA;        @resolvedTedIntId AS ResolvedTedId &#xD;&#xA;        ,TEUsCancelled      = ISNULL((SELECT SUM(Value) FROM @statusCount WHERE Id = @cancelledStatusId), 0)&#xD;&#xA;        ,TEUsFailed         = ISNULL((SELECT SUM(Value) FROM @statusCount WHERE Id = @calculatedFailedStatusId), 0)&#xD;&#xA;        ,TEUsCompleted      = ISNULL((SELECT SUM(Value) FROM @statusCount WHERE Id = dbo.Function_GetStatusId(@teuType, 'Completed')), 0)&#xD;&#xA;        ,TEUsWaiting        = ISNULL((SELECT SUM(Value) FROM @statusCount WHERE Id = dbo.Function_GetStatusId(@teuType, 'Waiting')), 0)&#xD;&#xA;        ,TEUsInProgress     = ISNULL((SELECT SUM(Value) FROM @statusCount WHERE Id = dbo.Function_GetStatusId(@teuType, 'InProgress')), 0)&#xD;&#xA;        ,TEUsNotScheduled   = ISNULL((SELECT SUM(Value) FROM @statusCount WHERE Id IN (dbo.Function_GetStatusId(@teuType, 'Filtered'),dbo.Function_GetStatusId(@teuType, 'Not Scheduled'))), 0)&#xD;&#xA;        ,TotalTEUs          = CASE @shouldAggregateAllTeus&#xD;&#xA;                                -- When all are aggregated, only consider actual row counts for total calculation; ignore artifically created status row.&#xD;&#xA;                                WHEN 1 THEN ISNULL((SELECT SUM(Value) FROM @statusCount WHERE Id &lt;&gt; @calculatedFailedStatusId), 0) &#xD;&#xA;                                -- When incremental, only add to total only if new.&#xD;&#xA;                                ELSE ISNULL(@isNewTeu, 0)&#xD;&#xA;                              END&#xD;&#xA;" StatementId="7" StatementCompId="144" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.0330208" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x12F3577D5F65D176" QueryPlanHash="0x9AB9C456F97ECA91" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="104" CompileTime="76" CompileCPU="75" CompileMemory="1408">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Clustered Index Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.01" EstimateCPU="1e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0330208" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <Update DMLRequestSort="0">
+                <Object Table="[@resolvedTedCount]" Index="[PK__Function__64F77D3279B10A63]" />
+                <SetPredicate>
+                  <ScalarOperator ScalarString="[ResolvedTedId] = RaiseIfNullInsert([@resolvedTedIntId]),[TEUsCancelled] = [Expr1009],[TEUsFailed] = [Expr1016],[TEUsCompleted] = [Expr1023],[TEUsWaiting] = [Expr1030],[TEUsInProgress] = [Expr1037],[TEUsNotScheduled] = [Expr1044],[TotalTEUs] = [Expr1051]">
+                    <ScalarExpressionList>
+                      <ScalarOperator>
+                        <MultipleAssign>
+                          <Assign>
+                            <ColumnReference Column="ResolvedTedId" />
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="RaiseIfNullInsert">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="@resolvedTedIntId" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Column="TEUsCancelled" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1009" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Column="TEUsFailed" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1016" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Column="TEUsCompleted" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1023" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Column="TEUsWaiting" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1030" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Column="TEUsInProgress" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1037" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Column="TEUsNotScheduled" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1044" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Column="TotalTEUs" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1051" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                        </MultipleAssign>
+                      </ScalarOperator>
+                    </ScalarExpressionList>
+                  </ScalarOperator>
+                </SetPredicate>
+                <RelOp NodeId="1" PhysicalOp="Top" LogicalOp="Top" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="35" EstimatedTotalSubtreeCost="0.0230198" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Expr1009" />
+                    <ColumnReference Column="Expr1016" />
+                    <ColumnReference Column="Expr1023" />
+                    <ColumnReference Column="Expr1030" />
+                    <ColumnReference Column="Expr1037" />
+                    <ColumnReference Column="Expr1044" />
+                    <ColumnReference Column="Expr1051" />
+                  </OutputList>
+                  <Top RowCount="0" IsPercent="0" WithTies="0">
+                    <TopExpression>
+                      <ScalarOperator ScalarString="(1)">
+                        <Const ConstValue="(1)" />
+                      </ScalarOperator>
+                    </TopExpression>
+                    <RelOp NodeId="2" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="35" EstimatedTotalSubtreeCost="0.0230197" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Column="Expr1009" />
+                        <ColumnReference Column="Expr1016" />
+                        <ColumnReference Column="Expr1023" />
+                        <ColumnReference Column="Expr1030" />
+                        <ColumnReference Column="Expr1037" />
+                        <ColumnReference Column="Expr1044" />
+                        <ColumnReference Column="Expr1051" />
+                      </OutputList>
+                      <ComputeScalar>
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1009" />
+                            <ScalarOperator ScalarString="isnull([Expr1007],(0))">
+                              <Intrinsic FunctionName="isnull">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="Expr1007" />
+                                  </Identifier>
+                                </ScalarOperator>
+                                <ScalarOperator>
+                                  <Const ConstValue="(0)" />
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1016" />
+                            <ScalarOperator ScalarString="isnull([Expr1014],(0))">
+                              <Intrinsic FunctionName="isnull">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="Expr1014" />
+                                  </Identifier>
+                                </ScalarOperator>
+                                <ScalarOperator>
+                                  <Const ConstValue="(0)" />
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1023" />
+                            <ScalarOperator ScalarString="isnull([Expr1021],(0))">
+                              <Intrinsic FunctionName="isnull">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="Expr1021" />
+                                  </Identifier>
+                                </ScalarOperator>
+                                <ScalarOperator>
+                                  <Const ConstValue="(0)" />
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1030" />
+                            <ScalarOperator ScalarString="isnull([Expr1028],(0))">
+                              <Intrinsic FunctionName="isnull">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="Expr1028" />
+                                  </Identifier>
+                                </ScalarOperator>
+                                <ScalarOperator>
+                                  <Const ConstValue="(0)" />
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1037" />
+                            <ScalarOperator ScalarString="isnull([Expr1035],(0))">
+                              <Intrinsic FunctionName="isnull">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="Expr1035" />
+                                  </Identifier>
+                                </ScalarOperator>
+                                <ScalarOperator>
+                                  <Const ConstValue="(0)" />
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1044" />
+                            <ScalarOperator ScalarString="isnull([Expr1042],(0))">
+                              <Intrinsic FunctionName="isnull">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="Expr1042" />
+                                  </Identifier>
+                                </ScalarOperator>
+                                <ScalarOperator>
+                                  <Const ConstValue="(0)" />
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1051" />
+                            <ScalarOperator ScalarString="CASE WHEN [@shouldAggregateAllTeus]=(1) THEN isnull([Expr1049],(0)) ELSE CONVERT_IMPLICIT(int,isnull([@isNewTeu],(0)),0) END">
+                              <IF>
+                                <Condition>
+                                  <ScalarOperator>
+                                    <Compare CompareOp="EQ">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="@shouldAggregateAllTeus" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(1)" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                </Condition>
+                                <Then>
+                                  <ScalarOperator>
+                                    <Intrinsic FunctionName="isnull">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="Expr1049" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(0)" />
+                                      </ScalarOperator>
+                                    </Intrinsic>
+                                  </ScalarOperator>
+                                </Then>
+                                <Else>
+                                  <ScalarOperator>
+                                    <Convert DataType="int" Style="0" Implicit="1">
+                                      <ScalarOperator>
+                                        <Intrinsic FunctionName="isnull">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Column="@isNewTeu" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="(0)" />
+                                          </ScalarOperator>
+                                        </Intrinsic>
+                                      </ScalarOperator>
+                                    </Convert>
+                                  </ScalarOperator>
+                                </Else>
+                              </IF>
+                            </ScalarOperator>
+                          </DefinedValue>
+                        </DefinedValues>
+                        <RelOp NodeId="3" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="35" EstimatedTotalSubtreeCost="0.0230196" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Column="Expr1007" />
+                            <ColumnReference Column="Expr1014" />
+                            <ColumnReference Column="Expr1021" />
+                            <ColumnReference Column="Expr1028" />
+                            <ColumnReference Column="Expr1035" />
+                            <ColumnReference Column="Expr1042" />
+                            <ColumnReference Column="Expr1049" />
+                          </OutputList>
+                          <NestedLoops Optimized="0">
+                            <PassThru>
+                              <ScalarOperator ScalarString="IsFalseOrNull [@shouldAggregateAllTeus]=(1)">
+                                <Logical Operation="IsFalseOrNull">
+                                  <ScalarOperator>
+                                    <Compare CompareOp="EQ">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="@shouldAggregateAllTeus" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(1)" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                </Logical>
+                              </ScalarOperator>
+                            </PassThru>
+                            <RelOp NodeId="4" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="31" EstimatedTotalSubtreeCost="0.0197304" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Column="Expr1007" />
+                                <ColumnReference Column="Expr1014" />
+                                <ColumnReference Column="Expr1021" />
+                                <ColumnReference Column="Expr1028" />
+                                <ColumnReference Column="Expr1035" />
+                                <ColumnReference Column="Expr1042" />
+                              </OutputList>
+                              <NestedLoops Optimized="0">
+                                <RelOp NodeId="5" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="27" EstimatedTotalSubtreeCost="0.0164415" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Column="Expr1007" />
+                                    <ColumnReference Column="Expr1021" />
+                                    <ColumnReference Column="Expr1028" />
+                                    <ColumnReference Column="Expr1035" />
+                                    <ColumnReference Column="Expr1042" />
+                                  </OutputList>
+                                  <NestedLoops Optimized="0">
+                                    <RelOp NodeId="6" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="23" EstimatedTotalSubtreeCost="0.0131525" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList>
+                                        <ColumnReference Column="Expr1007" />
+                                        <ColumnReference Column="Expr1028" />
+                                        <ColumnReference Column="Expr1035" />
+                                        <ColumnReference Column="Expr1042" />
+                                      </OutputList>
+                                      <NestedLoops Optimized="0">
+                                        <RelOp NodeId="7" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="19" EstimatedTotalSubtreeCost="0.0098634" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                          <OutputList>
+                                            <ColumnReference Column="Expr1007" />
+                                            <ColumnReference Column="Expr1035" />
+                                            <ColumnReference Column="Expr1042" />
+                                          </OutputList>
+                                          <NestedLoops Optimized="0">
+                                            <RelOp NodeId="8" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="15" EstimatedTotalSubtreeCost="0.00657434" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                              <OutputList>
+                                                <ColumnReference Column="Expr1007" />
+                                                <ColumnReference Column="Expr1042" />
+                                              </OutputList>
+                                              <NestedLoops Optimized="0">
+                                                <RelOp NodeId="9" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1.1e-006" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328468" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                  <OutputList>
+                                                    <ColumnReference Column="Expr1007" />
+                                                  </OutputList>
+                                                  <ComputeScalar>
+                                                    <DefinedValues>
+                                                      <DefinedValue>
+                                                        <ColumnReference Column="Expr1007" />
+                                                        <ScalarOperator ScalarString="CASE WHEN [Expr1092]=(0) THEN NULL ELSE [Expr1093] END">
+                                                          <IF>
+                                                            <Condition>
+                                                              <ScalarOperator>
+                                                                <Compare CompareOp="EQ">
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Column="Expr1092" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                  <ScalarOperator>
+                                                                    <Const ConstValue="(0)" />
+                                                                  </ScalarOperator>
+                                                                </Compare>
+                                                              </ScalarOperator>
+                                                            </Condition>
+                                                            <Then>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="NULL" />
+                                                              </ScalarOperator>
+                                                            </Then>
+                                                            <Else>
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Column="Expr1093" />
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                            </Else>
+                                                          </IF>
+                                                        </ScalarOperator>
+                                                      </DefinedValue>
+                                                    </DefinedValues>
+                                                    <RelOp NodeId="10" PhysicalOp="Stream Aggregate" LogicalOp="Aggregate" EstimateRows="1" EstimateIO="0" EstimateCPU="1.1e-006" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328468" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                      <OutputList>
+                                                        <ColumnReference Column="Expr1092" />
+                                                        <ColumnReference Column="Expr1093" />
+                                                      </OutputList>
+                                                      <StreamAggregate>
+                                                        <DefinedValues>
+                                                          <DefinedValue>
+                                                            <ColumnReference Column="Expr1092" />
+                                                            <ScalarOperator ScalarString="COUNT_BIG([Value])">
+                                                              <Aggregate Distinct="0" AggType="COUNT_BIG">
+                                                                <ScalarOperator>
+                                                                  <Identifier>
+                                                                    <ColumnReference Column="Value" />
+                                                                  </Identifier>
+                                                                </ScalarOperator>
+                                                              </Aggregate>
+                                                            </ScalarOperator>
+                                                          </DefinedValue>
+                                                          <DefinedValue>
+                                                            <ColumnReference Column="Expr1093" />
+                                                            <ScalarOperator ScalarString="SUM([Value])">
+                                                              <Aggregate Distinct="0" AggType="SUM">
+                                                                <ScalarOperator>
+                                                                  <Identifier>
+                                                                    <ColumnReference Column="Value" />
+                                                                  </Identifier>
+                                                                </ScalarOperator>
+                                                              </Aggregate>
+                                                            </ScalarOperator>
+                                                          </DefinedValue>
+                                                        </DefinedValues>
+                                                        <RelOp NodeId="11" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                          <OutputList>
+                                                            <ColumnReference Column="Value" />
+                                                          </OutputList>
+                                                          <TableScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                                                            <DefinedValues>
+                                                              <DefinedValue>
+                                                                <ColumnReference Column="Value" />
+                                                              </DefinedValue>
+                                                            </DefinedValues>
+                                                            <Object Table="[@statusCount]" TableReferenceId="1" />
+                                                            <Predicate>
+                                                              <ScalarOperator ScalarString="[Id]=[@cancelledStatusId]">
+                                                                <Compare CompareOp="EQ">
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Column="Id" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Column="@cancelledStatusId" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                </Compare>
+                                                              </ScalarOperator>
+                                                            </Predicate>
+                                                          </TableScan>
+                                                        </RelOp>
+                                                      </StreamAggregate>
+                                                    </RelOp>
+                                                  </ComputeScalar>
+                                                </RelOp>
+                                                <RelOp NodeId="20" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1.1e-006" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328548" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                  <OutputList>
+                                                    <ColumnReference Column="Expr1042" />
+                                                  </OutputList>
+                                                  <ComputeScalar>
+                                                    <DefinedValues>
+                                                      <DefinedValue>
+                                                        <ColumnReference Column="Expr1042" />
+                                                        <ScalarOperator ScalarString="CASE WHEN [Expr1094]=(0) THEN NULL ELSE [Expr1095] END">
+                                                          <IF>
+                                                            <Condition>
+                                                              <ScalarOperator>
+                                                                <Compare CompareOp="EQ">
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Column="Expr1094" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                  <ScalarOperator>
+                                                                    <Const ConstValue="(0)" />
+                                                                  </ScalarOperator>
+                                                                </Compare>
+                                                              </ScalarOperator>
+                                                            </Condition>
+                                                            <Then>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="NULL" />
+                                                              </ScalarOperator>
+                                                            </Then>
+                                                            <Else>
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Column="Expr1095" />
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                            </Else>
+                                                          </IF>
+                                                        </ScalarOperator>
+                                                      </DefinedValue>
+                                                    </DefinedValues>
+                                                    <RelOp NodeId="21" PhysicalOp="Stream Aggregate" LogicalOp="Aggregate" EstimateRows="1" EstimateIO="0" EstimateCPU="1.1e-006" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328548" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                      <OutputList>
+                                                        <ColumnReference Column="Expr1094" />
+                                                        <ColumnReference Column="Expr1095" />
+                                                      </OutputList>
+                                                      <StreamAggregate>
+                                                        <DefinedValues>
+                                                          <DefinedValue>
+                                                            <ColumnReference Column="Expr1094" />
+                                                            <ScalarOperator ScalarString="COUNT_BIG([Value])">
+                                                              <Aggregate Distinct="0" AggType="COUNT_BIG">
+                                                                <ScalarOperator>
+                                                                  <Identifier>
+                                                                    <ColumnReference Column="Value" />
+                                                                  </Identifier>
+                                                                </ScalarOperator>
+                                                              </Aggregate>
+                                                            </ScalarOperator>
+                                                          </DefinedValue>
+                                                          <DefinedValue>
+                                                            <ColumnReference Column="Expr1095" />
+                                                            <ScalarOperator ScalarString="SUM([Value])">
+                                                              <Aggregate Distinct="0" AggType="SUM">
+                                                                <ScalarOperator>
+                                                                  <Identifier>
+                                                                    <ColumnReference Column="Value" />
+                                                                  </Identifier>
+                                                                </ScalarOperator>
+                                                              </Aggregate>
+                                                            </ScalarOperator>
+                                                          </DefinedValue>
+                                                        </DefinedValues>
+                                                        <RelOp NodeId="22" PhysicalOp="Filter" LogicalOp="Filter" EstimateRows="1" EstimateIO="0" EstimateCPU="1.28e-006" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328438" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                          <OutputList>
+                                                            <ColumnReference Column="Value" />
+                                                          </OutputList>
+                                                          <Filter StartupExpression="0">
+                                                            <RelOp NodeId="23" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                              <OutputList>
+                                                                <ColumnReference Column="Id" />
+                                                                <ColumnReference Column="Value" />
+                                                              </OutputList>
+                                                              <TableScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                                                                <DefinedValues>
+                                                                  <DefinedValue>
+                                                                    <ColumnReference Column="Id" />
+                                                                  </DefinedValue>
+                                                                  <DefinedValue>
+                                                                    <ColumnReference Column="Value" />
+                                                                  </DefinedValue>
+                                                                </DefinedValues>
+                                                                <Object Table="[@statusCount]" TableReferenceId="6" />
+                                                              </TableScan>
+                                                            </RelOp>
+                                                            <Predicate>
+                                                              <ScalarOperator ScalarString="[Id]=[OurLabReporting].[dbo].[Function_GetStatusId](CONVERT_IMPLICIT(varchar(50),[@teuType],0),'Not Scheduled') OR [Id]=[OurLabReporting].[dbo].[Function_GetStatusId](CONVERT_IMPLICIT(varchar(50),[@teuType],0),'Filtered')">
+                                                                <Logical Operation="OR">
+                                                                  <ScalarOperator>
+                                                                    <Compare CompareOp="EQ">
+                                                                      <ScalarOperator>
+                                                                        <Identifier>
+                                                                          <ColumnReference Column="Id" />
+                                                                        </Identifier>
+                                                                      </ScalarOperator>
+                                                                      <ScalarOperator>
+                                                                        <UserDefinedFunction FunctionName="[OurLabReporting].[dbo].[Function_GetStatusId]">
+                                                                          <ScalarOperator>
+                                                                            <Identifier>
+                                                                              <ColumnReference Column="ConstExpr1055">
+                                                                                <ScalarOperator>
+                                                                                  <Convert DataType="varchar" Length="50" Style="0" Implicit="1">
+                                                                                    <ScalarOperator>
+                                                                                      <Identifier>
+                                                                                        <ColumnReference Column="@teuType" />
+                                                                                      </Identifier>
+                                                                                    </ScalarOperator>
+                                                                                  </Convert>
+                                                                                </ScalarOperator>
+                                                                              </ColumnReference>
+                                                                            </Identifier>
+                                                                          </ScalarOperator>
+                                                                          <ScalarOperator>
+                                                                            <Const ConstValue="'Not Scheduled'" />
+                                                                          </ScalarOperator>
+                                                                        </UserDefinedFunction>
+                                                                      </ScalarOperator>
+                                                                    </Compare>
+                                                                  </ScalarOperator>
+                                                                  <ScalarOperator>
+                                                                    <Compare CompareOp="EQ">
+                                                                      <ScalarOperator>
+                                                                        <Identifier>
+                                                                          <ColumnReference Column="Id" />
+                                                                        </Identifier>
+                                                                      </ScalarOperator>
+                                                                      <ScalarOperator>
+                                                                        <UserDefinedFunction FunctionName="[OurLabReporting].[dbo].[Function_GetStatusId]">
+                                                                          <ScalarOperator>
+                                                                            <Identifier>
+                                                                              <ColumnReference Column="ConstExpr1056">
+                                                                                <ScalarOperator>
+                                                                                  <Convert DataType="varchar" Length="50" Style="0" Implicit="1">
+                                                                                    <ScalarOperator>
+                                                                                      <Identifier>
+                                                                                        <ColumnReference Column="@teuType" />
+                                                                                      </Identifier>
+                                                                                    </ScalarOperator>
+                                                                                  </Convert>
+                                                                                </ScalarOperator>
+                                                                              </ColumnReference>
+                                                                            </Identifier>
+                                                                          </ScalarOperator>
+                                                                          <ScalarOperator>
+                                                                            <Const ConstValue="'Filtered'" />
+                                                                          </ScalarOperator>
+                                                                        </UserDefinedFunction>
+                                                                      </ScalarOperator>
+                                                                    </Compare>
+                                                                  </ScalarOperator>
+                                                                </Logical>
+                                                              </ScalarOperator>
+                                                            </Predicate>
+                                                          </Filter>
+                                                        </RelOp>
+                                                      </StreamAggregate>
+                                                    </RelOp>
+                                                  </ComputeScalar>
+                                                </RelOp>
+                                              </NestedLoops>
+                                            </RelOp>
+                                            <RelOp NodeId="33" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1.1e-006" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328488" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                              <OutputList>
+                                                <ColumnReference Column="Expr1035" />
+                                              </OutputList>
+                                              <ComputeScalar>
+                                                <DefinedValues>
+                                                  <DefinedValue>
+                                                    <ColumnReference Column="Expr1035" />
+                                                    <ScalarOperator ScalarString="CASE WHEN [Expr1096]=(0) THEN NULL ELSE [Expr1097] END">
+                                                      <IF>
+                                                        <Condition>
+                                                          <ScalarOperator>
+                                                            <Compare CompareOp="EQ">
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Column="Expr1096" />
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(0)" />
+                                                              </ScalarOperator>
+                                                            </Compare>
+                                                          </ScalarOperator>
+                                                        </Condition>
+                                                        <Then>
+                                                          <ScalarOperator>
+                                                            <Const ConstValue="NULL" />
+                                                          </ScalarOperator>
+                                                        </Then>
+                                                        <Else>
+                                                          <ScalarOperator>
+                                                            <Identifier>
+                                                              <ColumnReference Column="Expr1097" />
+                                                            </Identifier>
+                                                          </ScalarOperator>
+                                                        </Else>
+                                                      </IF>
+                                                    </ScalarOperator>
+                                                  </DefinedValue>
+                                                </DefinedValues>
+                                                <RelOp NodeId="34" PhysicalOp="Stream Aggregate" LogicalOp="Aggregate" EstimateRows="1" EstimateIO="0" EstimateCPU="1.1e-006" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328488" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                  <OutputList>
+                                                    <ColumnReference Column="Expr1096" />
+                                                    <ColumnReference Column="Expr1097" />
+                                                  </OutputList>
+                                                  <StreamAggregate>
+                                                    <DefinedValues>
+                                                      <DefinedValue>
+                                                        <ColumnReference Column="Expr1096" />
+                                                        <ScalarOperator ScalarString="COUNT_BIG([Value])">
+                                                          <Aggregate Distinct="0" AggType="COUNT_BIG">
+                                                            <ScalarOperator>
+                                                              <Identifier>
+                                                                <ColumnReference Column="Value" />
+                                                              </Identifier>
+                                                            </ScalarOperator>
+                                                          </Aggregate>
+                                                        </ScalarOperator>
+                                                      </DefinedValue>
+                                                      <DefinedValue>
+                                                        <ColumnReference Column="Expr1097" />
+                                                        <ScalarOperator ScalarString="SUM([Value])">
+                                                          <Aggregate Distinct="0" AggType="SUM">
+                                                            <ScalarOperator>
+                                                              <Identifier>
+                                                                <ColumnReference Column="Value" />
+                                                              </Identifier>
+                                                            </ScalarOperator>
+                                                          </Aggregate>
+                                                        </ScalarOperator>
+                                                      </DefinedValue>
+                                                    </DefinedValues>
+                                                    <RelOp NodeId="35" PhysicalOp="Filter" LogicalOp="Filter" EstimateRows="1" EstimateIO="0" EstimateCPU="6.8e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328378" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                      <OutputList>
+                                                        <ColumnReference Column="Value" />
+                                                      </OutputList>
+                                                      <Filter StartupExpression="0">
+                                                        <RelOp NodeId="36" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                          <OutputList>
+                                                            <ColumnReference Column="Id" />
+                                                            <ColumnReference Column="Value" />
+                                                          </OutputList>
+                                                          <TableScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                                                            <DefinedValues>
+                                                              <DefinedValue>
+                                                                <ColumnReference Column="Id" />
+                                                              </DefinedValue>
+                                                              <DefinedValue>
+                                                                <ColumnReference Column="Value" />
+                                                              </DefinedValue>
+                                                            </DefinedValues>
+                                                            <Object Table="[@statusCount]" TableReferenceId="5" />
+                                                          </TableScan>
+                                                        </RelOp>
+                                                        <Predicate>
+                                                          <ScalarOperator ScalarString="[Id]=[OurLabReporting].[dbo].[Function_GetStatusId](CONVERT_IMPLICIT(varchar(50),[@teuType],0),'InProgress')">
+                                                            <Compare CompareOp="EQ">
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Column="Id" />
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                              <ScalarOperator>
+                                                                <UserDefinedFunction FunctionName="[OurLabReporting].[dbo].[Function_GetStatusId]">
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Column="ConstExpr1054">
+                                                                        <ScalarOperator>
+                                                                          <Convert DataType="varchar" Length="50" Style="0" Implicit="1">
+                                                                            <ScalarOperator>
+                                                                              <Identifier>
+                                                                                <ColumnReference Column="@teuType" />
+                                                                              </Identifier>
+                                                                            </ScalarOperator>
+                                                                          </Convert>
+                                                                        </ScalarOperator>
+                                                                      </ColumnReference>
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                  <ScalarOperator>
+                                                                    <Const ConstValue="'InProgress'" />
+                                                                  </ScalarOperator>
+                                                                </UserDefinedFunction>
+                                                              </ScalarOperator>
+                                                            </Compare>
+                                                          </ScalarOperator>
+                                                        </Predicate>
+                                                      </Filter>
+                                                    </RelOp>
+                                                  </StreamAggregate>
+                                                </RelOp>
+                                              </ComputeScalar>
+                                            </RelOp>
+                                          </NestedLoops>
+                                        </RelOp>
+                                        <RelOp NodeId="46" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1.1e-006" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328488" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                          <OutputList>
+                                            <ColumnReference Column="Expr1028" />
+                                          </OutputList>
+                                          <ComputeScalar>
+                                            <DefinedValues>
+                                              <DefinedValue>
+                                                <ColumnReference Column="Expr1028" />
+                                                <ScalarOperator ScalarString="CASE WHEN [Expr1098]=(0) THEN NULL ELSE [Expr1099] END">
+                                                  <IF>
+                                                    <Condition>
+                                                      <ScalarOperator>
+                                                        <Compare CompareOp="EQ">
+                                                          <ScalarOperator>
+                                                            <Identifier>
+                                                              <ColumnReference Column="Expr1098" />
+                                                            </Identifier>
+                                                          </ScalarOperator>
+                                                          <ScalarOperator>
+                                                            <Const ConstValue="(0)" />
+                                                          </ScalarOperator>
+                                                        </Compare>
+                                                      </ScalarOperator>
+                                                    </Condition>
+                                                    <Then>
+                                                      <ScalarOperator>
+                                                        <Const ConstValue="NULL" />
+                                                      </ScalarOperator>
+                                                    </Then>
+                                                    <Else>
+                                                      <ScalarOperator>
+                                                        <Identifier>
+                                                          <ColumnReference Column="Expr1099" />
+                                                        </Identifier>
+                                                      </ScalarOperator>
+                                                    </Else>
+                                                  </IF>
+                                                </ScalarOperator>
+                                              </DefinedValue>
+                                            </DefinedValues>
+                                            <RelOp NodeId="47" PhysicalOp="Stream Aggregate" LogicalOp="Aggregate" EstimateRows="1" EstimateIO="0" EstimateCPU="1.1e-006" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328488" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                              <OutputList>
+                                                <ColumnReference Column="Expr1098" />
+                                                <ColumnReference Column="Expr1099" />
+                                              </OutputList>
+                                              <StreamAggregate>
+                                                <DefinedValues>
+                                                  <DefinedValue>
+                                                    <ColumnReference Column="Expr1098" />
+                                                    <ScalarOperator ScalarString="COUNT_BIG([Value])">
+                                                      <Aggregate Distinct="0" AggType="COUNT_BIG">
+                                                        <ScalarOperator>
+                                                          <Identifier>
+                                                            <ColumnReference Column="Value" />
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                      </Aggregate>
+                                                    </ScalarOperator>
+                                                  </DefinedValue>
+                                                  <DefinedValue>
+                                                    <ColumnReference Column="Expr1099" />
+                                                    <ScalarOperator ScalarString="SUM([Value])">
+                                                      <Aggregate Distinct="0" AggType="SUM">
+                                                        <ScalarOperator>
+                                                          <Identifier>
+                                                            <ColumnReference Column="Value" />
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                      </Aggregate>
+                                                    </ScalarOperator>
+                                                  </DefinedValue>
+                                                </DefinedValues>
+                                                <RelOp NodeId="48" PhysicalOp="Filter" LogicalOp="Filter" EstimateRows="1" EstimateIO="0" EstimateCPU="6.8e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328378" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                  <OutputList>
+                                                    <ColumnReference Column="Value" />
+                                                  </OutputList>
+                                                  <Filter StartupExpression="0">
+                                                    <RelOp NodeId="49" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                      <OutputList>
+                                                        <ColumnReference Column="Id" />
+                                                        <ColumnReference Column="Value" />
+                                                      </OutputList>
+                                                      <TableScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                                                        <DefinedValues>
+                                                          <DefinedValue>
+                                                            <ColumnReference Column="Id" />
+                                                          </DefinedValue>
+                                                          <DefinedValue>
+                                                            <ColumnReference Column="Value" />
+                                                          </DefinedValue>
+                                                        </DefinedValues>
+                                                        <Object Table="[@statusCount]" TableReferenceId="4" />
+                                                      </TableScan>
+                                                    </RelOp>
+                                                    <Predicate>
+                                                      <ScalarOperator ScalarString="[Id]=[OurLabReporting].[dbo].[Function_GetStatusId](CONVERT_IMPLICIT(varchar(50),[@teuType],0),'Waiting')">
+                                                        <Compare CompareOp="EQ">
+                                                          <ScalarOperator>
+                                                            <Identifier>
+                                                              <ColumnReference Column="Id" />
+                                                            </Identifier>
+                                                          </ScalarOperator>
+                                                          <ScalarOperator>
+                                                            <UserDefinedFunction FunctionName="[OurLabReporting].[dbo].[Function_GetStatusId]">
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Column="ConstExpr1053">
+                                                                    <ScalarOperator>
+                                                                      <Convert DataType="varchar" Length="50" Style="0" Implicit="1">
+                                                                        <ScalarOperator>
+                                                                          <Identifier>
+                                                                            <ColumnReference Column="@teuType" />
+                                                                          </Identifier>
+                                                                        </ScalarOperator>
+                                                                      </Convert>
+                                                                    </ScalarOperator>
+                                                                  </ColumnReference>
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="'Waiting'" />
+                                                              </ScalarOperator>
+                                                            </UserDefinedFunction>
+                                                          </ScalarOperator>
+                                                        </Compare>
+                                                      </ScalarOperator>
+                                                    </Predicate>
+                                                  </Filter>
+                                                </RelOp>
+                                              </StreamAggregate>
+                                            </RelOp>
+                                          </ComputeScalar>
+                                        </RelOp>
+                                      </NestedLoops>
+                                    </RelOp>
+                                    <RelOp NodeId="59" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1.1e-006" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328488" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList>
+                                        <ColumnReference Column="Expr1021" />
+                                      </OutputList>
+                                      <ComputeScalar>
+                                        <DefinedValues>
+                                          <DefinedValue>
+                                            <ColumnReference Column="Expr1021" />
+                                            <ScalarOperator ScalarString="CASE WHEN [Expr1100]=(0) THEN NULL ELSE [Expr1101] END">
+                                              <IF>
+                                                <Condition>
+                                                  <ScalarOperator>
+                                                    <Compare CompareOp="EQ">
+                                                      <ScalarOperator>
+                                                        <Identifier>
+                                                          <ColumnReference Column="Expr1100" />
+                                                        </Identifier>
+                                                      </ScalarOperator>
+                                                      <ScalarOperator>
+                                                        <Const ConstValue="(0)" />
+                                                      </ScalarOperator>
+                                                    </Compare>
+                                                  </ScalarOperator>
+                                                </Condition>
+                                                <Then>
+                                                  <ScalarOperator>
+                                                    <Const ConstValue="NULL" />
+                                                  </ScalarOperator>
+                                                </Then>
+                                                <Else>
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="Expr1101" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Else>
+                                              </IF>
+                                            </ScalarOperator>
+                                          </DefinedValue>
+                                        </DefinedValues>
+                                        <RelOp NodeId="60" PhysicalOp="Stream Aggregate" LogicalOp="Aggregate" EstimateRows="1" EstimateIO="0" EstimateCPU="1.1e-006" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328488" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                          <OutputList>
+                                            <ColumnReference Column="Expr1100" />
+                                            <ColumnReference Column="Expr1101" />
+                                          </OutputList>
+                                          <StreamAggregate>
+                                            <DefinedValues>
+                                              <DefinedValue>
+                                                <ColumnReference Column="Expr1100" />
+                                                <ScalarOperator ScalarString="COUNT_BIG([Value])">
+                                                  <Aggregate Distinct="0" AggType="COUNT_BIG">
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Column="Value" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                  </Aggregate>
+                                                </ScalarOperator>
+                                              </DefinedValue>
+                                              <DefinedValue>
+                                                <ColumnReference Column="Expr1101" />
+                                                <ScalarOperator ScalarString="SUM([Value])">
+                                                  <Aggregate Distinct="0" AggType="SUM">
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Column="Value" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                  </Aggregate>
+                                                </ScalarOperator>
+                                              </DefinedValue>
+                                            </DefinedValues>
+                                            <RelOp NodeId="61" PhysicalOp="Filter" LogicalOp="Filter" EstimateRows="1" EstimateIO="0" EstimateCPU="6.8e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328378" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                              <OutputList>
+                                                <ColumnReference Column="Value" />
+                                              </OutputList>
+                                              <Filter StartupExpression="0">
+                                                <RelOp NodeId="62" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                  <OutputList>
+                                                    <ColumnReference Column="Id" />
+                                                    <ColumnReference Column="Value" />
+                                                  </OutputList>
+                                                  <TableScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                                                    <DefinedValues>
+                                                      <DefinedValue>
+                                                        <ColumnReference Column="Id" />
+                                                      </DefinedValue>
+                                                      <DefinedValue>
+                                                        <ColumnReference Column="Value" />
+                                                      </DefinedValue>
+                                                    </DefinedValues>
+                                                    <Object Table="[@statusCount]" TableReferenceId="3" />
+                                                  </TableScan>
+                                                </RelOp>
+                                                <Predicate>
+                                                  <ScalarOperator ScalarString="[Id]=[OurLabReporting].[dbo].[Function_GetStatusId](CONVERT_IMPLICIT(varchar(50),[@teuType],0),'Completed')">
+                                                    <Compare CompareOp="EQ">
+                                                      <ScalarOperator>
+                                                        <Identifier>
+                                                          <ColumnReference Column="Id" />
+                                                        </Identifier>
+                                                      </ScalarOperator>
+                                                      <ScalarOperator>
+                                                        <UserDefinedFunction FunctionName="[OurLabReporting].[dbo].[Function_GetStatusId]">
+                                                          <ScalarOperator>
+                                                            <Identifier>
+                                                              <ColumnReference Column="ConstExpr1052">
+                                                                <ScalarOperator>
+                                                                  <Convert DataType="varchar" Length="50" Style="0" Implicit="1">
+                                                                    <ScalarOperator>
+                                                                      <Identifier>
+                                                                        <ColumnReference Column="@teuType" />
+                                                                      </Identifier>
+                                                                    </ScalarOperator>
+                                                                  </Convert>
+                                                                </ScalarOperator>
+                                                              </ColumnReference>
+                                                            </Identifier>
+                                                          </ScalarOperator>
+                                                          <ScalarOperator>
+                                                            <Const ConstValue="'Completed'" />
+                                                          </ScalarOperator>
+                                                        </UserDefinedFunction>
+                                                      </ScalarOperator>
+                                                    </Compare>
+                                                  </ScalarOperator>
+                                                </Predicate>
+                                              </Filter>
+                                            </RelOp>
+                                          </StreamAggregate>
+                                        </RelOp>
+                                      </ComputeScalar>
+                                    </RelOp>
+                                  </NestedLoops>
+                                </RelOp>
+                                <RelOp NodeId="72" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1.1e-006" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328468" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Column="Expr1014" />
+                                  </OutputList>
+                                  <ComputeScalar>
+                                    <DefinedValues>
+                                      <DefinedValue>
+                                        <ColumnReference Column="Expr1014" />
+                                        <ScalarOperator ScalarString="CASE WHEN [Expr1102]=(0) THEN NULL ELSE [Expr1103] END">
+                                          <IF>
+                                            <Condition>
+                                              <ScalarOperator>
+                                                <Compare CompareOp="EQ">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="Expr1102" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                  <ScalarOperator>
+                                                    <Const ConstValue="(0)" />
+                                                  </ScalarOperator>
+                                                </Compare>
+                                              </ScalarOperator>
+                                            </Condition>
+                                            <Then>
+                                              <ScalarOperator>
+                                                <Const ConstValue="NULL" />
+                                              </ScalarOperator>
+                                            </Then>
+                                            <Else>
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="Expr1103" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Else>
+                                          </IF>
+                                        </ScalarOperator>
+                                      </DefinedValue>
+                                    </DefinedValues>
+                                    <RelOp NodeId="73" PhysicalOp="Stream Aggregate" LogicalOp="Aggregate" EstimateRows="1" EstimateIO="0" EstimateCPU="1.1e-006" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328468" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList>
+                                        <ColumnReference Column="Expr1102" />
+                                        <ColumnReference Column="Expr1103" />
+                                      </OutputList>
+                                      <StreamAggregate>
+                                        <DefinedValues>
+                                          <DefinedValue>
+                                            <ColumnReference Column="Expr1102" />
+                                            <ScalarOperator ScalarString="COUNT_BIG([Value])">
+                                              <Aggregate Distinct="0" AggType="COUNT_BIG">
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Column="Value" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                              </Aggregate>
+                                            </ScalarOperator>
+                                          </DefinedValue>
+                                          <DefinedValue>
+                                            <ColumnReference Column="Expr1103" />
+                                            <ScalarOperator ScalarString="SUM([Value])">
+                                              <Aggregate Distinct="0" AggType="SUM">
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Column="Value" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                              </Aggregate>
+                                            </ScalarOperator>
+                                          </DefinedValue>
+                                        </DefinedValues>
+                                        <RelOp NodeId="74" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                          <OutputList>
+                                            <ColumnReference Column="Value" />
+                                          </OutputList>
+                                          <TableScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                                            <DefinedValues>
+                                              <DefinedValue>
+                                                <ColumnReference Column="Value" />
+                                              </DefinedValue>
+                                            </DefinedValues>
+                                            <Object Table="[@statusCount]" TableReferenceId="2" />
+                                            <Predicate>
+                                              <ScalarOperator ScalarString="[Id]=[@calculatedFailedStatusId]">
+                                                <Compare CompareOp="EQ">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="Id" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@calculatedFailedStatusId" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Compare>
+                                              </ScalarOperator>
+                                            </Predicate>
+                                          </TableScan>
+                                        </RelOp>
+                                      </StreamAggregate>
+                                    </RelOp>
+                                  </ComputeScalar>
+                                </RelOp>
+                              </NestedLoops>
+                            </RelOp>
+                            <RelOp NodeId="83" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1.1e-006" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328468" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Column="Expr1049" />
+                              </OutputList>
+                              <ComputeScalar>
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Column="Expr1049" />
+                                    <ScalarOperator ScalarString="CASE WHEN [Expr1104]=(0) THEN NULL ELSE [Expr1105] END">
+                                      <IF>
+                                        <Condition>
+                                          <ScalarOperator>
+                                            <Compare CompareOp="EQ">
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="Expr1104" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="(0)" />
+                                              </ScalarOperator>
+                                            </Compare>
+                                          </ScalarOperator>
+                                        </Condition>
+                                        <Then>
+                                          <ScalarOperator>
+                                            <Const ConstValue="NULL" />
+                                          </ScalarOperator>
+                                        </Then>
+                                        <Else>
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Column="Expr1105" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </Else>
+                                      </IF>
+                                    </ScalarOperator>
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <RelOp NodeId="84" PhysicalOp="Stream Aggregate" LogicalOp="Aggregate" EstimateRows="1" EstimateIO="0" EstimateCPU="1.1e-006" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328468" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Column="Expr1104" />
+                                    <ColumnReference Column="Expr1105" />
+                                  </OutputList>
+                                  <StreamAggregate>
+                                    <DefinedValues>
+                                      <DefinedValue>
+                                        <ColumnReference Column="Expr1104" />
+                                        <ScalarOperator ScalarString="COUNT_BIG([Value])">
+                                          <Aggregate Distinct="0" AggType="COUNT_BIG">
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Column="Value" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </Aggregate>
+                                        </ScalarOperator>
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Column="Expr1105" />
+                                        <ScalarOperator ScalarString="SUM([Value])">
+                                          <Aggregate Distinct="0" AggType="SUM">
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Column="Value" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </Aggregate>
+                                        </ScalarOperator>
+                                      </DefinedValue>
+                                    </DefinedValues>
+                                    <RelOp NodeId="85" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList>
+                                        <ColumnReference Column="Value" />
+                                      </OutputList>
+                                      <TableScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                                        <DefinedValues>
+                                          <DefinedValue>
+                                            <ColumnReference Column="Value" />
+                                          </DefinedValue>
+                                        </DefinedValues>
+                                        <Object Table="[@statusCount]" TableReferenceId="7" />
+                                        <Predicate>
+                                          <ScalarOperator ScalarString="[Id]&lt;&gt;[@calculatedFailedStatusId]">
+                                            <Compare CompareOp="NE">
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="Id" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@calculatedFailedStatusId" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Compare>
+                                          </ScalarOperator>
+                                        </Predicate>
+                                      </TableScan>
+                                    </RelOp>
+                                  </StreamAggregate>
+                                </RelOp>
+                              </ComputeScalar>
+                            </RelOp>
+                          </NestedLoops>
+                        </RelOp>
+                      </ComputeScalar>
+                    </RelOp>
+                  </Top>
+                </RelOp>
+              </Update>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@isNewTeu" ParameterCompiledValue="(0)" />
+              <ColumnReference Column="@shouldAggregateAllTeus" ParameterCompiledValue="(0)" />
+              <ColumnReference Column="@resolvedTedIntId" ParameterCompiledValue="(1381250)" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText="&#x9;RETURN; &#xD;" StatementId="8" StatementCompId="145" StatementType="RETURN NONE" RetrievedFromCache="true" />
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

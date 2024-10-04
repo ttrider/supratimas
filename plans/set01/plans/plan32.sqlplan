@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtCond StatementText="CREATE FUNCTION [dbo].[Function_ConvertTPMBuildToTellus] &#xD;&#xA;      (&#xD;&#xA;                  @Product nvarchar(10)=N'Apollo',&#xD;&#xA;                  @Branch nvarchar(100)=NULL,&#xD;&#xA;                  @InputBuildString nvarchar(256)&#xD;&#xA;      )&#xD;&#xA;      RETURNS @OutputTable TABLE (OutputBuildString nvarchar(256))&#xD;&#xA;      AS&#xD;&#xA;      BEGIN&#xD;&#xA;            DECLARE @OutputBuildString nvarchar(256);&#xD;&#xA;&#xD;&#xA;            IF LOWER(@Product) = '7_branch' AND @Branch IS NOT NULL&#xD;&#xA;            /* For Mango buildstring formats, we need branch name as well to convert into Tellus build format*/&#xD;&#xA;           " StatementId="1" StatementCompId="22" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;                        SELECT @OutputBuildString = ISNULL([dbo].[Function_Token] (&#xD;&#xA;                        @InputBuildString ,'.', 1), '') + '.0.' + @Branch + '.' + ISNULL(RIGHT([dbo].[Function_Token] (&#xD;&#xA;                        @InputBuildString ,'.', 2), 11), '')&#xD;&#xA;           " StatementId="2" StatementCompId="23" StatementType="ASSIGN WITH QUERY" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+          <Else>
+            <Statements>
+              <StmtSimple StatementText=" END&#xD;&#xA;            ELSE &#xD;&#xA;            /* For Apollo type buildstring formats*/&#xD;&#xA;            BEGIN&#xD;&#xA;                        SELECT @OutputBuildString = ISNULL([dbo].[Function_Token] (&#xD;&#xA;                        @InputBuildString ,'.', 2), '') + '.' + ISNULL([dbo].[Function_Token] (&#xD;&#xA;                        @InputBuildString ,'.', 3), '') + '.' + ISNULL([dbo].[Function_Token] (&#xD;&#xA;                        @InputBuildString ,'.', 1), '') + '.' + ISNULL(RIGHT([dbo].[Function_Token] (&#xD;&#xA;                        @InputBuildString ,'.', 4), 11), '')                        &#xD;&#xA;           " StatementId="3" StatementCompId="26" StatementType="ASSIGN WITH QUERY" RetrievedFromCache="true" />
+            </Statements>
+          </Else>
+        </StmtCond>
+        <StmtSimple StatementText=" END&#xD;&#xA;            &#xD;&#xA;            INSERT INTO @OutputTable VALUES (@OutputBuildString)&#xD;&#xA;     " StatementId="4" StatementCompId="28" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.0100022" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0xAD4F5EDDE67894F2" QueryPlanHash="0x248AF7301CFDCBBB">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="0" CompileCPU="0" CompileMemory="128">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Table Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.01" EstimateCPU="1e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0100022" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <ScalarInsert DMLRequestSort="0">
+                <Object Table="[@OutputTable]" />
+                <SetPredicate>
+                  <ScalarOperator ScalarString="[OutputBuildString] = [@OutputBuildString]">
+                    <ScalarExpressionList>
+                      <ScalarOperator>
+                        <MultipleAssign>
+                          <Assign>
+                            <ColumnReference Column="OutputBuildString" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="@OutputBuildString" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                        </MultipleAssign>
+                      </ScalarOperator>
+                    </ScalarExpressionList>
+                  </ScalarOperator>
+                </SetPredicate>
+              </ScalarInsert>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText=" RETURN &#xD;&#xA;       &#xD;&#xA;     " StatementId="5" StatementCompId="29" StatementType="RETURN NONE" RetrievedFromCache="true" />
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

@@ -1,0 +1,77 @@
+@color-primary-0: #91C1E6;
+@color-primary-1: #E7F3FD;
+@color-primary-2: #BCDBF3;
+@color-primary-3: #6CA8D6;
+@color-primary-4: #4B8FC3;
+@color-primary-5: darken(@color-primary-4, 20%);
+@color-alt3-0: spin(@color-primary-0, 150%);
+@color-alt3-1: spin(@color-primary-1, 150%);
+@color-alt3-2: spin(@color-primary-2, 150%);
+@color-alt3-3: spin(@color-primary-3, 150%);
+@color-alt3-4: spin(@color-primary-4, 150%);
+@color-alt3-5: spin(@color-primary-5, 150%);
+@color-alt-0: spin(@color-primary-0, 270%);
+@color-alt-1: spin(@color-primary-1, 270%);
+@color-alt-2: spin(@color-primary-2, 270%);
+@color-alt-3: spin(@color-primary-3, 270%);
+@color-alt-4: spin(@color-primary-4, 270%);
+@color-alt-5: spin(@color-primary-5, 270%);
+@color-alt2-0: spin(@color-primary-0, 200%);
+@color-alt2-1: spin(@color-primary-1, 200%);
+@color-alt2-2: spin(@color-primary-2, 200%);
+@color-alt2-3: spin(@color-primary-3, 200%);
+@color-alt2-4: spin(@color-primary-4, 200%);
+@color-alt2-5: spin(@color-primary-5, 200%);
+@color-light: lighten(@color-primary-1, 4.7%);
+@color-dark: darken(@color-primary-4, 30%);
+@color-warning: spin(@color-primary-0, 20%);
+@color-attention: spin(@color-primary-4, 150%);
+@actionbarColor: desaturate(@color-primary-3, 50%);
+@color-background-light: lighten(@color-primary-1, 10%);
+@import "./icons.less";
+@actoinbarRightPosition: 19em;
+// testtest {
+//     color-warning: @color-warning;
+//     color-attention: @color-attention;
+//     color-primary-0: @color-primary-0;
+//     color-primary-1: @color-primary-1;
+//     color-primary-2: @color-primary-2;
+//     color-primary-3: @color-primary-3;
+//     color-primary-4: @color-primary-4;
+//     color-primary-5: @color-primary-5;
+//     color-light: @color-light;
+//     color-dark: @color-dark;
+// }
+.base-background() {
+    background-color: @color-light;
+    background-image: url(i/noise.white.png);
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+// .clickable:hover {
+//     //text-decoration: underline;
+// }
+
+.flexrow {
+    display: flex;
+    flex-direction: row;
+    white-space: nowrap;
+    flex-wrap: nowrap;
+}
+
+.flexcolumn {
+    display: flex;
+    flex-direction: column;
+}
+
+.flexcolumn-grow {
+    flex-grow: 1;
+    .flexcolumn();
+}
+
+
+
+@navigator-width: 15em;

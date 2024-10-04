@@ -1,0 +1,489 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="create procedure sys.sp_tablecollations_100&#xD;&#xA;(&#xD;&#xA;    @object nvarchar(4000)&#xD;&#xA;)&#xD;&#xA;as&#xD;&#xA;    select&#xD;&#xA;        colid               = s_tcv.colid,&#xD;&#xA;        name                = s_tcv.name,&#xD;&#xA;        tds_collation       = s_tcv.tds_collation_100,&#xD;&#xA;        &quot;collation&quot;         = s_tcv.collation_100&#xD;&#xA;    from&#xD;&#xA;        sys.spt_tablecollations_view s_tcv&#xD;&#xA;    where&#xD;&#xA;        s_tcv.object_id = object_id(@object, 'local')&#xD;&#xA;    order by colid&#xD;&#xA;" StatementId="1" StatementCompId="2" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0155097" StatementEstRows="5.19067" StatementOptmLevel="FULL" QueryHash="0x87DE7D10DCA6D10" QueryPlanHash="0x82B56F614DA9866A" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="56" CompileTime="59" CompileCPU="59" CompileMemory="1376">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="5.19067" EstimateIO="0" EstimateCPU="5.19067e-007" AvgRowSize="278" EstimatedTotalSubtreeCost="0.0155097" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Column="Union1039" />
+                <ColumnReference Column="Union1040" />
+                <ColumnReference Column="Union1046" />
+                <ColumnReference Column="Expr1074" />
+              </OutputList>
+              <ComputeScalar>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1074" />
+                    <ScalarOperator ScalarString="CONVERT(binary(5),collationproperty([Union1046],'tdscollation'),0)">
+                      <Convert DataType="binary" Length="5" Style="0" Implicit="0">
+                        <ScalarOperator>
+                          <Intrinsic FunctionName="collationproperty">
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Union1046" />
+                              </Identifier>
+                            </ScalarOperator>
+                            <ScalarOperator>
+                              <Const ConstValue="'tdscollation'" />
+                            </ScalarOperator>
+                          </Intrinsic>
+                        </ScalarOperator>
+                      </Convert>
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp NodeId="1" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="5.19067" EstimateIO="0" EstimateCPU="2.30973e-005" AvgRowSize="273" EstimatedTotalSubtreeCost="0.0155092" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Union1039" />
+                    <ColumnReference Column="Union1040" />
+                    <ColumnReference Column="Union1046" />
+                  </OutputList>
+                  <NestedLoops Optimized="0">
+                    <OuterReferences>
+                      <ColumnReference Column="Expr1082" />
+                    </OuterReferences>
+                    <RelOp NodeId="2" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328408" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Column="Expr1082" />
+                      </OutputList>
+                      <ComputeScalar>
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1082" />
+                            <ScalarOperator ScalarString="objectproperty([OurLabReporting].[sys].[sysschobjs].[id] as [o].[id],'tablehascolumnset')">
+                              <Intrinsic FunctionName="objectproperty">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                                  </Identifier>
+                                </ScalarOperator>
+                                <ScalarOperator>
+                                  <Const ConstValue="'tablehascolumnset'" />
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </DefinedValue>
+                        </DefinedValues>
+                        <RelOp NodeId="3" PhysicalOp="Filter" LogicalOp="Filter" EstimateRows="1" EstimateIO="0" EstimateCPU="8.8e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328398" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                          </OutputList>
+                          <Filter StartupExpression="0">
+                            <RelOp NodeId="4" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="3367" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                              </OutputList>
+                              <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <Object Database="[OurLabReporting]" Schema="[sys]" Table="[sysschobjs]" Index="[clst]" Alias="[o]" IndexKind="Clustered" />
+                                <SeekPredicates>
+                                  <SeekPredicateNew>
+                                    <SeekKeys>
+                                      <Prefix ScanType="EQ">
+                                        <RangeColumns>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                                        </RangeColumns>
+                                        <RangeExpressions>
+                                          <ScalarOperator ScalarString="object_id([@object],'local')">
+                                            <Identifier>
+                                              <ColumnReference Column="ConstExpr1081">
+                                                <ScalarOperator>
+                                                  <Intrinsic FunctionName="object_id">
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Column="@object" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="'local'" />
+                                                    </ScalarOperator>
+                                                  </Intrinsic>
+                                                </ScalarOperator>
+                                              </ColumnReference>
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </RangeExpressions>
+                                      </Prefix>
+                                    </SeekKeys>
+                                  </SeekPredicateNew>
+                                </SeekPredicates>
+                              </IndexScan>
+                            </RelOp>
+                            <Predicate>
+                              <ScalarOperator ScalarString="has_access('AO',[OurLabReporting].[sys].[sysschobjs].[id] as [o].[id])=(1)">
+                                <Compare CompareOp="EQ">
+                                  <ScalarOperator>
+                                    <Intrinsic FunctionName="has_access">
+                                      <ScalarOperator>
+                                        <Const ConstValue="'AO'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="" />
+                                      </ScalarOperator>
+                                    </Intrinsic>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(1)" />
+                                  </ScalarOperator>
+                                </Compare>
+                              </ScalarOperator>
+                            </Predicate>
+                          </Filter>
+                        </RelOp>
+                      </ComputeScalar>
+                    </RelOp>
+                    <RelOp NodeId="9" PhysicalOp="Merge Join" LogicalOp="Concatenation" EstimateRows="5.52567" EstimateIO="0" EstimateCPU="0.00560475" AvgRowSize="273" EstimatedTotalSubtreeCost="0.012202" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Column="Union1040" />
+                        <ColumnReference Column="Union1039" />
+                        <ColumnReference Column="Union1046" />
+                      </OutputList>
+                      <Merge>
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Union1040" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syscolpars]" Column="colid" />
+                            <ColumnReference Database="[mssqlsystemresource]" Schema="[sys]" Table="[syscolpars]" Column="colid" />
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Column="Union1039" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syscolpars]" Column="name" />
+                            <ColumnReference Column="Expr1036" />
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Column="Union1046" />
+                            <ColumnReference Column="Expr1003" />
+                            <ColumnReference Column="Expr1037" />
+                          </DefinedValue>
+                        </DefinedValues>
+                        <RelOp NodeId="10" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="4.52567" EstimateIO="0" EstimateCPU="4.52567e-007" AvgRowSize="165" EstimatedTotalSubtreeCost="0.00330341" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syscolpars]" Column="colid" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syscolpars]" Column="name" />
+                            <ColumnReference Column="Expr1003" />
+                          </OutputList>
+                          <ComputeScalar>
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Column="Expr1003" />
+                                <ScalarOperator ScalarString="CONVERT(nvarchar(128),collationpropertyfromid([OurLabReporting].[sys].[syscolpars].[collationid],'name'),0)">
+                                  <Convert DataType="nvarchar" Length="256" Style="0" Implicit="0">
+                                    <ScalarOperator>
+                                      <Intrinsic FunctionName="collationpropertyfromid">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syscolpars]" Column="collationid" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'name'" />
+                                        </ScalarOperator>
+                                      </Intrinsic>
+                                    </ScalarOperator>
+                                  </Convert>
+                                </ScalarOperator>
+                              </DefinedValue>
+                            </DefinedValues>
+                            <RelOp NodeId="11" PhysicalOp="Filter" LogicalOp="Filter" EstimateRows="4.52567" EstimateIO="0" EstimateCPU="1.34749e-005" AvgRowSize="39" EstimatedTotalSubtreeCost="0.00330296" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syscolpars]" Column="colid" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syscolpars]" Column="name" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syscolpars]" Column="collationid" />
+                              </OutputList>
+                              <Filter StartupExpression="0">
+                                <RelOp NodeId="12" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="4.52567" EstimateIO="0.003125" EstimateCPU="0.000164486" AvgRowSize="47" EstimatedTotalSubtreeCost="0.00328949" TableCardinality="5073" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syscolpars]" Column="id" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syscolpars]" Column="colid" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syscolpars]" Column="name" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syscolpars]" Column="collationid" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syscolpars]" Column="status" />
+                                  </OutputList>
+                                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                    <DefinedValues>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syscolpars]" Column="id" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syscolpars]" Column="colid" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syscolpars]" Column="name" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syscolpars]" Column="collationid" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syscolpars]" Column="status" />
+                                      </DefinedValue>
+                                    </DefinedValues>
+                                    <Object Database="[OurLabReporting]" Schema="[sys]" Table="[syscolpars]" Index="[clst]" IndexKind="Clustered" />
+                                    <SeekPredicates>
+                                      <SeekPredicateNew>
+                                        <SeekKeys>
+                                          <Prefix ScanType="EQ">
+                                            <RangeColumns>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syscolpars]" Column="id" />
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syscolpars]" Column="number" />
+                                            </RangeColumns>
+                                            <RangeExpressions>
+                                              <ScalarOperator ScalarString="object_id([@object],'local')">
+                                                <Identifier>
+                                                  <ColumnReference Column="ConstExpr1081">
+                                                    <ScalarOperator>
+                                                      <Intrinsic FunctionName="object_id">
+                                                        <ScalarOperator>
+                                                          <Identifier>
+                                                            <ColumnReference Column="@object" />
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator>
+                                                          <Const ConstValue="'local'" />
+                                                        </ScalarOperator>
+                                                      </Intrinsic>
+                                                    </ScalarOperator>
+                                                  </ColumnReference>
+                                                </Identifier>
+                                              </ScalarOperator>
+                                              <ScalarOperator ScalarString="(0)">
+                                                <Const ConstValue="(0)" />
+                                              </ScalarOperator>
+                                            </RangeExpressions>
+                                          </Prefix>
+                                        </SeekKeys>
+                                      </SeekPredicateNew>
+                                    </SeekPredicates>
+                                    <Predicate>
+                                      <ScalarOperator ScalarString="CONVERT(bit,[OurLabReporting].[sys].[syscolpars].[status]&amp;(16777216),0)=(0) OR [Expr1082]=(0)">
+                                        <Logical Operation="OR">
+                                          <ScalarOperator>
+                                            <Compare CompareOp="EQ">
+                                              <ScalarOperator>
+                                                <Convert DataType="bit" Style="0" Implicit="0">
+                                                  <ScalarOperator>
+                                                    <Arithmetic Operation="BIT_AND">
+                                                      <ScalarOperator>
+                                                        <Identifier>
+                                                          <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syscolpars]" Column="status" />
+                                                        </Identifier>
+                                                      </ScalarOperator>
+                                                      <ScalarOperator>
+                                                        <Const ConstValue="(16777216)" />
+                                                      </ScalarOperator>
+                                                    </Arithmetic>
+                                                  </ScalarOperator>
+                                                </Convert>
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="(0)" />
+                                              </ScalarOperator>
+                                            </Compare>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Compare CompareOp="EQ">
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="Expr1082" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="(0)" />
+                                              </ScalarOperator>
+                                            </Compare>
+                                          </ScalarOperator>
+                                        </Logical>
+                                      </ScalarOperator>
+                                    </Predicate>
+                                  </IndexScan>
+                                </RelOp>
+                                <Predicate>
+                                  <ScalarOperator ScalarString="has_access('CO',[OurLabReporting].[sys].[syscolpars].[id])=(1)">
+                                    <Compare CompareOp="EQ">
+                                      <ScalarOperator>
+                                        <Intrinsic FunctionName="has_access">
+                                          <ScalarOperator>
+                                            <Const ConstValue="'CO'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syscolpars]" Column="id" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="" />
+                                          </ScalarOperator>
+                                        </Intrinsic>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(1)" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                </Predicate>
+                              </Filter>
+                            </RelOp>
+                          </ComputeScalar>
+                        </RelOp>
+                        <RelOp NodeId="17" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="170" EstimatedTotalSubtreeCost="0.00329388" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Database="[mssqlsystemresource]" Schema="[sys]" Table="[syscolpars]" Column="colid" />
+                            <ColumnReference Column="Expr1036" />
+                            <ColumnReference Column="Expr1037" />
+                          </OutputList>
+                          <ComputeScalar>
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Column="Expr1036" />
+                                <ScalarOperator ScalarString="CONVERT(nvarchar(128),[mssqlsystemresource].[sys].[syscolpars].[name],0)">
+                                  <Convert DataType="nvarchar" Length="256" Style="0" Implicit="0">
+                                    <ScalarOperator>
+                                      <Identifier>
+                                        <ColumnReference Database="[mssqlsystemresource]" Schema="[sys]" Table="[syscolpars]" Column="name" />
+                                      </Identifier>
+                                    </ScalarOperator>
+                                  </Convert>
+                                </ScalarOperator>
+                              </DefinedValue>
+                              <DefinedValue>
+                                <ColumnReference Column="Expr1037" />
+                                <ScalarOperator ScalarString="CONVERT(nvarchar(128),columnpropertyex([mssqlsystemresource].[sys].[syscolpars].[id],[mssqlsystemresource].[sys].[syscolpars].[name],'collation'),0)">
+                                  <Convert DataType="nvarchar" Length="256" Style="0" Implicit="0">
+                                    <ScalarOperator>
+                                      <Intrinsic FunctionName="columnpropertyex">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Database="[mssqlsystemresource]" Schema="[sys]" Table="[syscolpars]" Column="id" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Database="[mssqlsystemresource]" Schema="[sys]" Table="[syscolpars]" Column="name" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'collation'" />
+                                        </ScalarOperator>
+                                      </Intrinsic>
+                                    </ScalarOperator>
+                                  </Convert>
+                                </ScalarOperator>
+                              </DefinedValue>
+                            </DefinedValues>
+                            <RelOp NodeId="18" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.000164279" AvgRowSize="48" EstimatedTotalSubtreeCost="0.00328928" TableCardinality="20666" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Database="[mssqlsystemresource]" Schema="[sys]" Table="[syscolpars]" Column="id" />
+                                <ColumnReference Database="[mssqlsystemresource]" Schema="[sys]" Table="[syscolpars]" Column="colid" />
+                                <ColumnReference Database="[mssqlsystemresource]" Schema="[sys]" Table="[syscolpars]" Column="name" />
+                                <ColumnReference Database="[mssqlsystemresource]" Schema="[sys]" Table="[syscolpars]" Column="status" />
+                              </OutputList>
+                              <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[mssqlsystemresource]" Schema="[sys]" Table="[syscolpars]" Column="id" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[mssqlsystemresource]" Schema="[sys]" Table="[syscolpars]" Column="colid" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[mssqlsystemresource]" Schema="[sys]" Table="[syscolpars]" Column="name" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[mssqlsystemresource]" Schema="[sys]" Table="[syscolpars]" Column="status" />
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <Object Database="[mssqlsystemresource]" Schema="[sys]" Table="[syscolpars]" Index="[clst]" IndexKind="Clustered" />
+                                <SeekPredicates>
+                                  <SeekPredicateNew>
+                                    <SeekKeys>
+                                      <Prefix ScanType="EQ">
+                                        <RangeColumns>
+                                          <ColumnReference Database="[mssqlsystemresource]" Schema="[sys]" Table="[syscolpars]" Column="id" />
+                                          <ColumnReference Database="[mssqlsystemresource]" Schema="[sys]" Table="[syscolpars]" Column="number" />
+                                        </RangeColumns>
+                                        <RangeExpressions>
+                                          <ScalarOperator ScalarString="object_id([@object],'local')">
+                                            <Identifier>
+                                              <ColumnReference Column="ConstExpr1081">
+                                                <ScalarOperator>
+                                                  <Intrinsic FunctionName="object_id">
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Column="@object" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="'local'" />
+                                                    </ScalarOperator>
+                                                  </Intrinsic>
+                                                </ScalarOperator>
+                                              </ColumnReference>
+                                            </Identifier>
+                                          </ScalarOperator>
+                                          <ScalarOperator ScalarString="(0)">
+                                            <Const ConstValue="(0)" />
+                                          </ScalarOperator>
+                                        </RangeExpressions>
+                                      </Prefix>
+                                    </SeekKeys>
+                                  </SeekPredicateNew>
+                                </SeekPredicates>
+                                <Predicate>
+                                  <ScalarOperator ScalarString="([mssqlsystemresource].[sys].[syscolpars].[status]&amp;(4096))=(4096)">
+                                    <Compare CompareOp="EQ">
+                                      <ScalarOperator>
+                                        <Arithmetic Operation="BIT_AND">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Database="[mssqlsystemresource]" Schema="[sys]" Table="[syscolpars]" Column="status" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="(4096)" />
+                                          </ScalarOperator>
+                                        </Arithmetic>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(4096)" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                </Predicate>
+                              </IndexScan>
+                            </RelOp>
+                          </ComputeScalar>
+                        </RelOp>
+                      </Merge>
+                    </RelOp>
+                  </NestedLoops>
+                </RelOp>
+              </ComputeScalar>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@object" ParameterCompiledValue="N'[upload].[TestCaseResult]'" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

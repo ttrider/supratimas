@@ -1,0 +1,836 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="&#xD;&#xA;--FOR ALWAYSON ROLE CHANGE, IF DATABASE NOW THE PRIMARY/PRINCIPAL, &#xD;&#xA; --THEN THE FOLLOWING IS DONE: &#xD;&#xA;    --ENABLES AGENT JOBS WITH NAMES in the table @JobNames &#xD;&#xA;    --DISABLES AGENT JOBS WITH NAMES in the table @JobNames&#xD;&#xA;    &#xD;&#xA;&#xD;&#xA;&#xD;&#xA; declare @dbname sysname = 'OurLabReporting'&#xD;&#xA; &#xD;&#xA;" StatementId="1" StatementCompId="1" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" DECLARE @JobNames Table(JobName Sysname)&#xD;&#xA; &#xD;&#xA; Insert into @JobNames Values ('OSGT3T_3Hour_Tran_Backups')&#xD;&#xA;" StatementId="2" StatementCompId="3" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.0100022" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0xC4F9D47779467F9C" QueryPlanHash="0x8707F1F47ECAF1EB">
+          <StatementSetOptions QUOTED_IDENTIFIER="false" ARITHABORT="false" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="0" CompileCPU="0" CompileMemory="216">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Table Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.01" EstimateCPU="1e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0100022" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <ScalarInsert DMLRequestSort="0">
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1004" />
+                    <ScalarOperator ScalarString="N'OSGT3T_3Hour_Tran_Backups'">
+                      <Const ConstValue="N'OSGT3T_3Hour_Tran_Backups'" />
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <Object Table="[@JobNames]" />
+                <SetPredicate>
+                  <ScalarOperator ScalarString="[JobName] = [Expr1004]">
+                    <ScalarExpressionList>
+                      <ScalarOperator>
+                        <MultipleAssign>
+                          <Assign>
+                            <ColumnReference Column="JobName" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1004" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                        </MultipleAssign>
+                      </ScalarOperator>
+                    </ScalarExpressionList>
+                  </ScalarOperator>
+                </SetPredicate>
+              </ScalarInsert>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText=" Insert into @JobNames Values ('OSGT3T Index Rebuilds')&#xD;&#xA;-- Insert into @JobNames Values ('OSGT3T_Daily_DBCC')&#xD;" StatementId="3" StatementCompId="4" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.0100022" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0xC4F9D47779467F9C" QueryPlanHash="0x8707F1F47ECAF1EB">
+          <StatementSetOptions QUOTED_IDENTIFIER="false" ARITHABORT="false" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="0" CompileCPU="0" CompileMemory="216">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Table Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.01" EstimateCPU="1e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0100022" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <ScalarInsert DMLRequestSort="0">
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1004" />
+                    <ScalarOperator ScalarString="N'OSGT3T Index Rebuilds'">
+                      <Const ConstValue="N'OSGT3T Index Rebuilds'" />
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <Object Table="[@JobNames]" />
+                <SetPredicate>
+                  <ScalarOperator ScalarString="[JobName] = [Expr1004]">
+                    <ScalarExpressionList>
+                      <ScalarOperator>
+                        <MultipleAssign>
+                          <Assign>
+                            <ColumnReference Column="JobName" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1004" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                        </MultipleAssign>
+                      </ScalarOperator>
+                    </ScalarExpressionList>
+                  </ScalarOperator>
+                </SetPredicate>
+              </ScalarInsert>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText="&#xA;Insert into @JobNames Values ('OSGT3T_GETIndexPhysicalStats')&#xD;&#xA;  &#xD;&#xA;" StatementId="4" StatementCompId="5" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.0100022" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0xC4F9D47779467F9C" QueryPlanHash="0x8707F1F47ECAF1EB">
+          <StatementSetOptions QUOTED_IDENTIFIER="false" ARITHABORT="false" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="0" CompileCPU="0" CompileMemory="216">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Table Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.01" EstimateCPU="1e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0100022" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <ScalarInsert DMLRequestSort="0">
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1004" />
+                    <ScalarOperator ScalarString="N'OSGT3T_GETIndexPhysicalStats'">
+                      <Const ConstValue="N'OSGT3T_GETIndexPhysicalStats'" />
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <Object Table="[@JobNames]" />
+                <SetPredicate>
+                  <ScalarOperator ScalarString="[JobName] = [Expr1004]">
+                    <ScalarExpressionList>
+                      <ScalarOperator>
+                        <MultipleAssign>
+                          <Assign>
+                            <ColumnReference Column="JobName" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1004" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                        </MultipleAssign>
+                      </ScalarOperator>
+                    </ScalarExpressionList>
+                  </ScalarOperator>
+                </SetPredicate>
+              </ScalarInsert>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText=" declare @jobid uniqueidentifier &#xD;&#xA; declare @jobprefix_pri sysname &#xD;&#xA; declare @jobprefix_sec sysname &#xD;&#xA; declare @jobname sysname &#xD;&#xA; declare @dbstate_desc nvarchar(120) &#xD;&#xA; declare @HADRON_role_state nvarchar(120) &#xD;&#xA; declare @db_role nvarchar(120)&#xD;&#xA; declare @EnableOrDisable bit = 0&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;" StatementId="5" StatementCompId="6" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" select @HADRON_role_state=ars.role_desc from master.sys.dm_hadr_availability_replica_states ars, master.sys.availability_databases_cluster dc &#xD;&#xA; where ars.group_id=dc.group_id and ars.is_local=1 and dc.database_name=@dbname &#xD;&#xA; &#xD;&#xA; &#xD;&#xA;&#xD;" StatementId="6" StatementCompId="7" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.026783" StatementEstRows="2643.43" StatementOptmLevel="FULL" QueryHash="0x2EB87D2E8C887F38" QueryPlanHash="0x7A1A9C330D8309A1" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="false" ARITHABORT="false" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="48" CompileTime="18" CompileCPU="16" CompileMemory="728">
+            <MemoryGrantInfo SerialRequiredMemory="1024" SerialDesiredMemory="1088" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Hash Match" LogicalOp="Inner Join" EstimateRows="2643.43" EstimateIO="0" EstimateCPU="0.0251997" AvgRowSize="71" EstimatedTotalSubtreeCost="0.026783" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Column="Expr1000" />
+              </OutputList>
+              <MemoryFractions Input="1" Output="1" />
+              <Hash>
+                <DefinedValues />
+                <HashKeysBuild>
+                  <ColumnReference Table="[DM_AVAILABILITY_DATABASES_CLUSTER]" Column="group_id" />
+                </HashKeysBuild>
+                <HashKeysProbe>
+                  <ColumnReference Table="[DM_HADR_INTERNAL_AVAILABILITY_REPLICA_STATES]" Column="group_id" />
+                </HashKeysProbe>
+                <ProbeResidual>
+                  <ScalarOperator ScalarString="DM_HADR_INTERNAL_AVAILABILITY_REPLICA_STATES.[group_id]=DM_AVAILABILITY_DATABASES_CLUSTER.[group_id]">
+                    <Compare CompareOp="EQ">
+                      <ScalarOperator>
+                        <Identifier>
+                          <ColumnReference Table="[DM_HADR_INTERNAL_AVAILABILITY_REPLICA_STATES]" Column="group_id" />
+                        </Identifier>
+                      </ScalarOperator>
+                      <ScalarOperator>
+                        <Identifier>
+                          <ColumnReference Table="[DM_AVAILABILITY_DATABASES_CLUSTER]" Column="group_id" />
+                        </Identifier>
+                      </ScalarOperator>
+                    </Compare>
+                  </ScalarOperator>
+                </ProbeResidual>
+                <RelOp NodeId="1" PhysicalOp="Filter" LogicalOp="Filter" EstimateRows="105.737" EstimateIO="0" EstimateCPU="0.00024" AvgRowSize="23" EstimatedTotalSubtreeCost="0.000790157" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Table="[DM_AVAILABILITY_DATABASES_CLUSTER]" Column="group_id" />
+                  </OutputList>
+                  <Filter StartupExpression="0">
+                    <RelOp NodeId="2" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="500" EstimateIO="0" EstimateCPU="5e-005" AvgRowSize="155" EstimatedTotalSubtreeCost="0.000550157" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Table="[DM_AVAILABILITY_DATABASES_CLUSTER]" Column="group_id" />
+                        <ColumnReference Column="Expr1018" />
+                      </OutputList>
+                      <ComputeScalar>
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1018" />
+                            <ScalarOperator ScalarString="CONVERT(nvarchar(128),DM_AVAILABILITY_DATABASES_CLUSTER.[database_name],0)">
+                              <Convert DataType="nvarchar" Length="256" Style="0" Implicit="0">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Table="[DM_AVAILABILITY_DATABASES_CLUSTER]" Column="database_name" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Convert>
+                            </ScalarOperator>
+                          </DefinedValue>
+                        </DefinedValues>
+                        <RelOp NodeId="3" PhysicalOp="Table-valued function" LogicalOp="Table-valued function" EstimateRows="500" EstimateIO="0" EstimateCPU="0.000500157" AvgRowSize="155" EstimatedTotalSubtreeCost="0.000500157" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Table="[DM_AVAILABILITY_DATABASES_CLUSTER]" Column="group_id" />
+                            <ColumnReference Table="[DM_AVAILABILITY_DATABASES_CLUSTER]" Column="database_name" />
+                          </OutputList>
+                          <TableValuedFunction>
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Table="[DM_AVAILABILITY_DATABASES_CLUSTER]" Column="group_id" />
+                              </DefinedValue>
+                              <DefinedValue>
+                                <ColumnReference Table="[DM_AVAILABILITY_DATABASES_CLUSTER]" Column="database_name" />
+                              </DefinedValue>
+                            </DefinedValues>
+                            <Object Table="[DM_AVAILABILITY_DATABASES_CLUSTER]" />
+                          </TableValuedFunction>
+                        </RelOp>
+                      </ComputeScalar>
+                    </RelOp>
+                    <Predicate>
+                      <ScalarOperator ScalarString="[Expr1018]=[@dbname]">
+                        <Compare CompareOp="EQ">
+                          <ScalarOperator>
+                            <Identifier>
+                              <ColumnReference Column="Expr1018" />
+                            </Identifier>
+                          </ScalarOperator>
+                          <ScalarOperator>
+                            <Identifier>
+                              <ColumnReference Column="@dbname" />
+                            </Identifier>
+                          </ScalarOperator>
+                        </Compare>
+                      </ScalarOperator>
+                    </Predicate>
+                  </Filter>
+                </RelOp>
+                <RelOp NodeId="8" PhysicalOp="Filter" LogicalOp="Filter" EstimateRows="250" EstimateIO="0" EstimateCPU="0.00024" AvgRowSize="87" EstimatedTotalSubtreeCost="0.000790157" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Table="[DM_HADR_INTERNAL_AVAILABILITY_REPLICA_STATES]" Column="group_id" />
+                    <ColumnReference Column="Expr1000" />
+                  </OutputList>
+                  <Filter StartupExpression="0">
+                    <RelOp NodeId="9" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="500" EstimateIO="0" EstimateCPU="5e-005" AvgRowSize="88" EstimatedTotalSubtreeCost="0.000550157" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Table="[DM_HADR_INTERNAL_AVAILABILITY_REPLICA_STATES]" Column="group_id" />
+                        <ColumnReference Table="[DM_HADR_INTERNAL_AVAILABILITY_REPLICA_STATES]" Column="is_local" />
+                        <ColumnReference Column="Expr1000" />
+                      </OutputList>
+                      <ComputeScalar>
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1000" />
+                            <ScalarOperator ScalarString="CASE WHEN DM_HADR_INTERNAL_AVAILABILITY_REPLICA_STATES.[role]=(0) THEN N'RESOLVING' ELSE CASE WHEN DM_HADR_INTERNAL_AVAILABILITY_REPLICA_STATES.[role]=(1) THEN N'PRIMARY' ELSE CASE WHEN DM_HADR_INTERNAL_AVAILABILITY_REPLICA_STATES.[role]=(2) THEN N'SECONDARY' ELSE CASE WHEN DM_HADR_INTERNAL_AVAILABILITY_REPLICA_STATES.[role]=(3) THEN N'INVALID' ELSE NULL END END END END">
+                              <IF>
+                                <Condition>
+                                  <ScalarOperator>
+                                    <Compare CompareOp="EQ">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Table="[DM_HADR_INTERNAL_AVAILABILITY_REPLICA_STATES]" Column="role" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(0)" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                </Condition>
+                                <Then>
+                                  <ScalarOperator>
+                                    <Const ConstValue="N'RESOLVING'" />
+                                  </ScalarOperator>
+                                </Then>
+                                <Else>
+                                  <ScalarOperator>
+                                    <IF>
+                                      <Condition>
+                                        <ScalarOperator>
+                                          <Compare CompareOp="EQ">
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Table="[DM_HADR_INTERNAL_AVAILABILITY_REPLICA_STATES]" Column="role" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                            <ScalarOperator>
+                                              <Const ConstValue="(1)" />
+                                            </ScalarOperator>
+                                          </Compare>
+                                        </ScalarOperator>
+                                      </Condition>
+                                      <Then>
+                                        <ScalarOperator>
+                                          <Const ConstValue="N'PRIMARY'" />
+                                        </ScalarOperator>
+                                      </Then>
+                                      <Else>
+                                        <ScalarOperator>
+                                          <IF>
+                                            <Condition>
+                                              <ScalarOperator>
+                                                <Compare CompareOp="EQ">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Table="[DM_HADR_INTERNAL_AVAILABILITY_REPLICA_STATES]" Column="role" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                  <ScalarOperator>
+                                                    <Const ConstValue="(2)" />
+                                                  </ScalarOperator>
+                                                </Compare>
+                                              </ScalarOperator>
+                                            </Condition>
+                                            <Then>
+                                              <ScalarOperator>
+                                                <Const ConstValue="N'SECONDARY'" />
+                                              </ScalarOperator>
+                                            </Then>
+                                            <Else>
+                                              <ScalarOperator>
+                                                <IF>
+                                                  <Condition>
+                                                    <ScalarOperator>
+                                                      <Compare CompareOp="EQ">
+                                                        <ScalarOperator>
+                                                          <Identifier>
+                                                            <ColumnReference Table="[DM_HADR_INTERNAL_AVAILABILITY_REPLICA_STATES]" Column="role" />
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator>
+                                                          <Const ConstValue="(3)" />
+                                                        </ScalarOperator>
+                                                      </Compare>
+                                                    </ScalarOperator>
+                                                  </Condition>
+                                                  <Then>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="N'INVALID'" />
+                                                    </ScalarOperator>
+                                                  </Then>
+                                                  <Else>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="NULL" />
+                                                    </ScalarOperator>
+                                                  </Else>
+                                                </IF>
+                                              </ScalarOperator>
+                                            </Else>
+                                          </IF>
+                                        </ScalarOperator>
+                                      </Else>
+                                    </IF>
+                                  </ScalarOperator>
+                                </Else>
+                              </IF>
+                            </ScalarOperator>
+                          </DefinedValue>
+                        </DefinedValues>
+                        <RelOp NodeId="10" PhysicalOp="Table-valued function" LogicalOp="Table-valued function" EstimateRows="500" EstimateIO="0" EstimateCPU="0.000500157" AvgRowSize="25" EstimatedTotalSubtreeCost="0.000500157" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Table="[DM_HADR_INTERNAL_AVAILABILITY_REPLICA_STATES]" Column="group_id" />
+                            <ColumnReference Table="[DM_HADR_INTERNAL_AVAILABILITY_REPLICA_STATES]" Column="is_local" />
+                            <ColumnReference Table="[DM_HADR_INTERNAL_AVAILABILITY_REPLICA_STATES]" Column="role" />
+                          </OutputList>
+                          <TableValuedFunction>
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Table="[DM_HADR_INTERNAL_AVAILABILITY_REPLICA_STATES]" Column="group_id" />
+                              </DefinedValue>
+                              <DefinedValue>
+                                <ColumnReference Table="[DM_HADR_INTERNAL_AVAILABILITY_REPLICA_STATES]" Column="is_local" />
+                              </DefinedValue>
+                              <DefinedValue>
+                                <ColumnReference Table="[DM_HADR_INTERNAL_AVAILABILITY_REPLICA_STATES]" Column="role" />
+                              </DefinedValue>
+                            </DefinedValues>
+                            <Object Table="[DM_HADR_INTERNAL_AVAILABILITY_REPLICA_STATES]" />
+                          </TableValuedFunction>
+                        </RelOp>
+                      </ComputeScalar>
+                    </RelOp>
+                    <Predicate>
+                      <ScalarOperator ScalarString="DM_HADR_INTERNAL_AVAILABILITY_REPLICA_STATES.[is_local]=(1)">
+                        <Compare CompareOp="EQ">
+                          <ScalarOperator>
+                            <Identifier>
+                              <ColumnReference Table="[DM_HADR_INTERNAL_AVAILABILITY_REPLICA_STATES]" Column="is_local" />
+                            </Identifier>
+                          </ScalarOperator>
+                          <ScalarOperator>
+                            <Const ConstValue="(1)" />
+                          </ScalarOperator>
+                        </Compare>
+                      </ScalarOperator>
+                    </Predicate>
+                  </Filter>
+                </RelOp>
+              </Hash>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtCond StatementText="&#xA;if @HADRON_role_state in ('PRIMARY','SECONDARY') &#xD;&#xA;   " StatementId="7" StatementCompId="8" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" select @db_role=@HADRON_role_state &#xD;&#xA;" StatementId="8" StatementCompId="9" StatementType="ASSIGN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+          <Else>
+            <Statements>
+              <StmtCond StatementText=" else &#xD;&#xA; begin &#xD;&#xA;    if @HADRON_role_state = 'RESOLVING' &#xD;&#xA;   " StatementId="9" StatementCompId="12" StatementType="COND" RetrievedFromCache="true">
+                <Condition />
+                <Then>
+                  <Statements>
+                    <StmtSimple StatementText=" begin &#xD;&#xA;        print 'AlwaysOn role currently in RESOLVING state - please try again later' &#xD;&#xA;   " StatementId="10" StatementCompId="13" StatementType="PRINT" RetrievedFromCache="true" />
+                  </Statements>
+                </Then>
+                <Else>
+                  <Statements>
+                    <StmtSimple StatementText=" end &#xD;&#xA;    else &#xD;&#xA;    begin &#xD;&#xA;        print 'AlwaysOn role could not be identified - Make sure that database is part of an AG' &#xD;&#xA;   " StatementId="11" StatementCompId="16" StatementType="PRINT" RetrievedFromCache="true" />
+                  </Statements>
+                </Else>
+              </StmtCond>
+            </Statements>
+          </Else>
+        </StmtCond>
+        <StmtCond StatementText=" end &#xD;&#xA; end&#xD;&#xA;&#xD;&#xA;--Now let's check for the jobs&#xD;&#xA;if @db_role = 'PRIMARY' &#xD;&#xA;" StatementId="12" StatementCompId="19" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText="&#x9;Set @EnableOrDisable = 1&#xD;&#xA;&#xD;" StatementId="13" StatementCompId="20" StatementType="ASSIGN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtSimple StatementText="&#xA;Select @HADRON_role_state as DatabaseRole, @EnableOrDisable as jobStatusNeedsTobe&#xD;&#xA;&#xD;" StatementId="14" StatementCompId="22" StatementType="SELECT WITHOUT QUERY" RetrievedFromCache="true" />
+        <StmtCond StatementText="&#xA;if exists (select * from msdb..sysjobs sj join @JobNames jb on sj.name = jb.JobName Where enabled!=@EnableOrDisable)&#xD;" StatementId="15" StatementCompId="23" StatementType="COND WITH QUERY" RetrievedFromCache="true" StatementSubTreeCost="0.00986358" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x349A8ED61CF5C27D" QueryPlanHash="0xA19ABEF6CDCDCD29" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="false" ARITHABORT="false" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <Condition>
+            <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="24" CompileTime="6" CompileCPU="6" CompileMemory="368">
+              <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+              <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+              <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00986358" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                <OutputList>
+                  <ColumnReference Column="Expr1006" />
+                </OutputList>
+                <ComputeScalar>
+                  <DefinedValues>
+                    <DefinedValue>
+                      <ColumnReference Column="Expr1006" />
+                      <ScalarOperator ScalarString="CASE WHEN [Expr1007] THEN (1) ELSE (0) END">
+                        <IF>
+                          <Condition>
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1007" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Condition>
+                          <Then>
+                            <ScalarOperator>
+                              <Const ConstValue="(1)" />
+                            </ScalarOperator>
+                          </Then>
+                          <Else>
+                            <ScalarOperator>
+                              <Const ConstValue="(0)" />
+                            </ScalarOperator>
+                          </Else>
+                        </IF>
+                      </ScalarOperator>
+                    </DefinedValue>
+                  </DefinedValues>
+                  <RelOp NodeId="1" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.00986348" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList>
+                      <ColumnReference Column="Expr1007" />
+                    </OutputList>
+                    <NestedLoops Optimized="0">
+                      <DefinedValues>
+                        <DefinedValue>
+                          <ColumnReference Column="Expr1007" />
+                        </DefinedValue>
+                      </DefinedValues>
+                      <ProbeColumn>
+                        <ColumnReference Column="Expr1007" />
+                      </ProbeColumn>
+                      <RelOp NodeId="2" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList />
+                        <ConstantScan />
+                      </RelOp>
+                      <RelOp NodeId="3" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.00985766" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList />
+                        <NestedLoops Optimized="0">
+                          <OuterReferences>
+                            <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Alias="[sj]" Column="job_id" />
+                          </OuterReferences>
+                          <RelOp NodeId="4" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="23" EstimatedTotalSubtreeCost="0.00657038" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList>
+                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Alias="[sj]" Column="job_id" />
+                            </OutputList>
+                            <NestedLoops Optimized="0">
+                              <OuterReferences>
+                                <ColumnReference Table="@JobNames" Alias="[jb]" Column="JobName" />
+                              </OuterReferences>
+                              <RelOp NodeId="5" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="139" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList>
+                                  <ColumnReference Table="@JobNames" Alias="[jb]" Column="JobName" />
+                                </OutputList>
+                                <TableScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                                  <DefinedValues>
+                                    <DefinedValue>
+                                      <ColumnReference Table="@JobNames" Alias="[jb]" Column="JobName" />
+                                    </DefinedValue>
+                                  </DefinedValues>
+                                  <Object Table="[@JobNames]" Alias="[jb]" />
+                                </TableScan>
+                              </RelOp>
+                              <RelOp NodeId="6" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="23" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="27" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList>
+                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Alias="[sj]" Column="job_id" />
+                                </OutputList>
+                                <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                  <DefinedValues>
+                                    <DefinedValue>
+                                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Alias="[sj]" Column="job_id" />
+                                    </DefinedValue>
+                                  </DefinedValues>
+                                  <Object Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Index="[nc1]" Alias="[sj]" IndexKind="NonClustered" />
+                                  <SeekPredicates>
+                                    <SeekPredicateNew>
+                                      <SeekKeys>
+                                        <Prefix ScanType="EQ">
+                                          <RangeColumns>
+                                            <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Alias="[sj]" Column="name" />
+                                          </RangeColumns>
+                                          <RangeExpressions>
+                                            <ScalarOperator ScalarString="@JobNames.[JobName] as [jb].[JobName]">
+                                              <Identifier>
+                                                <ColumnReference Table="@JobNames" Alias="[jb]" Column="JobName" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </RangeExpressions>
+                                        </Prefix>
+                                      </SeekKeys>
+                                    </SeekPredicateNew>
+                                  </SeekPredicates>
+                                </IndexScan>
+                              </RelOp>
+                            </NestedLoops>
+                          </RelOp>
+                          <RelOp NodeId="8" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="27" Parallel="0" EstimateRebinds="3.72529e-008" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList />
+                            <IndexScan Lookup="1" Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                              <DefinedValues />
+                              <Object Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Index="[clust]" Alias="[sj]" TableReferenceId="-1" IndexKind="Clustered" />
+                              <SeekPredicates>
+                                <SeekPredicateNew>
+                                  <SeekKeys>
+                                    <Prefix ScanType="EQ">
+                                      <RangeColumns>
+                                        <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Alias="[sj]" Column="job_id" />
+                                      </RangeColumns>
+                                      <RangeExpressions>
+                                        <ScalarOperator ScalarString="[msdb].[dbo].[sysjobs].[job_id] as [sj].[job_id]">
+                                          <Identifier>
+                                            <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Alias="[sj]" Column="job_id" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </RangeExpressions>
+                                    </Prefix>
+                                  </SeekKeys>
+                                </SeekPredicateNew>
+                              </SeekPredicates>
+                              <Predicate>
+                                <ScalarOperator ScalarString="[msdb].[dbo].[sysjobs].[enabled] as [sj].[enabled]&lt;&gt;[@EnableOrDisable]">
+                                  <Compare CompareOp="NE">
+                                    <ScalarOperator>
+                                      <Identifier>
+                                        <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Alias="[sj]" Column="enabled" />
+                                      </Identifier>
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Identifier>
+                                        <ColumnReference Column="@EnableOrDisable" />
+                                      </Identifier>
+                                    </ScalarOperator>
+                                  </Compare>
+                                </ScalarOperator>
+                              </Predicate>
+                            </IndexScan>
+                          </RelOp>
+                        </NestedLoops>
+                      </RelOp>
+                    </NestedLoops>
+                  </RelOp>
+                </ComputeScalar>
+              </RelOp>
+            </QueryPlan>
+          </Condition>
+          <Then>
+            <Statements>
+              <StmtSimple StatementText="&#xA;begin &#xD;&#xA;    print getdate() &#xD;&#xA;   " StatementId="16" StatementCompId="24" StatementType="PRINT" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" print 'Database ONLINE Need to enable/disable jobs due to role change...' &#xD;&#xA;   " StatementId="17" StatementCompId="25" StatementType="PRINT" RetrievedFromCache="true" />
+              <StmtCursor StatementText=" declare job_cursor cursor for &#xD;&#xA;    select job_id, name from msdb..sysjobs sj join @JobNames jb on sj.name = jb.JobName Where enabled!=@EnableOrDisable &#xD;&#xA;   " StatementId="18" StatementCompId="26" StatementType="DECLARE CURSOR" RetrievedFromCache="true">
+                <CursorPlan CursorName="job_cursor" CursorActualType="Dynamic" CursorRequestedType="Dynamic" CursorConcurrency="Optimistic" ForwardOnly="true">
+                  <Operation OperationType="FetchQuery">
+                    <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="40" CompileTime="6" CompileCPU="6" CompileMemory="448">
+                      <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                      <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                      <RelOp NodeId="0" PhysicalOp="Clustered Index Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.01" EstimateCPU="1e-006" AvgRowSize="84" EstimatedTotalSubtreeCost="0.0198592" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList>
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Alias="[sj]" Column="job_id" />
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Alias="[sj]" Column="name" />
+                          <ColumnReference Column="Expr1007" />
+                        </OutputList>
+                        <Update DMLRequestSort="0">
+                          <Object Database="[tempdb]" Index="[CWT_PrimaryKey]" />
+                          <SetPredicate>
+                            <ScalarOperator ScalarString="[CWT].[COLUMN0] = [msdb].[dbo].[sysjobs].[job_id] as [sj].[job_id],[CWT].[CHECKSUM1] = [Chk1002],[CWT].[BMK2] = [Bmk1004],[CWT].[CHECKSUM3] = [Chk1005],[CWT].[ROWID] = [Expr1007]">
+                              <ScalarExpressionList>
+                                <ScalarOperator>
+                                  <MultipleAssign>
+                                    <Assign>
+                                      <ColumnReference Table="[CWT]" Column="COLUMN0" />
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Alias="[sj]" Column="job_id" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Assign>
+                                    <Assign>
+                                      <ColumnReference Table="[CWT]" Column="CHECKSUM1" />
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="Chk1002" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Assign>
+                                    <Assign>
+                                      <ColumnReference Table="[CWT]" Column="BMK2" />
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="Bmk1004" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Assign>
+                                    <Assign>
+                                      <ColumnReference Table="[CWT]" Column="CHECKSUM3" />
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="Chk1005" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Assign>
+                                    <Assign>
+                                      <ColumnReference Table="[CWT]" Column="ROWID" />
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="Expr1007" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Assign>
+                                  </MultipleAssign>
+                                </ScalarOperator>
+                              </ScalarExpressionList>
+                            </ScalarOperator>
+                          </SetPredicate>
+                          <RelOp NodeId="1" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="100" EstimatedTotalSubtreeCost="0.00985824" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList>
+                              <ColumnReference Column="Chk1002" />
+                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Alias="[sj]" Column="job_id" />
+                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Alias="[sj]" Column="name" />
+                              <ColumnReference Column="Bmk1004" />
+                              <ColumnReference Column="Chk1005" />
+                              <ColumnReference Column="Expr1007" />
+                            </OutputList>
+                            <ComputeScalar>
+                              <DefinedValues>
+                                <DefinedValue>
+                                  <ColumnReference Column="Expr1007" />
+                                  <ScalarOperator ScalarString="CWT_ROWID()">
+                                    <Intrinsic FunctionName="CWT_ROWID" />
+                                  </ScalarOperator>
+                                </DefinedValue>
+                              </DefinedValues>
+                              <RelOp NodeId="2" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="97" EstimatedTotalSubtreeCost="0.00985766" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList>
+                                  <ColumnReference Column="Chk1002" />
+                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Alias="[sj]" Column="job_id" />
+                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Alias="[sj]" Column="name" />
+                                  <ColumnReference Column="Bmk1004" />
+                                  <ColumnReference Column="Chk1005" />
+                                </OutputList>
+                                <NestedLoops Optimized="0">
+                                  <OuterReferences>
+                                    <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Alias="[sj]" Column="job_id" />
+                                  </OuterReferences>
+                                  <RelOp NodeId="3" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="92" EstimatedTotalSubtreeCost="0.00657038" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                    <OutputList>
+                                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Alias="[sj]" Column="job_id" />
+                                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Alias="[sj]" Column="name" />
+                                      <ColumnReference Column="Bmk1004" />
+                                      <ColumnReference Column="Chk1005" />
+                                    </OutputList>
+                                    <NestedLoops Optimized="0">
+                                      <OuterReferences>
+                                        <ColumnReference Table="@JobNames" Alias="[jb]" Column="JobName" />
+                                      </OuterReferences>
+                                      <RelOp NodeId="4" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="151" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                        <OutputList>
+                                          <ColumnReference Column="Bmk1004" />
+                                          <ColumnReference Column="Chk1005" />
+                                          <ColumnReference Table="@JobNames" Alias="[jb]" Column="JobName" />
+                                        </OutputList>
+                                        <TableScan Ordered="1" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                                          <DefinedValues>
+                                            <DefinedValue>
+                                              <ColumnReference Column="Bmk1004" />
+                                            </DefinedValue>
+                                            <DefinedValue>
+                                              <ColumnReference Column="Chk1005" />
+                                            </DefinedValue>
+                                            <DefinedValue>
+                                              <ColumnReference Table="@JobNames" Alias="[jb]" Column="JobName" />
+                                            </DefinedValue>
+                                          </DefinedValues>
+                                          <Object Table="[@JobNames]" Alias="[jb]" />
+                                        </TableScan>
+                                      </RelOp>
+                                      <RelOp NodeId="5" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="80" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="27" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                        <OutputList>
+                                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Alias="[sj]" Column="job_id" />
+                                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Alias="[sj]" Column="name" />
+                                        </OutputList>
+                                        <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                          <DefinedValues>
+                                            <DefinedValue>
+                                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Alias="[sj]" Column="job_id" />
+                                            </DefinedValue>
+                                            <DefinedValue>
+                                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Alias="[sj]" Column="name" />
+                                            </DefinedValue>
+                                          </DefinedValues>
+                                          <Object Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Index="[nc1]" Alias="[sj]" IndexKind="NonClustered" />
+                                          <SeekPredicates>
+                                            <SeekPredicateNew>
+                                              <SeekKeys>
+                                                <Prefix ScanType="EQ">
+                                                  <RangeColumns>
+                                                    <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Alias="[sj]" Column="name" />
+                                                  </RangeColumns>
+                                                  <RangeExpressions>
+                                                    <ScalarOperator ScalarString="@JobNames.[JobName] as [jb].[JobName]">
+                                                      <Identifier>
+                                                        <ColumnReference Table="@JobNames" Alias="[jb]" Column="JobName" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                  </RangeExpressions>
+                                                </Prefix>
+                                              </SeekKeys>
+                                            </SeekPredicateNew>
+                                          </SeekPredicates>
+                                        </IndexScan>
+                                      </RelOp>
+                                    </NestedLoops>
+                                  </RelOp>
+                                  <RelOp NodeId="7" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="12" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="27" Parallel="0" EstimateRebinds="3.72529e-008" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                    <OutputList>
+                                      <ColumnReference Column="Chk1002" />
+                                    </OutputList>
+                                    <IndexScan Lookup="1" Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                      <DefinedValues>
+                                        <DefinedValue>
+                                          <ColumnReference Column="Chk1002" />
+                                        </DefinedValue>
+                                      </DefinedValues>
+                                      <Object Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Index="[clust]" Alias="[sj]" TableReferenceId="-1" IndexKind="Clustered" />
+                                      <SeekPredicates>
+                                        <SeekPredicateNew>
+                                          <SeekKeys>
+                                            <Prefix ScanType="EQ">
+                                              <RangeColumns>
+                                                <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Alias="[sj]" Column="job_id" />
+                                              </RangeColumns>
+                                              <RangeExpressions>
+                                                <ScalarOperator ScalarString="[msdb].[dbo].[sysjobs].[job_id] as [sj].[job_id]">
+                                                  <Identifier>
+                                                    <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Alias="[sj]" Column="job_id" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                              </RangeExpressions>
+                                            </Prefix>
+                                          </SeekKeys>
+                                        </SeekPredicateNew>
+                                      </SeekPredicates>
+                                      <Predicate>
+                                        <ScalarOperator ScalarString="[msdb].[dbo].[sysjobs].[enabled] as [sj].[enabled]&lt;&gt;[@EnableOrDisable]">
+                                          <Compare CompareOp="NE">
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Alias="[sj]" Column="enabled" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Column="@EnableOrDisable" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </Compare>
+                                        </ScalarOperator>
+                                      </Predicate>
+                                    </IndexScan>
+                                  </RelOp>
+                                </NestedLoops>
+                              </RelOp>
+                            </ComputeScalar>
+                          </RelOp>
+                        </Update>
+                      </RelOp>
+                    </QueryPlan>
+                  </Operation>
+                </CursorPlan>
+              </StmtCursor>
+              <StmtCursor StatementText=" open job_cursor &#xD;&#xA;   " StatementId="19" StatementCompId="27" StatementType="OPEN CURSOR" RetrievedFromCache="true">
+                <CursorPlan CursorName="job_cursor" />
+              </StmtCursor>
+              <StmtCursor StatementText=" fetch next from job_cursor into @jobid, @jobname &#xD;&#xA;   " StatementId="20" StatementCompId="28" StatementType="FETCH CURSOR" RetrievedFromCache="true">
+                <CursorPlan CursorName="job_cursor" />
+              </StmtCursor>
+              <StmtCond StatementText=" while @@fetch_status=0 &#xD;&#xA;   " StatementId="21" StatementCompId="29" StatementType="COND" RetrievedFromCache="true">
+                <Condition />
+                <Then>
+                  <Statements>
+                    <StmtSimple StatementText=" begin &#xD;&#xA;        exec msdb..sp_update_job @job_id=@jobid , @enabled=@EnableOrDisable &#xD;&#xA;       " StatementId="22" StatementCompId="30" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+                    <StmtSimple StatementText=" print 'Following job changed: ' + @jobname &#xD;&#xA;       " StatementId="23" StatementCompId="31" StatementType="PRINT" RetrievedFromCache="true" />
+                    <StmtCursor StatementText=" fetch next from job_cursor into @jobid, @jobname &#xD;&#xA;   " StatementId="24" StatementCompId="32" StatementType="FETCH CURSOR" RetrievedFromCache="true">
+                      <CursorPlan CursorName="job_cursor" />
+                    </StmtCursor>
+                  </Statements>
+                </Then>
+              </StmtCond>
+              <StmtCursor StatementText=" end &#xD;&#xA;    close job_cursor &#xD;&#xA;   " StatementId="25" StatementCompId="35" StatementType="CLOSE CURSOR" RetrievedFromCache="true">
+                <CursorPlan CursorName="job_cursor" />
+              </StmtCursor>
+              <StmtCursor StatementText=" deallocate job_cursor       &#xD;" StatementId="26" StatementCompId="36" StatementType="DEALLOCATE CURSOR" RetrievedFromCache="true">
+                <CursorPlan CursorName="job_cursor" />
+              </StmtCursor>
+            </Statements>
+          </Then>
+        </StmtCond>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

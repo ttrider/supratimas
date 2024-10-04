@@ -1,0 +1,1808 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="CREATE PROCEDURE sp_help_jobstep&#xD;&#xA;  @job_id    UNIQUEIDENTIFIER = NULL, -- Must provide either this or job_name&#xD;&#xA;  @job_name  sysname          = NULL, -- Must provide either this or job_id&#xD;&#xA;  @step_id   INT              = NULL,&#xD;&#xA;  @step_name sysname          = NULL,&#xD;&#xA;  @suffix    BIT              = 0     -- A flag to control how the result set is formatted&#xD;&#xA;AS&#xD;&#xA;BEGIN&#xD;&#xA;  DECLARE @retval      INT&#xD;&#xA;  DECLARE @max_step_id INT&#xD;&#xA;  DECLARE @valid_range VARCHAR(50)&#xD;&#xA;&#xD;&#xA;  SET NOCOUNT ON&#xD;&#xA;&#xD;&#xA; " StatementId="1" StatementCompId="3" StatementType="SET ON/OFF" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" EXECUTE @retval = sp_verify_job_identifiers '@job_name',&#xD;&#xA;                                              '@job_id',&#xD;&#xA;                                               @job_name OUTPUT,&#xD;&#xA;                                               @job_id   OUTPUT,&#xD;&#xA;                                              'NO_TEST'&#xD;&#xA; " StatementId="2" StatementCompId="4" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+        <StmtCond StatementText=" IF (@retval &lt;&gt; 0)&#xD;&#xA;   " StatementId="3" StatementCompId="5" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" RETURN(1) -- Failure&#xD;&#xA;&#xD;&#xA;  -- The suffix flag must be either 0 (ie. no suffix) or 1 (ie. add suffix). 0 is the default.&#xD;&#xA; " StatementId="4" StatementCompId="6" StatementType="RETURN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtCond StatementText=" IF (@suffix &lt;&gt; 0)&#xD;&#xA;   " StatementId="5" StatementCompId="8" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" SELECT @suffix = 1&#xD;&#xA;&#xD;&#xA;  -- Check step id (if supplied)&#xD;&#xA; " StatementId="6" StatementCompId="9" StatementType="ASSIGN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtCond StatementText=" IF (@step_id IS NOT NULL)&#xD;&#xA; " StatementId="7" StatementCompId="11" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;    -- Get current maximum step id&#xD;&#xA;    SELECT @max_step_id = ISNULL(MAX(step_id), 0)&#xD;&#xA;    FROM msdb.dbo.sysjobsteps&#xD;&#xA;    WHERE job_id = @job_id&#xD;&#xA;  " StatementId="8" StatementCompId="12" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.00328436" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0xCB350ECAE472CB34" QueryPlanHash="0xD18F89F9BCED56DA" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+                <StatementSetOptions QUOTED_IDENTIFIER="false" ARITHABORT="false" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="3" CompileCPU="3" CompileMemory="440">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328436" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList>
+                      <ColumnReference Column="Expr1004" />
+                    </OutputList>
+                    <ComputeScalar>
+                      <DefinedValues>
+                        <DefinedValue>
+                          <ColumnReference Column="Expr1004" />
+                          <ScalarOperator ScalarString="isnull([Expr1003],(0))">
+                            <Intrinsic FunctionName="isnull">
+                              <ScalarOperator>
+                                <Identifier>
+                                  <ColumnReference Column="Expr1003" />
+                                </Identifier>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Const ConstValue="(0)" />
+                              </ScalarOperator>
+                            </Intrinsic>
+                          </ScalarOperator>
+                        </DefinedValue>
+                      </DefinedValues>
+                      <RelOp NodeId="1" PhysicalOp="Stream Aggregate" LogicalOp="Aggregate" EstimateRows="1" EstimateIO="0" EstimateCPU="1.11994e-006" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328426" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList>
+                          <ColumnReference Column="Expr1003" />
+                        </OutputList>
+                        <StreamAggregate>
+                          <DefinedValues>
+                            <DefinedValue>
+                              <ColumnReference Column="Expr1003" />
+                              <ScalarOperator ScalarString="MAX([msdb].[dbo].[sysjobsteps].[step_id])">
+                                <Aggregate Distinct="0" AggType="MAX">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="step_id" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Aggregate>
+                              </ScalarOperator>
+                            </DefinedValue>
+                          </DefinedValues>
+                          <RelOp NodeId="2" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1.03324" EstimateIO="0.003125" EstimateCPU="0.000158137" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328314" TableCardinality="373" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList>
+                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="step_id" />
+                            </OutputList>
+                            <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                              <DefinedValues>
+                                <DefinedValue>
+                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="step_id" />
+                                </DefinedValue>
+                              </DefinedValues>
+                              <Object Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Index="[nc1]" IndexKind="NonClustered" />
+                              <SeekPredicates>
+                                <SeekPredicateNew>
+                                  <SeekKeys>
+                                    <Prefix ScanType="EQ">
+                                      <RangeColumns>
+                                        <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="job_id" />
+                                      </RangeColumns>
+                                      <RangeExpressions>
+                                        <ScalarOperator ScalarString="[@job_id]">
+                                          <Identifier>
+                                            <ColumnReference Column="@job_id" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </RangeExpressions>
+                                    </Prefix>
+                                  </SeekKeys>
+                                </SeekPredicateNew>
+                              </SeekPredicates>
+                            </IndexScan>
+                          </RelOp>
+                        </StreamAggregate>
+                      </RelOp>
+                    </ComputeScalar>
+                  </RelOp>
+                  <ParameterList>
+                    <ColumnReference Column="@job_id" ParameterCompiledValue="{guid'CEEC552E-CB20-464E-9253-ECAD443B2389'}" />
+                  </ParameterList>
+                </QueryPlan>
+              </StmtSimple>
+              <StmtCond StatementText=" IF @max_step_id = 0&#xD;&#xA;  " StatementId="9" StatementCompId="13" StatementType="COND" RetrievedFromCache="true">
+                <Condition />
+                <Then>
+                  <Statements>
+                    <StmtSimple StatementText=" BEGIN&#xD;&#xA;      RAISERROR(14528, -1, -1, @job_name)&#xD;&#xA;     " StatementId="10" StatementCompId="14" StatementType="RAISERROR" RetrievedFromCache="true" />
+                    <StmtSimple StatementText=" RETURN(1) -- Failure &#xD;&#xA;  " StatementId="11" StatementCompId="15" StatementType="RETURN" RetrievedFromCache="true" />
+                  </Statements>
+                </Then>
+                <Else>
+                  <Statements>
+                    <StmtCond StatementText=" END&#xD;&#xA;    ELSE IF (@step_id &lt; 1) OR (@step_id &gt; @max_step_id)&#xD;&#xA;   " StatementId="12" StatementCompId="18" StatementType="COND" RetrievedFromCache="true">
+                      <Condition />
+                      <Then>
+                        <Statements>
+                          <StmtSimple StatementText=" BEGIN&#xD;&#xA;      SELECT @valid_range = '1..' + CONVERT(VARCHAR, @max_step_id)&#xD;&#xA;     " StatementId="13" StatementCompId="19" StatementType="ASSIGN" RetrievedFromCache="true" />
+                          <StmtSimple StatementText=" RAISERROR(14266, -1, -1, '@step_id', @valid_range)&#xD;&#xA;     " StatementId="14" StatementCompId="20" StatementType="RAISERROR" RetrievedFromCache="true" />
+                          <StmtSimple StatementText=" RETURN(1) -- Failure&#xD;&#xA;   " StatementId="15" StatementCompId="21" StatementType="RETURN" RetrievedFromCache="true" />
+                        </Statements>
+                      </Then>
+                    </StmtCond>
+                  </Statements>
+                </Else>
+              </StmtCond>
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtCond StatementText=" END&#xD;&#xA;  END&#xD;&#xA;&#xD;&#xA;  -- Check step name (if supplied)&#xD;&#xA;  -- NOTE: A supplied step id overrides a supplied step name&#xD;&#xA;  IF ((@step_id IS NULL) AND (@step_name IS NOT NULL))&#xD;&#xA; " StatementId="16" StatementCompId="25" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;    SELECT @step_id = step_id&#xD;&#xA;    FROM msdb.dbo.sysjobsteps&#xD;&#xA;    WHERE (step_name = @step_name)&#xD;&#xA;      AND (job_id = @job_id)&#xD;&#xA;&#xD;&#xA;   " StatementId="17" StatementCompId="26" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032831" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0xA4AF4AC882C51BFE" QueryPlanHash="0x4DC5400D016D327B">
+                <StatementSetOptions QUOTED_IDENTIFIER="false" ARITHABORT="false" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="1" CompileCPU="1" CompileMemory="400">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="0" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="373" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList>
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="step_id" />
+                    </OutputList>
+                    <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                      <DefinedValues>
+                        <DefinedValue>
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="step_id" />
+                        </DefinedValue>
+                      </DefinedValues>
+                      <Object Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Index="[nc1]" IndexKind="NonClustered" />
+                      <SeekPredicates>
+                        <SeekPredicateNew>
+                          <SeekKeys>
+                            <Prefix ScanType="EQ">
+                              <RangeColumns>
+                                <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="job_id" />
+                                <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="step_name" />
+                              </RangeColumns>
+                              <RangeExpressions>
+                                <ScalarOperator ScalarString="[@job_id]">
+                                  <Identifier>
+                                    <ColumnReference Column="@job_id" />
+                                  </Identifier>
+                                </ScalarOperator>
+                                <ScalarOperator ScalarString="[@step_name]">
+                                  <Identifier>
+                                    <ColumnReference Column="@step_name" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </RangeExpressions>
+                            </Prefix>
+                          </SeekKeys>
+                        </SeekPredicateNew>
+                      </SeekPredicates>
+                    </IndexScan>
+                  </RelOp>
+                  <ParameterList>
+                    <ColumnReference Column="@step_id" ParameterCompiledValue="NULL" />
+                    <ColumnReference Column="@job_id" ParameterCompiledValue="{guid'CEEC552E-CB20-464E-9253-ECAD443B2389'}" />
+                    <ColumnReference Column="@step_name" ParameterCompiledValue="NULL" />
+                  </ParameterList>
+                </QueryPlan>
+              </StmtSimple>
+              <StmtCond StatementText=" IF (@step_id IS NULL)&#xD;&#xA;   " StatementId="18" StatementCompId="27" StatementType="COND" RetrievedFromCache="true">
+                <Condition />
+                <Then>
+                  <Statements>
+                    <StmtSimple StatementText=" BEGIN&#xD;&#xA;      RAISERROR(14262, -1, -1, '@step_name', @step_name)&#xD;&#xA;     " StatementId="19" StatementCompId="28" StatementType="RAISERROR" RetrievedFromCache="true" />
+                    <StmtSimple StatementText=" RETURN(1) -- Failure&#xD;&#xA;   " StatementId="20" StatementCompId="29" StatementType="RETURN" RetrievedFromCache="true" />
+                  </Statements>
+                </Then>
+              </StmtCond>
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtCond StatementText=" END&#xD;&#xA;  END&#xD;&#xA;&#xD;&#xA;  -- Return the job steps for this job (or just return the specific step)&#xD;&#xA;  IF (@suffix = 0)&#xD;&#xA; " StatementId="21" StatementCompId="32" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;    SELECT step_id,&#xD;&#xA;           step_name,&#xD;&#xA;           subsystem,&#xD;&#xA;           command,&#xD;&#xA;           flags,&#xD;&#xA;           cmdexec_success_code,&#xD;&#xA;           on_success_action,&#xD;&#xA;           on_success_step_id,&#xD;&#xA;           on_fail_action,&#xD;&#xA;           on_fail_step_id,&#xD;&#xA;           server,&#xD;&#xA;           database_name,&#xD;&#xA;           database_user_name,&#xD;&#xA;           retry_attempts,&#xD;&#xA;           retry_interval,&#xD;&#xA;           os_run_priority,&#xD;&#xA;           output_file_name,&#xD;&#xA;           last_run_outcome,&#xD;&#xA;           last_run_duration,&#xD;&#xA;           last_run_retries,&#xD;&#xA;           last_run_date,&#xD;&#xA;           last_run_time,&#xD;&#xA;         proxy_id&#xD;&#xA;    FROM msdb.dbo.sysjobsteps&#xD;&#xA;    WHERE (job_id = @job_id)&#xD;&#xA;      AND ((@step_id IS NULL) OR (step_id = @step_id))&#xD;&#xA;    ORDER BY job_id, step_id&#xD;&#xA; " StatementId="22" StatementCompId="33" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.00328314" StatementEstRows="1.03324" StatementOptmLevel="FULL" QueryHash="0x6F6A5F435384088" QueryPlanHash="0x4993347A66D987F7" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+                <StatementSetOptions QUOTED_IDENTIFIER="false" ARITHABORT="false" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="32" CompileTime="2" CompileCPU="2" CompileMemory="448">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="0" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1.03324" EstimateIO="0.003125" EstimateCPU="0.000158137" AvgRowSize="4797" EstimatedTotalSubtreeCost="0.00328314" TableCardinality="373" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList>
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="job_id" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="step_id" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="step_name" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="subsystem" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="command" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="flags" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="cmdexec_success_code" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_success_action" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_success_step_id" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_fail_action" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_fail_step_id" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="server" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="database_name" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="database_user_name" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="retry_attempts" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="retry_interval" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="os_run_priority" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="output_file_name" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="last_run_outcome" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="last_run_duration" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="last_run_retries" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="last_run_date" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="last_run_time" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="proxy_id" />
+                    </OutputList>
+                    <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                      <DefinedValues>
+                        <DefinedValue>
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="job_id" />
+                        </DefinedValue>
+                        <DefinedValue>
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="step_id" />
+                        </DefinedValue>
+                        <DefinedValue>
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="step_name" />
+                        </DefinedValue>
+                        <DefinedValue>
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="subsystem" />
+                        </DefinedValue>
+                        <DefinedValue>
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="command" />
+                        </DefinedValue>
+                        <DefinedValue>
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="flags" />
+                        </DefinedValue>
+                        <DefinedValue>
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="cmdexec_success_code" />
+                        </DefinedValue>
+                        <DefinedValue>
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_success_action" />
+                        </DefinedValue>
+                        <DefinedValue>
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_success_step_id" />
+                        </DefinedValue>
+                        <DefinedValue>
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_fail_action" />
+                        </DefinedValue>
+                        <DefinedValue>
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_fail_step_id" />
+                        </DefinedValue>
+                        <DefinedValue>
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="server" />
+                        </DefinedValue>
+                        <DefinedValue>
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="database_name" />
+                        </DefinedValue>
+                        <DefinedValue>
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="database_user_name" />
+                        </DefinedValue>
+                        <DefinedValue>
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="retry_attempts" />
+                        </DefinedValue>
+                        <DefinedValue>
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="retry_interval" />
+                        </DefinedValue>
+                        <DefinedValue>
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="os_run_priority" />
+                        </DefinedValue>
+                        <DefinedValue>
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="output_file_name" />
+                        </DefinedValue>
+                        <DefinedValue>
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="last_run_outcome" />
+                        </DefinedValue>
+                        <DefinedValue>
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="last_run_duration" />
+                        </DefinedValue>
+                        <DefinedValue>
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="last_run_retries" />
+                        </DefinedValue>
+                        <DefinedValue>
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="last_run_date" />
+                        </DefinedValue>
+                        <DefinedValue>
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="last_run_time" />
+                        </DefinedValue>
+                        <DefinedValue>
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="proxy_id" />
+                        </DefinedValue>
+                      </DefinedValues>
+                      <Object Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Index="[clust]" IndexKind="Clustered" />
+                      <SeekPredicates>
+                        <SeekPredicateNew>
+                          <SeekKeys>
+                            <Prefix ScanType="EQ">
+                              <RangeColumns>
+                                <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="job_id" />
+                              </RangeColumns>
+                              <RangeExpressions>
+                                <ScalarOperator ScalarString="[@job_id]">
+                                  <Identifier>
+                                    <ColumnReference Column="@job_id" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </RangeExpressions>
+                            </Prefix>
+                          </SeekKeys>
+                        </SeekPredicateNew>
+                      </SeekPredicates>
+                      <Predicate>
+                        <ScalarOperator ScalarString="[@step_id] IS NULL OR [msdb].[dbo].[sysjobsteps].[step_id]=[@step_id]">
+                          <Logical Operation="OR">
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="ConstExpr1003">
+                                  <ScalarOperator>
+                                    <Compare CompareOp="IS">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="@step_id" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="NULL" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                </ColumnReference>
+                              </Identifier>
+                            </ScalarOperator>
+                            <ScalarOperator>
+                              <Compare CompareOp="EQ">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="step_id" />
+                                  </Identifier>
+                                </ScalarOperator>
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="@step_id" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Compare>
+                            </ScalarOperator>
+                          </Logical>
+                        </ScalarOperator>
+                      </Predicate>
+                    </IndexScan>
+                  </RelOp>
+                  <ParameterList>
+                    <ColumnReference Column="@step_id" ParameterCompiledValue="NULL" />
+                    <ColumnReference Column="@job_id" ParameterCompiledValue="{guid'CEEC552E-CB20-464E-9253-ECAD443B2389'}" />
+                  </ParameterList>
+                </QueryPlan>
+              </StmtSimple>
+            </Statements>
+          </Then>
+          <Else>
+            <Statements>
+              <StmtSimple StatementText=" END&#xD;&#xA;  ELSE&#xD;&#xA;  BEGIN&#xD;&#xA;    SELECT step_id,&#xD;&#xA;           step_name,&#xD;&#xA;           subsystem,&#xD;&#xA;           command,&#xD;&#xA;          'flags' = CONVERT(NVARCHAR, flags) + N' (' +&#xD;&#xA;                    ISNULL(CASE WHEN (flags = 0)     THEN FORMATMESSAGE(14561) END, '') +&#xD;&#xA;                    ISNULL(CASE WHEN (flags &amp; 1) = 1 THEN FORMATMESSAGE(14558) + ISNULL(CASE WHEN (flags &gt; 1) THEN N', ' END, '') END, '') +&#xD;&#xA;                    ISNULL(CASE WHEN (flags &amp; 2) = 2 THEN FORMATMESSAGE(14559) + ISNULL(CASE WHEN (flags &gt; 3) THEN N', ' END, '') END, '') +&#xD;&#xA;                    ISNULL(CASE WHEN (flags &amp; 4) = 4 THEN FORMATMESSAGE(14560) END, '') + N')',&#xD;&#xA;           cmdexec_success_code,&#xD;&#xA;          'on_success_action' = CASE on_success_action&#xD;&#xA;                                  WHEN 1 THEN CONVERT(NVARCHAR, on_success_action) + N' ' + FORMATMESSAGE(14562)&#xD;&#xA;                                  WHEN 2 THEN CONVERT(NVARCHAR, on_success_action) + N' ' + FORMATMESSAGE(14563)&#xD;&#xA;                                  WHEN 3 THEN CONVERT(NVARCHAR, on_success_action) + N' ' + FORMATMESSAGE(14564)&#xD;&#xA;                                  WHEN 4 THEN CONVERT(NVARCHAR, on_success_action) + N' ' + FORMATMESSAGE(14565)&#xD;&#xA;                                  ELSE        CONVERT(NVARCHAR, on_success_action) + N' ' + FORMATMESSAGE(14205)&#xD;&#xA;                                END,&#xD;&#xA;           on_success_step_id,&#xD;&#xA;          'on_fail_action' = CASE on_fail_action&#xD;&#xA;                               WHEN 1 THEN CONVERT(NVARCHAR, on_fail_action) + N' ' + FORMATMESSAGE(14562)&#xD;&#xA;                               WHEN 2 THEN CONVERT(NVARCHAR, on_fail_action) + N' ' + FORMATMESSAGE(14563)&#xD;&#xA;                               WHEN 3 THEN CONVERT(NVARCHAR, on_fail_action) + N' ' + FORMATMESSAGE(14564)&#xD;&#xA;                               WHEN 4 THEN CONVERT(NVARCHAR, on_fail_action) + N' ' + FORMATMESSAGE(14565)&#xD;&#xA;                               ELSE        CONVERT(NVARCHAR, on_fail_action) + N' ' + FORMATMESSAGE(14205)&#xD;&#xA;                             END,&#xD;&#xA;           on_fail_step_id,&#xD;&#xA;           server,&#xD;&#xA;           database_name,&#xD;&#xA;           database_user_name,&#xD;&#xA;           retry_attempts,&#xD;&#xA;           retry_interval,&#xD;&#xA;          'os_run_priority' = CASE os_run_priority&#xD;&#xA;                                WHEN -15 THEN CONVERT(NVARCHAR, os_run_priority) + N' ' + FORMATMESSAGE(14566)&#xD;&#xA;                                WHEN -1  THEN CONVERT(NVARCHAR, os_run_priority) + N' ' + FORMATMESSAGE(14567)&#xD;&#xA;                                WHEN  0  THEN CONVERT(NVARCHAR, os_run_priority) + N' ' + FORMATMESSAGE(14561)&#xD;&#xA;                                WHEN  1  THEN CONVERT(NVARCHAR, os_run_priority) + N' ' + FORMATMESSAGE(14568)&#xD;&#xA;                                WHEN  15 THEN CONVERT(NVARCHAR, os_run_priority) + N' ' + FORMATMESSAGE(14569)&#xD;&#xA;                                ELSE          CONVERT(NVARCHAR, os_run_priority) + N' ' + FORMATMESSAGE(14205)&#xD;&#xA;                              END,&#xD;&#xA;           output_file_name,&#xD;&#xA;           last_run_outcome,&#xD;&#xA;           last_run_duration,&#xD;&#xA;           last_run_retries,&#xD;&#xA;           last_run_date,&#xD;&#xA;           last_run_time,&#xD;&#xA;         proxy_id&#xD;&#xA;    FROM msdb.dbo.sysjobsteps&#xD;&#xA;    WHERE (job_id = @job_id)&#xD;&#xA;      AND ((@step_id IS NULL) OR (step_id = @step_id))&#xD;&#xA;    ORDER BY job_id, step_id&#xD;&#xA; " StatementId="23" StatementCompId="36" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.00328405" StatementEstRows="1.03324" StatementOptmLevel="FULL" QueryHash="0xEEB0547D95D4AF9B" QueryPlanHash="0x79420ADE1B9B1744" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+                <StatementSetOptions QUOTED_IDENTIFIER="false" ARITHABORT="false" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="104" CompileTime="14" CompileCPU="14" CompileMemory="1032">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1.03324" EstimateIO="0" EstimateCPU="1.03324e-007" AvgRowSize="20795" EstimatedTotalSubtreeCost="0.00328405" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList>
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="job_id" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="step_id" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="step_name" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="subsystem" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="command" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="cmdexec_success_code" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_success_step_id" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_fail_step_id" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="server" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="database_name" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="database_user_name" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="retry_attempts" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="retry_interval" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="output_file_name" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="last_run_outcome" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="last_run_duration" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="last_run_retries" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="last_run_date" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="last_run_time" />
+                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="proxy_id" />
+                      <ColumnReference Column="Expr1003" />
+                      <ColumnReference Column="Expr1004" />
+                      <ColumnReference Column="Expr1005" />
+                      <ColumnReference Column="Expr1006" />
+                    </OutputList>
+                    <ComputeScalar>
+                      <DefinedValues>
+                        <DefinedValue>
+                          <ColumnReference Column="Expr1003" />
+                          <ScalarOperator ScalarString="[Expr1030]+isnull(CASE WHEN [msdb].[dbo].[sysjobsteps].[flags]=(0) THEN formatmessage((14561)) ELSE NULL END,N'')+isnull(CASE WHEN [Expr1031]=(1) THEN formatmessage((14558))+isnull(CASE WHEN [msdb].[dbo].[sysjobsteps].[flags]&gt;(1) THEN N', ' ELSE NULL END,N'') ELSE NULL END,N'')+isnull(CASE WHEN [Expr1032]=(2) THEN formatmessage((14559))+isnull(CASE WHEN [msdb].[dbo].[sysjobsteps].[flags]&gt;(3) THEN N', ' ELSE NULL END,N'') ELSE NULL END,N'')+isnull(CASE WHEN [Expr1033]=(4) THEN formatmessage((14560)) ELSE NULL END,N'')+N')'">
+                            <Arithmetic Operation="ADD">
+                              <ScalarOperator>
+                                <Arithmetic Operation="ADD">
+                                  <ScalarOperator>
+                                    <Arithmetic Operation="ADD">
+                                      <ScalarOperator>
+                                        <Arithmetic Operation="ADD">
+                                          <ScalarOperator>
+                                            <Arithmetic Operation="ADD">
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="Expr1030" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="isnull">
+                                                  <ScalarOperator>
+                                                    <IF>
+                                                      <Condition>
+                                                        <ScalarOperator>
+                                                          <Compare CompareOp="EQ">
+                                                            <ScalarOperator>
+                                                              <Identifier>
+                                                                <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="flags" />
+                                                              </Identifier>
+                                                            </ScalarOperator>
+                                                            <ScalarOperator>
+                                                              <Const ConstValue="(0)" />
+                                                            </ScalarOperator>
+                                                          </Compare>
+                                                        </ScalarOperator>
+                                                      </Condition>
+                                                      <Then>
+                                                        <ScalarOperator>
+                                                          <Identifier>
+                                                            <ColumnReference Column="ConstExpr1008">
+                                                              <ScalarOperator>
+                                                                <Intrinsic FunctionName="formatmessage">
+                                                                  <ScalarOperator>
+                                                                    <Const ConstValue="(14561)" />
+                                                                  </ScalarOperator>
+                                                                </Intrinsic>
+                                                              </ScalarOperator>
+                                                            </ColumnReference>
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                      </Then>
+                                                      <Else>
+                                                        <ScalarOperator>
+                                                          <Const ConstValue="NULL" />
+                                                        </ScalarOperator>
+                                                      </Else>
+                                                    </IF>
+                                                  </ScalarOperator>
+                                                  <ScalarOperator>
+                                                    <Const ConstValue="N''" />
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Arithmetic>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Intrinsic FunctionName="isnull">
+                                              <ScalarOperator>
+                                                <IF>
+                                                  <Condition>
+                                                    <ScalarOperator>
+                                                      <Compare CompareOp="EQ">
+                                                        <ScalarOperator>
+                                                          <Identifier>
+                                                            <ColumnReference Column="Expr1031" />
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator>
+                                                          <Const ConstValue="(1)" />
+                                                        </ScalarOperator>
+                                                      </Compare>
+                                                    </ScalarOperator>
+                                                  </Condition>
+                                                  <Then>
+                                                    <ScalarOperator>
+                                                      <Arithmetic Operation="ADD">
+                                                        <ScalarOperator>
+                                                          <Identifier>
+                                                            <ColumnReference Column="ConstExpr1009">
+                                                              <ScalarOperator>
+                                                                <Intrinsic FunctionName="formatmessage">
+                                                                  <ScalarOperator>
+                                                                    <Const ConstValue="(14558)" />
+                                                                  </ScalarOperator>
+                                                                </Intrinsic>
+                                                              </ScalarOperator>
+                                                            </ColumnReference>
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator>
+                                                          <Intrinsic FunctionName="isnull">
+                                                            <ScalarOperator>
+                                                              <IF>
+                                                                <Condition>
+                                                                  <ScalarOperator>
+                                                                    <Compare CompareOp="GT">
+                                                                      <ScalarOperator>
+                                                                        <Identifier>
+                                                                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="flags" />
+                                                                        </Identifier>
+                                                                      </ScalarOperator>
+                                                                      <ScalarOperator>
+                                                                        <Const ConstValue="(1)" />
+                                                                      </ScalarOperator>
+                                                                    </Compare>
+                                                                  </ScalarOperator>
+                                                                </Condition>
+                                                                <Then>
+                                                                  <ScalarOperator>
+                                                                    <Const ConstValue="N', '" />
+                                                                  </ScalarOperator>
+                                                                </Then>
+                                                                <Else>
+                                                                  <ScalarOperator>
+                                                                    <Const ConstValue="NULL" />
+                                                                  </ScalarOperator>
+                                                                </Else>
+                                                              </IF>
+                                                            </ScalarOperator>
+                                                            <ScalarOperator>
+                                                              <Const ConstValue="N''" />
+                                                            </ScalarOperator>
+                                                          </Intrinsic>
+                                                        </ScalarOperator>
+                                                      </Arithmetic>
+                                                    </ScalarOperator>
+                                                  </Then>
+                                                  <Else>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="NULL" />
+                                                    </ScalarOperator>
+                                                  </Else>
+                                                </IF>
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="N''" />
+                                              </ScalarOperator>
+                                            </Intrinsic>
+                                          </ScalarOperator>
+                                        </Arithmetic>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Intrinsic FunctionName="isnull">
+                                          <ScalarOperator>
+                                            <IF>
+                                              <Condition>
+                                                <ScalarOperator>
+                                                  <Compare CompareOp="EQ">
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Column="Expr1032" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="(2)" />
+                                                    </ScalarOperator>
+                                                  </Compare>
+                                                </ScalarOperator>
+                                              </Condition>
+                                              <Then>
+                                                <ScalarOperator>
+                                                  <Arithmetic Operation="ADD">
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Column="ConstExpr1010">
+                                                          <ScalarOperator>
+                                                            <Intrinsic FunctionName="formatmessage">
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(14559)" />
+                                                              </ScalarOperator>
+                                                            </Intrinsic>
+                                                          </ScalarOperator>
+                                                        </ColumnReference>
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Intrinsic FunctionName="isnull">
+                                                        <ScalarOperator>
+                                                          <IF>
+                                                            <Condition>
+                                                              <ScalarOperator>
+                                                                <Compare CompareOp="GT">
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="flags" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                  <ScalarOperator>
+                                                                    <Const ConstValue="(3)" />
+                                                                  </ScalarOperator>
+                                                                </Compare>
+                                                              </ScalarOperator>
+                                                            </Condition>
+                                                            <Then>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="N', '" />
+                                                              </ScalarOperator>
+                                                            </Then>
+                                                            <Else>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="NULL" />
+                                                              </ScalarOperator>
+                                                            </Else>
+                                                          </IF>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator>
+                                                          <Const ConstValue="N''" />
+                                                        </ScalarOperator>
+                                                      </Intrinsic>
+                                                    </ScalarOperator>
+                                                  </Arithmetic>
+                                                </ScalarOperator>
+                                              </Then>
+                                              <Else>
+                                                <ScalarOperator>
+                                                  <Const ConstValue="NULL" />
+                                                </ScalarOperator>
+                                              </Else>
+                                            </IF>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="N''" />
+                                          </ScalarOperator>
+                                        </Intrinsic>
+                                      </ScalarOperator>
+                                    </Arithmetic>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Intrinsic FunctionName="isnull">
+                                      <ScalarOperator>
+                                        <IF>
+                                          <Condition>
+                                            <ScalarOperator>
+                                              <Compare CompareOp="EQ">
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Column="Expr1033" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                                <ScalarOperator>
+                                                  <Const ConstValue="(4)" />
+                                                </ScalarOperator>
+                                              </Compare>
+                                            </ScalarOperator>
+                                          </Condition>
+                                          <Then>
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Column="ConstExpr1011">
+                                                  <ScalarOperator>
+                                                    <Intrinsic FunctionName="formatmessage">
+                                                      <ScalarOperator>
+                                                        <Const ConstValue="(14560)" />
+                                                      </ScalarOperator>
+                                                    </Intrinsic>
+                                                  </ScalarOperator>
+                                                </ColumnReference>
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </Then>
+                                          <Else>
+                                            <ScalarOperator>
+                                              <Const ConstValue="NULL" />
+                                            </ScalarOperator>
+                                          </Else>
+                                        </IF>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="N''" />
+                                      </ScalarOperator>
+                                    </Intrinsic>
+                                  </ScalarOperator>
+                                </Arithmetic>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Const ConstValue="N')'" />
+                              </ScalarOperator>
+                            </Arithmetic>
+                          </ScalarOperator>
+                        </DefinedValue>
+                        <DefinedValue>
+                          <ColumnReference Column="Expr1004" />
+                          <ScalarOperator ScalarString="CASE WHEN [msdb].[dbo].[sysjobsteps].[on_success_action]=(1) THEN CONVERT(nvarchar(30),[msdb].[dbo].[sysjobsteps].[on_success_action],0)+N' '+formatmessage((14562)) ELSE CASE WHEN [msdb].[dbo].[sysjobsteps].[on_success_action]=(2) THEN CONVERT(nvarchar(30),[msdb].[dbo].[sysjobsteps].[on_success_action],0)+N' '+formatmessage((14563)) ELSE CASE WHEN [msdb].[dbo].[sysjobsteps].[on_success_action]=(3) THEN CONVERT(nvarchar(30),[msdb].[dbo].[sysjobsteps].[on_success_action],0)+N' '+formatmessage((14564)) ELSE CASE WHEN [msdb].[dbo].[sysjobsteps].[on_success_action]=(4) THEN CONVERT(nvarchar(30),[msdb].[dbo].[sysjobsteps].[on_success_action],0)+N' '+formatmessage((14565)) ELSE CONVERT(nvarchar(30),[msdb].[dbo].[sysjobsteps].[on_success_action],0)+N' '+formatmessage((14205)) END END END END">
+                            <IF>
+                              <Condition>
+                                <ScalarOperator>
+                                  <Compare CompareOp="EQ">
+                                    <ScalarOperator>
+                                      <Identifier>
+                                        <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_success_action" />
+                                      </Identifier>
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Const ConstValue="(1)" />
+                                    </ScalarOperator>
+                                  </Compare>
+                                </ScalarOperator>
+                              </Condition>
+                              <Then>
+                                <ScalarOperator>
+                                  <Arithmetic Operation="ADD">
+                                    <ScalarOperator>
+                                      <Arithmetic Operation="ADD">
+                                        <ScalarOperator>
+                                          <Convert DataType="nvarchar" Length="60" Style="0" Implicit="0">
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_success_action" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </Convert>
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="N' '" />
+                                        </ScalarOperator>
+                                      </Arithmetic>
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Identifier>
+                                        <ColumnReference Column="ConstExpr1012">
+                                          <ScalarOperator>
+                                            <Intrinsic FunctionName="formatmessage">
+                                              <ScalarOperator>
+                                                <Const ConstValue="(14562)" />
+                                              </ScalarOperator>
+                                            </Intrinsic>
+                                          </ScalarOperator>
+                                        </ColumnReference>
+                                      </Identifier>
+                                    </ScalarOperator>
+                                  </Arithmetic>
+                                </ScalarOperator>
+                              </Then>
+                              <Else>
+                                <ScalarOperator>
+                                  <IF>
+                                    <Condition>
+                                      <ScalarOperator>
+                                        <Compare CompareOp="EQ">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_success_action" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="(2)" />
+                                          </ScalarOperator>
+                                        </Compare>
+                                      </ScalarOperator>
+                                    </Condition>
+                                    <Then>
+                                      <ScalarOperator>
+                                        <Arithmetic Operation="ADD">
+                                          <ScalarOperator>
+                                            <Arithmetic Operation="ADD">
+                                              <ScalarOperator>
+                                                <Convert DataType="nvarchar" Length="60" Style="0" Implicit="0">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_success_action" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Convert>
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="N' '" />
+                                              </ScalarOperator>
+                                            </Arithmetic>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Column="ConstExpr1013">
+                                                <ScalarOperator>
+                                                  <Intrinsic FunctionName="formatmessage">
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="(14563)" />
+                                                    </ScalarOperator>
+                                                  </Intrinsic>
+                                                </ScalarOperator>
+                                              </ColumnReference>
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </Arithmetic>
+                                      </ScalarOperator>
+                                    </Then>
+                                    <Else>
+                                      <ScalarOperator>
+                                        <IF>
+                                          <Condition>
+                                            <ScalarOperator>
+                                              <Compare CompareOp="EQ">
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_success_action" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                                <ScalarOperator>
+                                                  <Const ConstValue="(3)" />
+                                                </ScalarOperator>
+                                              </Compare>
+                                            </ScalarOperator>
+                                          </Condition>
+                                          <Then>
+                                            <ScalarOperator>
+                                              <Arithmetic Operation="ADD">
+                                                <ScalarOperator>
+                                                  <Arithmetic Operation="ADD">
+                                                    <ScalarOperator>
+                                                      <Convert DataType="nvarchar" Length="60" Style="0" Implicit="0">
+                                                        <ScalarOperator>
+                                                          <Identifier>
+                                                            <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_success_action" />
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                      </Convert>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="N' '" />
+                                                    </ScalarOperator>
+                                                  </Arithmetic>
+                                                </ScalarOperator>
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Column="ConstExpr1014">
+                                                      <ScalarOperator>
+                                                        <Intrinsic FunctionName="formatmessage">
+                                                          <ScalarOperator>
+                                                            <Const ConstValue="(14564)" />
+                                                          </ScalarOperator>
+                                                        </Intrinsic>
+                                                      </ScalarOperator>
+                                                    </ColumnReference>
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                              </Arithmetic>
+                                            </ScalarOperator>
+                                          </Then>
+                                          <Else>
+                                            <ScalarOperator>
+                                              <IF>
+                                                <Condition>
+                                                  <ScalarOperator>
+                                                    <Compare CompareOp="EQ">
+                                                      <ScalarOperator>
+                                                        <Identifier>
+                                                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_success_action" />
+                                                        </Identifier>
+                                                      </ScalarOperator>
+                                                      <ScalarOperator>
+                                                        <Const ConstValue="(4)" />
+                                                      </ScalarOperator>
+                                                    </Compare>
+                                                  </ScalarOperator>
+                                                </Condition>
+                                                <Then>
+                                                  <ScalarOperator>
+                                                    <Arithmetic Operation="ADD">
+                                                      <ScalarOperator>
+                                                        <Arithmetic Operation="ADD">
+                                                          <ScalarOperator>
+                                                            <Convert DataType="nvarchar" Length="60" Style="0" Implicit="0">
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_success_action" />
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                            </Convert>
+                                                          </ScalarOperator>
+                                                          <ScalarOperator>
+                                                            <Const ConstValue="N' '" />
+                                                          </ScalarOperator>
+                                                        </Arithmetic>
+                                                      </ScalarOperator>
+                                                      <ScalarOperator>
+                                                        <Identifier>
+                                                          <ColumnReference Column="ConstExpr1015">
+                                                            <ScalarOperator>
+                                                              <Intrinsic FunctionName="formatmessage">
+                                                                <ScalarOperator>
+                                                                  <Const ConstValue="(14565)" />
+                                                                </ScalarOperator>
+                                                              </Intrinsic>
+                                                            </ScalarOperator>
+                                                          </ColumnReference>
+                                                        </Identifier>
+                                                      </ScalarOperator>
+                                                    </Arithmetic>
+                                                  </ScalarOperator>
+                                                </Then>
+                                                <Else>
+                                                  <ScalarOperator>
+                                                    <Arithmetic Operation="ADD">
+                                                      <ScalarOperator>
+                                                        <Arithmetic Operation="ADD">
+                                                          <ScalarOperator>
+                                                            <Convert DataType="nvarchar" Length="60" Style="0" Implicit="0">
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_success_action" />
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                            </Convert>
+                                                          </ScalarOperator>
+                                                          <ScalarOperator>
+                                                            <Const ConstValue="N' '" />
+                                                          </ScalarOperator>
+                                                        </Arithmetic>
+                                                      </ScalarOperator>
+                                                      <ScalarOperator>
+                                                        <Identifier>
+                                                          <ColumnReference Column="ConstExpr1016">
+                                                            <ScalarOperator>
+                                                              <Intrinsic FunctionName="formatmessage">
+                                                                <ScalarOperator>
+                                                                  <Const ConstValue="(14205)" />
+                                                                </ScalarOperator>
+                                                              </Intrinsic>
+                                                            </ScalarOperator>
+                                                          </ColumnReference>
+                                                        </Identifier>
+                                                      </ScalarOperator>
+                                                    </Arithmetic>
+                                                  </ScalarOperator>
+                                                </Else>
+                                              </IF>
+                                            </ScalarOperator>
+                                          </Else>
+                                        </IF>
+                                      </ScalarOperator>
+                                    </Else>
+                                  </IF>
+                                </ScalarOperator>
+                              </Else>
+                            </IF>
+                          </ScalarOperator>
+                        </DefinedValue>
+                        <DefinedValue>
+                          <ColumnReference Column="Expr1005" />
+                          <ScalarOperator ScalarString="CASE WHEN [msdb].[dbo].[sysjobsteps].[on_fail_action]=(1) THEN CONVERT(nvarchar(30),[msdb].[dbo].[sysjobsteps].[on_fail_action],0)+N' '+formatmessage((14562)) ELSE CASE WHEN [msdb].[dbo].[sysjobsteps].[on_fail_action]=(2) THEN CONVERT(nvarchar(30),[msdb].[dbo].[sysjobsteps].[on_fail_action],0)+N' '+formatmessage((14563)) ELSE CASE WHEN [msdb].[dbo].[sysjobsteps].[on_fail_action]=(3) THEN CONVERT(nvarchar(30),[msdb].[dbo].[sysjobsteps].[on_fail_action],0)+N' '+formatmessage((14564)) ELSE CASE WHEN [msdb].[dbo].[sysjobsteps].[on_fail_action]=(4) THEN CONVERT(nvarchar(30),[msdb].[dbo].[sysjobsteps].[on_fail_action],0)+N' '+formatmessage((14565)) ELSE CONVERT(nvarchar(30),[msdb].[dbo].[sysjobsteps].[on_fail_action],0)+N' '+formatmessage((14205)) END END END END">
+                            <IF>
+                              <Condition>
+                                <ScalarOperator>
+                                  <Compare CompareOp="EQ">
+                                    <ScalarOperator>
+                                      <Identifier>
+                                        <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_fail_action" />
+                                      </Identifier>
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Const ConstValue="(1)" />
+                                    </ScalarOperator>
+                                  </Compare>
+                                </ScalarOperator>
+                              </Condition>
+                              <Then>
+                                <ScalarOperator>
+                                  <Arithmetic Operation="ADD">
+                                    <ScalarOperator>
+                                      <Arithmetic Operation="ADD">
+                                        <ScalarOperator>
+                                          <Convert DataType="nvarchar" Length="60" Style="0" Implicit="0">
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_fail_action" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </Convert>
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="N' '" />
+                                        </ScalarOperator>
+                                      </Arithmetic>
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Identifier>
+                                        <ColumnReference Column="ConstExpr1017">
+                                          <ScalarOperator>
+                                            <Intrinsic FunctionName="formatmessage">
+                                              <ScalarOperator>
+                                                <Const ConstValue="(14562)" />
+                                              </ScalarOperator>
+                                            </Intrinsic>
+                                          </ScalarOperator>
+                                        </ColumnReference>
+                                      </Identifier>
+                                    </ScalarOperator>
+                                  </Arithmetic>
+                                </ScalarOperator>
+                              </Then>
+                              <Else>
+                                <ScalarOperator>
+                                  <IF>
+                                    <Condition>
+                                      <ScalarOperator>
+                                        <Compare CompareOp="EQ">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_fail_action" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="(2)" />
+                                          </ScalarOperator>
+                                        </Compare>
+                                      </ScalarOperator>
+                                    </Condition>
+                                    <Then>
+                                      <ScalarOperator>
+                                        <Arithmetic Operation="ADD">
+                                          <ScalarOperator>
+                                            <Arithmetic Operation="ADD">
+                                              <ScalarOperator>
+                                                <Convert DataType="nvarchar" Length="60" Style="0" Implicit="0">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_fail_action" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Convert>
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="N' '" />
+                                              </ScalarOperator>
+                                            </Arithmetic>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Column="ConstExpr1018">
+                                                <ScalarOperator>
+                                                  <Intrinsic FunctionName="formatmessage">
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="(14563)" />
+                                                    </ScalarOperator>
+                                                  </Intrinsic>
+                                                </ScalarOperator>
+                                              </ColumnReference>
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </Arithmetic>
+                                      </ScalarOperator>
+                                    </Then>
+                                    <Else>
+                                      <ScalarOperator>
+                                        <IF>
+                                          <Condition>
+                                            <ScalarOperator>
+                                              <Compare CompareOp="EQ">
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_fail_action" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                                <ScalarOperator>
+                                                  <Const ConstValue="(3)" />
+                                                </ScalarOperator>
+                                              </Compare>
+                                            </ScalarOperator>
+                                          </Condition>
+                                          <Then>
+                                            <ScalarOperator>
+                                              <Arithmetic Operation="ADD">
+                                                <ScalarOperator>
+                                                  <Arithmetic Operation="ADD">
+                                                    <ScalarOperator>
+                                                      <Convert DataType="nvarchar" Length="60" Style="0" Implicit="0">
+                                                        <ScalarOperator>
+                                                          <Identifier>
+                                                            <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_fail_action" />
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                      </Convert>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="N' '" />
+                                                    </ScalarOperator>
+                                                  </Arithmetic>
+                                                </ScalarOperator>
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Column="ConstExpr1019">
+                                                      <ScalarOperator>
+                                                        <Intrinsic FunctionName="formatmessage">
+                                                          <ScalarOperator>
+                                                            <Const ConstValue="(14564)" />
+                                                          </ScalarOperator>
+                                                        </Intrinsic>
+                                                      </ScalarOperator>
+                                                    </ColumnReference>
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                              </Arithmetic>
+                                            </ScalarOperator>
+                                          </Then>
+                                          <Else>
+                                            <ScalarOperator>
+                                              <IF>
+                                                <Condition>
+                                                  <ScalarOperator>
+                                                    <Compare CompareOp="EQ">
+                                                      <ScalarOperator>
+                                                        <Identifier>
+                                                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_fail_action" />
+                                                        </Identifier>
+                                                      </ScalarOperator>
+                                                      <ScalarOperator>
+                                                        <Const ConstValue="(4)" />
+                                                      </ScalarOperator>
+                                                    </Compare>
+                                                  </ScalarOperator>
+                                                </Condition>
+                                                <Then>
+                                                  <ScalarOperator>
+                                                    <Arithmetic Operation="ADD">
+                                                      <ScalarOperator>
+                                                        <Arithmetic Operation="ADD">
+                                                          <ScalarOperator>
+                                                            <Convert DataType="nvarchar" Length="60" Style="0" Implicit="0">
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_fail_action" />
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                            </Convert>
+                                                          </ScalarOperator>
+                                                          <ScalarOperator>
+                                                            <Const ConstValue="N' '" />
+                                                          </ScalarOperator>
+                                                        </Arithmetic>
+                                                      </ScalarOperator>
+                                                      <ScalarOperator>
+                                                        <Identifier>
+                                                          <ColumnReference Column="ConstExpr1020">
+                                                            <ScalarOperator>
+                                                              <Intrinsic FunctionName="formatmessage">
+                                                                <ScalarOperator>
+                                                                  <Const ConstValue="(14565)" />
+                                                                </ScalarOperator>
+                                                              </Intrinsic>
+                                                            </ScalarOperator>
+                                                          </ColumnReference>
+                                                        </Identifier>
+                                                      </ScalarOperator>
+                                                    </Arithmetic>
+                                                  </ScalarOperator>
+                                                </Then>
+                                                <Else>
+                                                  <ScalarOperator>
+                                                    <Arithmetic Operation="ADD">
+                                                      <ScalarOperator>
+                                                        <Arithmetic Operation="ADD">
+                                                          <ScalarOperator>
+                                                            <Convert DataType="nvarchar" Length="60" Style="0" Implicit="0">
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_fail_action" />
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                            </Convert>
+                                                          </ScalarOperator>
+                                                          <ScalarOperator>
+                                                            <Const ConstValue="N' '" />
+                                                          </ScalarOperator>
+                                                        </Arithmetic>
+                                                      </ScalarOperator>
+                                                      <ScalarOperator>
+                                                        <Identifier>
+                                                          <ColumnReference Column="ConstExpr1021">
+                                                            <ScalarOperator>
+                                                              <Intrinsic FunctionName="formatmessage">
+                                                                <ScalarOperator>
+                                                                  <Const ConstValue="(14205)" />
+                                                                </ScalarOperator>
+                                                              </Intrinsic>
+                                                            </ScalarOperator>
+                                                          </ColumnReference>
+                                                        </Identifier>
+                                                      </ScalarOperator>
+                                                    </Arithmetic>
+                                                  </ScalarOperator>
+                                                </Else>
+                                              </IF>
+                                            </ScalarOperator>
+                                          </Else>
+                                        </IF>
+                                      </ScalarOperator>
+                                    </Else>
+                                  </IF>
+                                </ScalarOperator>
+                              </Else>
+                            </IF>
+                          </ScalarOperator>
+                        </DefinedValue>
+                        <DefinedValue>
+                          <ColumnReference Column="Expr1006" />
+                          <ScalarOperator ScalarString="CASE WHEN [msdb].[dbo].[sysjobsteps].[os_run_priority]=(-15) THEN CONVERT(nvarchar(30),[msdb].[dbo].[sysjobsteps].[os_run_priority],0)+N' '+formatmessage((14566)) ELSE CASE WHEN [msdb].[dbo].[sysjobsteps].[os_run_priority]=(-1) THEN CONVERT(nvarchar(30),[msdb].[dbo].[sysjobsteps].[os_run_priority],0)+N' '+formatmessage((14567)) ELSE CASE WHEN [msdb].[dbo].[sysjobsteps].[os_run_priority]=(0) THEN CONVERT(nvarchar(30),[msdb].[dbo].[sysjobsteps].[os_run_priority],0)+N' '+formatmessage((14561)) ELSE CASE WHEN [msdb].[dbo].[sysjobsteps].[os_run_priority]=(1) THEN CONVERT(nvarchar(30),[msdb].[dbo].[sysjobsteps].[os_run_priority],0)+N' '+formatmessage((14568)) ELSE CASE WHEN [msdb].[dbo].[sysjobsteps].[os_run_priority]=(15) THEN CONVERT(nvarchar(30),[msdb].[dbo].[sysjobsteps].[os_run_priority],0)+N' '+formatmessage((14569)) ELSE CONVERT(nvarchar(30),[msdb].[dbo].[sysjobsteps].[os_run_priority],0)+N' '+formatmessage((14205)) END END END END END">
+                            <IF>
+                              <Condition>
+                                <ScalarOperator>
+                                  <Compare CompareOp="EQ">
+                                    <ScalarOperator>
+                                      <Identifier>
+                                        <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="os_run_priority" />
+                                      </Identifier>
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Const ConstValue="(-15)" />
+                                    </ScalarOperator>
+                                  </Compare>
+                                </ScalarOperator>
+                              </Condition>
+                              <Then>
+                                <ScalarOperator>
+                                  <Arithmetic Operation="ADD">
+                                    <ScalarOperator>
+                                      <Arithmetic Operation="ADD">
+                                        <ScalarOperator>
+                                          <Convert DataType="nvarchar" Length="60" Style="0" Implicit="0">
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="os_run_priority" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </Convert>
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="N' '" />
+                                        </ScalarOperator>
+                                      </Arithmetic>
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Identifier>
+                                        <ColumnReference Column="ConstExpr1022">
+                                          <ScalarOperator>
+                                            <Intrinsic FunctionName="formatmessage">
+                                              <ScalarOperator>
+                                                <Const ConstValue="(14566)" />
+                                              </ScalarOperator>
+                                            </Intrinsic>
+                                          </ScalarOperator>
+                                        </ColumnReference>
+                                      </Identifier>
+                                    </ScalarOperator>
+                                  </Arithmetic>
+                                </ScalarOperator>
+                              </Then>
+                              <Else>
+                                <ScalarOperator>
+                                  <IF>
+                                    <Condition>
+                                      <ScalarOperator>
+                                        <Compare CompareOp="EQ">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="os_run_priority" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="(-1)" />
+                                          </ScalarOperator>
+                                        </Compare>
+                                      </ScalarOperator>
+                                    </Condition>
+                                    <Then>
+                                      <ScalarOperator>
+                                        <Arithmetic Operation="ADD">
+                                          <ScalarOperator>
+                                            <Arithmetic Operation="ADD">
+                                              <ScalarOperator>
+                                                <Convert DataType="nvarchar" Length="60" Style="0" Implicit="0">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="os_run_priority" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Convert>
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="N' '" />
+                                              </ScalarOperator>
+                                            </Arithmetic>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Column="ConstExpr1023">
+                                                <ScalarOperator>
+                                                  <Intrinsic FunctionName="formatmessage">
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="(14567)" />
+                                                    </ScalarOperator>
+                                                  </Intrinsic>
+                                                </ScalarOperator>
+                                              </ColumnReference>
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </Arithmetic>
+                                      </ScalarOperator>
+                                    </Then>
+                                    <Else>
+                                      <ScalarOperator>
+                                        <IF>
+                                          <Condition>
+                                            <ScalarOperator>
+                                              <Compare CompareOp="EQ">
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="os_run_priority" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                                <ScalarOperator>
+                                                  <Const ConstValue="(0)" />
+                                                </ScalarOperator>
+                                              </Compare>
+                                            </ScalarOperator>
+                                          </Condition>
+                                          <Then>
+                                            <ScalarOperator>
+                                              <Arithmetic Operation="ADD">
+                                                <ScalarOperator>
+                                                  <Arithmetic Operation="ADD">
+                                                    <ScalarOperator>
+                                                      <Convert DataType="nvarchar" Length="60" Style="0" Implicit="0">
+                                                        <ScalarOperator>
+                                                          <Identifier>
+                                                            <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="os_run_priority" />
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                      </Convert>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="N' '" />
+                                                    </ScalarOperator>
+                                                  </Arithmetic>
+                                                </ScalarOperator>
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Column="ConstExpr1024">
+                                                      <ScalarOperator>
+                                                        <Intrinsic FunctionName="formatmessage">
+                                                          <ScalarOperator>
+                                                            <Const ConstValue="(14561)" />
+                                                          </ScalarOperator>
+                                                        </Intrinsic>
+                                                      </ScalarOperator>
+                                                    </ColumnReference>
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                              </Arithmetic>
+                                            </ScalarOperator>
+                                          </Then>
+                                          <Else>
+                                            <ScalarOperator>
+                                              <IF>
+                                                <Condition>
+                                                  <ScalarOperator>
+                                                    <Compare CompareOp="EQ">
+                                                      <ScalarOperator>
+                                                        <Identifier>
+                                                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="os_run_priority" />
+                                                        </Identifier>
+                                                      </ScalarOperator>
+                                                      <ScalarOperator>
+                                                        <Const ConstValue="(1)" />
+                                                      </ScalarOperator>
+                                                    </Compare>
+                                                  </ScalarOperator>
+                                                </Condition>
+                                                <Then>
+                                                  <ScalarOperator>
+                                                    <Arithmetic Operation="ADD">
+                                                      <ScalarOperator>
+                                                        <Arithmetic Operation="ADD">
+                                                          <ScalarOperator>
+                                                            <Convert DataType="nvarchar" Length="60" Style="0" Implicit="0">
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="os_run_priority" />
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                            </Convert>
+                                                          </ScalarOperator>
+                                                          <ScalarOperator>
+                                                            <Const ConstValue="N' '" />
+                                                          </ScalarOperator>
+                                                        </Arithmetic>
+                                                      </ScalarOperator>
+                                                      <ScalarOperator>
+                                                        <Identifier>
+                                                          <ColumnReference Column="ConstExpr1025">
+                                                            <ScalarOperator>
+                                                              <Intrinsic FunctionName="formatmessage">
+                                                                <ScalarOperator>
+                                                                  <Const ConstValue="(14568)" />
+                                                                </ScalarOperator>
+                                                              </Intrinsic>
+                                                            </ScalarOperator>
+                                                          </ColumnReference>
+                                                        </Identifier>
+                                                      </ScalarOperator>
+                                                    </Arithmetic>
+                                                  </ScalarOperator>
+                                                </Then>
+                                                <Else>
+                                                  <ScalarOperator>
+                                                    <IF>
+                                                      <Condition>
+                                                        <ScalarOperator>
+                                                          <Compare CompareOp="EQ">
+                                                            <ScalarOperator>
+                                                              <Identifier>
+                                                                <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="os_run_priority" />
+                                                              </Identifier>
+                                                            </ScalarOperator>
+                                                            <ScalarOperator>
+                                                              <Const ConstValue="(15)" />
+                                                            </ScalarOperator>
+                                                          </Compare>
+                                                        </ScalarOperator>
+                                                      </Condition>
+                                                      <Then>
+                                                        <ScalarOperator>
+                                                          <Arithmetic Operation="ADD">
+                                                            <ScalarOperator>
+                                                              <Arithmetic Operation="ADD">
+                                                                <ScalarOperator>
+                                                                  <Convert DataType="nvarchar" Length="60" Style="0" Implicit="0">
+                                                                    <ScalarOperator>
+                                                                      <Identifier>
+                                                                        <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="os_run_priority" />
+                                                                      </Identifier>
+                                                                    </ScalarOperator>
+                                                                  </Convert>
+                                                                </ScalarOperator>
+                                                                <ScalarOperator>
+                                                                  <Const ConstValue="N' '" />
+                                                                </ScalarOperator>
+                                                              </Arithmetic>
+                                                            </ScalarOperator>
+                                                            <ScalarOperator>
+                                                              <Identifier>
+                                                                <ColumnReference Column="ConstExpr1026">
+                                                                  <ScalarOperator>
+                                                                    <Intrinsic FunctionName="formatmessage">
+                                                                      <ScalarOperator>
+                                                                        <Const ConstValue="(14569)" />
+                                                                      </ScalarOperator>
+                                                                    </Intrinsic>
+                                                                  </ScalarOperator>
+                                                                </ColumnReference>
+                                                              </Identifier>
+                                                            </ScalarOperator>
+                                                          </Arithmetic>
+                                                        </ScalarOperator>
+                                                      </Then>
+                                                      <Else>
+                                                        <ScalarOperator>
+                                                          <Arithmetic Operation="ADD">
+                                                            <ScalarOperator>
+                                                              <Arithmetic Operation="ADD">
+                                                                <ScalarOperator>
+                                                                  <Convert DataType="nvarchar" Length="60" Style="0" Implicit="0">
+                                                                    <ScalarOperator>
+                                                                      <Identifier>
+                                                                        <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="os_run_priority" />
+                                                                      </Identifier>
+                                                                    </ScalarOperator>
+                                                                  </Convert>
+                                                                </ScalarOperator>
+                                                                <ScalarOperator>
+                                                                  <Const ConstValue="N' '" />
+                                                                </ScalarOperator>
+                                                              </Arithmetic>
+                                                            </ScalarOperator>
+                                                            <ScalarOperator>
+                                                              <Identifier>
+                                                                <ColumnReference Column="ConstExpr1027">
+                                                                  <ScalarOperator>
+                                                                    <Intrinsic FunctionName="formatmessage">
+                                                                      <ScalarOperator>
+                                                                        <Const ConstValue="(14205)" />
+                                                                      </ScalarOperator>
+                                                                    </Intrinsic>
+                                                                  </ScalarOperator>
+                                                                </ColumnReference>
+                                                              </Identifier>
+                                                            </ScalarOperator>
+                                                          </Arithmetic>
+                                                        </ScalarOperator>
+                                                      </Else>
+                                                    </IF>
+                                                  </ScalarOperator>
+                                                </Else>
+                                              </IF>
+                                            </ScalarOperator>
+                                          </Else>
+                                        </IF>
+                                      </ScalarOperator>
+                                    </Else>
+                                  </IF>
+                                </ScalarOperator>
+                              </Else>
+                            </IF>
+                          </ScalarOperator>
+                        </DefinedValue>
+                      </DefinedValues>
+                      <RelOp NodeId="1" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1.03324" EstimateIO="0" EstimateCPU="1.03324e-007" AvgRowSize="4844" EstimatedTotalSubtreeCost="0.00328394" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList>
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="job_id" />
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="step_id" />
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="step_name" />
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="subsystem" />
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="command" />
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="flags" />
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="cmdexec_success_code" />
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_success_action" />
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_success_step_id" />
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_fail_action" />
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_fail_step_id" />
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="server" />
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="database_name" />
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="database_user_name" />
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="retry_attempts" />
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="retry_interval" />
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="os_run_priority" />
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="output_file_name" />
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="last_run_outcome" />
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="last_run_duration" />
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="last_run_retries" />
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="last_run_date" />
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="last_run_time" />
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="proxy_id" />
+                          <ColumnReference Column="Expr1030" />
+                          <ColumnReference Column="Expr1031" />
+                          <ColumnReference Column="Expr1032" />
+                          <ColumnReference Column="Expr1033" />
+                        </OutputList>
+                        <ComputeScalar>
+                          <DefinedValues>
+                            <DefinedValue>
+                              <ColumnReference Column="Expr1030" />
+                              <ScalarOperator ScalarString="CONVERT(nvarchar(30),[msdb].[dbo].[sysjobsteps].[flags],0)+N' ('">
+                                <Arithmetic Operation="ADD">
+                                  <ScalarOperator>
+                                    <Convert DataType="nvarchar" Length="60" Style="0" Implicit="0">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="flags" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Convert>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="N' ('" />
+                                  </ScalarOperator>
+                                </Arithmetic>
+                              </ScalarOperator>
+                            </DefinedValue>
+                            <DefinedValue>
+                              <ColumnReference Column="Expr1031" />
+                              <ScalarOperator ScalarString="[msdb].[dbo].[sysjobsteps].[flags]&amp;(1)">
+                                <Arithmetic Operation="BIT_AND">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="flags" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(1)" />
+                                  </ScalarOperator>
+                                </Arithmetic>
+                              </ScalarOperator>
+                            </DefinedValue>
+                            <DefinedValue>
+                              <ColumnReference Column="Expr1032" />
+                              <ScalarOperator ScalarString="[msdb].[dbo].[sysjobsteps].[flags]&amp;(2)">
+                                <Arithmetic Operation="BIT_AND">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="flags" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(2)" />
+                                  </ScalarOperator>
+                                </Arithmetic>
+                              </ScalarOperator>
+                            </DefinedValue>
+                            <DefinedValue>
+                              <ColumnReference Column="Expr1033" />
+                              <ScalarOperator ScalarString="[msdb].[dbo].[sysjobsteps].[flags]&amp;(4)">
+                                <Arithmetic Operation="BIT_AND">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="flags" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(4)" />
+                                  </ScalarOperator>
+                                </Arithmetic>
+                              </ScalarOperator>
+                            </DefinedValue>
+                          </DefinedValues>
+                          <RelOp NodeId="2" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1.03324" EstimateIO="0.003125" EstimateCPU="0.000158137" AvgRowSize="4797" EstimatedTotalSubtreeCost="0.00328314" TableCardinality="373" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList>
+                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="job_id" />
+                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="step_id" />
+                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="step_name" />
+                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="subsystem" />
+                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="command" />
+                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="flags" />
+                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="cmdexec_success_code" />
+                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_success_action" />
+                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_success_step_id" />
+                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_fail_action" />
+                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_fail_step_id" />
+                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="server" />
+                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="database_name" />
+                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="database_user_name" />
+                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="retry_attempts" />
+                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="retry_interval" />
+                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="os_run_priority" />
+                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="output_file_name" />
+                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="last_run_outcome" />
+                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="last_run_duration" />
+                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="last_run_retries" />
+                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="last_run_date" />
+                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="last_run_time" />
+                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="proxy_id" />
+                            </OutputList>
+                            <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                              <DefinedValues>
+                                <DefinedValue>
+                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="job_id" />
+                                </DefinedValue>
+                                <DefinedValue>
+                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="step_id" />
+                                </DefinedValue>
+                                <DefinedValue>
+                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="step_name" />
+                                </DefinedValue>
+                                <DefinedValue>
+                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="subsystem" />
+                                </DefinedValue>
+                                <DefinedValue>
+                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="command" />
+                                </DefinedValue>
+                                <DefinedValue>
+                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="flags" />
+                                </DefinedValue>
+                                <DefinedValue>
+                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="cmdexec_success_code" />
+                                </DefinedValue>
+                                <DefinedValue>
+                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_success_action" />
+                                </DefinedValue>
+                                <DefinedValue>
+                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_success_step_id" />
+                                </DefinedValue>
+                                <DefinedValue>
+                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_fail_action" />
+                                </DefinedValue>
+                                <DefinedValue>
+                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="on_fail_step_id" />
+                                </DefinedValue>
+                                <DefinedValue>
+                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="server" />
+                                </DefinedValue>
+                                <DefinedValue>
+                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="database_name" />
+                                </DefinedValue>
+                                <DefinedValue>
+                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="database_user_name" />
+                                </DefinedValue>
+                                <DefinedValue>
+                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="retry_attempts" />
+                                </DefinedValue>
+                                <DefinedValue>
+                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="retry_interval" />
+                                </DefinedValue>
+                                <DefinedValue>
+                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="os_run_priority" />
+                                </DefinedValue>
+                                <DefinedValue>
+                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="output_file_name" />
+                                </DefinedValue>
+                                <DefinedValue>
+                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="last_run_outcome" />
+                                </DefinedValue>
+                                <DefinedValue>
+                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="last_run_duration" />
+                                </DefinedValue>
+                                <DefinedValue>
+                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="last_run_retries" />
+                                </DefinedValue>
+                                <DefinedValue>
+                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="last_run_date" />
+                                </DefinedValue>
+                                <DefinedValue>
+                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="last_run_time" />
+                                </DefinedValue>
+                                <DefinedValue>
+                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="proxy_id" />
+                                </DefinedValue>
+                              </DefinedValues>
+                              <Object Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Index="[clust]" IndexKind="Clustered" />
+                              <SeekPredicates>
+                                <SeekPredicateNew>
+                                  <SeekKeys>
+                                    <Prefix ScanType="EQ">
+                                      <RangeColumns>
+                                        <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="job_id" />
+                                      </RangeColumns>
+                                      <RangeExpressions>
+                                        <ScalarOperator ScalarString="[@job_id]">
+                                          <Identifier>
+                                            <ColumnReference Column="@job_id" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </RangeExpressions>
+                                    </Prefix>
+                                  </SeekKeys>
+                                </SeekPredicateNew>
+                              </SeekPredicates>
+                              <Predicate>
+                                <ScalarOperator ScalarString="[@step_id] IS NULL OR [msdb].[dbo].[sysjobsteps].[step_id]=[@step_id]">
+                                  <Logical Operation="OR">
+                                    <ScalarOperator>
+                                      <Identifier>
+                                        <ColumnReference Column="ConstExpr1007">
+                                          <ScalarOperator>
+                                            <Compare CompareOp="IS">
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@step_id" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="NULL" />
+                                              </ScalarOperator>
+                                            </Compare>
+                                          </ScalarOperator>
+                                        </ColumnReference>
+                                      </Identifier>
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Compare CompareOp="EQ">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobsteps]" Column="step_id" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="@step_id" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Compare>
+                                    </ScalarOperator>
+                                  </Logical>
+                                </ScalarOperator>
+                              </Predicate>
+                            </IndexScan>
+                          </RelOp>
+                        </ComputeScalar>
+                      </RelOp>
+                    </ComputeScalar>
+                  </RelOp>
+                  <ParameterList>
+                    <ColumnReference Column="@step_id" ParameterCompiledValue="NULL" />
+                    <ColumnReference Column="@job_id" ParameterCompiledValue="{guid'CEEC552E-CB20-464E-9253-ECAD443B2389'}" />
+                  </ParameterList>
+                </QueryPlan>
+              </StmtSimple>
+            </Statements>
+          </Else>
+        </StmtCond>
+        <StmtSimple StatementText=" END&#xD;&#xA;&#xD;&#xA;  RETURN(@@error) -- 0 means success&#xD;&#xA;&#xD;" StatementId="24" StatementCompId="38" StatementType="RETURN" RetrievedFromCache="true" />
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>Supratimas</title>
+    @@include("./parts/head.html")
+</head>
+
+<body id="rootws" class="web">
+    @@include("./parts/header.html", {"mode":"app"})
+
+    <section class="docs" id="root">
+        <section class="doc">
+            <section class="title" style="min-height:230px;">
+                <div style="display:block; float:right;margin-left:1em; ">
+                    <ins class="adsbygoogle" style="display:inline-block;width:300px;height:250px" data-ad-client="ca-pub-2261371684278796" data-ad-slot="6705225266"></ins>
+                    <script>
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
+                Downloads
+
+                <section data-bind="foreach: products">
+                    <section style="font-size: 0.7em; margin-top: 1em;">
+                        <a data-bind="text: name, attr: { href: '/f/'+versions[0].fileName }" style="font-size: 1.1em;"></a>
+                        <div data-bind="text: description" style="font-size: 0.7em;"></div>
+                    </section>
+                </section>
+            </section>
+
+            <section class="body" style="text-align: center; margin-top: 1em;">
+                If you like Supratimas, please support us with your donation.
+                <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                    <input type="hidden" name="cmd" value="_s-xclick">
+                    <input type="hidden" name="hosted_button_id" value="PVVBQN37RHRZU">
+                    <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                    <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                </form>
+            </section>
+
+            <section class="body">
+
+                <section data-bind="foreach: products" style="font-size: 1.3em;">
+                    <section style="margin-top: 2em; border-top: aliceblue 1px solid;">
+                        <hr />
+                        <a data-bind="attr: { name: id }"></a>
+                        <div data-bind="text: name, attr: { name: id }" style="font-size: 1.1em;"></div>
+                        <div style="font-size: 0.8em;">
+
+                            <div data-bind="text: description"></div>
+
+                            <section data-bind="foreach: versions">
+                                <div style="margin-top: 1em;">
+                                    <div>
+                                        <span data-bind="text: 'v'+id " style="font-weight: bold;"></span>
+                                        <span> - </span>
+                                        <a data-bind="attr:{ href: '/f/' + fileName}">download</a>
+                                    </div>
+                                    <ul data-bind="foreach: changeList">
+                                        <li data-bind="text: $data "></li>
+                                    </ul>
+
+
+                                </div>
+                            </section>
+                        </div>
+                    </section>
+                </section>
+
+
+            </section>
+        </section>
+    </section>
+
+    @@include("./parts/footer.html")
+
+    <script type="text/javascript" language="javascript">
+        document.addEventListener("readystatechange", function(event) {
+
+            if (document.readyState === "interactive") {
+
+                var data = {
+
+                    "products": [{
+                        "id": "SSMS2016",
+                        "name": "Supratimas SSMS 2016-2017",
+                        "description": "Supratimas for SQl Server Management Studio 2016-2017",
+                        "versions": [{
+                            "id": "2.0.0-preview-170711",
+                            "index": 3,
+                            "fileName": "setup.supratimas.2016_2017.2.0.0-preview-170711.exe",
+                            "changeList": [
+                                "Removing RedGate's formatting integration",
+                                "Fixing Devart formatting intergration"
+                            ]
+                        }, {
+                            "id": "2.0.0-preview-170710",
+                            "fileName": "setup.supratimas.2016_2017.2.0.0-preview-170710.exe",
+                            "changeList": [
+                                "Support for SQl Server Management Studio 2017",
+                                "SQL formatting using external services from Redgate or Devart"
+                            ]
+                        }, {
+                            "id": "2.0.0-preview-170117",
+                            "fileName": "setup.supratimas.2016.2.0.0-preview-170117.exe",
+                            "changeList": [
+                                "Fixing setup bug preventing plan viewer to appear"
+                            ]
+                        }, {
+                            "id": "2.0.0-preview-170116",
+                            "fileName": "setup.supratimas.2016.2.0.0-preview-170116.exe",
+                            "changeList": [
+                                "Initial Port from the 2008-2014 version into SSMS 2016",
+                                "Ability to disable Supratimas plan viewer",
+                                "Workspace as a document window with Save capabilities"
+                            ]
+                        }]
+                    }, {
+                        "id": "SSMS2014",
+                        "name": "Supratimas for SSMS 2008-2014",
+                        "description": "Supratimas add-in for SQl Server Management Studio 2008-2014",
+                        "versions": [{
+                            "id": "1.1.2000",
+                            "fileName": "setup.supratimas.addin.1.1.2000.exe",
+                            "changeList": [
+                                "Version for the old SSMS - no longer in support or development"
+                            ]
+                        }]
+                    }]
+
+                };
+
+
+
+                ko.applyBindings(data, $('#root')[0]);
+            }
+
+        });
+    </script>
+</body>
+
+</html>

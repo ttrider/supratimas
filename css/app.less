@@ -1,0 +1,77 @@
+﻿@import "fonts.less";
+@import "colors.less";
+@import "ham-menu.less";
+@import "notifications.less";
+@footerHeight: 2.3em;
+@headerHeight: 110px;
+header {
+    background-color: @color-dark;
+    background-image: url(i/texturebg.png);
+    background-repeat: repeat;
+    color: @color-primary-1;
+    height: @appHeaderHeight;
+    background-repeat: repeat;
+    color: @color-dark;
+    box-shadow: @color-dark 0 0.1em 0.3em;
+    overflow: hidden;
+    display: flex;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 2000;
+    justify-content: space-between;
+    align-items: center;
+    .menubtn {
+        margin-left: 0.5em;
+        margin-top: .2em;
+        padding-top: 0.2em;
+        background-position-x: 3em;
+        width: 210px;
+        background-image: url(i/logo_170x39.png);
+        background-repeat: no-repeat;
+        height: 39px;
+        cursor: pointer;
+        svg {
+            width: 2.6em;
+            height: 2.6em;
+        }
+        line {
+            stroke: @color-primary-1;
+            stroke-width: 10px;
+            stroke-linecap: round;
+            fill: none;
+        }
+    }
+    .menubtn:hover {
+        line {
+            stroke: @color-light;
+        }
+    }
+    .title {
+        color: @color-primary-4;
+        margin-right: 1em;
+    }
+}
+
+.intro {
+    svg {
+        stroke: @color-dark;
+        fill: none;
+        stroke-width: 5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        width: 10em;
+        height: 10em;
+        margin-top: 3em;
+        margin-left: 3em;
+    }
+    span {
+        color: @color-dark;
+        font-size: 1.6em;
+    }
+
+    section{
+        margin-top: 5em;
+    }
+}

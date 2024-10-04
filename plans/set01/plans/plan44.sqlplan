@@ -1,0 +1,223 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="CREATE PROCEDURE [dbo].[Uploader_GetFrTedIdAndCheckParamsUploaded]&#xD;&#xA;@FrTedGuid UNIQUEIDENTIFIER, @FrTedId INT OUTPUT, @ParametersUploaded BIT OUTPUT&#xD;&#xA;AS&#xD;&#xA;BEGIN&#xD;&#xA;&#xD;&#xA;    DECLARE @stopwatchBeginTime datetime2 &#xD;&#xA;    SELECT @stopwatchBeginTime = [dbo].[fnBeginStopwatch]()&#xD;&#xA;&#xD;&#xA;   " StatementId="1" StatementCompId="2" StatementType="ASSIGN WITH QUERY" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" DECLARE @returnStatus int&#xD;&#xA;&#xD;&#xA;    SELECT @FrTedId = Id&#xD;&#xA;    FROM dbo.ResolvedTed WITH (NOLOCK)&#xD;&#xA;    WHERE Guid = @FrTedGuid&#xD;&#xA;    &#xD;&#xA;   " StatementId="2" StatementCompId="3" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032831" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0xC77ACB628516748A" QueryPlanHash="0xAE0239E3CA342451">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="1" CompileCPU="1" CompileMemory="192">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.37084e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Column="Id" />
+              </OutputList>
+              <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Column="Id" />
+                  </DefinedValue>
+                </DefinedValues>
+                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Index="[ResolvedTED_IDX_Guid]" IndexKind="NonClustered" />
+                <SeekPredicates>
+                  <SeekPredicateNew>
+                    <SeekKeys>
+                      <Prefix ScanType="EQ">
+                        <RangeColumns>
+                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Column="Guid" />
+                        </RangeColumns>
+                        <RangeExpressions>
+                          <ScalarOperator ScalarString="[@FrTedGuid]">
+                            <Identifier>
+                              <ColumnReference Column="@FrTedGuid" />
+                            </Identifier>
+                          </ScalarOperator>
+                        </RangeExpressions>
+                      </Prefix>
+                    </SeekKeys>
+                  </SeekPredicateNew>
+                </SeekPredicates>
+              </IndexScan>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@FrTedId" ParameterCompiledValue="NULL" />
+              <ColumnReference Column="@FrTedGuid" ParameterCompiledValue="{guid'FCC90A81-B5F6-47C3-AD6C-8F7C5982168B'}" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText=" SET @ParametersUploaded = 0&#xD;&#xA;    &#xD;&#xA;   " StatementId="3" StatementCompId="4" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtCond StatementText=" IF (@FrTedId IS NULL)&#xD;&#xA;   " StatementId="4" StatementCompId="5" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;        GOTO ProcExit&#xD;&#xA;   " StatementId="5" StatementCompId="6" StatementType="GOTO" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtCond StatementText=" END&#xD;&#xA;    &#xD;&#xA;    IF EXISTS &#xD;&#xA;    (&#xD;&#xA;        SELECT * FROM dbo.ResolvedTEDParameter WITH (NOLOCK) &#xD;&#xA;        WHERE ResolvedTEDId = @FrTedId&#xD;&#xA;    )&#xD;&#xA;   " StatementId="6" StatementCompId="8" StatementType="COND WITH QUERY" RetrievedFromCache="true" StatementSubTreeCost="0.00328854" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0xDB1A77D22C8F6057" QueryPlanHash="0x79BFFB3D975FF0D9" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <Condition>
+            <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="1" CompileCPU="1" CompileMemory="240">
+              <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+              <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+              <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328854" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                <OutputList>
+                  <ColumnReference Column="Expr1004" />
+                </OutputList>
+                <ComputeScalar>
+                  <DefinedValues>
+                    <DefinedValue>
+                      <ColumnReference Column="Expr1004" />
+                      <ScalarOperator ScalarString="CASE WHEN [Expr1005] THEN (1) ELSE (0) END">
+                        <IF>
+                          <Condition>
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1005" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Condition>
+                          <Then>
+                            <ScalarOperator>
+                              <Const ConstValue="(1)" />
+                            </ScalarOperator>
+                          </Then>
+                          <Else>
+                            <ScalarOperator>
+                              <Const ConstValue="(0)" />
+                            </ScalarOperator>
+                          </Else>
+                        </IF>
+                      </ScalarOperator>
+                    </DefinedValue>
+                  </DefinedValues>
+                  <RelOp NodeId="1" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.00328844" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList>
+                      <ColumnReference Column="Expr1005" />
+                    </OutputList>
+                    <NestedLoops Optimized="0">
+                      <DefinedValues>
+                        <DefinedValue>
+                          <ColumnReference Column="Expr1005" />
+                        </DefinedValue>
+                      </DefinedValues>
+                      <ProbeColumn>
+                        <ColumnReference Column="Expr1005" />
+                      </ProbeColumn>
+                      <RelOp NodeId="2" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList />
+                        <ConstantScan />
+                      </RelOp>
+                      <RelOp NodeId="3" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="8.29748e+007" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList />
+                        <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                          <DefinedValues />
+                          <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTEDParameter]" Index="[IX_ResolvedTEDParameter_ResolvedTEDId]" IndexKind="NonClustered" />
+                          <SeekPredicates>
+                            <SeekPredicateNew>
+                              <SeekKeys>
+                                <Prefix ScanType="EQ">
+                                  <RangeColumns>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTEDParameter]" Column="ResolvedTEDId" />
+                                  </RangeColumns>
+                                  <RangeExpressions>
+                                    <ScalarOperator ScalarString="[@FrTedId]">
+                                      <Identifier>
+                                        <ColumnReference Column="@FrTedId" />
+                                      </Identifier>
+                                    </ScalarOperator>
+                                  </RangeExpressions>
+                                </Prefix>
+                              </SeekKeys>
+                            </SeekPredicateNew>
+                          </SeekPredicates>
+                        </IndexScan>
+                      </RelOp>
+                    </NestedLoops>
+                  </RelOp>
+                </ComputeScalar>
+              </RelOp>
+              <ParameterList>
+                <ColumnReference Column="@FrTedId" ParameterCompiledValue="NULL" />
+              </ParameterList>
+            </QueryPlan>
+          </Condition>
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;        SET @ParametersUploaded = 1&#xD;&#xA;   " StatementId="7" StatementCompId="9" StatementType="ASSIGN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtSimple StatementText=" END&#xD;&#xA;&#xD;&#xA;    GOTO ProcExit&#xD;" StatementId="8" StatementCompId="11" StatementType="GOTO" RetrievedFromCache="true" />
+        <StmtCond StatementText="&#xA;ProcErrorExit:&#xD;&#xA;    IF @returnStatus IS NULL" StatementId="9" StatementCompId="13" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" SET @returnStatus = 1&#xD;" StatementId="10" StatementCompId="14" StatementType="ASSIGN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtCond StatementText="&#xA;ProcExit:&#xD;&#xA;    IF @returnStatus IS NULL" StatementId="11" StatementCompId="17" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" SET @returnStatus = 0&#xD;&#xA;&#xD;&#xA;   " StatementId="12" StatementCompId="18" StatementType="ASSIGN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtSimple StatementText=" DECLARE @objectName varchar(128) = (SELECT OBJECT_NAME(@@PROCID))&#xD;&#xA;   " StatementId="13" StatementCompId="20" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="1.257e-006" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x830C952D7490168E" QueryPlanHash="0x3B1EAEC0618BFE3F" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="0" CompileCPU="0" CompileMemory="192">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="75" EstimatedTotalSubtreeCost="1.257e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Column="Expr1001" />
+              </OutputList>
+              <ComputeScalar>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1001" />
+                    <ScalarOperator ScalarString="CONVERT_IMPLICIT(varchar(128),[Expr1000],0)">
+                      <Convert DataType="varchar" Length="128" Style="0" Implicit="1">
+                        <ScalarOperator>
+                          <Identifier>
+                            <ColumnReference Column="Expr1000" />
+                          </Identifier>
+                        </ScalarOperator>
+                      </Convert>
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp NodeId="1" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="139" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Expr1000" />
+                  </OutputList>
+                  <ConstantScan>
+                    <Values>
+                      <Row>
+                        <ScalarOperator ScalarString="object_name(@@procid)">
+                          <Intrinsic FunctionName="object_name">
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="@@procid" />
+                            </ScalarOperator>
+                            <ScalarOperator>
+                              <Const ConstValue="" />
+                            </ScalarOperator>
+                          </Intrinsic>
+                        </ScalarOperator>
+                      </Row>
+                    </Values>
+                  </ConstantScan>
+                </RelOp>
+              </ComputeScalar>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText=" EXEC [dbo].[spEndStopwatch] @objectName, @stopwatchBeginTime&#xD;&#xA;&#xD;&#xA;   " StatementId="14" StatementCompId="21" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" RETURN @returnStatus&#xD;" StatementId="15" StatementCompId="22" StatementType="RETURN" RetrievedFromCache="true" />
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

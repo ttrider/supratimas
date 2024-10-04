@@ -1,0 +1,658 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="CREATE PROCEDURE [dbo].[Uploader_GetOrCreateBuildFlavorId]&#xD;&#xA;@buildVersionId INT, @sku VARCHAR (50), @architecture VARCHAR (50), @type VARCHAR (50), @culture VARCHAR (50), @language VARCHAR (50), @buildFlavorId INT=NULL OUTPUT&#xD;&#xA;AS&#xD;&#xA;BEGIN&#xD;&#xA;&#xD;&#xA;    DECLARE @stopwatchBeginTime datetime2 &#xD;&#xA;    SELECT @stopwatchBeginTime = [dbo].[fnBeginStopwatch]()&#xD;&#xA;&#xD;&#xA;" StatementId="1" StatementCompId="2" StatementType="ASSIGN WITH QUERY" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;DECLARE @fqbn nvarchar(256)&#xD;&#xA;&#x9;DECLARE @majorVer smallint&#xD;&#xA;&#x9;DECLARE @minorVer smallint&#xD;&#xA;&#x9;DECLARE @buildNo smallint&#xD;&#xA;&#x9;DECLARE @revision smallint&#xD;&#xA;&#x9;DECLARE @timestamp datetime&#xD;&#xA;&#x9;DECLARE @branch nvarchar(100)&#xD;&#xA;&#x9;DECLARE @suffix nvarchar(5)&#xD;&#xA;&#x9;&#xD;&#xA;&#x9;SELECT @buildFlavorId = [Id]&#xD;&#xA;&#x9;FROM [dbo].[BuildFlavor]&#xD;&#xA;&#x9;WHERE @buildVersionId = [BuildVersionId]&#xD;&#xA;&#x9;AND UPPER(@sku) = UPPER([SKU])&#xD;&#xA;&#x9;AND UPPER(@architecture) = UPPER([Architecture])&#xD;&#xA;&#x9;AND UPPER(@type) = UPPER([Type])&#xD;&#xA;&#x9;AND UPPER(@culture) = UPPER([Culture])&#xD;&#xA;&#x9;AND UPPER(@language) = UPPER([Language])&#xD;&#xA;&#xD;&#xA;" StatementId="2" StatementCompId="3" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.00657276" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x5995C1A7A8D6136" QueryPlanHash="0x9AA71CD94CF1B03D" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="32" CompileTime="8" CompileCPU="8" CompileMemory="496">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="1" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="62" EstimatedTotalSubtreeCost="0.00657038" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Column="Id" />
+              </OutputList>
+              <NestedLoops Optimized="0">
+                <OuterReferences>
+                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Column="Id" />
+                </OuterReferences>
+                <RelOp NodeId="2" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="805176" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Column="Id" />
+                  </OutputList>
+                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Column="Id" />
+                      </DefinedValue>
+                    </DefinedValues>
+                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Index="[BuildFlavor_IDX_BuildVersion]" IndexKind="NonClustered" />
+                    <SeekPredicates>
+                      <SeekPredicateNew>
+                        <SeekKeys>
+                          <Prefix ScanType="EQ">
+                            <RangeColumns>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Column="BuildVersionId" />
+                            </RangeColumns>
+                            <RangeExpressions>
+                              <ScalarOperator ScalarString="[@buildVersionId]">
+                                <Identifier>
+                                  <ColumnReference Column="@buildVersionId" />
+                                </Identifier>
+                              </ScalarOperator>
+                            </RangeExpressions>
+                          </Prefix>
+                        </SeekKeys>
+                      </SeekPredicateNew>
+                    </SeekPredicates>
+                  </IndexScan>
+                </RelOp>
+                <RelOp NodeId="4" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="294" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="805176" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList />
+                  <IndexScan Lookup="1" Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                    <DefinedValues />
+                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Index="[BuildFlavor_PK]" TableReferenceId="-1" IndexKind="Clustered" />
+                    <SeekPredicates>
+                      <SeekPredicateNew>
+                        <SeekKeys>
+                          <Prefix ScanType="EQ">
+                            <RangeColumns>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Column="Id" />
+                            </RangeColumns>
+                            <RangeExpressions>
+                              <ScalarOperator ScalarString="[OurLabReporting].[dbo].[BuildFlavor].[Id]">
+                                <Identifier>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Column="Id" />
+                                </Identifier>
+                              </ScalarOperator>
+                            </RangeExpressions>
+                          </Prefix>
+                        </SeekKeys>
+                      </SeekPredicateNew>
+                    </SeekPredicates>
+                    <Predicate>
+                      <ScalarOperator ScalarString="upper([@sku])=upper([OurLabReporting].[dbo].[BuildFlavor].[Sku]) AND upper([@architecture])=upper([OurLabReporting].[dbo].[BuildFlavor].[Architecture]) AND upper([@type])=upper([OurLabReporting].[dbo].[BuildFlavor].[Type]) AND CONVERT_IMPLICIT(nvarchar(50),upper([@culture]),0)=upper([OurLabReporting].[dbo].[BuildFlavor].[Culture]) AND CONVERT_IMPLICIT(nvarchar(50),upper([@language]),0)=upper([OurLabReporting].[dbo].[BuildFlavor].[Language])">
+                        <Logical Operation="AND">
+                          <ScalarOperator>
+                            <Compare CompareOp="EQ">
+                              <ScalarOperator>
+                                <Identifier>
+                                  <ColumnReference Column="ConstExpr1003">
+                                    <ScalarOperator>
+                                      <Intrinsic FunctionName="upper">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="@sku" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Intrinsic>
+                                    </ScalarOperator>
+                                  </ColumnReference>
+                                </Identifier>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Intrinsic FunctionName="upper">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Column="Sku" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Intrinsic>
+                              </ScalarOperator>
+                            </Compare>
+                          </ScalarOperator>
+                          <ScalarOperator>
+                            <Compare CompareOp="EQ">
+                              <ScalarOperator>
+                                <Identifier>
+                                  <ColumnReference Column="ConstExpr1004">
+                                    <ScalarOperator>
+                                      <Intrinsic FunctionName="upper">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="@architecture" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Intrinsic>
+                                    </ScalarOperator>
+                                  </ColumnReference>
+                                </Identifier>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Intrinsic FunctionName="upper">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Column="Architecture" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Intrinsic>
+                              </ScalarOperator>
+                            </Compare>
+                          </ScalarOperator>
+                          <ScalarOperator>
+                            <Compare CompareOp="EQ">
+                              <ScalarOperator>
+                                <Identifier>
+                                  <ColumnReference Column="ConstExpr1005">
+                                    <ScalarOperator>
+                                      <Intrinsic FunctionName="upper">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="@type" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Intrinsic>
+                                    </ScalarOperator>
+                                  </ColumnReference>
+                                </Identifier>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Intrinsic FunctionName="upper">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Column="Type" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Intrinsic>
+                              </ScalarOperator>
+                            </Compare>
+                          </ScalarOperator>
+                          <ScalarOperator>
+                            <Compare CompareOp="EQ">
+                              <ScalarOperator>
+                                <Identifier>
+                                  <ColumnReference Column="ConstExpr1006">
+                                    <ScalarOperator>
+                                      <Convert DataType="nvarchar" Length="100" Style="0" Implicit="1">
+                                        <ScalarOperator>
+                                          <Intrinsic FunctionName="upper">
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Column="@culture" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </Intrinsic>
+                                        </ScalarOperator>
+                                      </Convert>
+                                    </ScalarOperator>
+                                  </ColumnReference>
+                                </Identifier>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Intrinsic FunctionName="upper">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Column="Culture" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Intrinsic>
+                              </ScalarOperator>
+                            </Compare>
+                          </ScalarOperator>
+                          <ScalarOperator>
+                            <Compare CompareOp="EQ">
+                              <ScalarOperator>
+                                <Identifier>
+                                  <ColumnReference Column="ConstExpr1007">
+                                    <ScalarOperator>
+                                      <Convert DataType="nvarchar" Length="100" Style="0" Implicit="1">
+                                        <ScalarOperator>
+                                          <Intrinsic FunctionName="upper">
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Column="@language" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </Intrinsic>
+                                        </ScalarOperator>
+                                      </Convert>
+                                    </ScalarOperator>
+                                  </ColumnReference>
+                                </Identifier>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Intrinsic FunctionName="upper">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Column="Language" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Intrinsic>
+                              </ScalarOperator>
+                            </Compare>
+                          </ScalarOperator>
+                        </Logical>
+                      </ScalarOperator>
+                    </Predicate>
+                  </IndexScan>
+                </RelOp>
+              </NestedLoops>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@buildFlavorId" ParameterCompiledValue="NULL" />
+              <ColumnReference Column="@language" ParameterCompiledValue="'AFK'" />
+              <ColumnReference Column="@culture" ParameterCompiledValue="''" />
+              <ColumnReference Column="@type" ParameterCompiledValue="'CHK'" />
+              <ColumnReference Column="@architecture" ParameterCompiledValue="'x86'" />
+              <ColumnReference Column="@sku" ParameterCompiledValue="'CoreOS_CEBase'" />
+              <ColumnReference Column="@buildVersionId" ParameterCompiledValue="(80063)" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtCond StatementText="&#x9;IF @buildFlavorId IS NULL&#xD;&#xA;" StatementId="3" StatementCompId="4" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;--&#xD;&#xA;&#x9;&#x9;-- Lookup the details of the test build&#xD;&#xA;&#x9;&#x9;--&#xD;&#xA;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;SELECT &#x9;@majorVer = [MajorVer],&#xD;&#xA;&#x9;&#x9;@minorVer = [MinorVer],&#xD;&#xA;&#x9;&#x9;@buildNo = [BuildNo],&#xD;&#xA;&#x9;&#x9;@revision = [Revision],&#xD;&#xA;&#x9;&#x9;@timestamp = [Timestamp],&#xD;&#xA;&#x9;&#x9;@branch = [Branch],&#xD;&#xA;&#x9;&#x9;@suffix = [Suffix]&#xD;&#xA;&#x9;&#x9;FROM dbo.BuildVersion&#xD;&#xA;&#x9;&#x9;WHERE [Id] = @buildVersionId&#xD;&#xA;&#x9;&#x9;&#xD;&#xA;&#x9;" StatementId="4" StatementCompId="5" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032831" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0xCD3AA79EC86BF356" QueryPlanHash="0x9BF605F1F51C4062">
+                <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="2" CompileCPU="2" CompileMemory="320">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="0" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="134" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="78971" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList>
+                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Column="Branch" />
+                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Column="MajorVer" />
+                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Column="MinorVer" />
+                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Column="BuildNo" />
+                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Column="Revision" />
+                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Column="Timestamp" />
+                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Column="Suffix" />
+                    </OutputList>
+                    <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                      <DefinedValues>
+                        <DefinedValue>
+                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Column="Branch" />
+                        </DefinedValue>
+                        <DefinedValue>
+                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Column="MajorVer" />
+                        </DefinedValue>
+                        <DefinedValue>
+                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Column="MinorVer" />
+                        </DefinedValue>
+                        <DefinedValue>
+                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Column="BuildNo" />
+                        </DefinedValue>
+                        <DefinedValue>
+                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Column="Revision" />
+                        </DefinedValue>
+                        <DefinedValue>
+                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Column="Timestamp" />
+                        </DefinedValue>
+                        <DefinedValue>
+                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Column="Suffix" />
+                        </DefinedValue>
+                      </DefinedValues>
+                      <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Index="[BuildVersion_PK]" IndexKind="Clustered" />
+                      <SeekPredicates>
+                        <SeekPredicateNew>
+                          <SeekKeys>
+                            <Prefix ScanType="EQ">
+                              <RangeColumns>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Column="Id" />
+                              </RangeColumns>
+                              <RangeExpressions>
+                                <ScalarOperator ScalarString="[@buildVersionId]">
+                                  <Identifier>
+                                    <ColumnReference Column="@buildVersionId" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </RangeExpressions>
+                            </Prefix>
+                          </SeekKeys>
+                        </SeekPredicateNew>
+                      </SeekPredicates>
+                    </IndexScan>
+                  </RelOp>
+                  <ParameterList>
+                    <ColumnReference Column="@buildVersionId" ParameterCompiledValue="(80063)" />
+                  </ParameterList>
+                </QueryPlan>
+              </StmtSimple>
+              <StmtSimple StatementText="&#x9;SET @fqbn = CAST(@majorVer as varchar) + '.' + CAST(@minorVer as varchar) + '.' + CAST(@buildNo as varchar) + '.' + CAST(@revision as varchar) + '.' + LOWER(@architecture) + LOWER(@type)&#xD;&#xA;&#x9;&#x9;            + '.' + LOWER(@branch) + '.' + CONVERT(varchar, @timestamp, 12) + '-' + RIGHT('0' + CAST(DATEPART(hh, @timestamp) as varchar(2)), 2) + RIGHT('0' + CAST(DATEPART(mi, @timestamp) as varchar(2)), 2) + ISNULL(LOWER(@suffix),'')&#xD;&#xA;&#x9;&#x9;            + '.' + LOWER(@language) + '-' + LOWER(@culture) + '.' + UPPER(@sku)&#xD;&#xA;&#xD;&#xA;&#x9;" StatementId="5" StatementCompId="6" StatementType="ASSIGN" RetrievedFromCache="true" />
+              <StmtSimple StatementText="&#x9;INSERT INTO [dbo].[BuildFlavor]&#xD;&#xA;           ([Sku]&#xD;&#xA;           ,[Architecture]&#xD;&#xA;           ,[Type]&#xD;&#xA;           ,[Culture]&#xD;&#xA;           ,[BuildVersionId]&#xD;&#xA;           ,[Language]&#xD;&#xA;           ,[FQBN])&#xD;&#xA;&#x9;&#x9;VALUES&#xD;&#xA;&#x9;&#x9;&#x9;   (@sku&#xD;&#xA;&#x9;&#x9;&#x9;   ,LOWER(@architecture)&#xD;&#xA;&#x9;&#x9;&#x9;   ,LOWER(@type)&#xD;&#xA;&#x9;&#x9;&#x9;   ,@culture&#xD;&#xA;&#x9;&#x9;&#x9;   ,@buildVersionId&#xD;&#xA;&#x9;&#x9;&#x9;   ,@language&#xD;&#xA;&#x9;&#x9;&#x9;   ,@fqbn)&#xD;&#xA;&#x9;&#x9;&#x9;   &#xD;&#xA;&#x9;" StatementId="6" StatementCompId="7" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.0332918" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x366AD29A25BCF5B4" QueryPlanHash="0x3CD542BC48E951B6">
+                <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="40" CompileTime="9" CompileCPU="9" CompileMemory="888">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="1" PhysicalOp="Assert" LogicalOp="Assert" EstimateRows="1" EstimateIO="0" EstimateCPU="1.8e-007" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0332918" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList />
+                    <Assert StartupExpression="0">
+                      <RelOp NodeId="2" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0332916" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList>
+                          <ColumnReference Column="Expr1042" />
+                        </OutputList>
+                        <NestedLoops Optimized="0">
+                          <DefinedValues>
+                            <DefinedValue>
+                              <ColumnReference Column="Expr1042" />
+                            </DefinedValue>
+                          </DefinedValues>
+                          <OuterReferences>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Column="BuildVersionId" />
+                          </OuterReferences>
+                          <ProbeColumn>
+                            <ColumnReference Column="Expr1042" />
+                          </ProbeColumn>
+                          <RelOp NodeId="3" PhysicalOp="Clustered Index Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.03" EstimateCPU="3e-006" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0300044" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Column="BuildVersionId" />
+                            </OutputList>
+                            <Update DMLRequestSort="0">
+                              <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Index="[BuildFlavor_PK]" IndexKind="Clustered" />
+                              <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Index="[BuildFlavor_IDX_BuildVersion]" IndexKind="NonClustered" />
+                              <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Index="[BuildFlavor_IDX_Id]" IndexKind="NonClustered" />
+                              <SetPredicate>
+                                <ScalarOperator ScalarString="[OurLabReporting].[dbo].[BuildFlavor].[Sku] = RaiseIfNullInsert([@sku]),[OurLabReporting].[dbo].[BuildFlavor].[Architecture] = RaiseIfNullInsert([Expr1004]),[OurLabReporting].[dbo].[BuildFlavor].[Type] = RaiseIfNullInsert([Expr1005]),[OurLabReporting].[dbo].[BuildFlavor].[Culture] = RaiseIfNullInsert([Expr1006]),[OurLabReporting].[dbo].[BuildFlavor].[BuildVersionId] = RaiseIfNullInsert([@buildVersionId]),[OurLabReporting].[dbo].[BuildFlavor].[Language] = RaiseIfNullInsert([Expr1007]),[OurLabReporting].[dbo].[BuildFlavor].[FQBN] = [@fqbn],[OurLabReporting].[dbo].[BuildFlavor].[Id] = [Expr1003]">
+                                  <ScalarExpressionList>
+                                    <ScalarOperator>
+                                      <MultipleAssign>
+                                        <Assign>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Column="Sku" />
+                                          <ScalarOperator>
+                                            <Intrinsic FunctionName="RaiseIfNullInsert">
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@sku" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Intrinsic>
+                                          </ScalarOperator>
+                                        </Assign>
+                                        <Assign>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Column="Architecture" />
+                                          <ScalarOperator>
+                                            <Intrinsic FunctionName="RaiseIfNullInsert">
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="Expr1004" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Intrinsic>
+                                          </ScalarOperator>
+                                        </Assign>
+                                        <Assign>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Column="Type" />
+                                          <ScalarOperator>
+                                            <Intrinsic FunctionName="RaiseIfNullInsert">
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="Expr1005" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Intrinsic>
+                                          </ScalarOperator>
+                                        </Assign>
+                                        <Assign>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Column="Culture" />
+                                          <ScalarOperator>
+                                            <Intrinsic FunctionName="RaiseIfNullInsert">
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="Expr1006" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Intrinsic>
+                                          </ScalarOperator>
+                                        </Assign>
+                                        <Assign>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Column="BuildVersionId" />
+                                          <ScalarOperator>
+                                            <Intrinsic FunctionName="RaiseIfNullInsert">
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@buildVersionId" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Intrinsic>
+                                          </ScalarOperator>
+                                        </Assign>
+                                        <Assign>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Column="Language" />
+                                          <ScalarOperator>
+                                            <Intrinsic FunctionName="RaiseIfNullInsert">
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="Expr1007" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Intrinsic>
+                                          </ScalarOperator>
+                                        </Assign>
+                                        <Assign>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Column="FQBN" />
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Column="@fqbn" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </Assign>
+                                        <Assign>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Column="Id" />
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Column="Expr1003" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </Assign>
+                                      </MultipleAssign>
+                                    </ScalarOperator>
+                                  </ScalarExpressionList>
+                                </ScalarOperator>
+                              </SetPredicate>
+                              <RelOp NodeId="4" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="271" EstimatedTotalSubtreeCost="1.357e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList>
+                                  <ColumnReference Column="Expr1003" />
+                                  <ColumnReference Column="Expr1004" />
+                                  <ColumnReference Column="Expr1005" />
+                                  <ColumnReference Column="Expr1006" />
+                                  <ColumnReference Column="Expr1007" />
+                                </OutputList>
+                                <ComputeScalar>
+                                  <DefinedValues>
+                                    <DefinedValue>
+                                      <ColumnReference Column="Expr1004" />
+                                      <ScalarOperator ScalarString="lower([@architecture])">
+                                        <Intrinsic FunctionName="lower">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Column="@architecture" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </Intrinsic>
+                                      </ScalarOperator>
+                                    </DefinedValue>
+                                    <DefinedValue>
+                                      <ColumnReference Column="Expr1005" />
+                                      <ScalarOperator ScalarString="lower([@type])">
+                                        <Intrinsic FunctionName="lower">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Column="@type" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </Intrinsic>
+                                      </ScalarOperator>
+                                    </DefinedValue>
+                                    <DefinedValue>
+                                      <ColumnReference Column="Expr1006" />
+                                      <ScalarOperator ScalarString="CONVERT_IMPLICIT(nvarchar(100),[@culture],0)">
+                                        <Convert DataType="nvarchar" Length="200" Style="0" Implicit="1">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Column="@culture" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </Convert>
+                                      </ScalarOperator>
+                                    </DefinedValue>
+                                    <DefinedValue>
+                                      <ColumnReference Column="Expr1007" />
+                                      <ScalarOperator ScalarString="CONVERT_IMPLICIT(nvarchar(100),[@language],0)">
+                                        <Convert DataType="nvarchar" Length="200" Style="0" Implicit="1">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Column="@language" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </Convert>
+                                      </ScalarOperator>
+                                    </DefinedValue>
+                                  </DefinedValues>
+                                  <RelOp NodeId="5" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="1.257e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                    <OutputList>
+                                      <ColumnReference Column="Expr1003" />
+                                    </OutputList>
+                                    <ComputeScalar ComputeSequence="1">
+                                      <DefinedValues>
+                                        <DefinedValue>
+                                          <ColumnReference Column="Expr1003" />
+                                          <ScalarOperator ScalarString="getidentity((917578307),(6),NULL)">
+                                            <Intrinsic FunctionName="getidentity">
+                                              <ScalarOperator>
+                                                <Const ConstValue="(917578307)" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="(6)" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="NULL" />
+                                              </ScalarOperator>
+                                            </Intrinsic>
+                                          </ScalarOperator>
+                                        </DefinedValue>
+                                      </DefinedValues>
+                                      <RelOp NodeId="6" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                        <OutputList />
+                                        <ConstantScan />
+                                      </RelOp>
+                                    </ComputeScalar>
+                                  </RelOp>
+                                </ComputeScalar>
+                              </RelOp>
+                            </Update>
+                          </RelOp>
+                          <RelOp NodeId="19" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="78971" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList />
+                            <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                              <DefinedValues />
+                              <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Index="[BuildVersion_PK]" IndexKind="Clustered" />
+                              <SeekPredicates>
+                                <SeekPredicateNew>
+                                  <SeekKeys>
+                                    <Prefix ScanType="EQ">
+                                      <RangeColumns>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Column="Id" />
+                                      </RangeColumns>
+                                      <RangeExpressions>
+                                        <ScalarOperator ScalarString="[OurLabReporting].[dbo].[BuildFlavor].[BuildVersionId]">
+                                          <Identifier>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Column="BuildVersionId" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </RangeExpressions>
+                                    </Prefix>
+                                  </SeekKeys>
+                                </SeekPredicateNew>
+                              </SeekPredicates>
+                            </IndexScan>
+                          </RelOp>
+                        </NestedLoops>
+                      </RelOp>
+                      <Predicate>
+                        <ScalarOperator ScalarString="CASE WHEN [Expr1042] IS NULL THEN (0) ELSE NULL END">
+                          <IF>
+                            <Condition>
+                              <ScalarOperator>
+                                <Logical Operation="IS NULL">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Expr1042" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Logical>
+                              </ScalarOperator>
+                            </Condition>
+                            <Then>
+                              <ScalarOperator>
+                                <Const ConstValue="(0)" />
+                              </ScalarOperator>
+                            </Then>
+                            <Else>
+                              <ScalarOperator>
+                                <Const ConstValue="NULL" />
+                              </ScalarOperator>
+                            </Else>
+                          </IF>
+                        </ScalarOperator>
+                      </Predicate>
+                    </Assert>
+                  </RelOp>
+                  <ParameterList>
+                    <ColumnReference Column="@language" ParameterCompiledValue="'AFK'" />
+                    <ColumnReference Column="@buildVersionId" ParameterCompiledValue="(80063)" />
+                    <ColumnReference Column="@culture" ParameterCompiledValue="''" />
+                    <ColumnReference Column="@type" ParameterCompiledValue="'CHK'" />
+                    <ColumnReference Column="@architecture" ParameterCompiledValue="'x86'" />
+                    <ColumnReference Column="@sku" ParameterCompiledValue="'CoreOS_CEBase'" />
+                  </ParameterList>
+                </QueryPlan>
+              </StmtSimple>
+              <StmtSimple StatementText="&#x9;SET @buildFlavorId = SCOPE_IDENTITY()&#xD;&#xA;" StatementId="7" StatementCompId="8" StatementType="ASSIGN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtSimple StatementText="&#x9;END&#xD;&#xA;&#xD;&#xA;    DECLARE @objectName varchar(128) = (SELECT OBJECT_NAME(@@PROCID))&#xD;&#xA;   " StatementId="8" StatementCompId="10" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="1.257e-006" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x830C952D7490168E" QueryPlanHash="0x3B1EAEC0618BFE3F" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="1" CompileCPU="1" CompileMemory="248">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="75" EstimatedTotalSubtreeCost="1.257e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Column="Expr1001" />
+              </OutputList>
+              <ComputeScalar>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1001" />
+                    <ScalarOperator ScalarString="CONVERT_IMPLICIT(varchar(128),[Expr1000],0)">
+                      <Convert DataType="varchar" Length="128" Style="0" Implicit="1">
+                        <ScalarOperator>
+                          <Identifier>
+                            <ColumnReference Column="Expr1000" />
+                          </Identifier>
+                        </ScalarOperator>
+                      </Convert>
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp NodeId="1" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="139" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Expr1000" />
+                  </OutputList>
+                  <ConstantScan>
+                    <Values>
+                      <Row>
+                        <ScalarOperator ScalarString="object_name(@@procid)">
+                          <Intrinsic FunctionName="object_name">
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="@@procid" />
+                            </ScalarOperator>
+                            <ScalarOperator>
+                              <Const ConstValue="" />
+                            </ScalarOperator>
+                          </Intrinsic>
+                        </ScalarOperator>
+                      </Row>
+                    </Values>
+                  </ConstantScan>
+                </RelOp>
+              </ComputeScalar>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText=" EXEC [dbo].[spEndStopwatch] @objectName, @stopwatchBeginTime&#xD;" StatementId="9" StatementCompId="11" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

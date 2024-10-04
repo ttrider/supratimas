@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtUseDb StatementText="use [OPS]" StatementId="1" StatementCompId="28" StatementType="USE DATABASE" RetrievedFromCache="true" Database="[OPS]" />
+        <StmtSimple StatementText=" select db_name() + '.' + sfg.groupname, db_id(), db_name(), sfg.groupname from dbo.sysfilegroups sfg with (readpast) " StatementId="2" StatementCompId="29" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.00328471" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0xFD25F950F87F323C" QueryPlanHash="0x2AD3CD8F3EEF379" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="24" CompileTime="13" CompileCPU="5" CompileMemory="456">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="530" EstimatedTotalSubtreeCost="0.00328471" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Database="[OPS]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="name" />
+                <ColumnReference Column="Expr1014" />
+                <ColumnReference Column="Expr1015" />
+                <ColumnReference Column="Expr1016" />
+              </OutputList>
+              <ComputeScalar>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1014" />
+                    <ScalarOperator ScalarString="db_name()+N'.'+[OPS].[sys].[sysclsobjs].[name] as [o].[name]">
+                      <Arithmetic Operation="ADD">
+                        <ScalarOperator>
+                          <Identifier>
+                            <ColumnReference Column="ConstExpr1017">
+                              <ScalarOperator>
+                                <Arithmetic Operation="ADD">
+                                  <ScalarOperator>
+                                    <Intrinsic FunctionName="db_name">
+                                      <ScalarOperator>
+                                        <Const ConstValue="" />
+                                      </ScalarOperator>
+                                    </Intrinsic>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="N'.'" />
+                                  </ScalarOperator>
+                                </Arithmetic>
+                              </ScalarOperator>
+                            </ColumnReference>
+                          </Identifier>
+                        </ScalarOperator>
+                        <ScalarOperator>
+                          <Identifier>
+                            <ColumnReference Database="[OPS]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="name" />
+                          </Identifier>
+                        </ScalarOperator>
+                      </Arithmetic>
+                    </ScalarOperator>
+                  </DefinedValue>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1015" />
+                    <ScalarOperator ScalarString="db_id()">
+                      <Identifier>
+                        <ColumnReference Column="ConstExpr1018">
+                          <ScalarOperator>
+                            <Intrinsic FunctionName="db_id">
+                              <ScalarOperator>
+                                <Const ConstValue="" />
+                              </ScalarOperator>
+                            </Intrinsic>
+                          </ScalarOperator>
+                        </ColumnReference>
+                      </Identifier>
+                    </ScalarOperator>
+                  </DefinedValue>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1016" />
+                    <ScalarOperator ScalarString="db_name()">
+                      <Identifier>
+                        <ColumnReference Column="ConstExpr1019">
+                          <ScalarOperator>
+                            <Intrinsic FunctionName="db_name">
+                              <ScalarOperator>
+                                <Const ConstValue="" />
+                              </ScalarOperator>
+                            </Intrinsic>
+                          </ScalarOperator>
+                        </ColumnReference>
+                      </Identifier>
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp NodeId="1" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.000158257" AvgRowSize="141" EstimatedTotalSubtreeCost="0.00328326" TableCardinality="16" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Database="[OPS]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="name" />
+                  </OutputList>
+                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Database="[OPS]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="name" />
+                      </DefinedValue>
+                    </DefinedValues>
+                    <Object Database="[OPS]" Schema="[sys]" Table="[sysclsobjs]" Index="[clst]" Alias="[o]" IndexKind="Clustered" />
+                    <SeekPredicates>
+                      <SeekPredicateNew>
+                        <SeekKeys>
+                          <Prefix ScanType="EQ">
+                            <RangeColumns>
+                              <ColumnReference Database="[OPS]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="class" />
+                            </RangeColumns>
+                            <RangeExpressions>
+                              <ScalarOperator ScalarString="(31)">
+                                <Const ConstValue="(31)" />
+                              </ScalarOperator>
+                            </RangeExpressions>
+                          </Prefix>
+                        </SeekKeys>
+                      </SeekPredicateNew>
+                    </SeekPredicates>
+                    <Predicate>
+                      <ScalarOperator ScalarString="[OPS].[sys].[sysclsobjs].[type] as [o].[type]='FD' OR [OPS].[sys].[sysclsobjs].[type] as [o].[type]='FG' OR [OPS].[sys].[sysclsobjs].[type] as [o].[type]='FL'">
+                        <Logical Operation="OR">
+                          <ScalarOperator>
+                            <Compare CompareOp="EQ">
+                              <ScalarOperator>
+                                <Identifier>
+                                  <ColumnReference Database="[OPS]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="type" />
+                                </Identifier>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Const ConstValue="'FD'" />
+                              </ScalarOperator>
+                            </Compare>
+                          </ScalarOperator>
+                          <ScalarOperator>
+                            <Compare CompareOp="EQ">
+                              <ScalarOperator>
+                                <Identifier>
+                                  <ColumnReference Database="[OPS]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="type" />
+                                </Identifier>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Const ConstValue="'FG'" />
+                              </ScalarOperator>
+                            </Compare>
+                          </ScalarOperator>
+                          <ScalarOperator>
+                            <Compare CompareOp="EQ">
+                              <ScalarOperator>
+                                <Identifier>
+                                  <ColumnReference Database="[OPS]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="type" />
+                                </Identifier>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Const ConstValue="'FL'" />
+                              </ScalarOperator>
+                            </Compare>
+                          </ScalarOperator>
+                        </Logical>
+                      </ScalarOperator>
+                    </Predicate>
+                  </IndexScan>
+                </RelOp>
+              </ComputeScalar>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

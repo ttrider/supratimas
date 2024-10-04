@@ -1,0 +1,79 @@
+@import "fonts.less";
+@import "colors.less";
+.ham-menu {
+    display: none; //flex;
+    position: absolute;
+    top: @appHeaderHeight;
+    left: 0.3em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    padding-bottom: 0.25em;
+    padding-top: 0.25em;
+    background-color: @color-dark;
+    background-image: url(i/texturebg.png);
+    background-repeat: repeat;
+    box-shadow: @color-dark 0 0.1em 0.3em;
+    overflow: hidden;
+    font-size: 1.1em;
+    flex-direction: column;
+    color: @color-primary-1;
+    z-index: 2000;
+    border-top: 1px solid @color-primary-5;
+    .sep {
+        border-bottom: 1px solid @color-primary-1;
+        margin-bottom: 0.25em;
+        margin-top: 0.5em;
+    }
+    .btn {
+        padding-top: .5em;
+        padding-bottom: .5em;
+        padding-left: 0.25em;
+        padding-right: 0.25em;
+        display: flex;
+        justify-content: space-between;
+        cursor: pointer;
+        a {
+            color: @color-primary-1;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        a:visited {
+            color: @color-primary-1;
+        }
+        a:hover {
+            color: @color-primary-1; //text-decoration: underline;
+        }
+        .rbtn {
+            width: 1em;
+            height: 1em;
+            cursor: pointer;
+            .stroked {
+                stroke: @color-primary-1;
+            }
+        }
+    }
+    .btn:hover {
+        background: @color-primary-5;
+        border-radius: 5px;
+        a {
+            text-decoration: underline;
+        }
+    }
+    .paste {
+        margin-top: 0.5em;
+        textarea {
+            max-width: 20em;
+            min-width: 20em;
+            width: 20em;
+            height: 5em;
+            overflow: hidden;
+            border: 1px dashed @color-primary-1;
+            resize: none;
+            scroll-behavior: smooth;
+            background-color: @color-dark;
+            text-align: center;
+            line-height: 5em;
+            color: @color-primary-1;
+        }
+    }
+}

@@ -1,0 +1,1654 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="CREATE PROCEDURE [dbo].[DeliverPayloads]&#xD;&#xA;&#x9;@payloads PayloadCollection READONLY&#xD;&#xA;    ,@MachineName NVARCHAR(50)&#xD;&#xA;&#x9;,@ClientName NVARCHAR(50)&#xD;&#xA;AS&#xD;&#xA;&#x9;-- @MachineName and @ClientName intentionally ignored. For future logging.&#xD;&#xA;&#xD;&#xA;&#x9;SET NOCOUNT ON&#xD;&#xA;&#xD;&#xA;&#x9;-- configure deadlock handling&#xD;&#xA;" StatementId="1" StatementCompId="2" StatementType="SET ON/OFF" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;DECLARE @deadlockAttempts INT = 0;&#xD;&#xA;" StatementId="2" StatementCompId="3" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;DECLARE @deadlockAttemptLimit INT = 3;&#xD;&#xA;" StatementId="3" StatementCompId="4" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;DECLARE @deadlockRetryWait NVARCHAR(12) = N'00:00:00.300';&#xD;&#xA;&#xD;&#xA;&#x9;-- setup error processing&#xD;&#xA;" StatementId="4" StatementCompId="5" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtCond StatementText="&#x9;DECLARE @errorNumber INT;&#xD;&#xA;&#xD;&#xA;&#x9;-- begin update&#xD;&#xA;&#x9;WHILE @deadlockAttempts &lt; @deadlockAttemptLimit&#xD;&#xA;" StatementId="5" StatementCompId="6" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;BEGIN TRY&#xD;&#xA;&#x9;&#x9;" StatementId="6" StatementCompId="7" StatementType="BEGIN TRY" RetrievedFromCache="true" />
+              <StmtSimple StatementText="&#x9;INSERT INTO dbo.EntityStaging (&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;BatchGuid,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;EntityName,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;Payload)&#xD;&#xA;&#x9;&#x9;&#x9;SELECT BatchGuid,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;EntityName,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;Payload&#xD;&#xA;&#x9;&#x9;&#x9;FROM @payloads&#xD;&#xA;&#x9;&#x9;" StatementId="7" StatementCompId="8" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.0332863" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x85871DC1250DC7BC" QueryPlanHash="0xC0A259A6A3CC5DCA">
+                <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="160" CompileTime="39" CompileCPU="19" CompileMemory="1080">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="0" PhysicalOp="Index Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.01" EstimateCPU="1e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0332863" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList />
+                    <Update DMLRequestSort="0">
+                      <Object Database="[OurLabStaging]" Schema="[dbo]" Table="[EntityStaging]" Index="[PK_EntityStaging]" IndexKind="NonClustered" />
+                      <SetPredicate>
+                        <ScalarOperator ScalarString="[DbTimestamp1013] = [OurLabStaging].[dbo].[EntityStaging].[DbTimestamp],[Uniq10031014] = [Uniq1003],[Id1015] = [OurLabStaging].[dbo].[EntityStaging].[Id]">
+                          <ScalarExpressionList>
+                            <ScalarOperator>
+                              <MultipleAssign>
+                                <Assign>
+                                  <ColumnReference Column="DbTimestamp1013" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[OurLabStaging]" Schema="[dbo]" Table="[EntityStaging]" Column="DbTimestamp" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Column="Uniq10031014" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Uniq1003" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Column="Id1015" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[OurLabStaging]" Schema="[dbo]" Table="[EntityStaging]" Column="Id" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                              </MultipleAssign>
+                            </ScalarOperator>
+                          </ScalarExpressionList>
+                        </ScalarOperator>
+                      </SetPredicate>
+                      <RelOp NodeId="1" PhysicalOp="Clustered Index Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.02" EstimateCPU="2e-006" AvgRowSize="27" EstimatedTotalSubtreeCost="0.0232853" Parallel="0" Partitioned="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList>
+                          <ColumnReference Column="Uniq1003" />
+                          <ColumnReference Database="[OurLabStaging]" Schema="[dbo]" Table="[EntityStaging]" Column="Id" />
+                          <ColumnReference Database="[OurLabStaging]" Schema="[dbo]" Table="[EntityStaging]" Column="DbTimestamp" />
+                        </OutputList>
+                        <Update DMLRequestSort="0">
+                          <Object Database="[OurLabStaging]" Schema="[dbo]" Table="[EntityStaging]" Index="[IDX_EntityStaging_DbTimestamp]" IndexKind="Clustered" />
+                          <Object Database="[OurLabStaging]" Schema="[dbo]" Table="[EntityStaging]" Index="[IDX_EntityStaging_EntityName_INC_Payload]" IndexKind="NonClustered" />
+                          <SetPredicate>
+                            <ScalarOperator ScalarString="[OurLabStaging].[dbo].[EntityStaging].[BatchGuid] = [BatchGuid],[OurLabStaging].[dbo].[EntityStaging].[EntityName] = RaiseIfNullInsert([EntityName]),[OurLabStaging].[dbo].[EntityStaging].[Payload] = RaiseIfNullInsert([Payload]),[OurLabStaging].[dbo].[EntityStaging].[Id] = [Expr1009],[OurLabStaging].[dbo].[EntityStaging].[DbTimestamp] = RaiseIfNullInsert([Expr1010]),[PtnId1000] = RaiseIfNullInsert([Expr1012])">
+                              <ScalarExpressionList>
+                                <ScalarOperator>
+                                  <MultipleAssign>
+                                    <Assign>
+                                      <ColumnReference Database="[OurLabStaging]" Schema="[dbo]" Table="[EntityStaging]" Column="BatchGuid" />
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="BatchGuid" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Assign>
+                                    <Assign>
+                                      <ColumnReference Database="[OurLabStaging]" Schema="[dbo]" Table="[EntityStaging]" Column="EntityName" />
+                                      <ScalarOperator>
+                                        <Intrinsic FunctionName="RaiseIfNullInsert">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Column="EntityName" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </Intrinsic>
+                                      </ScalarOperator>
+                                    </Assign>
+                                    <Assign>
+                                      <ColumnReference Database="[OurLabStaging]" Schema="[dbo]" Table="[EntityStaging]" Column="Payload" />
+                                      <ScalarOperator>
+                                        <Intrinsic FunctionName="RaiseIfNullInsert">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Column="Payload" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </Intrinsic>
+                                      </ScalarOperator>
+                                    </Assign>
+                                    <Assign>
+                                      <ColumnReference Database="[OurLabStaging]" Schema="[dbo]" Table="[EntityStaging]" Column="Id" />
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="Expr1009" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Assign>
+                                    <Assign>
+                                      <ColumnReference Database="[OurLabStaging]" Schema="[dbo]" Table="[EntityStaging]" Column="DbTimestamp" />
+                                      <ScalarOperator>
+                                        <Intrinsic FunctionName="RaiseIfNullInsert">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Column="Expr1010" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </Intrinsic>
+                                      </ScalarOperator>
+                                    </Assign>
+                                    <Assign>
+                                      <ColumnReference Column="PtnId1000" ComputedColumn="1" />
+                                      <ScalarOperator>
+                                        <Intrinsic FunctionName="RaiseIfNullInsert">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Column="Expr1012" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </Intrinsic>
+                                      </ScalarOperator>
+                                    </Assign>
+                                  </MultipleAssign>
+                                </ScalarOperator>
+                              </ScalarExpressionList>
+                            </ScalarOperator>
+                          </SetPredicate>
+                          <RelOp NodeId="2" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="4173" EstimatedTotalSubtreeCost="0.0032833" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList>
+                              <ColumnReference Column="BatchGuid" />
+                              <ColumnReference Column="EntityName" />
+                              <ColumnReference Column="Payload" />
+                              <ColumnReference Column="Expr1009" />
+                              <ColumnReference Column="Expr1010" />
+                              <ColumnReference Column="Expr1012" />
+                            </OutputList>
+                            <ComputeScalar>
+                              <DefinedValues>
+                                <DefinedValue>
+                                  <ColumnReference Column="Expr1010" />
+                                  <ScalarOperator ScalarString="CONVERT_IMPLICIT(datetime2(7),getutcdate(),0)">
+                                    <Identifier>
+                                      <ColumnReference Column="ConstExpr1011">
+                                        <ScalarOperator>
+                                          <Convert DataType="datetime2" Style="0" Implicit="1">
+                                            <ScalarOperator>
+                                              <Intrinsic FunctionName="getutcdate" />
+                                            </ScalarOperator>
+                                          </Convert>
+                                        </ScalarOperator>
+                                      </ColumnReference>
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </DefinedValue>
+                                <DefinedValue>
+                                  <ColumnReference Column="Expr1012" />
+                                  <ScalarOperator ScalarString="RangePartitionNew(CONVERT_IMPLICIT(datetime2(7),getutcdate(),0),(1),'2014-03-30 00:00:00.0000000','2014-04-06 00:00:00.0000000','2014-04-13 00:00:00.0000000','2014-04-20 00:00:00.0000000','2014-04-27 00:00:00.0000000','2014-05-04 00:00:00.0000000','2014-05-11 00:00:00.0000000','2014-05-18 00:00:00.0000000','2014-05-25 00:00:00.0000000','2014-06-01 00:00:00.0000000','2014-06-08 00:00:00.0000000','2014-06-15 00:00:00.0000000','2014-06-22 00:00:00.0000000','2014-06-29 00:00:00.0000000','2014-07-06 00:00:00.0000000','2014-07-13 00:00:00.0000000','2014-07-20 00:00:00.0000000','2014-07-27 00:00:00.0000000','2014-08-03 00:00:00.0000000','2014-08-10 00:00:00.0000000','2014-08-17 00:00:00.0000000','2014-08-24 00:00:00.0000000','2014-08-31 00:00:00.0000000','2014-09-07 00:00:00.0000000','2014-09-14 00:00:00.0000000','2014-09-21 00:00:00.0000000','2014-09-28 00:00:00.0000000','2014-10-05 00:00:00.0000000','2014-10-12 00:00:00.0000000','2014-10-19 00:00:00.0000000','2014-10-26 00:00:00.0000000','2014-11-02 00:00:00.0000000','2014-11-09 00:00:00.0000000','2014-11-16 00:00:00.0000000','2014-11-23 00:00:00.0000000','2014-11-30 00:00:00.0000000','2014-12-07 00:00:00.0000000','2014-12-14 00:00:00.0000000','2014-12-21 00:00:00.0000000','2014-12-28 00:00:00.0000000','2015-01-04 00:00:00.0000000','2015-01-11 00:00:00.0000000','2015-01-18 00:00:00.0000000','2015-01-25 00:00:00.0000000','2015-02-01 00:00:00.0000000','2015-02-08 00:00:00.0000000','2015-02-15 00:00:00.0000000','2015-02-22 00:00:00.0000000','2015-03-01 00:00:00.0000000','2015-03-08 00:00:00.0000000','2015-03-15 00:00:00.0000000','2015-03-22 00:00:00.0000000','2015-03-29 00:00:00.0000000','2015-04-05 00:00:00.0000000','2015-04-12 00:00:00.0000000','2015-04-19 00:00:00.0000000','2015-04-26 00:00:00.0000000','2015-05-03 00:00:00.0000000','2015-05-10 00:00:00.0000000','2015-05-17 00:00:00.0000000','2015-05-24 00:00:00.0000000','2015-05-31 00:00:00.0000000','2015-06-07 00:00:00.0000000','2015-06-14 00:00:00.0000000','2015-06-21 00:00:00.0000000','2015-06-28 00:00:00.0000000','2015-07-05 00:00:00.0000000','2015-07-12 00:00:00.0000000','2015-07-19 00:00:00.0000000','2015-07-26 00:00:00.0000000','2015-08-02 00:00:00.0000000','2015-08-09 00:00:00.0000000','2015-08-16 00:00:00.0000000','2015-08-23 00:00:00.0000000','2015-08-30 00:00:00.0000000','2015-09-06 00:00:00.0000000','2015-09-13 00:00:00.0000000','2015-09-20 00:00:00.0000000','2015-09-27 00:00:00.0000000','2015-10-04 00:00:00.0000000','2015-10-11 00:00:00.0000000','2015-10-18 00:00:00.0000000','2015-10-25 00:00:00.0000000','2015-11-01 00:00:00.0000000','2015-11-08 00:00:00.0000000','2015-11-15 00:00:00.0000000','2015-11-22 00:00:00.0000000','2015-11-29 00:00:00.0000000','2015-12-06 00:00:00.0000000','2015-12-13 00:00:00.0000000','2015-12-20 00:00:00.0000000','2015-12-27 00:00:00.0000000','2016-01-03 00:00:00.0000000','2016-01-10 00:00:00.0000000','2016-01-17 00:00:00.0000000','2016-01-24 00:00:00.0000000','2016-01-31 00:00:00.0000000','2016-02-07 00:00:00.0000000','2016-02-14 00:00:00.0000000','2016-02-21 00:00:00.0000000','2016-02-28 00:00:00.0000000','2016-03-06 00:00:00.0000000','2016-03-13 00:00:00.0000000','2016-03-20 00:00:00.0000000','2016-03-27 00:00:00.0000000','2016-04-03 00:00:00.0000000','2016-04-10 00:00:00.0000000','2016-04-17 00:00:00.0000000','2016-04-24 00:00:00.0000000','2016-05-01 00:00:00.0000000','2016-05-08 00:00:00.0000000','2016-05-15 00:00:00.0000000','2016-05-22 00:00:00.0000000','2016-05-29 00:00:00.0000000','2016-06-05 00:00:00.0000000','2016-06-12 00:00:00.0000000','2016-06-19 00:00:00.0000000','2016-06-26 00:00:00.0000000','2016-07-03 00:00:00.0000000','2016-07-10 00:00:00.0000000','2016-07-17 00:00:00.0000000','2016-07-24 00:00:00.0000000','2016-07-31 00:00:00.0000000','2016-08-07 00:00:00.0000000','2016-08-14 00:00:00.0000000','2016-08-21 00:00:00.0000000','2016-08-28 00:00:00.0000000','2016-09-04 00:00:00.0000000','2016-09-11 00:00:00.0000000','2016-09-18 00:00:00.0000000','2016-09-25 00:00:00.0000000','2016-10-02 00:00:00.0000000','2016-10-09 00:00:00.0000000','2016-10-16 00:00:00.0000000','2016-10-23 00:00:00.0000000','2016-10-30 00:00:00.0000000','2016-11-06 00:00:00.0000000','2016-11-13 00:00:00.0000000','2016-11-20 00:00:00.0000000','2016-11-27 00:00:00.0000000','2016-12-04 00:00:00.0000000','2016-12-11 00:00:00.0000000','2016-12-18 00:00:00.0000000','2016-12-25 00:00:00.0000000','2017-01-01 00:00:00.0000000','2017-01-08 00:00:00.0000000','2017-01-15 00:00:00.0000000','2017-01-22 00:00:00.0000000','2017-01-29 00:00:00.0000000','2017-02-05 00:00:00.0000000','2017-02-12 00:00:00.0000000','2017-02-19 00:00:00.0000000','2017-02-26 00:00:00.0000000','2017-03-05 00:00:00.0000000','2017-03-12 00:00:00.0000000','2017-03-19 00:00:00.0000000','2017-03-26 00:00:00.0000000','2017-04-02 00:00:00.0000000','2017-04-09 00:00:00.0000000','2017-04-16 00:00:00.0000000','2017-04-23 00:00:00.0000000','2017-04-30 00:00:00.0000000','2017-05-07 00:00:00.0000000','2017-05-14 00:00:00.0000000','2017-05-21 00:00:00.0000000','2017-05-28 00:00:00.0000000','2017-06-04 00:00:00.0000000','2017-06-11 00:00:00.0000000','2017-06-18 00:00:00.0000000','2017-06-25 00:00:00.0000000','2017-07-02 00:00:00.0000000','2017-07-09 00:00:00.0000000','2017-07-16 00:00:00.0000000','2017-07-23 00:00:00.0000000','2017-07-30 00:00:00.0000000','2017-08-06 00:00:00.0000000','2017-08-13 00:00:00.0000000','2017-08-20 00:00:00.0000000','2017-08-27 00:00:00.0000000','2017-09-03 00:00:00.0000000','2017-09-10 00:00:00.0000000','2017-09-17 00:00:00.0000000','2017-09-24 00:00:00.0000000','2017-10-01 00:00:00.0000000','2017-10-08 00:00:00.0000000','2017-10-15 00:00:00.0000000','2017-10-22 00:00:00.0000000','2017-10-29 00:00:00.0000000','2017-11-05 00:00:00.0000000','2017-11-12 00:00:00.0000000','2017-11-19 00:00:00.0000000','2017-11-26 00:00:00.0000000','2017-12-03 00:00:00.0000000','2017-12-10 00:00:00.0000000','2017-12-17 00:00:00.0000000','2017-12-24 00:00:00.0000000','2017-12-31 00:00:00.0000000','2018-01-07 00:00:00.0000000','2018-01-14 00:00:00.0000000','2018-01-21 00:00:00.0000000','2018-01-28 00:00:00.0000000','2018-02-04 00:00:00.0000000','2018-02-11 00:00:00.0000000','2018-02-18 00:00:00.0000000','2018-02-25 00:00:00.0000000','2018-03-04 00:00:00.0000000','2018-03-11 00:00:00.0000000','2018-03-18 00:00:00.0000000','2018-03-25 00:00:00.0000000','2018-04-01 00:00:00.0000000','2018-04-08 00:00:00.0000000','2018-04-15 00:00:00.0000000','2018-04-22 00:00:00.0000000','2018-04-29 00:00:00.0000000','2018-05-06 00:00:00.0000000','2018-05-13 00:00:00.0000000','2018-05-20 00:00:00.0000000','2018-05-27 00:00:00.0000000','2018-06-03 00:00:00.0000000','2018-06-10 00:00:00.0000000','2018-06-17 00:00:00.0000000','2018-06-24 00:00:00.0000000','2018-07-01 00:00:00.0000000','2018-07-08 00:00:00.0000000','2018-07-15 00:00:00.0000000','2018-07-22 00:00:00.0000000','2018-07-29 00:00:00.0000000','2018-08-05 00:00:00.0000000','2018-08-12 00:00:00.0000000','2018-08-19 00:00:00.0000000','2018-08-26 00:00:00.0000000','2018-09-02 00:00:00.0000000','2018-09-09 00:00:00.0000000','2018-09-16 00:00:00.0000000','2018-09-23 00:00:00.0000000','2018-09-30 00:00:00.0000000','2018-10-07 00:00:00.0000000','2018-10-14 00:00:00.0000000','2018-10-21 00:00:00.0000000','2018-10-28 00:00:00.0000000','2018-11-04 00:00:00.0000000','2018-11-11 00:00:00.0000000','2018-11-18 00:00:00.0000000','2018-11-25 00:00:00.0000000','2018-12-02 00:00:00.0000000','2018-12-09 00:00:00.0000000','2018-12-16 00:00:00.0000000','2018-12-23 00:00:00.0000000','2018-12-30 00:00:00.0000000','2019-01-06 00:00:00.0000000','2019-01-13 00:00:00.0000000','2019-01-20 00:00:00.0000000','2019-01-27 00:00:00.0000000','2019-02-03 00:00:00.0000000','2019-02-10 00:00:00.0000000','2019-02-17 00:00:00.0000000','2019-02-24 00:00:00.0000000','2019-03-03 00:00:00.0000000','2019-03-10 00:00:00.0000000','2019-03-17 00:00:00.0000000','2019-03-24 00:00:00.0000000','2019-03-31 00:00:00.0000000','2019-04-07 00:00:00.0000000','2019-04-14 00:00:00.0000000','2019-04-21 00:00:00.0000000','2019-04-28 00:00:00.0000000','2019-05-05 00:00:00.0000000','2019-05-12 00:00:00.0000000','2019-05-19 00:00:00.0000000','2019-05-26 00:00:00.0000000','2019-06-02 00:00:00.0000000','2019-06-09 00:00:00.0000000','2019-06-16 00:00:00.0000000','2019-06-23 00:00:00.0000000','2019-06-30 00:00:00.0000000','2019-07-07 00:00:00.0000000','2019-07-14 00:00:00.0000000','2019-07-21 00:00:00.0000000','2019-07-28 00:00:00.0000000','2019-08-04 00:00:00.0000000','2019-08-11 00:00:00.0000000','2019-08-18 00:00:00.0000000','2019-08-25 00:00:00.0000000','2019-09-01 00:00:00.0000000','2019-09-08 00:00:00.0000000','2019-09-15 00:00:00.0000000','2019-09-22 00:00:00.0000000','2019-09-29 00:00:00.0000000','2019-10-06 00:00:00.0000000','2019-10-13 00:00:00.0000000','2019-10-20 00:00:00.0000000','2019-10-27 00:00:00.0000000','2019-11-03 00:00:00.0000000','2019-11-10 00:00:00.0000000','2019-11-17 00:00:00.0000000','2019-11-24 00:00:00.0000000','2019-12-01 00:00:00.0000000','2019-12-08 00:00:00.0000000','2019-12-15 00:00:00.0000000','2019-12-22 00:00:00.0000000','2019-12-29 00:00:00.0000000','2020-01-05 00:00:00.0000000','2020-01-12 00:00:00.0000000','2020-01-19 00:00:00.0000000','2020-01-26 00:00:00.0000000','2020-02-02 00:00:00.0000000','2020-02-09 00:00:00.0000000','2020-02-16 00:00:00.0000000','2020-02-23 00:00:00.0000000','2020-03-01 00:00:00.0000000','2020-03-08 00:00:00.0000000','2020-03-15 00:00:00.0000000','2020-03-22 00:00:00.0000000','2020-03-29 00:00:00.0000000','2020-04-05 00:00:00.0000000','2020-04-12 00:00:00.0000000','2020-04-19 00:00:00.0000000','2020-04-26 00:00:00.0000000','2020-05-03 00:00:00.0000000','2020-05-10 00:00:00.0000000','2020-05-17 00:00:00.0000000','2020-05-24 00:00:00.0000000','2020-05-31 00:00:00.0000000','2020-06-07 00:00:00.0000000','2020-06-14 00:00:00.0000000','2020-06-21 00:00:00.0000000','2020-06-28 00:00:00.0000000','2020-07-05 00:00:00.0000000','2020-07-12 00:00:00.0000000','2020-07-19 00:00:00.0000000','2020-07-26 00:00:00.0000000','2020-08-02 00:00:00.0000000','2020-08-09 00:00:00.0000000','2020-08-16 00:00:00.0000000','2020-08-23 00:00:00.0000000','2020-08-30 00:00:00.0000000','2020-09-06 00:00:00.0000000','2020-09-13 00:00:00.0000000','2020-09-20 00:00:00.0000000','2020-09-27 00:00:00.0000000','2020-10-04 00:00:00.0000000','2020-10-11 00:00:00.0000000','2020-10-18 00:00:00.0000000','2020-10-25 00:00:00.0000000','2020-11-01 00:00:00.0000000','2020-11-08 00:00:00.0000000','2020-11-15 00:00:00.0000000','2020-11-22 00:00:00.0000000','2020-11-29 00:00:00.0000000','2020-12-06 00:00:00.0000000','2020-12-13 00:00:00.0000000','2020-12-20 00:00:00.0000000','2020-12-27 00:00:00.0000000','2021-01-03 00:00:00.0000000','2021-01-10 00:00:00.0000000','2021-01-17 00:00:00.0000000','2021-01-24 00:00:00.0000000','2021-01-31 00:00:00.0000000','2021-02-07 00:00:00.0000000','2021-02-14 00:00:00.0000000','2021-02-21 00:00:00.0000000','2021-02-28 00:00:00.0000000','2021-03-07 00:00:00.0000000','2021-03-14 00:00:00.0000000','2021-03-21 00:00:00.0000000','2021-03-28 00:00:00.0000000','2021-04-04 00:00:00.0000000','2021-04-11 00:00:00.0000000','2021-04-18 00:00:00.0000000','2021-04-25 00:00:00.0000000','2021-05-02 00:00:00.0000000','2021-05-09 00:00:00.0000000','2021-05-16 00:00:00.0000000','2021-05-23 00:00:00.0000000','2021-05-30 00:00:00.0000000','2021-06-06 00:00:00.0000000','2021-06-13 00:00:00.0000000','2021-06-20 00:00:00.0000000','2021-06-27 00:00:00.0000000','2021-07-04 00:00:00.0000000','2021-07-11 00:00:00.0000000','2021-07-18 00:00:00.0000000','2021-07-25 00:00:00.0000000','2021-08-01 00:00:00.0000000','2021-08-08 00:00:00.0000000','2021-08-15 00:00:00.0000000','2021-08-22 00:00:00.0000000','2021-08-29 00:00:00.0000000','2021-09-05 00:00:00.0000000','2021-09-12 00:00:00.0000000','2021-09-19 00:00:00.0000000','2021-09-26 00:00:00.0000000','2021-10-03 00:00:00.0000000','2021-10-10 00:00:00.0000000','2021-10-17 00:00:00.0000000','2021-10-24 00:00:00.0000000','2021-10-31 00:00:00.0000000','2021-11-07 00:00:00.0000000','2021-11-14 00:00:00.0000000','2021-11-21 00:00:00.0000000','2021-11-28 00:00:00.0000000','2021-12-05 00:00:00.0000000','2021-12-12 00:00:00.0000000','2021-12-19 00:00:00.0000000','2021-12-26 00:00:00.0000000','2022-01-02 00:00:00.0000000','2022-01-09 00:00:00.0000000','2022-01-16 00:00:00.0000000','2022-01-23 00:00:00.0000000','2022-01-30 00:00:00.0000000','2022-02-06 00:00:00.0000000','2022-02-13 00:00:00.0000000','2022-02-20 00:00:00.0000000','2022-02-27 00:00:00.0000000','2022-03-06 00:00:00.0000000','2022-03-13 00:00:00.0000000','2022-03-20 00:00:00.0000000','2022-03-27 00:00:00.0000000','2022-04-03 00:00:00.0000000','2022-04-10 00:00:00.0000000','2022-04-17 00:00:00.0000000','2022-04-24 00:00:00.0000000','2022-05-01 00:00:00.0000000','2022-05-08 00:00:00.0000000','2022-05-15 00:00:00.0000000','2022-05-22 00:00:00.0000000','2022-05-29 00:00:00.0000000','2022-06-05 00:00:00.0000000','2022-06-12 00:00:00.0000000','2022-06-19 00:00:00.0000000','2022-06-26 00:00:00.0000000','2022-07-03 00:00:00.0000000','2022-07-10 00:00:00.0000000','2022-07-17 00:00:00.0000000','2022-07-24 00:00:00.0000000','2022-07-31 00:00:00.0000000','2022-08-07 00:00:00.0000000','2022-08-14 00:00:00.0000000','2022-08-21 00:00:00.0000000','2022-08-28 00:00:00.0000000','2022-09-04 00:00:00.0000000','2022-09-11 00:00:00.0000000','2022-09-18 00:00:00.0000000','2022-09-25 00:00:00.0000000','2022-10-02 00:00:00.0000000','2022-10-09 00:00:00.0000000','2022-10-16 00:00:00.0000000','2022-10-23 00:00:00.0000000','2022-10-30 00:00:00.0000000','2022-11-06 00:00:00.0000000','2022-11-13 00:00:00.0000000','2022-11-20 00:00:00.0000000','2022-11-27 00:00:00.0000000','2022-12-04 00:00:00.0000000','2022-12-11 00:00:00.0000000','2022-12-18 00:00:00.0000000','2022-12-25 00:00:00.0000000')">
+                                    <Intrinsic FunctionName="RangePartitionNew">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="ConstExpr1011">
+                                            <ScalarOperator>
+                                              <Convert DataType="datetime2" Style="0" Implicit="1">
+                                                <ScalarOperator>
+                                                  <Intrinsic FunctionName="getutcdate" />
+                                                </ScalarOperator>
+                                              </Convert>
+                                            </ScalarOperator>
+                                          </ColumnReference>
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(1)" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-03-30 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-04-06 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-04-13 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-04-20 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-04-27 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-05-04 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-05-11 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-05-18 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-05-25 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-06-01 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-06-08 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-06-15 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-06-22 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-06-29 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-07-06 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-07-13 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-07-20 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-07-27 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-08-03 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-08-10 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-08-17 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-08-24 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-08-31 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-09-07 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-09-14 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-09-21 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-09-28 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-10-05 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-10-12 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-10-19 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-10-26 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-11-02 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-11-09 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-11-16 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-11-23 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-11-30 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-12-07 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-12-14 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-12-21 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2014-12-28 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-01-04 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-01-11 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-01-18 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-01-25 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-02-01 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-02-08 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-02-15 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-02-22 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-03-01 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-03-08 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-03-15 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-03-22 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-03-29 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-04-05 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-04-12 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-04-19 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-04-26 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-05-03 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-05-10 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-05-17 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-05-24 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-05-31 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-06-07 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-06-14 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-06-21 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-06-28 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-07-05 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-07-12 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-07-19 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-07-26 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-08-02 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-08-09 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-08-16 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-08-23 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-08-30 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-09-06 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-09-13 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-09-20 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-09-27 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-10-04 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-10-11 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-10-18 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-10-25 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-11-01 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-11-08 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-11-15 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-11-22 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-11-29 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-12-06 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-12-13 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-12-20 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2015-12-27 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-01-03 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-01-10 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-01-17 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-01-24 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-01-31 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-02-07 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-02-14 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-02-21 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-02-28 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-03-06 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-03-13 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-03-20 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-03-27 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-04-03 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-04-10 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-04-17 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-04-24 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-05-01 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-05-08 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-05-15 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-05-22 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-05-29 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-06-05 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-06-12 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-06-19 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-06-26 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-07-03 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-07-10 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-07-17 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-07-24 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-07-31 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-08-07 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-08-14 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-08-21 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-08-28 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-09-04 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-09-11 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-09-18 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-09-25 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-10-02 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-10-09 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-10-16 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-10-23 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-10-30 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-11-06 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-11-13 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-11-20 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-11-27 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-12-04 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-12-11 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-12-18 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2016-12-25 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-01-01 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-01-08 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-01-15 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-01-22 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-01-29 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-02-05 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-02-12 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-02-19 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-02-26 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-03-05 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-03-12 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-03-19 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-03-26 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-04-02 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-04-09 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-04-16 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-04-23 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-04-30 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-05-07 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-05-14 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-05-21 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-05-28 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-06-04 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-06-11 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-06-18 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-06-25 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-07-02 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-07-09 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-07-16 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-07-23 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-07-30 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-08-06 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-08-13 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-08-20 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-08-27 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-09-03 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-09-10 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-09-17 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-09-24 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-10-01 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-10-08 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-10-15 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-10-22 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-10-29 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-11-05 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-11-12 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-11-19 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-11-26 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-12-03 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-12-10 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-12-17 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-12-24 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2017-12-31 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-01-07 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-01-14 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-01-21 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-01-28 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-02-04 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-02-11 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-02-18 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-02-25 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-03-04 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-03-11 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-03-18 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-03-25 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-04-01 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-04-08 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-04-15 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-04-22 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-04-29 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-05-06 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-05-13 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-05-20 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-05-27 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-06-03 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-06-10 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-06-17 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-06-24 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-07-01 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-07-08 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-07-15 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-07-22 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-07-29 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-08-05 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-08-12 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-08-19 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-08-26 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-09-02 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-09-09 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-09-16 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-09-23 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-09-30 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-10-07 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-10-14 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-10-21 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-10-28 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-11-04 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-11-11 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-11-18 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-11-25 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-12-02 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-12-09 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-12-16 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-12-23 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2018-12-30 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-01-06 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-01-13 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-01-20 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-01-27 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-02-03 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-02-10 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-02-17 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-02-24 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-03-03 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-03-10 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-03-17 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-03-24 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-03-31 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-04-07 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-04-14 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-04-21 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-04-28 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-05-05 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-05-12 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-05-19 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-05-26 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-06-02 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-06-09 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-06-16 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-06-23 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-06-30 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-07-07 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-07-14 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-07-21 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-07-28 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-08-04 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-08-11 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-08-18 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-08-25 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-09-01 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-09-08 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-09-15 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-09-22 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-09-29 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-10-06 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-10-13 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-10-20 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-10-27 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-11-03 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-11-10 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-11-17 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-11-24 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-12-01 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-12-08 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-12-15 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-12-22 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2019-12-29 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-01-05 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-01-12 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-01-19 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-01-26 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-02-02 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-02-09 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-02-16 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-02-23 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-03-01 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-03-08 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-03-15 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-03-22 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-03-29 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-04-05 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-04-12 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-04-19 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-04-26 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-05-03 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-05-10 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-05-17 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-05-24 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-05-31 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-06-07 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-06-14 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-06-21 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-06-28 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-07-05 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-07-12 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-07-19 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-07-26 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-08-02 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-08-09 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-08-16 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-08-23 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-08-30 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-09-06 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-09-13 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-09-20 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-09-27 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-10-04 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-10-11 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-10-18 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-10-25 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-11-01 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-11-08 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-11-15 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-11-22 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-11-29 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-12-06 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-12-13 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-12-20 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2020-12-27 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-01-03 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-01-10 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-01-17 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-01-24 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-01-31 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-02-07 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-02-14 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-02-21 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-02-28 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-03-07 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-03-14 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-03-21 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-03-28 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-04-04 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-04-11 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-04-18 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-04-25 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-05-02 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-05-09 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-05-16 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-05-23 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-05-30 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-06-06 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-06-13 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-06-20 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-06-27 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-07-04 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-07-11 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-07-18 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-07-25 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-08-01 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-08-08 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-08-15 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-08-22 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-08-29 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-09-05 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-09-12 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-09-19 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-09-26 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-10-03 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-10-10 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-10-17 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-10-24 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-10-31 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-11-07 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-11-14 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-11-21 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-11-28 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-12-05 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-12-12 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-12-19 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2021-12-26 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-01-02 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-01-09 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-01-16 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-01-23 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-01-30 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-02-06 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-02-13 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-02-20 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-02-27 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-03-06 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-03-13 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-03-20 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-03-27 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-04-03 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-04-10 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-04-17 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-04-24 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-05-01 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-05-08 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-05-15 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-05-22 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-05-29 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-06-05 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-06-12 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-06-19 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-06-26 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-07-03 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-07-10 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-07-17 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-07-24 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-07-31 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-08-07 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-08-14 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-08-21 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-08-28 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-09-04 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-09-11 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-09-18 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-09-25 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-10-02 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-10-09 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-10-16 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-10-23 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-10-30 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-11-06 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-11-13 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-11-20 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-11-27 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-12-04 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-12-11 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-12-18 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'2022-12-25 00:00:00.0000000'" />
+                                      </ScalarOperator>
+                                    </Intrinsic>
+                                  </ScalarOperator>
+                                </DefinedValue>
+                              </DefinedValues>
+                              <RelOp NodeId="3" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="4161" EstimatedTotalSubtreeCost="0.0032832" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList>
+                                  <ColumnReference Column="BatchGuid" />
+                                  <ColumnReference Column="EntityName" />
+                                  <ColumnReference Column="Payload" />
+                                  <ColumnReference Column="Expr1009" />
+                                </OutputList>
+                                <ComputeScalar ComputeSequence="1">
+                                  <DefinedValues>
+                                    <DefinedValue>
+                                      <ColumnReference Column="Expr1009" />
+                                      <ScalarOperator ScalarString="getidentity((357576312),(8),NULL)">
+                                        <Intrinsic FunctionName="getidentity">
+                                          <ScalarOperator>
+                                            <Const ConstValue="(357576312)" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="(8)" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="NULL" />
+                                          </ScalarOperator>
+                                        </Intrinsic>
+                                      </ScalarOperator>
+                                    </DefinedValue>
+                                  </DefinedValues>
+                                  <RelOp NodeId="4" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="1" EstimateIO="0.0032035" EstimateCPU="7.96e-005" AvgRowSize="4153" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                    <OutputList>
+                                      <ColumnReference Column="BatchGuid" />
+                                      <ColumnReference Column="EntityName" />
+                                      <ColumnReference Column="Payload" />
+                                    </OutputList>
+                                    <TableScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                                      <DefinedValues>
+                                        <DefinedValue>
+                                          <ColumnReference Column="BatchGuid" />
+                                        </DefinedValue>
+                                        <DefinedValue>
+                                          <ColumnReference Column="EntityName" />
+                                        </DefinedValue>
+                                        <DefinedValue>
+                                          <ColumnReference Column="Payload" />
+                                        </DefinedValue>
+                                      </DefinedValues>
+                                      <Object Table="[@payloads]" />
+                                    </TableScan>
+                                  </RelOp>
+                                </ComputeScalar>
+                              </RelOp>
+                            </ComputeScalar>
+                          </RelOp>
+                        </Update>
+                      </RelOp>
+                    </Update>
+                  </RelOp>
+                </QueryPlan>
+              </StmtSimple>
+              <StmtSimple StatementText="&#x9;BREAK;&#xD;&#xA;&#x9;" StatementId="8" StatementCompId="9" StatementType="GOTO" RetrievedFromCache="true" />
+              <StmtSimple StatementText="&#x9;END TRY&#xD;&#xA;&#xD;&#xA;&#x9;" StatementId="9" StatementCompId="10" StatementType="END TRY" RetrievedFromCache="true" />
+              <StmtSimple StatementText="&#x9;BEGIN CATCH&#xD;&#xA;&#x9;&#x9;" StatementId="10" StatementCompId="11" StatementType="BEGIN CATCH" RetrievedFromCache="true" />
+              <StmtSimple StatementText="&#x9;SET @errorNumber = ERROR_NUMBER();&#xD;&#xA;&#xD;&#xA;&#x9;&#x9;" StatementId="11" StatementCompId="12" StatementType="ASSIGN" RetrievedFromCache="true" />
+              <StmtCond StatementText="&#x9;IF @errorNumber = 1205&#xD;&#xA;&#x9;&#x9;" StatementId="12" StatementCompId="13" StatementType="COND" RetrievedFromCache="true">
+                <Condition />
+                <Then>
+                  <Statements>
+                    <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;SET @deadlockAttempts = @deadlockAttempts + 1;&#xD;&#xA;&#x9;&#x9;&#x9;" StatementId="13" StatementCompId="14" StatementType="ASSIGN" RetrievedFromCache="true" />
+                    <StmtCond StatementText="&#x9;IF @deadlockAttempts &gt;= @deadlockAttemptLimit&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;" StatementId="14" StatementCompId="15" StatementType="COND" RetrievedFromCache="true">
+                      <Condition />
+                      <Then>
+                        <Statements>
+                          <StmtSimple StatementText="&#x9;THROW;&#xD;&#xA;&#xD;&#xA;&#x9;&#x9;&#x9;" StatementId="15" StatementCompId="16" StatementType="THROW" RetrievedFromCache="true" />
+                        </Statements>
+                      </Then>
+                    </StmtCond>
+                    <StmtSimple StatementText="&#x9;WAITFOR DELAY @deadlockRetryWait&#xD;&#xA;&#x9;&#x9;" StatementId="16" StatementCompId="18" StatementType="WAITFOR" RetrievedFromCache="true" />
+                  </Statements>
+                </Then>
+                <Else>
+                  <Statements>
+                    <StmtSimple StatementText="&#x9;END&#xD;&#xA;&#x9;&#x9;&#x9;ELSE&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;THROW&#xD;&#xA;&#x9;" StatementId="17" StatementCompId="21" StatementType="THROW" RetrievedFromCache="true" />
+                  </Statements>
+                </Else>
+              </StmtCond>
+              <StmtSimple StatementText="&#x9;END CATC" StatementId="18" StatementCompId="23" StatementType="END CATCH" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtSimple StatementText="H&#xD;&#xA;&#x9;END&#xD;&#xA;RETURN 0" StatementId="19" StatementCompId="27" StatementType="RETURN" RetrievedFromCache="true" />
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="CREATE FUNCTION [dbo].[Function_GetFailureType]&#xD;&#xA;(@type NVARCHAR (100))&#xD;&#xA;RETURNS INT&#xD;&#xA;AS&#xD;&#xA;BEGIN&#xD;&#xA;    DECLARE @Id INT&#xD;&#xA;    SELECT @Id = Id FROM dbo.FailureType WHERE Type = @type&#xD;&#xA;" StatementId="1" StatementCompId="34" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032886" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0xC2ACB05E5FB346D3" QueryPlanHash="0xEBCE396D9C001806">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="0" CompileCPU="0" CompileMemory="96">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Clustered Index Scan" LogicalOp="Clustered Index Scan" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001636" AvgRowSize="38" EstimatedTotalSubtreeCost="0.0032886" TableCardinality="6" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureType]" Column="Id" />
+              </OutputList>
+              <IndexScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureType]" Column="Id" />
+                  </DefinedValue>
+                </DefinedValues>
+                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureType]" Index="[FailureType_PK]" IndexKind="Clustered" />
+                <Predicate>
+                  <ScalarOperator ScalarString="[OurLabReporting].[dbo].[FailureType].[Type]=[@type]">
+                    <Compare CompareOp="EQ">
+                      <ScalarOperator>
+                        <Identifier>
+                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureType]" Column="Type" />
+                        </Identifier>
+                      </ScalarOperator>
+                      <ScalarOperator>
+                        <Identifier>
+                          <ColumnReference Column="@type" />
+                        </Identifier>
+                      </ScalarOperator>
+                    </Compare>
+                  </ScalarOperator>
+                </Predicate>
+              </IndexScan>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@type" ParameterCompiledValue="N'Deprecated'" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText="&#x9;RETURN @Id&#xD;" StatementId="2" StatementCompId="35" StatementType="RETURN" RetrievedFromCache="true" />
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

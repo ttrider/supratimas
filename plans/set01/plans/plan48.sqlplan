@@ -1,0 +1,495 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="CREATE TRIGGER [PlatformBsp_InsertUpdate] ON [dbo].[PlatformBsp]&#xD;&#xA;FOR INSERT, UPDATE &#xD;&#xA;AS &#xD;&#xA;BEGIN&#xD;&#xA;    SET NOCOUNT ON&#xD;&#xA;&#xD;&#xA;&#x9;/*&#xD;&#xA;&#x9;** Update our segments&#xD;&#xA;&#x9;*/&#xD;&#xA;" StatementId="1" StatementCompId="35" StatementType="SET ON/OFF" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;UPDATE BV SET &#xD;&#xA;&#x9;&#x9;BV.Segment1 = LEFT(dbo.Function_Token(BV.Name,'.',1), 32),&#xD;&#xA;&#x9;&#x9;BV.Segment2 = LEFT(dbo.Function_Token(BV.Name,'.',2), 32),&#xD;&#xA;&#x9;&#x9;BV.Segment3 = LEFT(dbo.Function_Token(BV.Name,'.',3), 32),&#xD;&#xA;&#x9;&#x9;BV.Segment4 = LEFT(dbo.Function_Token(BV.Name,'.',4), 32)&#xD;&#xA;&#x9;FROM dbo.PlatformBsp AS BV&#xD;&#xA;&#x9;WHERE BV.Segment1 IS NULL&#xD;&#xA;&#xD;&#xA;&#x9;/*&#xD;&#xA;&#x9;** Recalc our ranking&#xD;&#xA;&#x9;*/&#xD;&#xA;" StatementId="2" StatementCompId="36" StatementType="UPDATE" RetrievedFromCache="true" StatementSubTreeCost="0.0265201" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x8DF7513B23D0B570" QueryPlanHash="0xB9707AC1698C8C0E" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="32" CompileTime="4" CompileCPU="4" CompileMemory="496">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Clustered Index Update" LogicalOp="Update" EstimateRows="1" EstimateIO="0.01" EstimateCPU="1e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0265201" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <Update DMLRequestSort="0">
+                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Index="[PlatformBsp_PK]" Alias="[BV]" IndexKind="Clustered" />
+                <SetPredicate>
+                  <ScalarOperator ScalarString="[OurLabReporting].[dbo].[PlatformBsp].[Segment1] as [BV].[Segment1] = [Expr1002],[OurLabReporting].[dbo].[PlatformBsp].[Segment2] as [BV].[Segment2] = [Expr1003],[OurLabReporting].[dbo].[PlatformBsp].[Segment3] as [BV].[Segment3] = [Expr1004],[OurLabReporting].[dbo].[PlatformBsp].[Segment4] as [BV].[Segment4] = [Expr1005]">
+                    <ScalarExpressionList>
+                      <ScalarOperator>
+                        <MultipleAssign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[BV]" Column="Segment1" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1002" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[BV]" Column="Segment2" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1003" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[BV]" Column="Segment3" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1004" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[BV]" Column="Segment4" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1005" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                        </MultipleAssign>
+                      </ScalarOperator>
+                    </ScalarExpressionList>
+                  </ScalarOperator>
+                </SetPredicate>
+                <RelOp NodeId="1" PhysicalOp="Table Spool" LogicalOp="Eager Spool" EstimateRows="1" EstimateIO="0.013125" EstimateCPU="0.00010086" AvgRowSize="149" EstimatedTotalSubtreeCost="0.0165191" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[BV]" Column="Id" />
+                    <ColumnReference Column="Expr1002" />
+                    <ColumnReference Column="Expr1003" />
+                    <ColumnReference Column="Expr1004" />
+                    <ColumnReference Column="Expr1005" />
+                  </OutputList>
+                  <Spool>
+                    <RelOp NodeId="2" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="149" EstimatedTotalSubtreeCost="0.00329326" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[BV]" Column="Id" />
+                        <ColumnReference Column="Expr1002" />
+                        <ColumnReference Column="Expr1003" />
+                        <ColumnReference Column="Expr1004" />
+                        <ColumnReference Column="Expr1005" />
+                      </OutputList>
+                      <ComputeScalar>
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1002" />
+                            <ScalarOperator ScalarString="CONVERT_IMPLICIT(nvarchar(32),substring([OurLabReporting].[dbo].[Function_Token]([Expr1016],'.',(1)),(1),(32)),0)">
+                              <Convert DataType="nvarchar" Length="64" Style="0" Implicit="1">
+                                <ScalarOperator>
+                                  <Intrinsic FunctionName="substring">
+                                    <ScalarOperator>
+                                      <UserDefinedFunction FunctionName="[OurLabReporting].[dbo].[Function_Token]">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="Expr1016" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'.'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="(1)" />
+                                        </ScalarOperator>
+                                      </UserDefinedFunction>
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Const ConstValue="(1)" />
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Const ConstValue="(32)" />
+                                    </ScalarOperator>
+                                  </Intrinsic>
+                                </ScalarOperator>
+                              </Convert>
+                            </ScalarOperator>
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1003" />
+                            <ScalarOperator ScalarString="CONVERT_IMPLICIT(nvarchar(32),substring([OurLabReporting].[dbo].[Function_Token]([Expr1016],'.',(2)),(1),(32)),0)">
+                              <Convert DataType="nvarchar" Length="64" Style="0" Implicit="1">
+                                <ScalarOperator>
+                                  <Intrinsic FunctionName="substring">
+                                    <ScalarOperator>
+                                      <UserDefinedFunction FunctionName="[OurLabReporting].[dbo].[Function_Token]">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="Expr1016" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'.'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="(2)" />
+                                        </ScalarOperator>
+                                      </UserDefinedFunction>
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Const ConstValue="(1)" />
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Const ConstValue="(32)" />
+                                    </ScalarOperator>
+                                  </Intrinsic>
+                                </ScalarOperator>
+                              </Convert>
+                            </ScalarOperator>
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1004" />
+                            <ScalarOperator ScalarString="CONVERT_IMPLICIT(nvarchar(32),substring([OurLabReporting].[dbo].[Function_Token]([Expr1016],'.',(3)),(1),(32)),0)">
+                              <Convert DataType="nvarchar" Length="64" Style="0" Implicit="1">
+                                <ScalarOperator>
+                                  <Intrinsic FunctionName="substring">
+                                    <ScalarOperator>
+                                      <UserDefinedFunction FunctionName="[OurLabReporting].[dbo].[Function_Token]">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="Expr1016" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'.'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="(3)" />
+                                        </ScalarOperator>
+                                      </UserDefinedFunction>
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Const ConstValue="(1)" />
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Const ConstValue="(32)" />
+                                    </ScalarOperator>
+                                  </Intrinsic>
+                                </ScalarOperator>
+                              </Convert>
+                            </ScalarOperator>
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1005" />
+                            <ScalarOperator ScalarString="CONVERT_IMPLICIT(nvarchar(32),substring([OurLabReporting].[dbo].[Function_Token]([Expr1016],'.',(4)),(1),(32)),0)">
+                              <Convert DataType="nvarchar" Length="64" Style="0" Implicit="1">
+                                <ScalarOperator>
+                                  <Intrinsic FunctionName="substring">
+                                    <ScalarOperator>
+                                      <UserDefinedFunction FunctionName="[OurLabReporting].[dbo].[Function_Token]">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="Expr1016" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'.'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="(4)" />
+                                        </ScalarOperator>
+                                      </UserDefinedFunction>
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Const ConstValue="(1)" />
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Const ConstValue="(32)" />
+                                    </ScalarOperator>
+                                  </Intrinsic>
+                                </ScalarOperator>
+                              </Convert>
+                            </ScalarOperator>
+                          </DefinedValue>
+                        </DefinedValues>
+                        <RelOp NodeId="3" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="4039" EstimatedTotalSubtreeCost="0.00329316" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[BV]" Column="Id" />
+                            <ColumnReference Column="Expr1016" />
+                          </OutputList>
+                          <ComputeScalar>
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Column="Expr1016" />
+                                <ScalarOperator ScalarString="CONVERT_IMPLICIT(varchar(max),[OurLabReporting].[dbo].[PlatformBsp].[Name] as [BV].[Name],0)">
+                                  <Convert DataType="varchar(max)" Length="2147483647" Style="0" Implicit="1">
+                                    <ScalarOperator>
+                                      <Identifier>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[BV]" Column="Name" />
+                                      </Identifier>
+                                    </ScalarOperator>
+                                  </Convert>
+                                </ScalarOperator>
+                              </DefinedValue>
+                            </DefinedValues>
+                            <RelOp NodeId="4" PhysicalOp="Clustered Index Scan" LogicalOp="Clustered Index Scan" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001647" AvgRowSize="154" EstimatedTotalSubtreeCost="0.0032897" TableCardinality="7" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[BV]" Column="Id" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[BV]" Column="Name" />
+                              </OutputList>
+                              <IndexScan Ordered="1" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[BV]" Column="Id" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[BV]" Column="Name" />
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Index="[PlatformBsp_PK]" Alias="[BV]" IndexKind="Clustered" />
+                                <Predicate>
+                                  <ScalarOperator ScalarString="[OurLabReporting].[dbo].[PlatformBsp].[Segment1] as [BV].[Segment1] IS NULL">
+                                    <Compare CompareOp="IS">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[BV]" Column="Segment1" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="NULL" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                </Predicate>
+                              </IndexScan>
+                            </RelOp>
+                          </ComputeScalar>
+                        </RelOp>
+                      </ComputeScalar>
+                    </RelOp>
+                  </Spool>
+                </RelOp>
+              </Update>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText="&#x9;UPDATE BV&#xD;&#xA;&#x9;&#x9;SET BV.RankInPlatform = T.RankInPlatform&#xD;&#xA;&#x9;FROM dbo.PlatformBsp AS BV&#xD;&#xA;&#x9;INNER JOIN (&#xD;&#xA;&#x9;&#x9;SELECT Id, (RANK() OVER (PARTITION BY innerBV.PlatformId ORDER BY innerBV.Segment1 DESC, innerBV.Segment2 DESC, innerBV.Segment3 DESC, innerBV.Segment4 DESC)) AS RankInPlatform&#xD;&#xA;&#x9;&#x9;FROM dbo.PlatformBsp AS innerBV&#xD;&#xA;&#x9;) AS T ON BV.Id = T.Id&#xD;" StatementId="3" StatementCompId="37" StatementType="UPDATE" RetrievedFromCache="true" StatementSubTreeCost="0.0421789" StatementEstRows="7" StatementOptmLevel="FULL" QueryHash="0xA3220D1DAC285AD6" QueryPlanHash="0xF53EB28D2D8C88C0" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="40" CompileTime="3" CompileCPU="3" CompileMemory="328">
+            <MemoryGrantInfo SerialRequiredMemory="512" SerialDesiredMemory="544" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Clustered Index Update" LogicalOp="Update" EstimateRows="7" EstimateIO="0.01" EstimateCPU="7e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0421789" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <Update DMLRequestSort="0">
+                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Index="[PlatformBsp_PK]" Alias="[BV]" IndexKind="Clustered" />
+                <SetPredicate>
+                  <ScalarOperator ScalarString="[OurLabReporting].[dbo].[PlatformBsp].[RankInPlatform] as [BV].[RankInPlatform] = [Expr1005]">
+                    <ScalarExpressionList>
+                      <ScalarOperator>
+                        <MultipleAssign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[BV]" Column="RankInPlatform" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1005" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                        </MultipleAssign>
+                      </ScalarOperator>
+                    </ScalarExpressionList>
+                  </ScalarOperator>
+                </SetPredicate>
+                <RelOp NodeId="1" PhysicalOp="Table Spool" LogicalOp="Eager Spool" EstimateRows="7" EstimateIO="0.013125" EstimateCPU="0.00010272" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0321719" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[BV]" Column="Id" />
+                    <ColumnReference Column="Expr1005" />
+                  </OutputList>
+                  <Spool>
+                    <RelOp NodeId="2" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="7" EstimateIO="0" EstimateCPU="7e-007" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0189441" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[BV]" Column="Id" />
+                        <ColumnReference Column="Expr1005" />
+                      </OutputList>
+                      <ComputeScalar>
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1005" />
+                            <ScalarOperator ScalarString="CONVERT_IMPLICIT(int,[Expr1004],0)">
+                              <Convert DataType="int" Style="0" Implicit="1">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="Expr1004" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Convert>
+                            </ScalarOperator>
+                          </DefinedValue>
+                        </DefinedValues>
+                        <RelOp NodeId="3" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="7" EstimateIO="0" EstimateCPU="2.926e-005" AvgRowSize="19" EstimatedTotalSubtreeCost="0.0189434" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[BV]" Column="Id" />
+                            <ColumnReference Column="Expr1004" />
+                          </OutputList>
+                          <NestedLoops Optimized="0">
+                            <OuterReferences>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Id" />
+                            </OuterReferences>
+                            <RelOp NodeId="4" PhysicalOp="Sequence Project" LogicalOp="Compute Scalar" EstimateRows="7" EstimateIO="0" EstimateCPU="4.2e-007" AvgRowSize="19" EstimatedTotalSubtreeCost="0.0146825" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Id" />
+                                <ColumnReference Column="Expr1004" />
+                              </OutputList>
+                              <SequenceProject>
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Column="Expr1004" />
+                                    <ScalarOperator ScalarString="rank">
+                                      <Sequence FunctionName="rank" />
+                                    </ScalarOperator>
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <RelOp NodeId="5" PhysicalOp="Segment" LogicalOp="Segment" EstimateRows="7" EstimateIO="0" EstimateCPU="1.4e-007" AvgRowSize="19" EstimatedTotalSubtreeCost="0.0146821" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Id" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="PlatformId" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Segment1" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Segment2" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Segment3" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Segment4" />
+                                    <ColumnReference Column="Segment1011" />
+                                    <ColumnReference Column="Segment1012" />
+                                  </OutputList>
+                                  <Segment>
+                                    <GroupBy>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="PlatformId" />
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Segment1" />
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Segment2" />
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Segment3" />
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Segment4" />
+                                    </GroupBy>
+                                    <SegmentColumn>
+                                      <ColumnReference Column="Segment1012" />
+                                    </SegmentColumn>
+                                    <RelOp NodeId="6" PhysicalOp="Segment" LogicalOp="Segment" EstimateRows="7" EstimateIO="0" EstimateCPU="1.4e-007" AvgRowSize="19" EstimatedTotalSubtreeCost="0.0146819" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Id" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="PlatformId" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Segment1" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Segment2" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Segment3" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Segment4" />
+                                        <ColumnReference Column="Segment1011" />
+                                      </OutputList>
+                                      <Segment>
+                                        <GroupBy>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="PlatformId" />
+                                        </GroupBy>
+                                        <SegmentColumn>
+                                          <ColumnReference Column="Segment1011" />
+                                        </SegmentColumn>
+                                        <RelOp NodeId="7" PhysicalOp="Sort" LogicalOp="Sort" EstimateRows="7" EstimateIO="0.0112613" EstimateCPU="0.000130809" AvgRowSize="153" EstimatedTotalSubtreeCost="0.0146818" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                          <OutputList>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Id" />
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="PlatformId" />
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Segment1" />
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Segment2" />
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Segment3" />
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Segment4" />
+                                          </OutputList>
+                                          <MemoryFractions Input="1" Output="1" />
+                                          <Sort Distinct="0">
+                                            <OrderBy>
+                                              <OrderByColumn Ascending="1">
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="PlatformId" />
+                                              </OrderByColumn>
+                                              <OrderByColumn Ascending="0">
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Segment1" />
+                                              </OrderByColumn>
+                                              <OrderByColumn Ascending="0">
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Segment2" />
+                                              </OrderByColumn>
+                                              <OrderByColumn Ascending="0">
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Segment3" />
+                                              </OrderByColumn>
+                                              <OrderByColumn Ascending="0">
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Segment4" />
+                                              </OrderByColumn>
+                                            </OrderBy>
+                                            <RelOp NodeId="8" PhysicalOp="Clustered Index Scan" LogicalOp="Clustered Index Scan" EstimateRows="7" EstimateIO="0.003125" EstimateCPU="0.0001647" AvgRowSize="153" EstimatedTotalSubtreeCost="0.0032897" TableCardinality="7" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                              <OutputList>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Id" />
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="PlatformId" />
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Segment1" />
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Segment2" />
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Segment3" />
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Segment4" />
+                                              </OutputList>
+                                              <IndexScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                                                <DefinedValues>
+                                                  <DefinedValue>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Id" />
+                                                  </DefinedValue>
+                                                  <DefinedValue>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="PlatformId" />
+                                                  </DefinedValue>
+                                                  <DefinedValue>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Segment1" />
+                                                  </DefinedValue>
+                                                  <DefinedValue>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Segment2" />
+                                                  </DefinedValue>
+                                                  <DefinedValue>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Segment3" />
+                                                  </DefinedValue>
+                                                  <DefinedValue>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Segment4" />
+                                                  </DefinedValue>
+                                                </DefinedValues>
+                                                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Index="[PlatformBsp_PK]" Alias="[innerBV]" IndexKind="Clustered" />
+                                              </IndexScan>
+                                            </RelOp>
+                                          </Sort>
+                                        </RelOp>
+                                      </Segment>
+                                    </RelOp>
+                                  </Segment>
+                                </RelOp>
+                              </SequenceProject>
+                            </RelOp>
+                            <RelOp NodeId="12" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0042317" TableCardinality="7" Parallel="0" EstimateRebinds="6" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[BV]" Column="Id" />
+                              </OutputList>
+                              <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[BV]" Column="Id" />
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Index="[PlatformBsp_PK]" Alias="[BV]" IndexKind="Clustered" />
+                                <SeekPredicates>
+                                  <SeekPredicateNew>
+                                    <SeekKeys>
+                                      <Prefix ScanType="EQ">
+                                        <RangeColumns>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[BV]" Column="Id" />
+                                        </RangeColumns>
+                                        <RangeExpressions>
+                                          <ScalarOperator ScalarString="[OurLabReporting].[dbo].[PlatformBsp].[Id] as [innerBV].[Id]">
+                                            <Identifier>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PlatformBsp]" Alias="[innerBV]" Column="Id" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </RangeExpressions>
+                                      </Prefix>
+                                    </SeekKeys>
+                                  </SeekPredicateNew>
+                                </SeekPredicates>
+                              </IndexScan>
+                            </RelOp>
+                          </NestedLoops>
+                        </RelOp>
+                      </ComputeScalar>
+                    </RelOp>
+                  </Spool>
+                </RelOp>
+              </Update>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

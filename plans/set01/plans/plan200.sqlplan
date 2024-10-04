@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="&#xD;&#xA;SELECT &#xD;&#xA;T.Id,&#xD;&#xA;T.TestPassId,&#xD;&#xA;T.MixId,&#xD;&#xA;T.RunLogDirectory,&#xD;&#xA;T.TCPassCount,&#xD;&#xA;T.TCFailCount,&#xD;&#xA;T.TCSkipCount,&#xD;&#xA;T.TCWarnCount,&#xD;&#xA;T.TCBlockCount,&#xD;&#xA;T.WTTJobId,&#xD;&#xA;T.RecordCreated,&#xD;&#xA;T.RecordUpdated,&#xD;&#xA;T.IsRerunPrimary,&#xD;&#xA;T.IsRerun,&#xD;&#xA;DT.RerunSourceId,&#xD;&#xA;T.RerunCount &#xD;&#xA;FROM reporting.TEUs T with (nolock) &#xD;&#xA;join dbo.TEU  DT with (nolock) &#xD;&#xA;on T.Id = DT.Id &#xD;&#xA;WHERE T.TestPassId in (1382492,1382881)&#xD;&#xA;" StatementId="1" StatementCompId="1" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="787.791" StatementEstRows="4254.44" StatementOptmLevel="FULL" QueryHash="0xC1BA8D17482BA859" QueryPlanHash="0x12F0BF0C3145D493">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="48" CompileTime="13" CompileCPU="12" CompileMemory="760">
+            <MemoryGrantInfo SerialRequiredMemory="512" SerialDesiredMemory="19099408" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="4254.44" EstimateIO="0" EstimateCPU="0.0177835" AvgRowSize="341" EstimatedTotalSubtreeCost="787.791" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="Id" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="TestPassId" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="MixId" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="IsRerunPrimary" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="IsRerun" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="TCPassCount" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="TCFailCount" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="TCWarnCount" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="TCSkipCount" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="TCBlockCount" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="RunLogDirectory" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="RecordCreated" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="RecordUpdated" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="WTTJobId" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="RerunCount" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Alias="[DT]" Column="RerunSourceId" />
+              </OutputList>
+              <NestedLoops Optimized="1" WithUnorderedPrefetch="1">
+                <OuterReferences>
+                  <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="Id" />
+                  <ColumnReference Column="Expr1005" />
+                </OuterReferences>
+                <RelOp NodeId="3" PhysicalOp="Clustered Index Scan" LogicalOp="Clustered Index Scan" EstimateRows="4254.44" EstimateIO="690.786" EstimateCPU="46.146" AvgRowSize="333" EstimatedTotalSubtreeCost="736.932" TableCardinality="4.19282e+007" Parallel="0" Partitioned="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="Id" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="TestPassId" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="MixId" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="IsRerunPrimary" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="IsRerun" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="TCPassCount" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="TCFailCount" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="TCWarnCount" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="TCSkipCount" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="TCBlockCount" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="RunLogDirectory" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="RecordCreated" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="RecordUpdated" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="WTTJobId" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="RerunCount" />
+                  </OutputList>
+                  <IndexScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="Id" />
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="TestPassId" />
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="MixId" />
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="IsRerunPrimary" />
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="IsRerun" />
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="TCPassCount" />
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="TCFailCount" />
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="TCWarnCount" />
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="TCSkipCount" />
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="TCBlockCount" />
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="RunLogDirectory" />
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="RecordCreated" />
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="RecordUpdated" />
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="WTTJobId" />
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="RerunCount" />
+                      </DefinedValue>
+                    </DefinedValues>
+                    <Object Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Index="[PK_TEUs]" Alias="[T]" IndexKind="Clustered" />
+                    <Predicate>
+                      <ScalarOperator ScalarString="[OurLabReporting].[Reporting].[TEUs].[TestPassId] as [T].[TestPassId]=(1382492) OR [OurLabReporting].[Reporting].[TEUs].[TestPassId] as [T].[TestPassId]=(1382881)">
+                        <Logical Operation="OR">
+                          <ScalarOperator>
+                            <Compare CompareOp="EQ">
+                              <ScalarOperator>
+                                <Identifier>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="TestPassId" />
+                                </Identifier>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Const ConstValue="(1382492)" />
+                              </ScalarOperator>
+                            </Compare>
+                          </ScalarOperator>
+                          <ScalarOperator>
+                            <Compare CompareOp="EQ">
+                              <ScalarOperator>
+                                <Identifier>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="TestPassId" />
+                                </Identifier>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Const ConstValue="(1382881)" />
+                              </ScalarOperator>
+                            </Compare>
+                          </ScalarOperator>
+                        </Logical>
+                      </ScalarOperator>
+                    </Predicate>
+                  </IndexScan>
+                </RelOp>
+                <RelOp NodeId="4" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="15" EstimatedTotalSubtreeCost="13.9443" TableCardinality="4.1203e+007" Parallel="0" EstimateRebinds="4253.44" EstimateRewinds="0.00147567" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Alias="[DT]" Column="RerunSourceId" />
+                  </OutputList>
+                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Alias="[DT]" Column="RerunSourceId" />
+                      </DefinedValue>
+                    </DefinedValues>
+                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Index="[Teu_PK]" Alias="[DT]" IndexKind="Clustered" />
+                    <SeekPredicates>
+                      <SeekPredicateNew>
+                        <SeekKeys>
+                          <Prefix ScanType="EQ">
+                            <RangeColumns>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Alias="[DT]" Column="Id" />
+                            </RangeColumns>
+                            <RangeExpressions>
+                              <ScalarOperator ScalarString="[OurLabReporting].[Reporting].[TEUs].[Id] as [T].[Id]">
+                                <Identifier>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TEUs]" Alias="[T]" Column="Id" />
+                                </Identifier>
+                              </ScalarOperator>
+                            </RangeExpressions>
+                          </Prefix>
+                        </SeekKeys>
+                      </SeekPredicateNew>
+                    </SeekPredicates>
+                  </IndexScan>
+                </RelOp>
+              </NestedLoops>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-16"?>
+<ShowPlanXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="1.2" Build="12.0.2269.0" xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementCompId="2" StatementEstRows="3" StatementId="1" StatementOptmLevel="TRIVIAL" CardinalityEstimationModelVersion="120" StatementSubTreeCost="0.0100062" StatementText="INSERT INTO @t VALUES (0,100), (1,101), (2, 102)" StatementType="INSERT" QueryHash="0x43082502F060390E" QueryPlanHash="0x79387FA9527E6D52" RetrievedFromCache="true">
+          <StatementSetOptions ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" NUMERIC_ROUNDABORT="false" QUOTED_IDENTIFIER="true" />
+          <QueryPlan DegreeOfParallelism="0" NonParallelPlanReason="CouldNotGenerateValidParallelPlan" CachedPlanSize="16" CompileTime="0" CompileCPU="0" CompileMemory="152">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="104847" EstimatedPagesCached="157270" EstimatedAvailableDegreeOfParallelism="12" />
+            <RelOp AvgRowSize="9" EstimateCPU="3E-06" EstimateIO="0.01" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="3" LogicalOp="Insert" NodeId="0" Parallel="false" PhysicalOp="Table Insert" EstimatedTotalSubtreeCost="0.0100062">
+              <OutputList />
+              <RunTimeInformation>
+                <RunTimeCountersPerThread Thread="0" ActualRows="3" ActualEndOfScans="1" ActualExecutions="1" />
+              </RunTimeInformation>
+              <Update DMLRequestSort="false">
+                <Object Table="[@t]" Storage="RowStore" />
+                <SetPredicate>
+                  <ScalarOperator ScalarString="[a] = [Union1009],[b] = [Union1010]">
+                    <ScalarExpressionList>
+                      <ScalarOperator>
+                        <MultipleAssign>
+                          <Assign>
+                            <ColumnReference Column="a" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Union1009" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Column="b" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Union1010" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                        </MultipleAssign>
+                      </ScalarOperator>
+                    </ScalarExpressionList>
+                  </ScalarOperator>
+                </SetPredicate>
+                <RelOp AvgRowSize="15" EstimateCPU="3.157E-06" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="3" LogicalOp="Constant Scan" NodeId="1" Parallel="false" PhysicalOp="Constant Scan" EstimatedTotalSubtreeCost="3.157E-06">
+                  <OutputList>
+                    <ColumnReference Column="Union1009" />
+                    <ColumnReference Column="Union1010" />
+                  </OutputList>
+                  <RunTimeInformation>
+                    <RunTimeCountersPerThread Thread="0" ActualRows="3" ActualEndOfScans="1" ActualExecutions="1" />
+                  </RunTimeInformation>
+                  <ConstantScan>
+                    <Values>
+                      <Row>
+                        <ScalarOperator ScalarString="(0)">
+                          <Const ConstValue="(0)" />
+                        </ScalarOperator>
+                        <ScalarOperator ScalarString="(100)">
+                          <Const ConstValue="(100)" />
+                        </ScalarOperator>
+                      </Row>
+                      <Row>
+                        <ScalarOperator ScalarString="(1)">
+                          <Const ConstValue="(1)" />
+                        </ScalarOperator>
+                        <ScalarOperator ScalarString="(101)">
+                          <Const ConstValue="(101)" />
+                        </ScalarOperator>
+                      </Row>
+                      <Row>
+                        <ScalarOperator ScalarString="(2)">
+                          <Const ConstValue="(2)" />
+                        </ScalarOperator>
+                        <ScalarOperator ScalarString="(102)">
+                          <Const ConstValue="(102)" />
+                        </ScalarOperator>
+                      </Row>
+                    </Values>
+                  </ConstantScan>
+                </RelOp>
+              </Update>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementCompId="3" StatementEstRows="1" StatementId="2" StatementOptmLevel="TRIVIAL" CardinalityEstimationModelVersion="120" StatementSubTreeCost="0.0146447" StatementText="SELECT a+b from @t WHERE a &gt; 1 ORDER BY b" StatementType="SELECT" QueryHash="0x27AE87B08F3CB09B" QueryPlanHash="0xC032F087B2BB3C9F" RetrievedFromCache="true">
+          <StatementSetOptions ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" NUMERIC_ROUNDABORT="false" QUOTED_IDENTIFIER="true" />
+          <QueryPlan DegreeOfParallelism="1" MemoryGrant="1024" CachedPlanSize="16" CompileTime="0" CompileCPU="0" CompileMemory="128">
+            <MemoryGrantInfo SerialRequiredMemory="512" SerialDesiredMemory="544" RequiredMemory="512" DesiredMemory="544" RequestedMemory="1024" GrantWaitTime="0" GrantedMemory="1024" MaxUsedMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="104847" EstimatedPagesCached="157270" EstimatedAvailableDegreeOfParallelism="12" />
+            <RelOp AvgRowSize="15" EstimateCPU="1E-07" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="1" LogicalOp="Compute Scalar" NodeId="0" Parallel="false" PhysicalOp="Compute Scalar" EstimatedTotalSubtreeCost="0.0146447">
+              <OutputList>
+                <ColumnReference Column="b" />
+                <ColumnReference Column="Expr1003" />
+              </OutputList>
+              <ComputeScalar>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1003" />
+                    <ScalarOperator ScalarString="[a]+[b]">
+                      <Arithmetic Operation="ADD">
+                        <ScalarOperator>
+                          <Identifier>
+                            <ColumnReference Column="a" />
+                          </Identifier>
+                        </ScalarOperator>
+                        <ScalarOperator>
+                          <Identifier>
+                            <ColumnReference Column="b" />
+                          </Identifier>
+                        </ScalarOperator>
+                      </Arithmetic>
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp AvgRowSize="15" EstimateCPU="0.000100015" EstimateIO="0.0112613" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="1" LogicalOp="Sort" NodeId="1" Parallel="false" PhysicalOp="Sort" EstimatedTotalSubtreeCost="0.0146446">
+                  <OutputList>
+                    <ColumnReference Column="a" />
+                    <ColumnReference Column="b" />
+                  </OutputList>
+                  <MemoryFractions Input="1" Output="1" />
+                  <RunTimeInformation>
+                    <RunTimeCountersPerThread Thread="0" ActualRebinds="1" ActualRewinds="0" ActualRows="1" ActualEndOfScans="1" ActualExecutions="1" />
+                  </RunTimeInformation>
+                  <Sort Distinct="false">
+                    <OrderBy>
+                      <OrderByColumn Ascending="true">
+                        <ColumnReference Column="b" />
+                      </OrderByColumn>
+                    </OrderBy>
+                    <RelOp AvgRowSize="15" EstimateCPU="7.96E-05" EstimateIO="0.0032035" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="1" LogicalOp="Table Scan" NodeId="2" Parallel="false" PhysicalOp="Table Scan" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0">
+                      <OutputList>
+                        <ColumnReference Column="a" />
+                        <ColumnReference Column="b" />
+                      </OutputList>
+                      <RunTimeInformation>
+                        <RunTimeCountersPerThread Thread="0" ActualRows="1" ActualEndOfScans="1" ActualExecutions="1" />
+                      </RunTimeInformation>
+                      <TableScan Ordered="false" ForcedIndex="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="a" />
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Column="b" />
+                          </DefinedValue>
+                        </DefinedValues>
+                        <Object Table="[@t]" Storage="RowStore" />
+                        <Predicate>
+                          <ScalarOperator ScalarString="[a]&gt;(1)">
+                            <Compare CompareOp="GT">
+                              <ScalarOperator>
+                                <Identifier>
+                                  <ColumnReference Column="a" />
+                                </Identifier>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Const ConstValue="(1)" />
+                              </ScalarOperator>
+                            </Compare>
+                          </ScalarOperator>
+                        </Predicate>
+                      </TableScan>
+                    </RelOp>
+                  </Sort>
+                </RelOp>
+              </ComputeScalar>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

@@ -1,0 +1,237 @@
+﻿@appHeaderHeight: 40px;
+@import "fonts.less";
+@import "colors.less";
+@import "planview.less";
+@footerHeight: 2.3em;
+@headerHeight: 110px;
+a.logoLink {
+    color: @color-dark;
+    text-decoration: none;
+}
+
+a.logoLink:visited {
+    color: @color-dark;
+}
+
+a.logoLink:hover {
+    color: @color-dark;
+    text-decoration: underline;
+}
+
+.web {
+    font-family: "Roboto", "Segoe UI", sans-serif;
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+    min-width: 50em;
+    color: @color-dark;
+    .base-background();
+    .hlogo {
+        background-image: url(i/logo_290x60_1d3e58.png);
+        background-repeat: no-repeat;
+        height: 60px;
+        width: 290px;
+        margin: 1em;
+        div {
+            padding-top: 51px;
+            padding-left: 22px;
+        }
+    }
+    .htoolbar {
+        position: fixed;
+        right: 1em;
+        top: 0.5em;
+        .base-background();
+        padding: 0.5em;
+        border-radius: 1em;
+        z-index: 2000;
+        a {
+            text-transform: uppercase;
+            text-decoration: none;
+            margin-left: 0.5em;
+            padding: 0.2em;
+            color: @color-primary-3;
+        }
+        a:visited {
+            color: @color-primary-3;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    }
+    .htoolbar:hover {
+        a {
+            color: @color-dark;
+        }
+        a:visited {
+            color: @color-dark;
+        }
+        box-shadow: @color-primary-3 0 0 1em;
+        opacity: 1;
+    }
+    .hframe {
+        font-size: 1.4em;
+        margin: 2em;
+        padding: 2em;
+        clear: both;
+        .centered {
+            text-align: center;
+        }
+        .larger {
+            font-size: 1.5em;
+        }
+        .smaller {
+            font-size: 0.8em;
+        }
+        div {
+            margin: 0.2em;
+        }
+        a:visited {
+            color: @color-dark;
+        }
+        a {
+            color: @color-dark;
+        }
+        .htitle {
+            font-size: 0.6em;
+            border-top: 1px dashed @color-primary-4;
+            text-transform: uppercase;
+            color: @color-primary-4;
+            margin-bottom: 1em;
+        }
+        .right-ad {
+            display: flex;
+        }
+    }
+    .hdwnld {
+        display: flex;
+        justify-content: space-around;
+        font-size: 1.2em;
+        div {
+            text-align: center;
+        }
+        a {
+            font-size: 1.2em;
+        }
+        .vsep {
+            border-left: 1px dashed @color-primary-4;
+        }
+    }
+    .hsplit {
+        display: flex;
+        margin-top: 1em;
+        padding-top: 1em;
+        border-top: 3px dotted #bcdbf3;
+        .hmarker {
+            position: absolute;
+            width: 3em;
+            path {
+                stroke-width: 7px;
+                stroke: @color-warning;
+                fill: @color-attention;
+            }
+            text {
+                stroke: @color-primary-4;
+                fill: @color-light;
+                font-weight: bold;
+                text-anchor: middle;
+                font-size: 4em;
+            }
+        }
+        .htext {
+            flex-grow: 2;
+            ol {
+                text-align: justify;
+                li {
+                    margin-bottom: 1em;
+                }
+            }
+        }
+        .himage {
+            font-size: 0.75em;
+            box-shadow: #bcdbf3 0 0 3em 1px;
+        }
+    }
+    .hheader {
+        font-size: 1.1em;
+        font-weight: bold;
+    }
+    .selector {
+        flex-grow: 2;
+        a {
+            color: @color-dark;
+        }
+        a:hover {
+            color: @color-dark;
+        }
+        a:visited {
+            color: @color-dark;
+        }
+        .openPlan {
+            text-align: right;
+        }
+        a.openExamplePlan {
+            color: @color-primary-4;
+            text-transform: none;
+            font-size: 1.2em;
+        }
+        a.openExamplePlan:hover {
+            color: @color-primary-4;
+            text-transform: none;
+            text-decoration: underline;
+        }
+        a.openExamplePlan:visited {
+            color: @color-primary-4;
+            text-transform: none;
+        }
+        .planText {
+            border: 2px dashed @color-dark;
+            border-radius: 5px;
+            vertical-align: middle;
+            text-align: center;
+            color: @color-dark;
+            padding-top: 1em;
+            padding-left: 1em;
+            padding-right: 1em;
+            overflow: hidden;
+            height: 500px;
+            resize: none;
+            box-sizing: border-box;
+            width: 100%;
+            font-size: 1.6em;
+            background-color: @color-light;
+            p {
+                font-size: 0.8em;
+                margin-top: 5em;
+            }
+        }
+        .selector-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        .selector-examples {
+            font-size: 0.6em;
+            text-transform: uppercase;
+            align-self: flex-end;
+        
+            li{
+                margin-bottom: 1em;
+            }
+        }
+    }
+    @import "docs.less";
+    @import "header.less";
+    @import "footer.less";
+}
+
+.app {
+    font-family: "Roboto", "Segoe UI", sans-serif;
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+    min-width: 50em;
+    color: @color-dark;
+    .base-background();
+    @import "app.less";
+}

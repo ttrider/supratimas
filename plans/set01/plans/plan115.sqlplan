@@ -1,0 +1,790 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtCond StatementText="(@ParamObjectID int, @ParamIndexID int, @ParamPartitionNumber int, @ParamOnReadOnlyFileGroup bit OUTPUT)IF EXISTS(SELECT * FROM (SELECT filegroups.data_space_id FROM [OurLabReporting].sys.indexes indexes INNER JOIN [OurLabReporting].sys.destination_data_spaces destination_data_spaces ON indexes.data_space_id = destination_data_spaces.partition_scheme_id INNER JOIN [OurLabReporting].sys.filegroups filegroups ON destination_data_spaces.data_space_id = filegroups.data_space_id WHERE filegroups.is_read_only = 1 AND indexes.[object_id] = @ParamObjectID AND indexes.[index_id] = @ParamIndexID UNION SELECT filegroups.data_space_id FROM [OurLabReporting].sys.indexes indexes INNER JOIN [OurLabReporting].sys.filegroups filegroups ON indexes.data_space_id = filegroups.data_space_id WHERE filegroups.is_read_only = 1 AND indexes.[object_id] = @ParamObjectID AND indexes.[index_id] = @ParamIndexID) ReadOnlyFileGroups)" StatementId="1" StatementCompId="2429" StatementType="COND WITH QUERY" RetrievedFromCache="true" StatementSubTreeCost="0.0132746" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x971FA8A1C34C2D48" QueryPlanHash="0x27FE445D56FAFB5D" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <Condition>
+            <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="80" CompileTime="25" CompileCPU="25" CompileMemory="2224">
+              <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+              <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+              <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0132746" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                <OutputList>
+                  <ColumnReference Column="Expr1063" />
+                </OutputList>
+                <ComputeScalar>
+                  <DefinedValues>
+                    <DefinedValue>
+                      <ColumnReference Column="Expr1063" />
+                      <ScalarOperator ScalarString="CASE WHEN [Expr1064] THEN (1) ELSE (0) END">
+                        <IF>
+                          <Condition>
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1064" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Condition>
+                          <Then>
+                            <ScalarOperator>
+                              <Const ConstValue="(1)" />
+                            </ScalarOperator>
+                          </Then>
+                          <Else>
+                            <ScalarOperator>
+                              <Const ConstValue="(0)" />
+                            </ScalarOperator>
+                          </Else>
+                        </IF>
+                      </ScalarOperator>
+                    </DefinedValue>
+                  </DefinedValues>
+                  <RelOp NodeId="1" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0132745" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList>
+                      <ColumnReference Column="Expr1064" />
+                    </OutputList>
+                    <NestedLoops Optimized="0">
+                      <DefinedValues>
+                        <DefinedValue>
+                          <ColumnReference Column="Expr1064" />
+                        </DefinedValue>
+                      </DefinedValues>
+                      <ProbeColumn>
+                        <ColumnReference Column="Expr1064" />
+                      </ProbeColumn>
+                      <RelOp NodeId="2" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList />
+                        <ConstantScan />
+                      </RelOp>
+                      <RelOp NodeId="3" PhysicalOp="Concatenation" LogicalOp="Concatenation" EstimateRows="1" EstimateIO="0" EstimateCPU="2e-007" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0132691" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList />
+                        <Concat>
+                          <DefinedValues />
+                          <RelOp NodeId="4" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="5.20745e-005" AvgRowSize="9" EstimatedTotalSubtreeCost="0.013269" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList />
+                            <NestedLoops Optimized="0">
+                              <Predicate>
+                                <ScalarOperator ScalarString="isnull([OurLabReporting].[sys].[syssingleobjrefs].[indepid] as [ds].[indepid],[Expr1067])=[OurLabReporting].[sys].[syssingleobjrefs].[depid]">
+                                  <Compare CompareOp="EQ">
+                                    <ScalarOperator>
+                                      <Intrinsic FunctionName="isnull">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syssingleobjrefs]" Alias="[ds]" Column="indepid" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="Expr1067" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Intrinsic>
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Identifier>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syssingleobjrefs]" Column="depid" />
+                                      </Identifier>
+                                    </ScalarOperator>
+                                  </Compare>
+                                </ScalarOperator>
+                              </Predicate>
+                              <RelOp NodeId="5" PhysicalOp="Nested Loops" LogicalOp="Left Outer Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="15" EstimatedTotalSubtreeCost="0.00657256" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syssingleobjrefs]" Alias="[ds]" Column="indepid" />
+                                  <ColumnReference Column="Expr1067" />
+                                </OutputList>
+                                <NestedLoops Optimized="0">
+                                  <RelOp NodeId="6" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328528" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                    <OutputList>
+                                      <ColumnReference Column="Expr1067" />
+                                    </OutputList>
+                                    <ComputeScalar>
+                                      <DefinedValues>
+                                        <DefinedValue>
+                                          <ColumnReference Column="Expr1067" />
+                                          <ScalarOperator ScalarString="(1)-([OurLabReporting].[sys].[sysidxstats].[status] as [i].[status]&amp;(256))/(256)">
+                                            <Arithmetic Operation="SUB">
+                                              <ScalarOperator>
+                                                <Const ConstValue="(1)" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Arithmetic Operation="DIV">
+                                                  <ScalarOperator>
+                                                    <Arithmetic Operation="BIT_AND">
+                                                      <ScalarOperator>
+                                                        <Identifier>
+                                                          <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="status" />
+                                                        </Identifier>
+                                                      </ScalarOperator>
+                                                      <ScalarOperator>
+                                                        <Const ConstValue="(256)" />
+                                                      </ScalarOperator>
+                                                    </Arithmetic>
+                                                  </ScalarOperator>
+                                                  <ScalarOperator>
+                                                    <Const ConstValue="(256)" />
+                                                  </ScalarOperator>
+                                                </Arithmetic>
+                                              </ScalarOperator>
+                                            </Arithmetic>
+                                          </ScalarOperator>
+                                        </DefinedValue>
+                                      </DefinedValues>
+                                      <RelOp NodeId="7" PhysicalOp="Filter" LogicalOp="Filter" EstimateRows="1" EstimateIO="0" EstimateCPU="2.08e-006" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328518" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                        <OutputList>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="status" />
+                                        </OutputList>
+                                        <Filter StartupExpression="0">
+                                          <RelOp NodeId="8" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1236" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                            <OutputList>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="status" />
+                                            </OutputList>
+                                            <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                              <DefinedValues>
+                                                <DefinedValue>
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                                                </DefinedValue>
+                                                <DefinedValue>
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="status" />
+                                                </DefinedValue>
+                                              </DefinedValues>
+                                              <Object Database="[OurLabReporting]" Schema="[sys]" Table="[sysidxstats]" Index="[clst]" Alias="[i]" TableReferenceId="1" IndexKind="Clustered" />
+                                              <SeekPredicates>
+                                                <SeekPredicateNew>
+                                                  <SeekKeys>
+                                                    <Prefix ScanType="EQ">
+                                                      <RangeColumns>
+                                                        <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                                                        <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="indid" />
+                                                      </RangeColumns>
+                                                      <RangeExpressions>
+                                                        <ScalarOperator ScalarString="[@ParamObjectID]">
+                                                          <Identifier>
+                                                            <ColumnReference Column="@ParamObjectID" />
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator ScalarString="[@ParamIndexID]">
+                                                          <Identifier>
+                                                            <ColumnReference Column="@ParamIndexID" />
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                      </RangeExpressions>
+                                                    </Prefix>
+                                                  </SeekKeys>
+                                                </SeekPredicateNew>
+                                              </SeekPredicates>
+                                              <Predicate>
+                                                <ScalarOperator ScalarString="([OurLabReporting].[sys].[sysidxstats].[status] as [i].[status]&amp;(1))&lt;(0) OR ([OurLabReporting].[sys].[sysidxstats].[status] as [i].[status]&amp;(1))&gt;(0)">
+                                                  <Logical Operation="OR">
+                                                    <ScalarOperator>
+                                                      <Compare CompareOp="LT">
+                                                        <ScalarOperator>
+                                                          <Arithmetic Operation="BIT_AND">
+                                                            <ScalarOperator>
+                                                              <Identifier>
+                                                                <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="status" />
+                                                              </Identifier>
+                                                            </ScalarOperator>
+                                                            <ScalarOperator>
+                                                              <Const ConstValue="(1)" />
+                                                            </ScalarOperator>
+                                                          </Arithmetic>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator>
+                                                          <Const ConstValue="(0)" />
+                                                        </ScalarOperator>
+                                                      </Compare>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Compare CompareOp="GT">
+                                                        <ScalarOperator>
+                                                          <Arithmetic Operation="BIT_AND">
+                                                            <ScalarOperator>
+                                                              <Identifier>
+                                                                <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="status" />
+                                                              </Identifier>
+                                                            </ScalarOperator>
+                                                            <ScalarOperator>
+                                                              <Const ConstValue="(1)" />
+                                                            </ScalarOperator>
+                                                          </Arithmetic>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator>
+                                                          <Const ConstValue="(0)" />
+                                                        </ScalarOperator>
+                                                      </Compare>
+                                                    </ScalarOperator>
+                                                  </Logical>
+                                                </ScalarOperator>
+                                              </Predicate>
+                                            </IndexScan>
+                                          </RelOp>
+                                          <Predicate>
+                                            <ScalarOperator ScalarString="has_access('CO',[OurLabReporting].[sys].[sysidxstats].[id] as [i].[id])=(1)">
+                                              <Compare CompareOp="EQ">
+                                                <ScalarOperator>
+                                                  <Intrinsic FunctionName="has_access">
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="'CO'" />
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="" />
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="" />
+                                                    </ScalarOperator>
+                                                  </Intrinsic>
+                                                </ScalarOperator>
+                                                <ScalarOperator>
+                                                  <Const ConstValue="(1)" />
+                                                </ScalarOperator>
+                                              </Compare>
+                                            </ScalarOperator>
+                                          </Predicate>
+                                        </Filter>
+                                      </RelOp>
+                                    </ComputeScalar>
+                                  </RelOp>
+                                  <RelOp NodeId="13" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="4889" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                    <OutputList>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syssingleobjrefs]" Alias="[ds]" Column="indepid" />
+                                    </OutputList>
+                                    <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                      <DefinedValues>
+                                        <DefinedValue>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syssingleobjrefs]" Alias="[ds]" Column="indepid" />
+                                        </DefinedValue>
+                                      </DefinedValues>
+                                      <Object Database="[OurLabReporting]" Schema="[sys]" Table="[syssingleobjrefs]" Index="[clst]" Alias="[ds]" TableReferenceId="1" IndexKind="Clustered" />
+                                      <SeekPredicates>
+                                        <SeekPredicateNew>
+                                          <SeekKeys>
+                                            <Prefix ScanType="EQ">
+                                              <RangeColumns>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syssingleobjrefs]" Alias="[ds]" Column="depid" />
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syssingleobjrefs]" Alias="[ds]" Column="class" />
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syssingleobjrefs]" Alias="[ds]" Column="depsubid" />
+                                              </RangeColumns>
+                                              <RangeExpressions>
+                                                <ScalarOperator ScalarString="[@ParamObjectID]">
+                                                  <Identifier>
+                                                    <ColumnReference Column="@ParamObjectID" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                                <ScalarOperator ScalarString="(7)">
+                                                  <Const ConstValue="(7)" />
+                                                </ScalarOperator>
+                                                <ScalarOperator ScalarString="[@ParamIndexID]">
+                                                  <Identifier>
+                                                    <ColumnReference Column="@ParamIndexID" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                              </RangeExpressions>
+                                            </Prefix>
+                                          </SeekKeys>
+                                        </SeekPredicateNew>
+                                      </SeekPredicates>
+                                    </IndexScan>
+                                  </RelOp>
+                                </NestedLoops>
+                              </RelOp>
+                              <RelOp NodeId="14" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="12.458" EstimateIO="0" EstimateCPU="5.20745e-005" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00663818" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syssingleobjrefs]" Column="depid" />
+                                </OutputList>
+                                <NestedLoops Optimized="0">
+                                  <OuterReferences>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="id" />
+                                  </OuterReferences>
+                                  <RelOp NodeId="16" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.000160064" AvgRowSize="17" EstimatedTotalSubtreeCost="0.00328506" TableCardinality="39" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                    <OutputList>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="id" />
+                                    </OutputList>
+                                    <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                      <DefinedValues>
+                                        <DefinedValue>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="id" />
+                                        </DefinedValue>
+                                      </DefinedValues>
+                                      <Object Database="[OurLabReporting]" Schema="[sys]" Table="[sysclsobjs]" Index="[clst]" Alias="[o]" TableReferenceId="1" IndexKind="Clustered" />
+                                      <SeekPredicates>
+                                        <SeekPredicateNew>
+                                          <SeekKeys>
+                                            <Prefix ScanType="EQ">
+                                              <RangeColumns>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="class" />
+                                              </RangeColumns>
+                                              <RangeExpressions>
+                                                <ScalarOperator ScalarString="(31)">
+                                                  <Const ConstValue="(31)" />
+                                                </ScalarOperator>
+                                              </RangeExpressions>
+                                            </Prefix>
+                                          </SeekKeys>
+                                        </SeekPredicateNew>
+                                      </SeekPredicates>
+                                      <Predicate>
+                                        <ScalarOperator ScalarString="CONVERT(bit,[OurLabReporting].[sys].[sysclsobjs].[status] as [o].[status]&amp;(2),0)=(1) AND ([OurLabReporting].[sys].[sysclsobjs].[type] as [o].[type]='FD' OR [OurLabReporting].[sys].[sysclsobjs].[type] as [o].[type]='FG' OR [OurLabReporting].[sys].[sysclsobjs].[type] as [o].[type]='FL')">
+                                          <Logical Operation="AND">
+                                            <ScalarOperator>
+                                              <Compare CompareOp="EQ">
+                                                <ScalarOperator>
+                                                  <Convert DataType="bit" Style="0" Implicit="0">
+                                                    <ScalarOperator>
+                                                      <Arithmetic Operation="BIT_AND">
+                                                        <ScalarOperator>
+                                                          <Identifier>
+                                                            <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="status" />
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator>
+                                                          <Const ConstValue="(2)" />
+                                                        </ScalarOperator>
+                                                      </Arithmetic>
+                                                    </ScalarOperator>
+                                                  </Convert>
+                                                </ScalarOperator>
+                                                <ScalarOperator>
+                                                  <Const ConstValue="(1)" />
+                                                </ScalarOperator>
+                                              </Compare>
+                                            </ScalarOperator>
+                                            <ScalarOperator>
+                                              <Logical Operation="OR">
+                                                <ScalarOperator>
+                                                  <Compare CompareOp="EQ">
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="type" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="'FD'" />
+                                                    </ScalarOperator>
+                                                  </Compare>
+                                                </ScalarOperator>
+                                                <ScalarOperator>
+                                                  <Compare CompareOp="EQ">
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="type" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="'FG'" />
+                                                    </ScalarOperator>
+                                                  </Compare>
+                                                </ScalarOperator>
+                                                <ScalarOperator>
+                                                  <Compare CompareOp="EQ">
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="type" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="'FL'" />
+                                                    </ScalarOperator>
+                                                  </Compare>
+                                                </ScalarOperator>
+                                              </Logical>
+                                            </ScalarOperator>
+                                          </Logical>
+                                        </ScalarOperator>
+                                      </Predicate>
+                                    </IndexScan>
+                                  </RelOp>
+                                  <RelOp NodeId="18" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="12.458" EstimateIO="0.003125" EstimateCPU="0.000170704" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032957" TableCardinality="4889" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                    <OutputList>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syssingleobjrefs]" Column="depid" />
+                                    </OutputList>
+                                    <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                      <DefinedValues>
+                                        <DefinedValue>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syssingleobjrefs]" Column="depid" />
+                                        </DefinedValue>
+                                      </DefinedValues>
+                                      <Object Database="[OurLabReporting]" Schema="[sys]" Table="[syssingleobjrefs]" Index="[nc1]" IndexKind="NonClustered" />
+                                      <SeekPredicates>
+                                        <SeekPredicateNew>
+                                          <SeekKeys>
+                                            <Prefix ScanType="EQ">
+                                              <RangeColumns>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syssingleobjrefs]" Column="indepid" />
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syssingleobjrefs]" Column="class" />
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syssingleobjrefs]" Column="indepsubid" />
+                                              </RangeColumns>
+                                              <RangeExpressions>
+                                                <ScalarOperator ScalarString="[OurLabReporting].[sys].[sysclsobjs].[id] as [o].[id]">
+                                                  <Identifier>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="id" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                                <ScalarOperator ScalarString="(30)">
+                                                  <Const ConstValue="(30)" />
+                                                </ScalarOperator>
+                                                <ScalarOperator ScalarString="(0)">
+                                                  <Const ConstValue="(0)" />
+                                                </ScalarOperator>
+                                              </RangeExpressions>
+                                            </Prefix>
+                                          </SeekKeys>
+                                        </SeekPredicateNew>
+                                      </SeekPredicates>
+                                    </IndexScan>
+                                  </RelOp>
+                                </NestedLoops>
+                              </RelOp>
+                            </NestedLoops>
+                          </RelOp>
+                          <RelOp NodeId="21" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.00986172" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList />
+                            <NestedLoops Optimized="0">
+                              <OuterReferences>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syssingleobjrefs]" Alias="[ds]" Column="indepid" />
+                                <ColumnReference Column="Expr1070" />
+                              </OuterReferences>
+                              <RelOp NodeId="22" PhysicalOp="Nested Loops" LogicalOp="Left Outer Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="15" EstimatedTotalSubtreeCost="0.00657256" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syssingleobjrefs]" Alias="[ds]" Column="indepid" />
+                                  <ColumnReference Column="Expr1070" />
+                                </OutputList>
+                                <NestedLoops Optimized="0">
+                                  <RelOp NodeId="23" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328528" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                    <OutputList>
+                                      <ColumnReference Column="Expr1070" />
+                                    </OutputList>
+                                    <ComputeScalar>
+                                      <DefinedValues>
+                                        <DefinedValue>
+                                          <ColumnReference Column="Expr1070" />
+                                          <ScalarOperator ScalarString="(1)-([OurLabReporting].[sys].[sysidxstats].[status] as [i].[status]&amp;(256))/(256)">
+                                            <Arithmetic Operation="SUB">
+                                              <ScalarOperator>
+                                                <Const ConstValue="(1)" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Arithmetic Operation="DIV">
+                                                  <ScalarOperator>
+                                                    <Arithmetic Operation="BIT_AND">
+                                                      <ScalarOperator>
+                                                        <Identifier>
+                                                          <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="status" />
+                                                        </Identifier>
+                                                      </ScalarOperator>
+                                                      <ScalarOperator>
+                                                        <Const ConstValue="(256)" />
+                                                      </ScalarOperator>
+                                                    </Arithmetic>
+                                                  </ScalarOperator>
+                                                  <ScalarOperator>
+                                                    <Const ConstValue="(256)" />
+                                                  </ScalarOperator>
+                                                </Arithmetic>
+                                              </ScalarOperator>
+                                            </Arithmetic>
+                                          </ScalarOperator>
+                                        </DefinedValue>
+                                      </DefinedValues>
+                                      <RelOp NodeId="24" PhysicalOp="Filter" LogicalOp="Filter" EstimateRows="1" EstimateIO="0" EstimateCPU="2.08e-006" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328518" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                        <OutputList>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="status" />
+                                        </OutputList>
+                                        <Filter StartupExpression="0">
+                                          <RelOp NodeId="25" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1236" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                            <OutputList>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="status" />
+                                            </OutputList>
+                                            <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                              <DefinedValues>
+                                                <DefinedValue>
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                                                </DefinedValue>
+                                                <DefinedValue>
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="status" />
+                                                </DefinedValue>
+                                              </DefinedValues>
+                                              <Object Database="[OurLabReporting]" Schema="[sys]" Table="[sysidxstats]" Index="[clst]" Alias="[i]" TableReferenceId="2" IndexKind="Clustered" />
+                                              <SeekPredicates>
+                                                <SeekPredicateNew>
+                                                  <SeekKeys>
+                                                    <Prefix ScanType="EQ">
+                                                      <RangeColumns>
+                                                        <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                                                        <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="indid" />
+                                                      </RangeColumns>
+                                                      <RangeExpressions>
+                                                        <ScalarOperator ScalarString="[@ParamObjectID]">
+                                                          <Identifier>
+                                                            <ColumnReference Column="@ParamObjectID" />
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator ScalarString="[@ParamIndexID]">
+                                                          <Identifier>
+                                                            <ColumnReference Column="@ParamIndexID" />
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                      </RangeExpressions>
+                                                    </Prefix>
+                                                  </SeekKeys>
+                                                </SeekPredicateNew>
+                                              </SeekPredicates>
+                                              <Predicate>
+                                                <ScalarOperator ScalarString="([OurLabReporting].[sys].[sysidxstats].[status] as [i].[status]&amp;(1))&lt;(0) OR ([OurLabReporting].[sys].[sysidxstats].[status] as [i].[status]&amp;(1))&gt;(0)">
+                                                  <Logical Operation="OR">
+                                                    <ScalarOperator>
+                                                      <Compare CompareOp="LT">
+                                                        <ScalarOperator>
+                                                          <Arithmetic Operation="BIT_AND">
+                                                            <ScalarOperator>
+                                                              <Identifier>
+                                                                <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="status" />
+                                                              </Identifier>
+                                                            </ScalarOperator>
+                                                            <ScalarOperator>
+                                                              <Const ConstValue="(1)" />
+                                                            </ScalarOperator>
+                                                          </Arithmetic>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator>
+                                                          <Const ConstValue="(0)" />
+                                                        </ScalarOperator>
+                                                      </Compare>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Compare CompareOp="GT">
+                                                        <ScalarOperator>
+                                                          <Arithmetic Operation="BIT_AND">
+                                                            <ScalarOperator>
+                                                              <Identifier>
+                                                                <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="status" />
+                                                              </Identifier>
+                                                            </ScalarOperator>
+                                                            <ScalarOperator>
+                                                              <Const ConstValue="(1)" />
+                                                            </ScalarOperator>
+                                                          </Arithmetic>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator>
+                                                          <Const ConstValue="(0)" />
+                                                        </ScalarOperator>
+                                                      </Compare>
+                                                    </ScalarOperator>
+                                                  </Logical>
+                                                </ScalarOperator>
+                                              </Predicate>
+                                            </IndexScan>
+                                          </RelOp>
+                                          <Predicate>
+                                            <ScalarOperator ScalarString="has_access('CO',[OurLabReporting].[sys].[sysidxstats].[id] as [i].[id])=(1)">
+                                              <Compare CompareOp="EQ">
+                                                <ScalarOperator>
+                                                  <Intrinsic FunctionName="has_access">
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="'CO'" />
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="" />
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="" />
+                                                    </ScalarOperator>
+                                                  </Intrinsic>
+                                                </ScalarOperator>
+                                                <ScalarOperator>
+                                                  <Const ConstValue="(1)" />
+                                                </ScalarOperator>
+                                              </Compare>
+                                            </ScalarOperator>
+                                          </Predicate>
+                                        </Filter>
+                                      </RelOp>
+                                    </ComputeScalar>
+                                  </RelOp>
+                                  <RelOp NodeId="30" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="4889" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                    <OutputList>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syssingleobjrefs]" Alias="[ds]" Column="indepid" />
+                                    </OutputList>
+                                    <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                      <DefinedValues>
+                                        <DefinedValue>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syssingleobjrefs]" Alias="[ds]" Column="indepid" />
+                                        </DefinedValue>
+                                      </DefinedValues>
+                                      <Object Database="[OurLabReporting]" Schema="[sys]" Table="[syssingleobjrefs]" Index="[clst]" Alias="[ds]" TableReferenceId="2" IndexKind="Clustered" />
+                                      <SeekPredicates>
+                                        <SeekPredicateNew>
+                                          <SeekKeys>
+                                            <Prefix ScanType="EQ">
+                                              <RangeColumns>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syssingleobjrefs]" Alias="[ds]" Column="depid" />
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syssingleobjrefs]" Alias="[ds]" Column="class" />
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syssingleobjrefs]" Alias="[ds]" Column="depsubid" />
+                                              </RangeColumns>
+                                              <RangeExpressions>
+                                                <ScalarOperator ScalarString="[@ParamObjectID]">
+                                                  <Identifier>
+                                                    <ColumnReference Column="@ParamObjectID" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                                <ScalarOperator ScalarString="(7)">
+                                                  <Const ConstValue="(7)" />
+                                                </ScalarOperator>
+                                                <ScalarOperator ScalarString="[@ParamIndexID]">
+                                                  <Identifier>
+                                                    <ColumnReference Column="@ParamIndexID" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                              </RangeExpressions>
+                                            </Prefix>
+                                          </SeekKeys>
+                                        </SeekPredicateNew>
+                                      </SeekPredicates>
+                                    </IndexScan>
+                                  </RelOp>
+                                </NestedLoops>
+                              </RelOp>
+                              <RelOp NodeId="31" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="13" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="39" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList />
+                                <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                  <DefinedValues />
+                                  <Object Database="[OurLabReporting]" Schema="[sys]" Table="[sysclsobjs]" Index="[clst]" Alias="[o]" TableReferenceId="2" IndexKind="Clustered" />
+                                  <SeekPredicates>
+                                    <SeekPredicateNew>
+                                      <SeekKeys>
+                                        <Prefix ScanType="EQ">
+                                          <RangeColumns>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="class" />
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="id" />
+                                          </RangeColumns>
+                                          <RangeExpressions>
+                                            <ScalarOperator ScalarString="(31)">
+                                              <Const ConstValue="(31)" />
+                                            </ScalarOperator>
+                                            <ScalarOperator ScalarString="isnull([OurLabReporting].[sys].[syssingleobjrefs].[indepid] as [ds].[indepid],[Expr1070])">
+                                              <Intrinsic FunctionName="isnull">
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[syssingleobjrefs]" Alias="[ds]" Column="indepid" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Column="Expr1070" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                              </Intrinsic>
+                                            </ScalarOperator>
+                                          </RangeExpressions>
+                                        </Prefix>
+                                      </SeekKeys>
+                                    </SeekPredicateNew>
+                                  </SeekPredicates>
+                                  <Predicate>
+                                    <ScalarOperator ScalarString="CONVERT(bit,[OurLabReporting].[sys].[sysclsobjs].[status] as [o].[status]&amp;(2),0)=(1) AND ([OurLabReporting].[sys].[sysclsobjs].[type] as [o].[type]='FD' OR [OurLabReporting].[sys].[sysclsobjs].[type] as [o].[type]='FG' OR [OurLabReporting].[sys].[sysclsobjs].[type] as [o].[type]='FL')">
+                                      <Logical Operation="AND">
+                                        <ScalarOperator>
+                                          <Compare CompareOp="EQ">
+                                            <ScalarOperator>
+                                              <Convert DataType="bit" Style="0" Implicit="0">
+                                                <ScalarOperator>
+                                                  <Arithmetic Operation="BIT_AND">
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="status" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="(2)" />
+                                                    </ScalarOperator>
+                                                  </Arithmetic>
+                                                </ScalarOperator>
+                                              </Convert>
+                                            </ScalarOperator>
+                                            <ScalarOperator>
+                                              <Const ConstValue="(1)" />
+                                            </ScalarOperator>
+                                          </Compare>
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Logical Operation="OR">
+                                            <ScalarOperator>
+                                              <Compare CompareOp="EQ">
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="type" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                                <ScalarOperator>
+                                                  <Const ConstValue="'FD'" />
+                                                </ScalarOperator>
+                                              </Compare>
+                                            </ScalarOperator>
+                                            <ScalarOperator>
+                                              <Compare CompareOp="EQ">
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="type" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                                <ScalarOperator>
+                                                  <Const ConstValue="'FG'" />
+                                                </ScalarOperator>
+                                              </Compare>
+                                            </ScalarOperator>
+                                            <ScalarOperator>
+                                              <Compare CompareOp="EQ">
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[sys]" Table="[sysclsobjs]" Alias="[o]" Column="type" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                                <ScalarOperator>
+                                                  <Const ConstValue="'FL'" />
+                                                </ScalarOperator>
+                                              </Compare>
+                                            </ScalarOperator>
+                                          </Logical>
+                                        </ScalarOperator>
+                                      </Logical>
+                                    </ScalarOperator>
+                                  </Predicate>
+                                </IndexScan>
+                              </RelOp>
+                            </NestedLoops>
+                          </RelOp>
+                        </Concat>
+                      </RelOp>
+                    </NestedLoops>
+                  </RelOp>
+                </ComputeScalar>
+              </RelOp>
+              <ParameterList>
+                <ColumnReference Column="@ParamIndexID" ParameterCompiledValue="(18)" />
+                <ColumnReference Column="@ParamObjectID" ParameterCompiledValue="(533576939)" />
+              </ParameterList>
+            </QueryPlan>
+          </Condition>
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN SET @ParamOnReadOnlyFileGroup = 1" StatementId="2" StatementCompId="2430" StatementType="ASSIGN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

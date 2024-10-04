@@ -1,0 +1,565 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="select &#xD;&#xA;                                    f.FailureTypeId,&#xD;&#xA;                                    t.IsRerunPrimary                                  &#xD;&#xA;                                    from Failure f (nolock)                            &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;inner join Status s (nolock) on s.id = f.StatusId&#x9;&#x9;&#xD;&#xA;                                    inner join Teu t (nolock) on t.Id = f.TEUId &#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#xD;&#xA;                                    where f.id in (12901367,12901474,12901406,12901489,12901488,12901483,12901482,12901481,12901480,12901478,12901475,12901472,12901471,12901470,12901469,12901468,12901467,12901466,12901465,12901464,12901462,12901461,12901459,12901458,12901456,12901455,12901386,12901451,12901450,12901449,12901447,12901446,12901404,12901417,12901416,12901415,12901413,12901412,12901411,12901410,12901409,12901407,12901405,12901403,12901402,12901401,12901400,12901399,12901398,12901397,12901396,12901395,12901394,12901393,12901392,12901391,12901390,12901388,12901387,12901384,12901383,12901382,12901377,12901376,12901375,12901374,12901373,12901372,12901371,12901370,12901369,12901365,12901364,12901485,12901408,12901389,12901385,12901414,12901368)and s.Status = 'Active'" StatementId="1" StatementCompId="1" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.175642" StatementEstRows="39.4664" StatementOptmLevel="FULL" QueryHash="0xF0FD3CAE4619327C" QueryPlanHash="0xC777EFCE7500663F" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="72" CompileTime="16" CompileCPU="16" CompileMemory="1456">
+            <MemoryGrantInfo SerialRequiredMemory="512" SerialDesiredMemory="544" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="39.4664" EstimateIO="0" EstimateCPU="0.000165259" AvgRowSize="12" EstimatedTotalSubtreeCost="0.175642" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Alias="[f]" Column="FailureTypeId" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Alias="[t]" Column="IsRerunPrimary" />
+              </OutputList>
+              <NestedLoops Optimized="1" WithUnorderedPrefetch="1">
+                <OuterReferences>
+                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Alias="[f]" Column="TEUId" />
+                  <ColumnReference Column="Expr1008" />
+                </OuterReferences>
+                <RelOp NodeId="3" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="39.5357" EstimateIO="0" EstimateCPU="0.000330541" AvgRowSize="19" EstimatedTotalSubtreeCost="0.0488143" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Alias="[f]" Column="TEUId" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Alias="[f]" Column="FailureTypeId" />
+                  </OutputList>
+                  <NestedLoops Optimized="0">
+                    <OuterReferences>
+                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Alias="[f]" Column="StatusId" />
+                    </OuterReferences>
+                    <RelOp NodeId="5" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="79" EstimateIO="0" EstimateCPU="0.00033022" AvgRowSize="23" EstimatedTotalSubtreeCost="0.0328188" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Alias="[f]" Column="StatusId" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Alias="[f]" Column="TEUId" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Alias="[f]" Column="FailureTypeId" />
+                      </OutputList>
+                      <NestedLoops Optimized="0" WithUnorderedPrefetch="1">
+                        <OuterReferences>
+                          <ColumnReference Column="Expr1006" />
+                          <ColumnReference Column="Expr1007" />
+                        </OuterReferences>
+                        <RelOp NodeId="7" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="79" EstimateIO="0" EstimateCPU="7.9157e-005" AvgRowSize="11" EstimatedTotalSubtreeCost="7.9157e-005" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Column="Expr1006" />
+                          </OutputList>
+                          <ConstantScan>
+                            <Values>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901364)">
+                                  <Const ConstValue="(12901364)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901365)">
+                                  <Const ConstValue="(12901365)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901367)">
+                                  <Const ConstValue="(12901367)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901368)">
+                                  <Const ConstValue="(12901368)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901369)">
+                                  <Const ConstValue="(12901369)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901370)">
+                                  <Const ConstValue="(12901370)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901371)">
+                                  <Const ConstValue="(12901371)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901372)">
+                                  <Const ConstValue="(12901372)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901373)">
+                                  <Const ConstValue="(12901373)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901374)">
+                                  <Const ConstValue="(12901374)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901375)">
+                                  <Const ConstValue="(12901375)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901376)">
+                                  <Const ConstValue="(12901376)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901377)">
+                                  <Const ConstValue="(12901377)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901382)">
+                                  <Const ConstValue="(12901382)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901383)">
+                                  <Const ConstValue="(12901383)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901384)">
+                                  <Const ConstValue="(12901384)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901385)">
+                                  <Const ConstValue="(12901385)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901386)">
+                                  <Const ConstValue="(12901386)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901387)">
+                                  <Const ConstValue="(12901387)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901388)">
+                                  <Const ConstValue="(12901388)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901389)">
+                                  <Const ConstValue="(12901389)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901390)">
+                                  <Const ConstValue="(12901390)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901391)">
+                                  <Const ConstValue="(12901391)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901392)">
+                                  <Const ConstValue="(12901392)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901393)">
+                                  <Const ConstValue="(12901393)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901394)">
+                                  <Const ConstValue="(12901394)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901395)">
+                                  <Const ConstValue="(12901395)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901396)">
+                                  <Const ConstValue="(12901396)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901397)">
+                                  <Const ConstValue="(12901397)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901398)">
+                                  <Const ConstValue="(12901398)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901399)">
+                                  <Const ConstValue="(12901399)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901400)">
+                                  <Const ConstValue="(12901400)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901401)">
+                                  <Const ConstValue="(12901401)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901402)">
+                                  <Const ConstValue="(12901402)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901403)">
+                                  <Const ConstValue="(12901403)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901404)">
+                                  <Const ConstValue="(12901404)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901405)">
+                                  <Const ConstValue="(12901405)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901406)">
+                                  <Const ConstValue="(12901406)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901407)">
+                                  <Const ConstValue="(12901407)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901408)">
+                                  <Const ConstValue="(12901408)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901409)">
+                                  <Const ConstValue="(12901409)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901410)">
+                                  <Const ConstValue="(12901410)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901411)">
+                                  <Const ConstValue="(12901411)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901412)">
+                                  <Const ConstValue="(12901412)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901413)">
+                                  <Const ConstValue="(12901413)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901414)">
+                                  <Const ConstValue="(12901414)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901415)">
+                                  <Const ConstValue="(12901415)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901416)">
+                                  <Const ConstValue="(12901416)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901417)">
+                                  <Const ConstValue="(12901417)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901446)">
+                                  <Const ConstValue="(12901446)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901447)">
+                                  <Const ConstValue="(12901447)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901449)">
+                                  <Const ConstValue="(12901449)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901450)">
+                                  <Const ConstValue="(12901450)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901451)">
+                                  <Const ConstValue="(12901451)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901455)">
+                                  <Const ConstValue="(12901455)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901456)">
+                                  <Const ConstValue="(12901456)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901458)">
+                                  <Const ConstValue="(12901458)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901459)">
+                                  <Const ConstValue="(12901459)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901461)">
+                                  <Const ConstValue="(12901461)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901462)">
+                                  <Const ConstValue="(12901462)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901464)">
+                                  <Const ConstValue="(12901464)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901465)">
+                                  <Const ConstValue="(12901465)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901466)">
+                                  <Const ConstValue="(12901466)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901467)">
+                                  <Const ConstValue="(12901467)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901468)">
+                                  <Const ConstValue="(12901468)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901469)">
+                                  <Const ConstValue="(12901469)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901470)">
+                                  <Const ConstValue="(12901470)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901471)">
+                                  <Const ConstValue="(12901471)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901472)">
+                                  <Const ConstValue="(12901472)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901474)">
+                                  <Const ConstValue="(12901474)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901475)">
+                                  <Const ConstValue="(12901475)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901478)">
+                                  <Const ConstValue="(12901478)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901480)">
+                                  <Const ConstValue="(12901480)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901481)">
+                                  <Const ConstValue="(12901481)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901482)">
+                                  <Const ConstValue="(12901482)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901483)">
+                                  <Const ConstValue="(12901483)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901485)">
+                                  <Const ConstValue="(12901485)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901488)">
+                                  <Const ConstValue="(12901488)" />
+                                </ScalarOperator>
+                              </Row>
+                              <Row>
+                                <ScalarOperator ScalarString="(12901489)">
+                                  <Const ConstValue="(12901489)" />
+                                </ScalarOperator>
+                              </Row>
+                            </Values>
+                          </ConstantScan>
+                        </RelOp>
+                        <RelOp NodeId="87" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="23" EstimatedTotalSubtreeCost="0.0324094" TableCardinality="3.38968e+007" Parallel="0" EstimateRebinds="78" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Alias="[f]" Column="StatusId" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Alias="[f]" Column="TEUId" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Alias="[f]" Column="FailureTypeId" />
+                          </OutputList>
+                          <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Alias="[f]" Column="StatusId" />
+                              </DefinedValue>
+                              <DefinedValue>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Alias="[f]" Column="TEUId" />
+                              </DefinedValue>
+                              <DefinedValue>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Alias="[f]" Column="FailureTypeId" />
+                              </DefinedValue>
+                            </DefinedValues>
+                            <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Index="[Failure_PK]" Alias="[f]" IndexKind="Clustered" />
+                            <SeekPredicates>
+                              <SeekPredicateNew>
+                                <SeekKeys>
+                                  <Prefix ScanType="EQ">
+                                    <RangeColumns>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Alias="[f]" Column="Id" />
+                                    </RangeColumns>
+                                    <RangeExpressions>
+                                      <ScalarOperator ScalarString="[Expr1006]">
+                                        <Identifier>
+                                          <ColumnReference Column="Expr1006" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </RangeExpressions>
+                                  </Prefix>
+                                </SeekKeys>
+                              </SeekPredicateNew>
+                            </SeekPredicates>
+                          </IndexScan>
+                        </RelOp>
+                      </NestedLoops>
+                    </RelOp>
+                    <RelOp NodeId="89" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="24" EstimatedTotalSubtreeCost="0.0156271" TableCardinality="96" Parallel="0" EstimateRebinds="20.7193" EstimateRewinds="57.3576" EstimatedExecutionMode="Row">
+                      <OutputList />
+                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                        <DefinedValues />
+                        <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Index="[Status_PK]" Alias="[s]" IndexKind="Clustered" />
+                        <SeekPredicates>
+                          <SeekPredicateNew>
+                            <SeekKeys>
+                              <Prefix ScanType="EQ">
+                                <RangeColumns>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Alias="[s]" Column="Id" />
+                                </RangeColumns>
+                                <RangeExpressions>
+                                  <ScalarOperator ScalarString="[OurLabReporting].[dbo].[Failure].[StatusId] as [f].[StatusId]">
+                                    <Identifier>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Alias="[f]" Column="StatusId" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </RangeExpressions>
+                              </Prefix>
+                            </SeekKeys>
+                          </SeekPredicateNew>
+                        </SeekPredicates>
+                        <Predicate>
+                          <ScalarOperator ScalarString="[OurLabReporting].[dbo].[Status].[Status] as [s].[Status]='Active'">
+                            <Compare CompareOp="EQ">
+                              <ScalarOperator>
+                                <Identifier>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Alias="[s]" Column="Status" />
+                                </Identifier>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Const ConstValue="'Active'" />
+                              </ScalarOperator>
+                            </Compare>
+                          </ScalarOperator>
+                        </Predicate>
+                      </IndexScan>
+                    </RelOp>
+                  </NestedLoops>
+                </RelOp>
+                <RelOp NodeId="90" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.126663" TableCardinality="4.1203e+007" Parallel="0" EstimateRebinds="38.5357" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Alias="[t]" Column="IsRerunPrimary" />
+                  </OutputList>
+                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Alias="[t]" Column="IsRerunPrimary" />
+                      </DefinedValue>
+                    </DefinedValues>
+                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Index="[Teu_IDX_Id]" Alias="[t]" IndexKind="NonClustered" />
+                    <SeekPredicates>
+                      <SeekPredicateNew>
+                        <SeekKeys>
+                          <Prefix ScanType="EQ">
+                            <RangeColumns>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Alias="[t]" Column="Id" />
+                            </RangeColumns>
+                            <RangeExpressions>
+                              <ScalarOperator ScalarString="[OurLabReporting].[dbo].[Failure].[TEUId] as [f].[TEUId]">
+                                <Identifier>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Alias="[f]" Column="TEUId" />
+                                </Identifier>
+                              </ScalarOperator>
+                            </RangeExpressions>
+                          </Prefix>
+                        </SeekKeys>
+                      </SeekPredicateNew>
+                    </SeekPredicates>
+                  </IndexScan>
+                </RelOp>
+              </NestedLoops>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

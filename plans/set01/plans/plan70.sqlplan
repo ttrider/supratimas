@@ -1,0 +1,1641 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="CREATE PROCEDURE [dbo].[Web_GetScheduleDetails] &#xD;&#xA;     @Branch            NVARCHAR(100)&#xD;&#xA;    ,@FullBuildNumber&#x9;NVARCHAR(256)&#xD;&#xA;    ,@Platform&#x9;&#x9;&#x9;INT = NULL&#xD;&#xA;    ,@BSP&#x9;&#x9;&#x9;&#x9;INT = NULL&#xD;&#xA;    ,@Firmware&#x9;&#x9;&#x9;INT = NULL&#xD;&#xA;    ,@ScheduleName&#x9;&#x9;NVARCHAR(200) = 'ALL'&#xD;&#xA;    ,@TopRowCount&#x9;&#x9;INT&#xD;&#xA;    ,@OrderByString&#x9;&#x9;NVARCHAR(512) = ' ORDER BY StartDate DESC '&#xD;&#xA;    ,@UserName&#x9;&#x9;&#x9;NVARCHAR(50)&#xD;&#xA;    ,@ScheduleId&#x9;&#x9;INT = NULL&#xD;&#xA;AS&#xD;&#xA;&#xD;&#xA;BEGIN &#xD;&#xA;&#xD;&#xA;&#x9;DECLARE @stopwatchBeginTime datetime2 &#xD;&#xA;&#x9;SELECT @stopwatchBeginTime = [dbo].[fnBeginStopwatch]()&#xD;&#xA;&#xD;&#xA;   " StatementId="1" StatementCompId="2" StatementType="ASSIGN WITH QUERY" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" DECLARE @C_All NVARCHAR(3) = 'ALL'&#xD;&#xA;&#xD;&#xA;   " StatementId="2" StatementCompId="3" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" DECLARE @BuildNumberCondition nvarchar(256)     = ''&#xD;&#xA;   " StatementId="3" StatementCompId="4" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" DECLARE @BranchCondition nvarchar(512)          = ''&#xD;&#xA;   " StatementId="4" StatementCompId="5" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" DECLARE @local_ImageInfojoin nvarchar(512)      = ''&#xD;&#xA;   " StatementId="5" StatementCompId="6" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" DECLARE @PlatformCondition nvarchar(512)        = ''&#xD;&#xA;   " StatementId="6" StatementCompId="7" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" DECLARE @BSPCondition nvarchar(512)             = ''&#xD;&#xA;   " StatementId="7" StatementCompId="8" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" DECLARE @FirmwareCondition nvarchar(512)        = ''&#xD;&#xA;   " StatementId="8" StatementCompId="9" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" DECLARE @BuildVersionId int &#xD;&#xA;    DECLARE @sqlStatement nvarchar(MAX)             = ''&#xD;&#xA;&#xD;&#xA;   " StatementId="9" StatementCompId="10" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" DECLARE @SelectPart nvarchar(MAX)               = ''&#xD;&#xA;   " StatementId="10" StatementCompId="11" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" DECLARE @FromPart nvarchar(MAX)                 = ''&#xD;&#xA;   " StatementId="11" StatementCompId="12" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" DECLARE @WherePart nvarchar(MAX)                = ''&#xD;&#xA;&#xD;&#xA;   " StatementId="12" StatementCompId="13" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" DECLARE @parameterDefinition nvarchar(MAX)&#xD;&#xA;    DECLARE @ScheduleNameCondition nvarchar(512)   = ''&#xD;&#xA;   " StatementId="13" StatementCompId="14" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" DECLARE @ScheduleIdCondition nvarchar(100)&#x9;   = ''&#xD;&#xA;&#xD;&#xA;   " StatementId="14" StatementCompId="15" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" DECLARE @UserId                SMALLINT&#xD;&#xA;    DECLARE @ActiveFailureStatusId TINYINT&#xD;&#xA;    DECLARE @DateConstrain&#x9;&#x9;   DATETIME&#x9;&#x9;   = GETDATE()&#xD;&#xA;&#xD;&#xA;   " StatementId="15" StatementCompId="16" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtCond StatementText=" IF (@FullBuildNumber &lt;&gt; @C_All)&#xD;&#xA;   " StatementId="16" StatementCompId="17" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;        SELECT @BuildVersionId = Id &#xD;&#xA;        FROM dbo.BuildVersion WITH (NOLOCK)&#xD;&#xA;        WHERE FullBuildNumber = @FullBuildNumber&#xD;&#xA;&#xD;&#xA;       " StatementId="17" StatementCompId="18" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032831" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x7C6DA1D7880F846C" QueryPlanHash="0x86A1C0302E744BCF">
+                <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="1" CompileCPU="1" CompileMemory="488">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="0" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="78971" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList>
+                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Column="Id" />
+                    </OutputList>
+                    <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                      <DefinedValues>
+                        <DefinedValue>
+                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Column="Id" />
+                        </DefinedValue>
+                      </DefinedValues>
+                      <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Index="[BuildVersion_IDX_FullBuildNumber]" IndexKind="NonClustered" />
+                      <SeekPredicates>
+                        <SeekPredicateNew>
+                          <SeekKeys>
+                            <Prefix ScanType="EQ">
+                              <RangeColumns>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Column="FullBuildNumber" />
+                              </RangeColumns>
+                              <RangeExpressions>
+                                <ScalarOperator ScalarString="[@FullBuildNumber]">
+                                  <Identifier>
+                                    <ColumnReference Column="@FullBuildNumber" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </RangeExpressions>
+                            </Prefix>
+                          </SeekKeys>
+                        </SeekPredicateNew>
+                      </SeekPredicates>
+                    </IndexScan>
+                  </RelOp>
+                  <ParameterList>
+                    <ColumnReference Column="@FullBuildNumber" ParameterCompiledValue="N'ALL'" />
+                  </ParameterList>
+                </QueryPlan>
+              </StmtSimple>
+              <StmtSimple StatementText=" SET @BuildNumberCondition = ' AND s.BuildVersionId = @BuildVersionId '&#xD;&#xA;   " StatementId="18" StatementCompId="19" StatementType="ASSIGN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtCond StatementText=" END &#xD;&#xA;&#xD;&#xA;    IF (@Branch &lt;&gt; @C_All AND @FullBuildNumber = @C_All)&#xD;&#xA;   " StatementId="19" StatementCompId="21" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN     &#xD;&#xA;&#xD;&#xA;        SET @BranchCondition = ' INNER JOIN &#xD;&#xA;                                 (&#xD;&#xA;                                    SELECT dbo.BuildVersion.Id AS BuildVersionId&#xD;&#xA;                                    FROM dbo.BuildVersion WITH (NOLOCK)&#xD;&#xA;                                    WHERE dbo.BuildVersion.Branch = @Branch&#xD;&#xA;                                 ) AS BranchBV ON BranchBV.BuildVersionId = s.BuildVersionId ' &#xD;&#xA;       &#xD;&#xA;   " StatementId="20" StatementCompId="22" StatementType="ASSIGN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtCond StatementText=" END &#xD;&#xA;&#xD;&#xA;    IF (@Firmware IS NOT NULL)&#xD;&#xA;   " StatementId="21" StatementCompId="24" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN     &#xD;&#xA;&#xD;&#xA;        SET @FirmwareCondition = ' AND I.PlatformBspFirmwareId = @Firmware ' &#xD;&#xA;       &#xD;&#xA;   " StatementId="22" StatementCompId="25" StatementType="ASSIGN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtCond StatementText=" END &#xD;&#xA;    IF (@BSP IS NOT NULL)&#xD;&#xA;   " StatementId="23" StatementCompId="27" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN     &#xD;&#xA;&#xD;&#xA;        SET @BSPCondition = 'AND I.PlatformBspId = @BSP ' &#xD;&#xA;       &#xD;&#xA;   " StatementId="24" StatementCompId="28" StatementType="ASSIGN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtCond StatementText=" END  &#xD;&#xA;    IF (@Platform IS NOT NULL)&#xD;&#xA;   " StatementId="25" StatementCompId="30" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN     &#xD;&#xA;&#xD;&#xA;        SET @PlatformCondition = ' AND I.PlatformId = @Platform ' &#xD;&#xA;       &#xD;&#xA;   " StatementId="26" StatementCompId="31" StatementType="ASSIGN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtCond StatementText=" END &#xD;&#xA;&#xD;&#xA;    &#xD;&#xA;    IF (@UserName IS NOT NULL)&#xD;&#xA;   " StatementId="27" StatementCompId="33" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;        exec dbo.GetOrCreateUser @Alias = @UserName, @UserId = @UserId OUTPUT&#xD;&#xA;   " StatementId="28" StatementCompId="34" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtSimple StatementText=" END&#xD;&#xA;&#xD;&#xA;    -- get failures that are not resolved&#xD;&#xA;    SELECT  @ActiveFailureStatusId = Id &#xD;&#xA;    FROM dbo.[Status] WITH (NOLOCK)&#xD;&#xA;    WHERE [Type] = 'Failure' AND &#xD;&#xA;          [Status] = 'Active'&#xD;&#xA;&#xD;&#xA;   " StatementId="29" StatementCompId="36" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032832" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x1038B349CFE76360" QueryPlanHash="0x4FCB558C872215FB">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="1" CompileCPU="1" CompileMemory="400">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032832" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Column="Expr1003" />
+              </OutputList>
+              <ComputeScalar>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1003" />
+                    <ScalarOperator ScalarString="CONVERT_IMPLICIT(tinyint,[OurLabReporting].[dbo].[Status].[Id],0)">
+                      <Convert DataType="tinyint" Style="0" Implicit="1">
+                        <ScalarOperator>
+                          <Identifier>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Column="Id" />
+                          </Identifier>
+                        </ScalarOperator>
+                      </Convert>
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp NodeId="1" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="96" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Column="Id" />
+                  </OutputList>
+                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Column="Id" />
+                      </DefinedValue>
+                    </DefinedValues>
+                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Index="[Status_AK]" IndexKind="NonClustered" />
+                    <SeekPredicates>
+                      <SeekPredicateNew>
+                        <SeekKeys>
+                          <Prefix ScanType="EQ">
+                            <RangeColumns>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Column="Type" />
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Column="Status" />
+                            </RangeColumns>
+                            <RangeExpressions>
+                              <ScalarOperator ScalarString="'Failure'">
+                                <Const ConstValue="'Failure'" />
+                              </ScalarOperator>
+                              <ScalarOperator ScalarString="'Active'">
+                                <Const ConstValue="'Active'" />
+                              </ScalarOperator>
+                            </RangeExpressions>
+                          </Prefix>
+                        </SeekKeys>
+                      </SeekPredicateNew>
+                    </SeekPredicates>
+                  </IndexScan>
+                </RelOp>
+              </ComputeScalar>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtCond StatementText=" IF (@ScheduleName &lt;&gt; @C_All)&#xD;&#xA;   " StatementId="30" StatementCompId="37" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;        SET @ScheduleNameCondition = ' AND s.Name = @ScheduleName'&#xD;&#xA;   " StatementId="31" StatementCompId="38" StatementType="ASSIGN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtCond StatementText=" END&#xD;&#xA;&#xD;&#xA;    IF (@ScheduleId IS NOT NULL)&#xD;&#xA;   " StatementId="32" StatementCompId="40" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;        SET @ScheduleIdCondition = ' AND s.Id = @ScheduleId '&#xD;&#xA;&#xD;&#xA;       " StatementId="33" StatementCompId="41" StatementType="ASSIGN" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" SELECT @DateConstrain = S.StartDate&#x9;&#xD;&#xA;        FROM dbo.Schedule AS S WITH (NOLOCK)&#xD;&#xA;        WHERE S.Id = @ScheduleId&#xD;&#xA;   " StatementId="34" StatementCompId="42" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032831" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x2E0AED24845CB2E1" QueryPlanHash="0x74251790AB7B773A">
+                <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="0" CompileCPU="0" CompileMemory="400">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="0" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.44032e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList>
+                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Alias="[S]" Column="StartDate" />
+                    </OutputList>
+                    <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                      <DefinedValues>
+                        <DefinedValue>
+                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Alias="[S]" Column="StartDate" />
+                        </DefinedValue>
+                      </DefinedValues>
+                      <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Index="[Schedule_PK]" Alias="[S]" IndexKind="Clustered" />
+                      <SeekPredicates>
+                        <SeekPredicateNew>
+                          <SeekKeys>
+                            <Prefix ScanType="EQ">
+                              <RangeColumns>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Alias="[S]" Column="Id" />
+                              </RangeColumns>
+                              <RangeExpressions>
+                                <ScalarOperator ScalarString="[@ScheduleId]">
+                                  <Identifier>
+                                    <ColumnReference Column="@ScheduleId" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </RangeExpressions>
+                            </Prefix>
+                          </SeekKeys>
+                        </SeekPredicateNew>
+                      </SeekPredicates>
+                    </IndexScan>
+                  </RelOp>
+                  <ParameterList>
+                    <ColumnReference Column="@ScheduleId" ParameterCompiledValue="(1450753)" />
+                  </ParameterList>
+                </QueryPlan>
+              </StmtSimple>
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtCond StatementText=" END&#xD;&#xA;&#xD;&#xA;    IF OBJECT_ID('tempdb..#Failures') IS NOT NULL&#xD;&#xA;   " StatementId="35" StatementCompId="44" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;        DROP TABLE #Failures&#xD;&#xA;   " StatementId="36" StatementCompId="45" StatementType="DROP OBJECT" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtSimple StatementText=" END&#xD;&#xA;&#xD;&#xA;    CREATE TABLE #Failures&#xD;&#xA;    (&#xD;&#xA;        ScheduleId       INT,&#xD;&#xA;        StatusId         TINYINT,&#xD;&#xA;        AssignedToUserId SMALLINT,&#xD;&#xA;        Total            INT&#xD;&#xA;    )&#xD;&#xA;&#xD;&#xA;   " StatementId="37" StatementCompId="47" StatementType="CREATE TABLE" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" INSERT INTO #Failures&#xD;&#xA;    SELECT&#xD;&#xA;      F.ScheduleId  ScheduleId&#xD;&#xA;      , F.StatusId&#xD;&#xA;      , F.AssignedToUserId&#xD;&#xA;      , COUNT(F.Id) AS Total&#xD;&#xA;    FROM   Reporting.Failures AS F WITH (NOLOCK)&#xD;&#xA;    WHERE  F.ScheduleStartDateTime BETWEEN DATEADD(WEEK, -1, @DateConstrain) AND @DateConstrain&#xD;&#xA;       AND IsReRunPrimary = 1&#xD;&#xA;    GROUP  BY F.ScheduleId&#xD;&#xA;              , F.AssignedToUserId&#xD;&#xA;              , F.StatusId&#xD;&#xA;&#xD;&#xA;   " StatementId="38" StatementCompId="48" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="171.68" StatementEstRows="2.48048e+006" StatementOptmLevel="FULL" QueryHash="0xE957CC9EA6E26CFE" QueryPlanHash="0x5B220C6AAD99389D">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="120" CompileTime="15" CompileCPU="15" CompileMemory="1016">
+            <MemoryGrantInfo SerialRequiredMemory="1024" SerialDesiredMemory="245600" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Table Insert" LogicalOp="Insert" EstimateRows="2.48048e+006" EstimateIO="36.8295" EstimateCPU="2.48048" AvgRowSize="9" EstimatedTotalSubtreeCost="171.68" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <Update DMLRequestSort="0">
+                <Object Database="[tempdb]" Schema="[dbo]" Table="[#Failures]" />
+                <SetPredicate>
+                  <ScalarOperator ScalarString="[#Failures].[ScheduleId] = [OurLabReporting].[Reporting].[Failures].[ScheduleId] as [F].[ScheduleId],[#Failures].[StatusId] = [OurLabReporting].[Reporting].[Failures].[StatusId] as [F].[StatusId],[#Failures].[AssignedToUserId] = [OurLabReporting].[Reporting].[Failures].[AssignedToUserId] as [F].[AssignedToUserId],[#Failures].[Total] = [Expr1007]">
+                    <ScalarExpressionList>
+                      <ScalarOperator>
+                        <MultipleAssign>
+                          <Assign>
+                            <ColumnReference Table="[#Failures]" Column="ScheduleId" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Failures]" Alias="[F]" Column="ScheduleId" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Table="[#Failures]" Column="StatusId" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Failures]" Alias="[F]" Column="StatusId" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Table="[#Failures]" Column="AssignedToUserId" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Failures]" Alias="[F]" Column="AssignedToUserId" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Table="[#Failures]" Column="Total" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1007" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                        </MultipleAssign>
+                      </ScalarOperator>
+                    </ScalarExpressionList>
+                  </ScalarOperator>
+                </SetPredicate>
+                <RelOp NodeId="1" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="2.48048e+006" EstimateIO="0" EstimateCPU="72.592" AvgRowSize="18" EstimatedTotalSubtreeCost="132.37" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Failures]" Alias="[F]" Column="ScheduleId" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Failures]" Alias="[F]" Column="AssignedToUserId" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Failures]" Alias="[F]" Column="StatusId" />
+                    <ColumnReference Column="Expr1007" />
+                  </OutputList>
+                  <ComputeScalar>
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1007" />
+                        <ScalarOperator ScalarString="CONVERT_IMPLICIT(int,[Expr1011],0)">
+                          <Convert DataType="int" Style="0" Implicit="1">
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1011" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Convert>
+                        </ScalarOperator>
+                      </DefinedValue>
+                    </DefinedValues>
+                    <RelOp NodeId="2" PhysicalOp="Hash Match" LogicalOp="Aggregate" EstimateRows="2.48048e+006" EstimateIO="0" EstimateCPU="72.592" AvgRowSize="18" EstimatedTotalSubtreeCost="132.37" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Failures]" Alias="[F]" Column="ScheduleId" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Failures]" Alias="[F]" Column="AssignedToUserId" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Failures]" Alias="[F]" Column="StatusId" />
+                        <ColumnReference Column="Expr1011" />
+                      </OutputList>
+                      <MemoryFractions Input="1" Output="1" />
+                      <Hash>
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1011" />
+                            <ScalarOperator ScalarString="COUNT(*)">
+                              <Aggregate Distinct="0" AggType="COUNT*" />
+                            </ScalarOperator>
+                          </DefinedValue>
+                        </DefinedValues>
+                        <HashKeysBuild>
+                          <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Failures]" Alias="[F]" Column="ScheduleId" />
+                          <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Failures]" Alias="[F]" Column="AssignedToUserId" />
+                          <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Failures]" Alias="[F]" Column="StatusId" />
+                        </HashKeysBuild>
+                        <BuildResidual>
+                          <ScalarOperator ScalarString="[OurLabReporting].[Reporting].[Failures].[ScheduleId] as [F].[ScheduleId] = [OurLabReporting].[Reporting].[Failures].[ScheduleId] as [F].[ScheduleId] AND [OurLabReporting].[Reporting].[Failures].[AssignedToUserId] as [F].[AssignedToUserId] = [OurLabReporting].[Reporting].[Failures].[AssignedToUserId] as [F].[AssignedToUserId] AND [OurLabReporting].[Reporting].[Failures].[StatusId] as [F].[StatusId] = [OurLabReporting].[Reporting].[Failures].[StatusId] as [F].[StatusId]">
+                            <Logical Operation="AND">
+                              <ScalarOperator>
+                                <Logical Operation="AND">
+                                  <ScalarOperator>
+                                    <Compare CompareOp="IS">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Failures]" Alias="[F]" Column="ScheduleId" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Failures]" Alias="[F]" Column="ScheduleId" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Compare CompareOp="IS">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Failures]" Alias="[F]" Column="AssignedToUserId" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Failures]" Alias="[F]" Column="AssignedToUserId" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                </Logical>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Compare CompareOp="IS">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Failures]" Alias="[F]" Column="StatusId" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Failures]" Alias="[F]" Column="StatusId" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Compare>
+                              </ScalarOperator>
+                            </Logical>
+                          </ScalarOperator>
+                        </BuildResidual>
+                        <RelOp NodeId="3" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="2.58113e+006" EstimateIO="54.9415" EstimateCPU="3.36816" AvgRowSize="15" EstimatedTotalSubtreeCost="58.3097" TableCardinality="3.39981e+007" Parallel="0" Partitioned="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Failures]" Alias="[F]" Column="ScheduleId" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Failures]" Alias="[F]" Column="AssignedToUserId" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Failures]" Alias="[F]" Column="StatusId" />
+                          </OutputList>
+                          <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Failures]" Alias="[F]" Column="ScheduleId" />
+                              </DefinedValue>
+                              <DefinedValue>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Failures]" Alias="[F]" Column="AssignedToUserId" />
+                              </DefinedValue>
+                              <DefinedValue>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Failures]" Alias="[F]" Column="StatusId" />
+                              </DefinedValue>
+                            </DefinedValues>
+                            <Object Database="[OurLabReporting]" Schema="[Reporting]" Table="[Failures]" Index="[PK_Failures]" Alias="[F]" IndexKind="Clustered" />
+                            <SeekPredicates>
+                              <SeekPredicateNew>
+                                <SeekKeys>
+                                  <StartRange ScanType="GE">
+                                    <RangeColumns>
+                                      <ColumnReference Column="PtnId1004" />
+                                    </RangeColumns>
+                                    <RangeExpressions>
+                                      <ScalarOperator ScalarString="RangePartitionNew(dateadd(week,(-1),[@DateConstrain]),(1),'2012-01-01 00:00:00.000','2012-01-08 00:00:00.000','2012-01-15 00:00:00.000','2012-01-22 00:00:00.000','2012-01-29 00:00:00.000','2012-02-05 00:00:00.000','2012-02-12 00:00:00.000','2012-02-19 00:00:00.000','2012-02-26 00:00:00.000','2012-03-04 00:00:00.000','2012-03-11 00:00:00.000','2012-03-18 00:00:00.000','2012-03-25 00:00:00.000','2012-04-01 00:00:00.000','2012-04-08 00:00:00.000','2012-04-15 00:00:00.000','2012-04-22 00:00:00.000','2012-04-29 00:00:00.000','2012-05-06 00:00:00.000','2012-05-13 00:00:00.000','2012-05-20 00:00:00.000','2012-05-27 00:00:00.000','2012-06-03 00:00:00.000','2012-06-10 00:00:00.000','2012-06-17 00:00:00.000','2012-06-24 00:00:00.000','2012-07-01 00:00:00.000','2012-07-08 00:00:00.000','2012-07-15 00:00:00.000','2012-07-22 00:00:00.000','2012-07-29 00:00:00.000','2012-08-05 00:00:00.000','2012-08-12 00:00:00.000','2012-08-19 00:00:00.000','2012-08-26 00:00:00.000','2012-09-02 00:00:00.000','2012-09-09 00:00:00.000','2012-09-16 00:00:00.000','2012-09-23 00:00:00.000','2012-09-30 00:00:00.000','2012-10-07 00:00:00.000','2012-10-14 00:00:00.000','2012-10-21 00:00:00.000','2012-10-28 00:00:00.000','2012-11-04 00:00:00.000','2012-11-11 00:00:00.000','2012-11-18 00:00:00.000','2012-11-25 00:00:00.000','2012-12-02 00:00:00.000','2012-12-09 00:00:00.000','2012-12-16 00:00:00.000','2012-12-23 00:00:00.000','2012-12-30 00:00:00.000','2013-01-06 00:00:00.000','2013-01-13 00:00:00.000','2013-01-20 00:00:00.000','2013-01-27 00:00:00.000','2013-02-03 00:00:00.000','2013-02-10 00:00:00.000','2013-02-17 00:00:00.000','2013-02-24 00:00:00.000','2013-03-03 00:00:00.000','2013-03-10 00:00:00.000','2013-03-17 00:00:00.000','2013-03-24 00:00:00.000','2013-03-31 00:00:00.000','2013-04-07 00:00:00.000','2013-04-14 00:00:00.000','2013-04-21 00:00:00.000','2013-04-28 00:00:00.000','2013-05-05 00:00:00.000','2013-05-12 00:00:00.000','2013-05-19 00:00:00.000','2013-05-26 00:00:00.000','2013-06-02 00:00:00.000','2013-06-09 00:00:00.000','2013-06-16 00:00:00.000','2013-06-23 00:00:00.000','2013-06-30 00:00:00.000','2013-07-07 00:00:00.000','2013-07-14 00:00:00.000','2013-07-21 00:00:00.000','2013-07-28 00:00:00.000','2013-08-04 00:00:00.000','2013-08-11 00:00:00.000','2013-08-18 00:00:00.000','2013-08-25 00:00:00.000','2013-09-01 00:00:00.000','2013-09-08 00:00:00.000','2013-09-15 00:00:00.000','2013-09-22 00:00:00.000','2013-09-29 00:00:00.000','2013-10-06 00:00:00.000','2013-10-13 00:00:00.000','2013-10-20 00:00:00.000','2013-10-27 00:00:00.000','2013-11-03 00:00:00.000','2013-11-10 00:00:00.000','2013-11-17 00:00:00.000','2013-11-24 00:00:00.000','2013-12-01 00:00:00.000','2013-12-08 00:00:00.000','2013-12-15 00:00:00.000','2013-12-22 00:00:00.000','2013-12-29 00:00:00.000','2014-01-05 00:00:00.000','2014-01-12 00:00:00.000','2014-01-19 00:00:00.000','2014-01-26 00:00:00.000','2014-02-02 00:00:00.000','2014-02-09 00:00:00.000','2014-02-16 00:00:00.000','2014-02-23 00:00:00.000','2014-03-02 00:00:00.000','2014-03-09 00:00:00.000','2014-03-16 00:00:00.000','2014-03-23 00:00:00.000','2014-03-30 00:00:00.000','2014-04-06 00:00:00.000','2014-04-13 00:00:00.000','2014-04-20 00:00:00.000','2014-04-27 00:00:00.000','2014-05-04 00:00:00.000','2014-05-11 00:00:00.000','2014-05-18 00:00:00.000','2014-05-25 00:00:00.000','2014-06-01 00:00:00.000','2014-06-08 00:00:00.000','2014-06-15 00:00:00.000','2014-06-22 00:00:00.000','2014-06-29 00:00:00.000','2014-07-06 00:00:00.000','2014-07-13 00:00:00.000','2014-07-20 00:00:00.000','2014-07-27 00:00:00.000','2014-08-03 00:00:00.000','2014-08-10 00:00:00.000','2014-08-17 00:00:00.000','2014-08-24 00:00:00.000','2014-08-31 00:00:00.000','2014-09-07 00:00:00.000','2014-09-14 00:00:00.000','2014-09-21 00:00:00.000','2014-09-28 00:00:00.000','2014-10-05 00:00:00.000','2014-10-12 00:00:00.000','2014-10-19 00:00:00.000','2014-10-26 00:00:00.000','2014-11-02 00:00:00.000','2014-11-09 00:00:00.000','2014-11-16 00:00:00.000','2014-11-23 00:00:00.000','2014-11-30 00:00:00.000','2014-12-07 00:00:00.000','2014-12-14 00:00:00.000','2014-12-21 00:00:00.000','2014-12-28 00:00:00.000','2015-01-04 00:00:00.000')">
+                                        <Intrinsic FunctionName="RangePartitionNew">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Column="ConstExpr1008">
+                                                <ScalarOperator>
+                                                  <Intrinsic FunctionName="dateadd">
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="(10)" />
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="(-1)" />
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Column="@DateConstrain" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                  </Intrinsic>
+                                                </ScalarOperator>
+                                              </ColumnReference>
+                                            </Identifier>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="(1)" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-01-01 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-01-08 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-01-15 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-01-22 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-01-29 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-02-05 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-02-12 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-02-19 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-02-26 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-03-04 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-03-11 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-03-18 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-03-25 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-04-01 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-04-08 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-04-15 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-04-22 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-04-29 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-05-06 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-05-13 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-05-20 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-05-27 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-06-03 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-06-10 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-06-17 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-06-24 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-07-01 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-07-08 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-07-15 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-07-22 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-07-29 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-08-05 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-08-12 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-08-19 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-08-26 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-09-02 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-09-09 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-09-16 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-09-23 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-09-30 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-10-07 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-10-14 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-10-21 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-10-28 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-11-04 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-11-11 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-11-18 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-11-25 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-12-02 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-12-09 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-12-16 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-12-23 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-12-30 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-01-06 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-01-13 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-01-20 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-01-27 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-02-03 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-02-10 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-02-17 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-02-24 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-03-03 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-03-10 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-03-17 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-03-24 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-03-31 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-04-07 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-04-14 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-04-21 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-04-28 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-05-05 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-05-12 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-05-19 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-05-26 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-06-02 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-06-09 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-06-16 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-06-23 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-06-30 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-07-07 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-07-14 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-07-21 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-07-28 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-08-04 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-08-11 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-08-18 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-08-25 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-09-01 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-09-08 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-09-15 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-09-22 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-09-29 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-10-06 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-10-13 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-10-20 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-10-27 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-11-03 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-11-10 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-11-17 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-11-24 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-12-01 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-12-08 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-12-15 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-12-22 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-12-29 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-01-05 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-01-12 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-01-19 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-01-26 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-02-02 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-02-09 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-02-16 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-02-23 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-03-02 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-03-09 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-03-16 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-03-23 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-03-30 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-04-06 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-04-13 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-04-20 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-04-27 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-05-04 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-05-11 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-05-18 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-05-25 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-06-01 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-06-08 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-06-15 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-06-22 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-06-29 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-07-06 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-07-13 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-07-20 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-07-27 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-08-03 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-08-10 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-08-17 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-08-24 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-08-31 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-09-07 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-09-14 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-09-21 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-09-28 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-10-05 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-10-12 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-10-19 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-10-26 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-11-02 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-11-09 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-11-16 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-11-23 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-11-30 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-12-07 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-12-14 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-12-21 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-12-28 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2015-01-04 00:00:00.000'" />
+                                          </ScalarOperator>
+                                        </Intrinsic>
+                                      </ScalarOperator>
+                                    </RangeExpressions>
+                                  </StartRange>
+                                  <EndRange ScanType="LE">
+                                    <RangeColumns>
+                                      <ColumnReference Column="PtnId1004" />
+                                    </RangeColumns>
+                                    <RangeExpressions>
+                                      <ScalarOperator ScalarString="RangePartitionNew([@DateConstrain],(1),'2012-01-01 00:00:00.000','2012-01-08 00:00:00.000','2012-01-15 00:00:00.000','2012-01-22 00:00:00.000','2012-01-29 00:00:00.000','2012-02-05 00:00:00.000','2012-02-12 00:00:00.000','2012-02-19 00:00:00.000','2012-02-26 00:00:00.000','2012-03-04 00:00:00.000','2012-03-11 00:00:00.000','2012-03-18 00:00:00.000','2012-03-25 00:00:00.000','2012-04-01 00:00:00.000','2012-04-08 00:00:00.000','2012-04-15 00:00:00.000','2012-04-22 00:00:00.000','2012-04-29 00:00:00.000','2012-05-06 00:00:00.000','2012-05-13 00:00:00.000','2012-05-20 00:00:00.000','2012-05-27 00:00:00.000','2012-06-03 00:00:00.000','2012-06-10 00:00:00.000','2012-06-17 00:00:00.000','2012-06-24 00:00:00.000','2012-07-01 00:00:00.000','2012-07-08 00:00:00.000','2012-07-15 00:00:00.000','2012-07-22 00:00:00.000','2012-07-29 00:00:00.000','2012-08-05 00:00:00.000','2012-08-12 00:00:00.000','2012-08-19 00:00:00.000','2012-08-26 00:00:00.000','2012-09-02 00:00:00.000','2012-09-09 00:00:00.000','2012-09-16 00:00:00.000','2012-09-23 00:00:00.000','2012-09-30 00:00:00.000','2012-10-07 00:00:00.000','2012-10-14 00:00:00.000','2012-10-21 00:00:00.000','2012-10-28 00:00:00.000','2012-11-04 00:00:00.000','2012-11-11 00:00:00.000','2012-11-18 00:00:00.000','2012-11-25 00:00:00.000','2012-12-02 00:00:00.000','2012-12-09 00:00:00.000','2012-12-16 00:00:00.000','2012-12-23 00:00:00.000','2012-12-30 00:00:00.000','2013-01-06 00:00:00.000','2013-01-13 00:00:00.000','2013-01-20 00:00:00.000','2013-01-27 00:00:00.000','2013-02-03 00:00:00.000','2013-02-10 00:00:00.000','2013-02-17 00:00:00.000','2013-02-24 00:00:00.000','2013-03-03 00:00:00.000','2013-03-10 00:00:00.000','2013-03-17 00:00:00.000','2013-03-24 00:00:00.000','2013-03-31 00:00:00.000','2013-04-07 00:00:00.000','2013-04-14 00:00:00.000','2013-04-21 00:00:00.000','2013-04-28 00:00:00.000','2013-05-05 00:00:00.000','2013-05-12 00:00:00.000','2013-05-19 00:00:00.000','2013-05-26 00:00:00.000','2013-06-02 00:00:00.000','2013-06-09 00:00:00.000','2013-06-16 00:00:00.000','2013-06-23 00:00:00.000','2013-06-30 00:00:00.000','2013-07-07 00:00:00.000','2013-07-14 00:00:00.000','2013-07-21 00:00:00.000','2013-07-28 00:00:00.000','2013-08-04 00:00:00.000','2013-08-11 00:00:00.000','2013-08-18 00:00:00.000','2013-08-25 00:00:00.000','2013-09-01 00:00:00.000','2013-09-08 00:00:00.000','2013-09-15 00:00:00.000','2013-09-22 00:00:00.000','2013-09-29 00:00:00.000','2013-10-06 00:00:00.000','2013-10-13 00:00:00.000','2013-10-20 00:00:00.000','2013-10-27 00:00:00.000','2013-11-03 00:00:00.000','2013-11-10 00:00:00.000','2013-11-17 00:00:00.000','2013-11-24 00:00:00.000','2013-12-01 00:00:00.000','2013-12-08 00:00:00.000','2013-12-15 00:00:00.000','2013-12-22 00:00:00.000','2013-12-29 00:00:00.000','2014-01-05 00:00:00.000','2014-01-12 00:00:00.000','2014-01-19 00:00:00.000','2014-01-26 00:00:00.000','2014-02-02 00:00:00.000','2014-02-09 00:00:00.000','2014-02-16 00:00:00.000','2014-02-23 00:00:00.000','2014-03-02 00:00:00.000','2014-03-09 00:00:00.000','2014-03-16 00:00:00.000','2014-03-23 00:00:00.000','2014-03-30 00:00:00.000','2014-04-06 00:00:00.000','2014-04-13 00:00:00.000','2014-04-20 00:00:00.000','2014-04-27 00:00:00.000','2014-05-04 00:00:00.000','2014-05-11 00:00:00.000','2014-05-18 00:00:00.000','2014-05-25 00:00:00.000','2014-06-01 00:00:00.000','2014-06-08 00:00:00.000','2014-06-15 00:00:00.000','2014-06-22 00:00:00.000','2014-06-29 00:00:00.000','2014-07-06 00:00:00.000','2014-07-13 00:00:00.000','2014-07-20 00:00:00.000','2014-07-27 00:00:00.000','2014-08-03 00:00:00.000','2014-08-10 00:00:00.000','2014-08-17 00:00:00.000','2014-08-24 00:00:00.000','2014-08-31 00:00:00.000','2014-09-07 00:00:00.000','2014-09-14 00:00:00.000','2014-09-21 00:00:00.000','2014-09-28 00:00:00.000','2014-10-05 00:00:00.000','2014-10-12 00:00:00.000','2014-10-19 00:00:00.000','2014-10-26 00:00:00.000','2014-11-02 00:00:00.000','2014-11-09 00:00:00.000','2014-11-16 00:00:00.000','2014-11-23 00:00:00.000','2014-11-30 00:00:00.000','2014-12-07 00:00:00.000','2014-12-14 00:00:00.000','2014-12-21 00:00:00.000','2014-12-28 00:00:00.000','2015-01-04 00:00:00.000')">
+                                        <Intrinsic FunctionName="RangePartitionNew">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Column="@DateConstrain" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="(1)" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-01-01 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-01-08 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-01-15 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-01-22 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-01-29 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-02-05 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-02-12 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-02-19 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-02-26 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-03-04 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-03-11 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-03-18 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-03-25 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-04-01 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-04-08 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-04-15 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-04-22 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-04-29 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-05-06 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-05-13 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-05-20 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-05-27 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-06-03 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-06-10 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-06-17 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-06-24 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-07-01 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-07-08 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-07-15 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-07-22 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-07-29 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-08-05 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-08-12 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-08-19 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-08-26 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-09-02 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-09-09 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-09-16 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-09-23 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-09-30 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-10-07 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-10-14 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-10-21 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-10-28 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-11-04 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-11-11 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-11-18 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-11-25 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-12-02 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-12-09 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-12-16 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-12-23 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-12-30 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-01-06 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-01-13 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-01-20 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-01-27 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-02-03 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-02-10 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-02-17 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-02-24 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-03-03 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-03-10 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-03-17 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-03-24 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-03-31 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-04-07 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-04-14 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-04-21 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-04-28 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-05-05 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-05-12 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-05-19 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-05-26 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-06-02 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-06-09 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-06-16 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-06-23 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-06-30 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-07-07 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-07-14 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-07-21 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-07-28 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-08-04 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-08-11 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-08-18 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-08-25 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-09-01 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-09-08 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-09-15 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-09-22 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-09-29 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-10-06 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-10-13 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-10-20 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-10-27 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-11-03 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-11-10 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-11-17 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-11-24 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-12-01 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-12-08 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-12-15 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-12-22 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-12-29 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-01-05 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-01-12 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-01-19 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-01-26 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-02-02 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-02-09 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-02-16 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-02-23 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-03-02 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-03-09 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-03-16 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-03-23 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-03-30 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-04-06 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-04-13 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-04-20 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-04-27 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-05-04 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-05-11 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-05-18 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-05-25 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-06-01 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-06-08 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-06-15 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-06-22 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-06-29 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-07-06 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-07-13 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-07-20 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-07-27 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-08-03 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-08-10 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-08-17 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-08-24 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-08-31 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-09-07 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-09-14 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-09-21 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-09-28 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-10-05 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-10-12 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-10-19 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-10-26 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-11-02 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-11-09 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-11-16 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-11-23 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-11-30 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-12-07 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-12-14 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-12-21 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-12-28 00:00:00.000'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2015-01-04 00:00:00.000'" />
+                                          </ScalarOperator>
+                                        </Intrinsic>
+                                      </ScalarOperator>
+                                    </RangeExpressions>
+                                  </EndRange>
+                                </SeekKeys>
+                                <SeekKeys>
+                                  <StartRange ScanType="GE">
+                                    <RangeColumns>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Failures]" Alias="[F]" Column="ScheduleStartDateTime" />
+                                    </RangeColumns>
+                                    <RangeExpressions>
+                                      <ScalarOperator ScalarString="dateadd(week,(-1),[@DateConstrain])">
+                                        <Identifier>
+                                          <ColumnReference Column="ConstExpr1008">
+                                            <ScalarOperator>
+                                              <Intrinsic FunctionName="dateadd">
+                                                <ScalarOperator>
+                                                  <Const ConstValue="(10)" />
+                                                </ScalarOperator>
+                                                <ScalarOperator>
+                                                  <Const ConstValue="(-1)" />
+                                                </ScalarOperator>
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Column="@DateConstrain" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                              </Intrinsic>
+                                            </ScalarOperator>
+                                          </ColumnReference>
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </RangeExpressions>
+                                  </StartRange>
+                                  <EndRange ScanType="LE">
+                                    <RangeColumns>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Failures]" Alias="[F]" Column="ScheduleStartDateTime" />
+                                    </RangeColumns>
+                                    <RangeExpressions>
+                                      <ScalarOperator ScalarString="[@DateConstrain]">
+                                        <Identifier>
+                                          <ColumnReference Column="@DateConstrain" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </RangeExpressions>
+                                  </EndRange>
+                                </SeekKeys>
+                              </SeekPredicateNew>
+                            </SeekPredicates>
+                            <Predicate>
+                              <ScalarOperator ScalarString="[OurLabReporting].[Reporting].[Failures].[IsRerunPrimary] as [F].[IsRerunPrimary]=(1)">
+                                <Compare CompareOp="EQ">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Failures]" Alias="[F]" Column="IsRerunPrimary" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(1)" />
+                                  </ScalarOperator>
+                                </Compare>
+                              </ScalarOperator>
+                            </Predicate>
+                          </IndexScan>
+                        </RelOp>
+                      </Hash>
+                    </RelOp>
+                  </ComputeScalar>
+                </RelOp>
+              </Update>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText=" CREATE CLUSTERED INDEX F_Status&#xD;&#xA;    ON #Failures (ScheduleID, StatusId, AssignedToUserId)&#xD;&#xA;&#xD;&#xA;   " StatementId="39" StatementCompId="49" StatementType="CREATE INDEX" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" SET @SelectPart = N'  SET ROWCOUNT @TopRowCount ; &#x9;&#x9;&#x9;&#x9;&#x9;   &#xD;&#xA;                               SELECT&#xD;&#xA;                                  s.Id                       AS ScheduleId&#xD;&#xA;                                  , s.Name                   AS ScheduleName&#xD;&#xA;                                  , s.ScheduledBy&#xD;&#xA;                                  , s.RunLogDirectory&#xD;&#xA;                                  , s.Comments&#xD;&#xA;                                  , s.CommentAddedBy&#xD;&#xA;                                  , s.CommentUpdateTime&#xD;&#xA;                                  , s.StartDate&#xD;&#xA;                                  , s.EndDate&#xD;&#xA;                                  , dbo.Status.Status&#xD;&#xA;                                  , bv.FullbuildNumber       AS BuildString&#xD;&#xA;                                  , bv.Branch&#xD;&#xA;                                  , s.BuildVersionId&#xD;&#xA;                                  , bv.FullBuildNumber&#xD;&#xA;                                  , Counts.TotalTEUs&#xD;&#xA;                                  , Counts.TEUsFailed        AS FailedTEUs&#xD;&#xA;                                  , Counts.TEUsNotScheduled  AS NotScheduledTEUs&#xD;&#xA;                                  , Counts.TEUsCompleted     AS CompletedTEUs&#xD;&#xA;                                  , Counts.PassTotal&#xD;&#xA;                                  , Counts.FailTotal&#xD;&#xA;                                  , Counts.WarnTotal&#xD;&#xA;                                  , Counts.SkipTotal         AS SkippedTotal&#xD;&#xA;                                  , Counts.BlockTotal        AS BlockedTotal&#xD;&#xA;                                  , Counts.Total&#xD;&#xA;                                  , Counts.WarnTotal + Counts.BlockTotal&#xD;&#xA;                                    + Counts.SkipTotal       AS WarnSkippedBlockedCount&#xD;&#xA;                                  , ISNULL(PrimaryFailures.Total, 0)&#x9;&#x9; AS TotalFailureCount&#xD;&#xA;                                  , ISNULL(ActiveFailures.Total, 0)&#x9;&#x9;&#x9; AS UnResolvedFailureCount&#xD;&#xA;                                  , ISNULL(PrimaryBugCounts.BugCount, 0)     AS BugCount&#xD;&#xA;                                  , ISNULL(MyFailures.Total, 0)              AS MyUnResolvedFailureCount&#xD;&#xA;                                  , I.[Platform]&#xD;&#xA;                                  , I.BSP&#xD;&#xA;                                  , I.Firmware '&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;       " StatementId="40" StatementCompId="50" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" SET @FromPart = N'  FROM dbo.Schedule AS s WITH (NOLOCK)&#xD;&#xA;                            INNER JOIN dbo.BuildVersion AS bv WITH (NOLOCK) ON bv.Id = s.BuildVersionId&#xD;&#xA;                            INNER JOIN dbo.[Status] WITH (NOLOCK) ON dbo.[Status].Id = s.StatusId &#xD;&#xA;                            INNER JOIN Reporting.Mixes AS M WITH (NOLOCK) ON s.Id = M.ScheduleId&#xD;&#xA;                            LEFT JOIN dbo.View_TEUAndTCCountsBySchedule AS Counts WITH (NOLOCK) ON s.Id = Counts.ScheduleId&#xD;&#xA;                            LEFT JOIN dbo.View_ImageInfo AS I WITH (NOLOCK) ON M.ImageId = I.ImageId&#xD;&#xA;                            LEFT JOIN&#xD;&#xA;                            (&#xD;&#xA;                                SELECT F.ScheduleId&#xD;&#xA;                                      ,SUM(F.Total)&#x9;AS Total&#xD;&#xA;                                FROM #Failures AS F&#xD;&#xA;                                GROUP BY F.ScheduleId&#xD;&#xA;                            ) AS PrimaryFailures ON s.Id = PrimaryFailures.ScheduleId &#xD;&#xA;                            LEFT JOIN&#xD;&#xA;                            (&#xD;&#xA;                                SELECT F.ScheduleId&#xD;&#xA;                                      ,SUM(F.Total) AS Total&#xD;&#xA;                                FROM #Failures AS F&#xD;&#xA;                                WHERE F.StatusId = @ActiveFailureStatusId&#xD;&#xA;                                GROUP BY F.ScheduleId&#xD;&#xA;                            ) AS ActiveFailures ON s.Id = ActiveFailures.ScheduleId &#xD;&#xA;                            LEFT JOIN &#xD;&#xA;                            (&#xD;&#xA;                                SELECT F.ScheduleId&#xD;&#xA;                                      ,SUM(F.Total) AS Total&#xD;&#xA;                                FROM #Failures AS F&#xD;&#xA;                                WHERE F.StatusId = @ActiveFailureStatusId AND F.AssignedToUserId = @UserId&#xD;&#xA;                                GROUP BY F.ScheduleId&#xD;&#xA;                            ) AS MyFailures ON MyFailures.ScheduleId = s.Id&#xD;&#xA;                            LEFT JOIN &#xD;&#xA;                            (&#xD;&#xA;                                SELECT&#xD;&#xA;                                  F.ScheduleId&#xD;&#xA;                                  , Count(DISTINCT FBM.BugId) AS BugCount&#xD;&#xA;                                FROM   dbo.FailureBugMapping AS FBM WITH (NOLOCK)&#xD;&#xA;                                       INNER JOIN Reporting.Failures AS F&#xD;&#xA;                                               ON FBM.FailureId = F.Id&#xD;&#xA;                                WHERE F.IsRerunPrimary = 1&#xD;&#xA;                                    AND F.ScheduleStartDateTime BETWEEN DATEADD(week, -1, @DateConstrain) AND @DateConstrain&#xD;&#xA;                                GROUP  BY F.ScheduleId &#xD;&#xA;                            ) AS PrimaryBugCounts ON PrimaryBugCounts.ScheduleId = s.Id '&#xD;&#xA;                            + @BranchCondition&#xD;&#xA;&#xD;&#xA;           " StatementId="41" StatementCompId="51" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" SET @WherePart = 'WHERE 1=1 AND M.ScheduleStartDateTime BETWEEN DATEADD(week, -1, @DateConstrain) AND @DateConstrain'&#xD;&#xA;                             + @ScheduleIdCondition&#xD;&#xA;                             + @BuildNumberCondition &#xD;&#xA;                             + @PlatformCondition&#xD;&#xA;                             + @BSPCondition &#xD;&#xA;                             + @FirmwareCondition&#xD;&#xA;                             + @ScheduleNameCondition &#xD;&#xA;                             + @OrderByString&#xD;&#xA;    &#xD;&#xA;   " StatementId="42" StatementCompId="52" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" SET @parameterDefinition = N'@BuildVersionId int, @Branch nvarchar(100), '&#xD;&#xA;                                + N'@Firmware int, @BSP int, @Platform int, '&#xD;&#xA;                                + N'@ActiveFailureStatusId int, @TopRowCount int, '&#xD;&#xA;                                + N'@UserName nvarchar(50),@OrderByString nvarchar(512), '&#xD;&#xA;                                + N'@ScheduleName nvarchar(200), @ScheduleId int, '&#xD;&#xA;                                + N'@UserId smallint, @DateConstrain DATETIME'&#xD;&#xA;&#xD;&#xA;   " StatementId="43" StatementCompId="53" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" SET @SqlStatement = @SelectPart + @FromPart + @WherePart&#xD;&#xA;&#xD;&#xA;   " StatementId="44" StatementCompId="54" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" EXEC sp_executesql&#xD;&#xA;      @SqlStatement,&#xD;&#xA;      @parameterDefinition,&#xD;&#xA;      @BuildVersionId=@BuildVersionId,&#xD;&#xA;      @Branch=@Branch,&#xD;&#xA;      @Firmware=@Firmware,&#xD;&#xA;      @BSP = @BSP,&#xD;&#xA;      @Platform = @Platform,&#xD;&#xA;      @ActiveFailureStatusId=@ActiveFailureStatusId,&#xD;&#xA;      @TopRowCount=@TopRowCount,&#xD;&#xA;      @UserName=@UserName,&#xD;&#xA;      @OrderByString=@OrderByString,&#xD;&#xA;      @ScheduleName=@ScheduleName,&#xD;&#xA;      @ScheduleId=@ScheduleId, &#xD;&#xA;      @UserId=@UserId,&#xD;&#xA;      @DateConstrain=@DateConstrain&#xD;&#xA;&#xD;&#xA;" StatementId="45" StatementCompId="55" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;DECLARE @objectName varchar(128) = (SELECT OBJECT_NAME(@@PROCID))&#xD;&#xA;&#xD;&#xA;&#x9;-- Only log if it is enabled to do so.&#xD;&#xA;" StatementId="46" StatementCompId="56" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="1.257e-006" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x830C952D7490168E" QueryPlanHash="0x3B1EAEC0618BFE3F" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="0" CompileCPU="0" CompileMemory="400">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="75" EstimatedTotalSubtreeCost="1.257e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Column="Expr1001" />
+              </OutputList>
+              <ComputeScalar>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1001" />
+                    <ScalarOperator ScalarString="CONVERT_IMPLICIT(varchar(128),[Expr1000],0)">
+                      <Convert DataType="varchar" Length="128" Style="0" Implicit="1">
+                        <ScalarOperator>
+                          <Identifier>
+                            <ColumnReference Column="Expr1000" />
+                          </Identifier>
+                        </ScalarOperator>
+                      </Convert>
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp NodeId="1" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="139" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Expr1000" />
+                  </OutputList>
+                  <ConstantScan>
+                    <Values>
+                      <Row>
+                        <ScalarOperator ScalarString="object_name(@@procid)">
+                          <Intrinsic FunctionName="object_name">
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="@@procid" />
+                            </ScalarOperator>
+                            <ScalarOperator>
+                              <Const ConstValue="" />
+                            </ScalarOperator>
+                          </Intrinsic>
+                        </ScalarOperator>
+                      </Row>
+                    </Values>
+                  </ConstantScan>
+                </RelOp>
+              </ComputeScalar>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtCond StatementText="&#x9;IF EXISTS (SELECT TOP 1 1 FROM dbo.PerformanceLogConfiguration WITH (NOLOCK) WHERE Name = @objectName AND IsEnabled = 1)&#xD;&#xA;" StatementId="47" StatementCompId="57" StatementType="COND WITH QUERY" RetrievedFromCache="true" StatementSubTreeCost="0.00328902" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x17C41F9190F739B0" QueryPlanHash="0x8514651F160870BE" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <Condition>
+            <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="1" CompileCPU="1" CompileMemory="480">
+              <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+              <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+              <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328902" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                <OutputList>
+                  <ColumnReference Column="Expr1004" />
+                </OutputList>
+                <ComputeScalar>
+                  <DefinedValues>
+                    <DefinedValue>
+                      <ColumnReference Column="Expr1004" />
+                      <ScalarOperator ScalarString="CASE WHEN [Expr1005] THEN (1) ELSE (0) END">
+                        <IF>
+                          <Condition>
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1005" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Condition>
+                          <Then>
+                            <ScalarOperator>
+                              <Const ConstValue="(1)" />
+                            </ScalarOperator>
+                          </Then>
+                          <Else>
+                            <ScalarOperator>
+                              <Const ConstValue="(0)" />
+                            </ScalarOperator>
+                          </Else>
+                        </IF>
+                      </ScalarOperator>
+                    </DefinedValue>
+                  </DefinedValues>
+                  <RelOp NodeId="1" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.00328892" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList>
+                      <ColumnReference Column="Expr1005" />
+                    </OutputList>
+                    <NestedLoops Optimized="0">
+                      <DefinedValues>
+                        <DefinedValue>
+                          <ColumnReference Column="Expr1005" />
+                        </DefinedValue>
+                      </DefinedValues>
+                      <ProbeColumn>
+                        <ColumnReference Column="Expr1005" />
+                      </ProbeColumn>
+                      <RelOp NodeId="2" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList />
+                        <ConstantScan />
+                      </RelOp>
+                      <RelOp NodeId="3" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="126" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList />
+                        <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                          <DefinedValues />
+                          <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[PerformanceLogConfiguration]" Index="[PerformanceLogConfiguration_IDX_Name]" IndexKind="NonClustered" />
+                          <SeekPredicates>
+                            <SeekPredicateNew>
+                              <SeekKeys>
+                                <Prefix ScanType="EQ">
+                                  <RangeColumns>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PerformanceLogConfiguration]" Column="Name" />
+                                  </RangeColumns>
+                                  <RangeExpressions>
+                                    <ScalarOperator ScalarString="[@objectName]">
+                                      <Identifier>
+                                        <ColumnReference Column="@objectName" />
+                                      </Identifier>
+                                    </ScalarOperator>
+                                  </RangeExpressions>
+                                </Prefix>
+                              </SeekKeys>
+                            </SeekPredicateNew>
+                          </SeekPredicates>
+                          <Predicate>
+                            <ScalarOperator ScalarString="[OurLabReporting].[dbo].[PerformanceLogConfiguration].[IsEnabled]=(1)">
+                              <Compare CompareOp="EQ">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PerformanceLogConfiguration]" Column="IsEnabled" />
+                                  </Identifier>
+                                </ScalarOperator>
+                                <ScalarOperator>
+                                  <Const ConstValue="(1)" />
+                                </ScalarOperator>
+                              </Compare>
+                            </ScalarOperator>
+                          </Predicate>
+                        </IndexScan>
+                      </RelOp>
+                    </NestedLoops>
+                  </RelOp>
+                </ComputeScalar>
+              </RelOp>
+            </QueryPlan>
+          </Condition>
+          <Then>
+            <Statements>
+              <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;DECLARE @logMetadata NVARCHAR(1024)&#xD;&#xA;&#x9;&#x9;EXEC [dbo].[spEndStopwatch] @objectName, @stopwatchBeginTime, @logMetadata&#xD;&#xA;" StatementId="48" StatementCompId="58" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

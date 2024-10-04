@@ -1,0 +1,686 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="(@0 datetime2(7),@1 int,@2 uniqueidentifier,@3 uniqueidentifier,@4 varchar(max) ,@5 int)insert [analysis].[FunctionalAnalysisResultLog]([PkSetPartition], [PkSetId], [FunctionalAnalysisResultId], [GuidId], [Message], [LogResultLevelId])&#xD;&#xA;values (@0, @1, @2, @3, @4, @5)&#xD;" StatementId="1" StatementCompId="1" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.0165771" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x7309EF874B81CAFA" QueryPlanHash="0x17FF4D4E840E2267">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="false" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="48" CompileTime="14" CompileCPU="14" CompileMemory="376">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="1" PhysicalOp="Assert" LogicalOp="Assert" EstimateRows="1" EstimateIO="0" EstimateCPU="1.8e-007" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0165771" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <Assert StartupExpression="0">
+                <RelOp NodeId="2" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0165769" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Expr1021" />
+                    <ColumnReference Column="Expr1022" />
+                  </OutputList>
+                  <NestedLoops Optimized="0">
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1022" />
+                      </DefinedValue>
+                    </DefinedValues>
+                    <OuterReferences>
+                      <ColumnReference Database="[TexusResults]" Schema="[analysis]" Table="[FunctionalAnalysisResultLog]" Column="LogResultLevelId" />
+                    </OuterReferences>
+                    <ProbeColumn>
+                      <ColumnReference Column="Expr1022" />
+                    </ProbeColumn>
+                    <RelOp NodeId="3" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="12" EstimatedTotalSubtreeCost="0.0132896" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Database="[TexusResults]" Schema="[analysis]" Table="[FunctionalAnalysisResultLog]" Column="LogResultLevelId" />
+                        <ColumnReference Column="Expr1021" />
+                      </OutputList>
+                      <NestedLoops Optimized="0">
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1021" />
+                          </DefinedValue>
+                        </DefinedValues>
+                        <OuterReferences>
+                          <ColumnReference Database="[TexusResults]" Schema="[analysis]" Table="[FunctionalAnalysisResultLog]" Column="PkSetPartition" />
+                          <ColumnReference Database="[TexusResults]" Schema="[analysis]" Table="[FunctionalAnalysisResultLog]" Column="PkSetId" />
+                          <ColumnReference Database="[TexusResults]" Schema="[analysis]" Table="[FunctionalAnalysisResultLog]" Column="FunctionalAnalysisResultId" />
+                        </OuterReferences>
+                        <ProbeColumn>
+                          <ColumnReference Column="Expr1021" />
+                        </ProbeColumn>
+                        <RelOp NodeId="4" PhysicalOp="Clustered Index Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.01" EstimateCPU="1e-006" AvgRowSize="34" EstimatedTotalSubtreeCost="0.0100024" Parallel="0" Partitioned="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Database="[TexusResults]" Schema="[analysis]" Table="[FunctionalAnalysisResultLog]" Column="PkSetPartition" />
+                            <ColumnReference Database="[TexusResults]" Schema="[analysis]" Table="[FunctionalAnalysisResultLog]" Column="PkSetId" />
+                            <ColumnReference Database="[TexusResults]" Schema="[analysis]" Table="[FunctionalAnalysisResultLog]" Column="FunctionalAnalysisResultId" />
+                            <ColumnReference Database="[TexusResults]" Schema="[analysis]" Table="[FunctionalAnalysisResultLog]" Column="LogResultLevelId" />
+                          </OutputList>
+                          <Update DMLRequestSort="0">
+                            <Object Database="[TexusResults]" Schema="[analysis]" Table="[FunctionalAnalysisResultLog]" Index="[FunctionalAnalysisResultLog_PK]" IndexKind="Clustered" />
+                            <SetPredicate>
+                              <ScalarOperator ScalarString="[TexusResults].[analysis].[FunctionalAnalysisResultLog].[PkSetPartition] = RaiseIfNullInsert([Expr1005]),[TexusResults].[analysis].[FunctionalAnalysisResultLog].[PkSetId] = RaiseIfNullInsert([@1]),[TexusResults].[analysis].[FunctionalAnalysisResultLog].[FunctionalAnalysisResultId] = RaiseIfNullInsert([@2]),[TexusResults].[analysis].[FunctionalAnalysisResultLog].[GuidId] = RaiseIfNullInsert([@3]),[TexusResults].[analysis].[FunctionalAnalysisResultLog].[Message] = RaiseIfNullInsert([@4]),[TexusResults].[analysis].[FunctionalAnalysisResultLog].[LogResultLevelId] = RaiseIfNullInsert([@5]),[TexusResults].[analysis].[FunctionalAnalysisResultLog].[PkId] = [Expr1004],[PtnId1000] = RaiseIfNullInsert([Expr1013])">
+                                <ScalarExpressionList>
+                                  <ScalarOperator>
+                                    <MultipleAssign>
+                                      <Assign>
+                                        <ColumnReference Database="[TexusResults]" Schema="[analysis]" Table="[FunctionalAnalysisResultLog]" Column="PkSetPartition" />
+                                        <ScalarOperator>
+                                          <Intrinsic FunctionName="RaiseIfNullInsert">
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Column="Expr1005" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </Intrinsic>
+                                        </ScalarOperator>
+                                      </Assign>
+                                      <Assign>
+                                        <ColumnReference Database="[TexusResults]" Schema="[analysis]" Table="[FunctionalAnalysisResultLog]" Column="PkSetId" />
+                                        <ScalarOperator>
+                                          <Intrinsic FunctionName="RaiseIfNullInsert">
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Column="@1" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </Intrinsic>
+                                        </ScalarOperator>
+                                      </Assign>
+                                      <Assign>
+                                        <ColumnReference Database="[TexusResults]" Schema="[analysis]" Table="[FunctionalAnalysisResultLog]" Column="FunctionalAnalysisResultId" />
+                                        <ScalarOperator>
+                                          <Intrinsic FunctionName="RaiseIfNullInsert">
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Column="@2" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </Intrinsic>
+                                        </ScalarOperator>
+                                      </Assign>
+                                      <Assign>
+                                        <ColumnReference Database="[TexusResults]" Schema="[analysis]" Table="[FunctionalAnalysisResultLog]" Column="GuidId" />
+                                        <ScalarOperator>
+                                          <Intrinsic FunctionName="RaiseIfNullInsert">
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Column="@3" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </Intrinsic>
+                                        </ScalarOperator>
+                                      </Assign>
+                                      <Assign>
+                                        <ColumnReference Database="[TexusResults]" Schema="[analysis]" Table="[FunctionalAnalysisResultLog]" Column="Message" />
+                                        <ScalarOperator>
+                                          <Intrinsic FunctionName="RaiseIfNullInsert">
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Column="@4" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </Intrinsic>
+                                        </ScalarOperator>
+                                      </Assign>
+                                      <Assign>
+                                        <ColumnReference Database="[TexusResults]" Schema="[analysis]" Table="[FunctionalAnalysisResultLog]" Column="LogResultLevelId" />
+                                        <ScalarOperator>
+                                          <Intrinsic FunctionName="RaiseIfNullInsert">
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Column="@5" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </Intrinsic>
+                                        </ScalarOperator>
+                                      </Assign>
+                                      <Assign>
+                                        <ColumnReference Database="[TexusResults]" Schema="[analysis]" Table="[FunctionalAnalysisResultLog]" Column="PkId" />
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="Expr1004" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Assign>
+                                      <Assign>
+                                        <ColumnReference Column="PtnId1000" ComputedColumn="1" />
+                                        <ScalarOperator>
+                                          <Intrinsic FunctionName="RaiseIfNullInsert">
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Column="Expr1013" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </Intrinsic>
+                                        </ScalarOperator>
+                                      </Assign>
+                                    </MultipleAssign>
+                                  </ScalarOperator>
+                                </ScalarExpressionList>
+                              </ScalarOperator>
+                            </SetPredicate>
+                            <RelOp NodeId="5" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="18" EstimatedTotalSubtreeCost="1.357e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Column="Expr1004" />
+                                <ColumnReference Column="Expr1005" />
+                                <ColumnReference Column="Expr1013" />
+                              </OutputList>
+                              <ComputeScalar>
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Column="Expr1005" />
+                                    <ScalarOperator ScalarString="CONVERT_IMPLICIT(date,[@0],0)">
+                                      <Convert DataType="date" Style="0" Implicit="1">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="@0" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Convert>
+                                    </ScalarOperator>
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Column="Expr1013" />
+                                    <ScalarOperator ScalarString="RangePartitionNew(CONVERT_IMPLICIT(date,[@0],0),(1),'2011-02-01','2011-03-01','2011-04-01','2011-05-01','2011-06-01','2011-07-01','2011-08-01','2011-09-01','2011-10-01','2011-11-01','2011-12-01','2012-01-01','2012-02-01','2012-03-01','2012-04-01','2012-05-01','2012-06-01','2012-07-01','2012-08-01','2012-09-01','2012-10-01','2012-11-01','2012-12-01','2013-01-01','2013-02-01','2013-03-01','2013-04-01','2013-05-01','2013-06-01','2013-07-01','2013-08-01','2013-09-01','2013-10-01','2013-11-01','2013-12-01','2014-01-01')">
+                                      <Intrinsic FunctionName="RangePartitionNew">
+                                        <ScalarOperator>
+                                          <Convert DataType="date" Style="0" Implicit="1">
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Column="@0" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </Convert>
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="(1)" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2011-02-01'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2011-03-01'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2011-04-01'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2011-05-01'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2011-06-01'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2011-07-01'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2011-08-01'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2011-09-01'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2011-10-01'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2011-11-01'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2011-12-01'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2012-01-01'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2012-02-01'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2012-03-01'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2012-04-01'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2012-05-01'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2012-06-01'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2012-07-01'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2012-08-01'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2012-09-01'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2012-10-01'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2012-11-01'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2012-12-01'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2013-01-01'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2013-02-01'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2013-03-01'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2013-04-01'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2013-05-01'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2013-06-01'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2013-07-01'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2013-08-01'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2013-09-01'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2013-10-01'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2013-11-01'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2013-12-01'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'2014-01-01'" />
+                                        </ScalarOperator>
+                                      </Intrinsic>
+                                    </ScalarOperator>
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <RelOp NodeId="6" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="1.257e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Column="Expr1004" />
+                                  </OutputList>
+                                  <ComputeScalar ComputeSequence="1">
+                                    <DefinedValues>
+                                      <DefinedValue>
+                                        <ColumnReference Column="Expr1004" />
+                                        <ScalarOperator ScalarString="getidentity((309576141),(7),NULL)">
+                                          <Intrinsic FunctionName="getidentity">
+                                            <ScalarOperator>
+                                              <Const ConstValue="(309576141)" />
+                                            </ScalarOperator>
+                                            <ScalarOperator>
+                                              <Const ConstValue="(7)" />
+                                            </ScalarOperator>
+                                            <ScalarOperator>
+                                              <Const ConstValue="NULL" />
+                                            </ScalarOperator>
+                                          </Intrinsic>
+                                        </ScalarOperator>
+                                      </DefinedValue>
+                                    </DefinedValues>
+                                    <RelOp NodeId="7" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList />
+                                      <ConstantScan />
+                                    </RelOp>
+                                  </ComputeScalar>
+                                </RelOp>
+                              </ComputeScalar>
+                            </RelOp>
+                          </Update>
+                        </RelOp>
+                        <RelOp NodeId="16" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="2.29956e+007" Parallel="0" Partitioned="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList />
+                          <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                            <DefinedValues />
+                            <Object Database="[TexusResults]" Schema="[analysis]" Table="[FunctionalAnalysisResult]" Index="[FunctionalAnalysisResult_PK]" IndexKind="Clustered" />
+                            <SeekPredicates>
+                              <SeekPredicateNew>
+                                <SeekKeys>
+                                  <Prefix ScanType="EQ">
+                                    <RangeColumns>
+                                      <ColumnReference Column="PtnId1014" />
+                                      <ColumnReference Database="[TexusResults]" Schema="[analysis]" Table="[FunctionalAnalysisResult]" Column="PkSetPartition" />
+                                      <ColumnReference Database="[TexusResults]" Schema="[analysis]" Table="[FunctionalAnalysisResult]" Column="PkSetId" />
+                                      <ColumnReference Database="[TexusResults]" Schema="[analysis]" Table="[FunctionalAnalysisResult]" Column="PkId" />
+                                    </RangeColumns>
+                                    <RangeExpressions>
+                                      <ScalarOperator ScalarString="RangePartitionNew([TexusResults].[analysis].[FunctionalAnalysisResultLog].[PkSetPartition],(1),'2011-02-01','2011-03-01','2011-04-01','2011-05-01','2011-06-01','2011-07-01','2011-08-01','2011-09-01','2011-10-01','2011-11-01','2011-12-01','2012-01-01','2012-02-01','2012-03-01','2012-04-01','2012-05-01','2012-06-01','2012-07-01','2012-08-01','2012-09-01','2012-10-01','2012-11-01','2012-12-01','2013-01-01','2013-02-01','2013-03-01','2013-04-01','2013-05-01','2013-06-01','2013-07-01','2013-08-01','2013-09-01','2013-10-01','2013-11-01','2013-12-01','2014-01-01')">
+                                        <Intrinsic FunctionName="RangePartitionNew">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Database="[TexusResults]" Schema="[analysis]" Table="[FunctionalAnalysisResultLog]" Column="PkSetPartition" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="(1)" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2011-02-01'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2011-03-01'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2011-04-01'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2011-05-01'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2011-06-01'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2011-07-01'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2011-08-01'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2011-09-01'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2011-10-01'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2011-11-01'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2011-12-01'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-01-01'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-02-01'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-03-01'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-04-01'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-05-01'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-06-01'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-07-01'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-08-01'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-09-01'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-10-01'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-11-01'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2012-12-01'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-01-01'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-02-01'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-03-01'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-04-01'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-05-01'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-06-01'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-07-01'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-08-01'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-09-01'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-10-01'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-11-01'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2013-12-01'" />
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2014-01-01'" />
+                                          </ScalarOperator>
+                                        </Intrinsic>
+                                      </ScalarOperator>
+                                      <ScalarOperator ScalarString="[TexusResults].[analysis].[FunctionalAnalysisResultLog].[PkSetPartition]">
+                                        <Identifier>
+                                          <ColumnReference Database="[TexusResults]" Schema="[analysis]" Table="[FunctionalAnalysisResultLog]" Column="PkSetPartition" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator ScalarString="[TexusResults].[analysis].[FunctionalAnalysisResultLog].[PkSetId]">
+                                        <Identifier>
+                                          <ColumnReference Database="[TexusResults]" Schema="[analysis]" Table="[FunctionalAnalysisResultLog]" Column="PkSetId" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator ScalarString="[TexusResults].[analysis].[FunctionalAnalysisResultLog].[FunctionalAnalysisResultId]">
+                                        <Identifier>
+                                          <ColumnReference Database="[TexusResults]" Schema="[analysis]" Table="[FunctionalAnalysisResultLog]" Column="FunctionalAnalysisResultId" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </RangeExpressions>
+                                  </Prefix>
+                                </SeekKeys>
+                              </SeekPredicateNew>
+                            </SeekPredicates>
+                          </IndexScan>
+                        </RelOp>
+                      </NestedLoops>
+                    </RelOp>
+                    <RelOp NodeId="17" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="5" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList />
+                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                        <DefinedValues />
+                        <Object Database="[TexusResults]" Schema="[base]" Table="[LogResultLevel]" Index="[ExecutionState_PK]" IndexKind="Clustered" />
+                        <SeekPredicates>
+                          <SeekPredicateNew>
+                            <SeekKeys>
+                              <Prefix ScanType="EQ">
+                                <RangeColumns>
+                                  <ColumnReference Database="[TexusResults]" Schema="[base]" Table="[LogResultLevel]" Column="PkId" />
+                                </RangeColumns>
+                                <RangeExpressions>
+                                  <ScalarOperator ScalarString="[TexusResults].[analysis].[FunctionalAnalysisResultLog].[LogResultLevelId]">
+                                    <Identifier>
+                                      <ColumnReference Database="[TexusResults]" Schema="[analysis]" Table="[FunctionalAnalysisResultLog]" Column="LogResultLevelId" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </RangeExpressions>
+                              </Prefix>
+                            </SeekKeys>
+                          </SeekPredicateNew>
+                        </SeekPredicates>
+                      </IndexScan>
+                    </RelOp>
+                  </NestedLoops>
+                </RelOp>
+                <Predicate>
+                  <ScalarOperator ScalarString="CASE WHEN [Expr1021] IS NULL THEN (0) ELSE CASE WHEN [Expr1022] IS NULL THEN (1) ELSE NULL END END">
+                    <IF>
+                      <Condition>
+                        <ScalarOperator>
+                          <Logical Operation="IS NULL">
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1021" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Logical>
+                        </ScalarOperator>
+                      </Condition>
+                      <Then>
+                        <ScalarOperator>
+                          <Const ConstValue="(0)" />
+                        </ScalarOperator>
+                      </Then>
+                      <Else>
+                        <ScalarOperator>
+                          <IF>
+                            <Condition>
+                              <ScalarOperator>
+                                <Logical Operation="IS NULL">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Expr1022" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Logical>
+                              </ScalarOperator>
+                            </Condition>
+                            <Then>
+                              <ScalarOperator>
+                                <Const ConstValue="(1)" />
+                              </ScalarOperator>
+                            </Then>
+                            <Else>
+                              <ScalarOperator>
+                                <Const ConstValue="NULL" />
+                              </ScalarOperator>
+                            </Else>
+                          </IF>
+                        </ScalarOperator>
+                      </Else>
+                    </IF>
+                  </ScalarOperator>
+                </Predicate>
+              </Assert>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@5" ParameterCompiledValue="(2)" />
+              <ColumnReference Column="@4" ParameterCompiledValue="'Expected total number of results (the number of tests started, 3) does not match actual total number of results (the number of tests ended, 2).'" />
+              <ColumnReference Column="@3" ParameterCompiledValue="{guid'CFF50D3B-DFDA-4CFC-A5EB-2906AFAD12EE'}" />
+              <ColumnReference Column="@2" ParameterCompiledValue="{guid'3ABB286B-0559-4F38-8018-80A27E398C3A'}" />
+              <ColumnReference Column="@1" ParameterCompiledValue="(747448)" />
+              <ColumnReference Column="@0" ParameterCompiledValue="'2015-01-30 00:00:00.0000000'" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText="&#xA;select [PkId]&#xD;&#xA;from [analysis].[FunctionalAnalysisResultLog]&#xD;&#xA;where @@ROWCOUNT &gt; 0 and [PkSetPartition] = @0 and [PkSetId] = @1 and [PkId] = scope_identity()" StatementId="2" StatementCompId="2" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.121435" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0xC4B35193EABC82FB" QueryPlanHash="0xC589EAB657A5E33E">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="false" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="13" CompileCPU="13" CompileMemory="256">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Filter" LogicalOp="Filter" EstimateRows="1" EstimateIO="0" EstimateCPU="1.8e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="0.121435" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Database="[TexusResults]" Schema="[analysis]" Table="[FunctionalAnalysisResultLog]" Column="PkId" />
+              </OutputList>
+              <Filter StartupExpression="1">
+                <RelOp NodeId="1" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.115625" EstimateCPU="0.0058101" AvgRowSize="11" EstimatedTotalSubtreeCost="0.121435" TableCardinality="2.6345e+006" Parallel="0" Partitioned="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Database="[TexusResults]" Schema="[analysis]" Table="[FunctionalAnalysisResultLog]" Column="PkId" />
+                  </OutputList>
+                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Database="[TexusResults]" Schema="[analysis]" Table="[FunctionalAnalysisResultLog]" Column="PkId" />
+                      </DefinedValue>
+                    </DefinedValues>
+                    <Object Database="[TexusResults]" Schema="[analysis]" Table="[FunctionalAnalysisResultLog]" Index="[FunctionalAnalysisResultLog_PK]" IndexKind="Clustered" />
+                    <SeekPredicates>
+                      <SeekPredicateNew>
+                        <SeekKeys>
+                          <StartRange ScanType="GE">
+                            <RangeColumns>
+                              <ColumnReference Column="PtnId1000" />
+                            </RangeColumns>
+                            <RangeExpressions>
+                              <ScalarOperator ScalarString="(1)">
+                                <Const ConstValue="(1)" />
+                              </ScalarOperator>
+                            </RangeExpressions>
+                          </StartRange>
+                          <EndRange ScanType="LE">
+                            <RangeColumns>
+                              <ColumnReference Column="PtnId1000" />
+                            </RangeColumns>
+                            <RangeExpressions>
+                              <ScalarOperator ScalarString="(37)">
+                                <Const ConstValue="(37)" />
+                              </ScalarOperator>
+                            </RangeExpressions>
+                          </EndRange>
+                        </SeekKeys>
+                        <SeekKeys>
+                          <Prefix ScanType="EQ">
+                            <RangeColumns>
+                              <ColumnReference Database="[TexusResults]" Schema="[analysis]" Table="[FunctionalAnalysisResultLog]" Column="PkSetPartition" />
+                              <ColumnReference Database="[TexusResults]" Schema="[analysis]" Table="[FunctionalAnalysisResultLog]" Column="PkSetId" />
+                              <ColumnReference Database="[TexusResults]" Schema="[analysis]" Table="[FunctionalAnalysisResultLog]" Column="PkId" />
+                            </RangeColumns>
+                            <RangeExpressions>
+                              <ScalarOperator ScalarString="[@0]">
+                                <Identifier>
+                                  <ColumnReference Column="@0" />
+                                </Identifier>
+                              </ScalarOperator>
+                              <ScalarOperator ScalarString="[@1]">
+                                <Identifier>
+                                  <ColumnReference Column="@1" />
+                                </Identifier>
+                              </ScalarOperator>
+                              <ScalarOperator ScalarString="scope_identity()">
+                                <Intrinsic FunctionName="scope_identity" />
+                              </ScalarOperator>
+                            </RangeExpressions>
+                          </Prefix>
+                        </SeekKeys>
+                      </SeekPredicateNew>
+                    </SeekPredicates>
+                  </IndexScan>
+                </RelOp>
+                <Predicate>
+                  <ScalarOperator ScalarString="@@rowcount&gt;(0)">
+                    <Compare CompareOp="GT">
+                      <ScalarOperator>
+                        <Intrinsic FunctionName="@@rowcount" />
+                      </ScalarOperator>
+                      <ScalarOperator>
+                        <Const ConstValue="(0)" />
+                      </ScalarOperator>
+                    </Compare>
+                  </ScalarOperator>
+                </Predicate>
+              </Filter>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@1" ParameterCompiledValue="(747448)" />
+              <ColumnReference Column="@0" ParameterCompiledValue="'2015-01-30 00:00:00.0000000'" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

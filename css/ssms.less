@@ -1,0 +1,30 @@
+﻿@appHeaderHeight: 0px;
+
+@import "fonts.less";
+@import "colors.less";
+
+@import "planview.less";
+
+
+.ssms {
+    font-family: "Roboto", "Segoe UI", sans-serif;
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+    min-width: 50em;
+    color: @color-dark;
+    
+    .base-background();
+}
+
+.app {
+    font-family: "Roboto", "Segoe UI", sans-serif;
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+    min-width: 50em;
+    color: @color-dark;
+    
+    .base-background();
+    @import "app.less";
+}

@@ -1,0 +1,26 @@
+{{#nodeClasses}}
+{{name}}
+{{/nodeClasses}}
+{{#classes}}
+{{name}}
+{{/classes}}
+
+# Classes by reference
+{{#nodeClasses}}
+- {{name}} - [{{inRef}}]
+
+{{/nodeClasses}}
+
+# Classes
+{{#classes}}
+
+## {{name}}{{#baseName}} ({{baseName}}){{/baseName}}
+{{#isBatch}}
+batch {{/isBatch}}{{#isStatement}}statement {{/isStatement}}{{#isNode}}node{{/isNode}}
+{{#properties}}
+- {{propName}}{{#title}} (title){{/title}}{{#subTitle}} (subTitle){{/subTitle}}
+{{/properties}}
+{{#propertyElements}}
+- {{name}} (obj{{#isArray}}[]{{/isArray}})
+{{/propertyElements}}
+{{/classes}}

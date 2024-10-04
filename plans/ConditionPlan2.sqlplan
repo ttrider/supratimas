@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="utf-16"?>
+<ShowPlanXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="1.2" Build="11.0.2100.60" xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementCompId="3" StatementEstRows="1" StatementId="2" StatementOptmLevel="TRIVIAL" StatementSubTreeCost="0.0032832" StatementText="&#xA;select &#xD;&#xA;&#xD;&#xA;CASE id &#xD;&#xA;     WHEN 1 THEN 1000 &#xD;&#xA;  WHEN 2 THEN 2000 &#xD;&#xA;     ELSE 9000 &#xD;&#xA;END &#xD;&#xA;,&#xD;&#xA;CASE&#xD;&#xA;     WHEN id=3 THEN 3000&#xD;&#xA;     WHEN id=4 THEN 4000&#xD;&#xA;     ELSE 5000 &#xD;&#xA;END&#xD;&#xA;&#xD;&#xA;from @T;&#xD;&#xA; &#xD;&#xA;&#xD;" StatementType="SELECT" QueryHash="0x9FFA1619426F4F1" QueryPlanHash="0x4D019B8B1E8DB959" RetrievedFromCache="true">
+          <StatementSetOptions ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" NUMERIC_ROUNDABORT="false" QUOTED_IDENTIFIER="true" />
+          <QueryPlan CachedPlanSize="16" CompileTime="0" CompileCPU="0" CompileMemory="160">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="52428" EstimatedPagesCached="13107" EstimatedAvailableDegreeOfParallelism="2" />
+            <RelOp AvgRowSize="15" EstimateCPU="1E-07" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="1" LogicalOp="Compute Scalar" NodeId="0" Parallel="false" PhysicalOp="Compute Scalar" EstimatedTotalSubtreeCost="0.0032832">
+              <OutputList>
+                <ColumnReference Column="Expr1004" />
+                <ColumnReference Column="Expr1005" />
+              </OutputList>
+              <ComputeScalar>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1004" />
+                    <ScalarOperator ScalarString="CASE WHEN [id]=(1) THEN (1000) ELSE CASE WHEN [id]=(2) THEN (2000) ELSE (9000) END END">
+                      <IF>
+                        <Condition>
+                          <ScalarOperator>
+                            <Compare CompareOp="EQ">
+                              <ScalarOperator>
+                                <Identifier>
+                                  <ColumnReference Column="id" />
+                                </Identifier>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Const ConstValue="(1)" />
+                              </ScalarOperator>
+                            </Compare>
+                          </ScalarOperator>
+                        </Condition>
+                        <Then>
+                          <ScalarOperator>
+                            <Const ConstValue="(1000)" />
+                          </ScalarOperator>
+                        </Then>
+                        <Else>
+                          <ScalarOperator>
+                            <IF>
+                              <Condition>
+                                <ScalarOperator>
+                                  <Compare CompareOp="EQ">
+                                    <ScalarOperator>
+                                      <Identifier>
+                                        <ColumnReference Column="id" />
+                                      </Identifier>
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Const ConstValue="(2)" />
+                                    </ScalarOperator>
+                                  </Compare>
+                                </ScalarOperator>
+                              </Condition>
+                              <Then>
+                                <ScalarOperator>
+                                  <Const ConstValue="(2000)" />
+                                </ScalarOperator>
+                              </Then>
+                              <Else>
+                                <ScalarOperator>
+                                  <Const ConstValue="(9000)" />
+                                </ScalarOperator>
+                              </Else>
+                            </IF>
+                          </ScalarOperator>
+                        </Else>
+                      </IF>
+                    </ScalarOperator>
+                  </DefinedValue>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1005" />
+                    <ScalarOperator ScalarString="CASE WHEN [id]=(3) THEN (3000) ELSE CASE WHEN [id]=(4) THEN (4000) ELSE (5000) END END">
+                      <IF>
+                        <Condition>
+                          <ScalarOperator>
+                            <Compare CompareOp="EQ">
+                              <ScalarOperator>
+                                <Identifier>
+                                  <ColumnReference Column="id" />
+                                </Identifier>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Const ConstValue="(3)" />
+                              </ScalarOperator>
+                            </Compare>
+                          </ScalarOperator>
+                        </Condition>
+                        <Then>
+                          <ScalarOperator>
+                            <Const ConstValue="(3000)" />
+                          </ScalarOperator>
+                        </Then>
+                        <Else>
+                          <ScalarOperator>
+                            <IF>
+                              <Condition>
+                                <ScalarOperator>
+                                  <Compare CompareOp="EQ">
+                                    <ScalarOperator>
+                                      <Identifier>
+                                        <ColumnReference Column="id" />
+                                      </Identifier>
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Const ConstValue="(4)" />
+                                    </ScalarOperator>
+                                  </Compare>
+                                </ScalarOperator>
+                              </Condition>
+                              <Then>
+                                <ScalarOperator>
+                                  <Const ConstValue="(4000)" />
+                                </ScalarOperator>
+                              </Then>
+                              <Else>
+                                <ScalarOperator>
+                                  <Const ConstValue="(5000)" />
+                                </ScalarOperator>
+                              </Else>
+                            </IF>
+                          </ScalarOperator>
+                        </Else>
+                      </IF>
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp AvgRowSize="11" EstimateCPU="7.96E-05" EstimateIO="0.0032035" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="1" LogicalOp="Table Scan" NodeId="1" Parallel="false" PhysicalOp="Table Scan" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0">
+                  <OutputList>
+                    <ColumnReference Column="id" />
+                  </OutputList>
+                  <TableScan Ordered="false" ForcedIndex="false" ForceScan="false" NoExpandHint="false">
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="id" />
+                      </DefinedValue>
+                    </DefinedValues>
+                    <Object Table="[@T]" />
+                  </TableScan>
+                </RelOp>
+              </ComputeScalar>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+      
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

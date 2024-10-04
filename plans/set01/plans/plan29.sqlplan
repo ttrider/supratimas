@@ -1,0 +1,319 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="CREATE TRIGGER [FailureBugMapping_Insert]&#xD;&#xA;ON [dbo].[FailureBugMapping]&#xD;&#xA;FOR INSERT, UPDATE &#xD;&#xA;AS &#xD;&#xA;BEGIN&#xD;&#xA;    SET NOCOUNT ON&#xD;&#xA;&#xD;&#xA;" StatementId="1" StatementCompId="22" StatementType="SET ON/OFF" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;UPDATE FB &#xD;&#xA;&#x9;&#x9;SET FB.TeuNameHash = CHECKSUM(T.Name)&#xD;&#xA;&#x9;FROM FailureBugMapping AS FB WITH(NOLOCK)&#xD;&#xA;&#x9;INNER JOIN Failure AS F WITH(NOLOCK) ON F.Id = FB.FailureId&#xD;&#xA;&#x9;INNER JOIN Teu AS T WITH(NOLOCK) ON T.Id = F.TeuId&#xD;&#xA;&#x9;INNER JOIN inserted AS I ON I.FailureId = FB.FailureId AND I.BugId = FB.BugId&#xD;&#xA;&#xD;&#xA;&#x9;-- Dirty TED so we know to recrawl FailureBugMapping&#xD;&#xA;&#x9;--UPDATE TED&#xD;&#xA;&#x9;--&#x9;SET LastUpdateTime = GETDATE()&#xD;&#xA;&#x9;--FROM inserted AS I&#xD;&#xA;&#x9;--INNER JOIN Failure AS F WITH(NOLOCK) ON F.Id = I.FailureId&#xD;&#xA;&#x9;--INNER JOIN Teu AS T WITH(NOLOCK) ON T.Id = F.TeuId&#xD;&#xA;&#x9;--INNER JOIN TEUCountsByResolvedTED AS TED ON TED.ResolvedTEDId = T.ResolvedTedId&#xD;&#xA;&#x9;&#xD;" StatementId="2" StatementCompId="23" StatementType="UPDATE" RetrievedFromCache="true" StatementSubTreeCost="0.0331472" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0xF2A14E6CA2EFD60A" QueryPlanHash="0x3B122D4EA24D6BF9" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="56" CompileTime="29" CompileCPU="29" CompileMemory="1472">
+            <MemoryGrantInfo SerialRequiredMemory="1024" SerialDesiredMemory="1088" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="1" PhysicalOp="Clustered Index Update" LogicalOp="Update" EstimateRows="1" EstimateIO="0.02" EstimateCPU="2e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0331472" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <Update DMLRequestSort="0">
+                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Index="[FailureBugMapping_PK]" Alias="[FB]" IndexKind="Clustered" />
+                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Index="[FailureBugMapping_IDX_TeuNameHash]" Alias="[FB]" IndexKind="NonClustered" />
+                <SetPredicate>
+                  <ScalarOperator ScalarString="[OurLabReporting].[dbo].[FailureBugMapping].[TeuNameHash] as [FB].[TeuNameHash] = [Expr1007]">
+                    <ScalarExpressionList>
+                      <ScalarOperator>
+                        <MultipleAssign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[FB]" Column="TeuNameHash" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1007" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                        </MultipleAssign>
+                      </ScalarOperator>
+                    </ScalarExpressionList>
+                  </ScalarOperator>
+                </SetPredicate>
+                <RelOp NodeId="2" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="23" EstimatedTotalSubtreeCost="0.0131452" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[FB]" Column="BugId" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[FB]" Column="FailureId" />
+                    <ColumnReference Column="Expr1007" />
+                    <ColumnReference Column="Expr1031" />
+                  </OutputList>
+                  <ComputeScalar>
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1031" />
+                        <ScalarOperator ScalarString="[Expr1031]">
+                          <Identifier>
+                            <ColumnReference Column="Expr1031" />
+                          </Identifier>
+                        </ScalarOperator>
+                      </DefinedValue>
+                    </DefinedValues>
+                    <RelOp NodeId="3" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="23" EstimatedTotalSubtreeCost="0.0131452" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[FB]" Column="BugId" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[FB]" Column="FailureId" />
+                        <ColumnReference Column="Expr1007" />
+                        <ColumnReference Column="Expr1031" />
+                      </OutputList>
+                      <ComputeScalar>
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1031" />
+                            <ScalarOperator ScalarString="CASE WHEN [Expr1026] THEN (0) ELSE (1) END">
+                              <IF>
+                                <Condition>
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Expr1026" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Condition>
+                                <Then>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(0)" />
+                                  </ScalarOperator>
+                                </Then>
+                                <Else>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(1)" />
+                                  </ScalarOperator>
+                                </Else>
+                              </IF>
+                            </ScalarOperator>
+                          </DefinedValue>
+                        </DefinedValues>
+                        <RelOp NodeId="4" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="20" EstimatedTotalSubtreeCost="0.0131451" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[FB]" Column="BugId" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[FB]" Column="FailureId" />
+                            <ColumnReference Column="Expr1007" />
+                            <ColumnReference Column="Expr1026" />
+                          </OutputList>
+                          <ComputeScalar>
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Column="Expr1026" />
+                                <ScalarOperator ScalarString="CASE WHEN [OurLabReporting].[dbo].[FailureBugMapping].[TeuNameHash] as [FB].[TeuNameHash] = [Expr1007] THEN (1) ELSE (0) END">
+                                  <IF>
+                                    <Condition>
+                                      <ScalarOperator>
+                                        <Compare CompareOp="BINARY IS">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[FB]" Column="TeuNameHash" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Column="Expr1007" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </Compare>
+                                      </ScalarOperator>
+                                    </Condition>
+                                    <Then>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(1)" />
+                                      </ScalarOperator>
+                                    </Then>
+                                    <Else>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(0)" />
+                                      </ScalarOperator>
+                                    </Else>
+                                  </IF>
+                                </ScalarOperator>
+                              </DefinedValue>
+                            </DefinedValues>
+                            <RelOp NodeId="5" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="23" EstimatedTotalSubtreeCost="0.013145" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[FB]" Column="BugId" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[FB]" Column="FailureId" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[FB]" Column="TeuNameHash" />
+                                <ColumnReference Column="Expr1007" />
+                              </OutputList>
+                              <ComputeScalar>
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Column="Expr1007" />
+                                    <ScalarOperator ScalarString="[OurLabReporting].[dbo].[TEU].[NameHash] as [T].[NameHash]">
+                                      <Identifier>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Alias="[T]" Column="NameHash" ComputedColumn="1" />
+                                      </Identifier>
+                                    </ScalarOperator>
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <RelOp NodeId="6" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="23" EstimatedTotalSubtreeCost="0.0131449" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[FB]" Column="BugId" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[FB]" Column="FailureId" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[FB]" Column="TeuNameHash" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Alias="[T]" Column="NameHash" ComputedColumn="1" />
+                                  </OutputList>
+                                  <NestedLoops Optimized="1">
+                                    <OuterReferences>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Alias="[F]" Column="TEUId" />
+                                    </OuterReferences>
+                                    <RelOp NodeId="8" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="27" EstimatedTotalSubtreeCost="0.00985766" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[FB]" Column="BugId" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[FB]" Column="FailureId" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[FB]" Column="TeuNameHash" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Alias="[F]" Column="TEUId" />
+                                      </OutputList>
+                                      <NestedLoops Optimized="1">
+                                        <OuterReferences>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[I]" Column="FailureId" />
+                                        </OuterReferences>
+                                        <RelOp NodeId="10" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="23" EstimatedTotalSubtreeCost="0.00657038" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                          <OutputList>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[FB]" Column="BugId" />
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[FB]" Column="FailureId" />
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[FB]" Column="TeuNameHash" />
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[I]" Column="FailureId" />
+                                          </OutputList>
+                                          <NestedLoops Optimized="0">
+                                            <OuterReferences>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[I]" Column="BugId" />
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[I]" Column="FailureId" />
+                                            </OuterReferences>
+                                            <RelOp NodeId="11" PhysicalOp="Inserted Scan" LogicalOp="Inserted Scan" EstimateRows="1" EstimateIO="0.0032035" EstimateCPU="7.96e-005" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                              <OutputList>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[I]" Column="BugId" />
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[I]" Column="FailureId" />
+                                              </OutputList>
+                                              <InsertedScan>
+                                                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Index="[FailureBugMapping_PK]" Alias="[I]" IndexKind="Clustered" />
+                                              </InsertedScan>
+                                            </RelOp>
+                                            <RelOp NodeId="12" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="19" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="5.01329e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                              <OutputList>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[FB]" Column="BugId" />
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[FB]" Column="FailureId" />
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[FB]" Column="TeuNameHash" />
+                                              </OutputList>
+                                              <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                                <DefinedValues>
+                                                  <DefinedValue>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[FB]" Column="BugId" />
+                                                  </DefinedValue>
+                                                  <DefinedValue>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[FB]" Column="FailureId" />
+                                                  </DefinedValue>
+                                                  <DefinedValue>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[FB]" Column="TeuNameHash" />
+                                                  </DefinedValue>
+                                                </DefinedValues>
+                                                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Index="[FailureBugMapping_PK]" Alias="[FB]" IndexKind="Clustered" />
+                                                <SeekPredicates>
+                                                  <SeekPredicateNew>
+                                                    <SeekKeys>
+                                                      <Prefix ScanType="EQ">
+                                                        <RangeColumns>
+                                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[FB]" Column="BugId" />
+                                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[FB]" Column="FailureId" />
+                                                        </RangeColumns>
+                                                        <RangeExpressions>
+                                                          <ScalarOperator ScalarString="[OurLabReporting].[dbo].[FailureBugMapping].[BugId] as [I].[BugId]">
+                                                            <Identifier>
+                                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[I]" Column="BugId" />
+                                                            </Identifier>
+                                                          </ScalarOperator>
+                                                          <ScalarOperator ScalarString="[OurLabReporting].[dbo].[FailureBugMapping].[FailureId] as [I].[FailureId]">
+                                                            <Identifier>
+                                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[I]" Column="FailureId" />
+                                                            </Identifier>
+                                                          </ScalarOperator>
+                                                        </RangeExpressions>
+                                                      </Prefix>
+                                                    </SeekKeys>
+                                                  </SeekPredicateNew>
+                                                </SeekPredicates>
+                                              </IndexScan>
+                                            </RelOp>
+                                          </NestedLoops>
+                                        </RelOp>
+                                        <RelOp NodeId="13" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="3.38967e+007" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                          <OutputList>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Alias="[F]" Column="TEUId" />
+                                          </OutputList>
+                                          <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                            <DefinedValues>
+                                              <DefinedValue>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Alias="[F]" Column="TEUId" />
+                                              </DefinedValue>
+                                            </DefinedValues>
+                                            <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Index="[Failure_PK]" Alias="[F]" IndexKind="Clustered" />
+                                            <SeekPredicates>
+                                              <SeekPredicateNew>
+                                                <SeekKeys>
+                                                  <Prefix ScanType="EQ">
+                                                    <RangeColumns>
+                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Alias="[F]" Column="Id" />
+                                                    </RangeColumns>
+                                                    <RangeExpressions>
+                                                      <ScalarOperator ScalarString="[OurLabReporting].[dbo].[FailureBugMapping].[FailureId] as [I].[FailureId]">
+                                                        <Identifier>
+                                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureBugMapping]" Alias="[I]" Column="FailureId" />
+                                                        </Identifier>
+                                                      </ScalarOperator>
+                                                    </RangeExpressions>
+                                                  </Prefix>
+                                                </SeekKeys>
+                                              </SeekPredicateNew>
+                                            </SeekPredicates>
+                                          </IndexScan>
+                                        </RelOp>
+                                      </NestedLoops>
+                                    </RelOp>
+                                    <RelOp NodeId="14" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="4.12025e+007" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Alias="[T]" Column="NameHash" ComputedColumn="1" />
+                                      </OutputList>
+                                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                        <DefinedValues>
+                                          <DefinedValue>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Alias="[T]" Column="NameHash" ComputedColumn="1" />
+                                          </DefinedValue>
+                                        </DefinedValues>
+                                        <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Index="[Teu_PK]" Alias="[T]" IndexKind="Clustered" />
+                                        <SeekPredicates>
+                                          <SeekPredicateNew>
+                                            <SeekKeys>
+                                              <Prefix ScanType="EQ">
+                                                <RangeColumns>
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Alias="[T]" Column="Id" />
+                                                </RangeColumns>
+                                                <RangeExpressions>
+                                                  <ScalarOperator ScalarString="[OurLabReporting].[dbo].[Failure].[TEUId] as [F].[TEUId]">
+                                                    <Identifier>
+                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Alias="[F]" Column="TEUId" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </RangeExpressions>
+                                              </Prefix>
+                                            </SeekKeys>
+                                          </SeekPredicateNew>
+                                        </SeekPredicates>
+                                      </IndexScan>
+                                    </RelOp>
+                                  </NestedLoops>
+                                </RelOp>
+                              </ComputeScalar>
+                            </RelOp>
+                          </ComputeScalar>
+                        </RelOp>
+                      </ComputeScalar>
+                    </RelOp>
+                  </ComputeScalar>
+                </RelOp>
+              </Update>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

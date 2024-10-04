@@ -1,0 +1,15 @@
+
+//BUGBUG performance is slow on rendering
+//BUGBUG Rows information is missing on nodes
+
+
+//TODO move metrics into the node class itself
+
+//TODO Separate TS compilations for the different destinations
+//TODO Create an emeddable supra component 
+
+//TODO add profiling code to the layout to investigate performance
+
+//TODO Combine static strings during codegen
+
+//TODO node icon mapping

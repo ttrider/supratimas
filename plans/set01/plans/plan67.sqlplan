@@ -1,0 +1,261 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="&#xD;&#xA;CREATE PROCEDURE [dbo].[spSavePoisonMessage]&#xD;&#xA;&#x9;@id UNIQUEIDENTIFIER,&#xD;&#xA;&#x9;@agentId INT,&#xD;&#xA;&#x9;@error VARCHAR(32),&#xD;&#xA;&#x9;@exceptionStack VARCHAR(2048),&#xD;&#xA;&#x9;@messageType VARCHAR(128),&#xD;&#xA;&#x9;@messageId VARCHAR(64),&#xD;&#xA;&#x9;@isRawFormat BIT,&#xD;&#xA;&#x9;@messageBody VARBINARY(MAX)&#xD;&#xA;AS&#xD;&#xA;BEGIN&#xD;&#xA;&#x9;SET NOCOUNT ON;&#xD;&#xA;&#xD;&#xA;" StatementId="1" StatementCompId="2" StatementType="SET ON/OFF" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;INSERT INTO [dbo].[DatamartPoisonMessage]&#xD;&#xA;           ([Id]&#xD;&#xA;&#x9;&#x9;   ,[AgentId]&#xD;&#xA;           ,[ErrorType]&#xD;&#xA;           ,[Exception]&#xD;&#xA;&#x9;&#x9;   ,[MessageType]&#xD;&#xA;&#x9;&#x9;   ,[MessageId]&#xD;&#xA;           ,[MessageBody]&#xD;&#xA;&#x9;&#x9;   ,[InRawFormat])&#xD;&#xA;     VALUES&#xD;&#xA;           (@id&#xD;&#xA;&#x9;&#x9;   ,@agentId&#xD;&#xA;           ,@error&#xD;&#xA;           ,@exceptionStack&#xD;&#xA;&#x9;&#x9;   ,@messageType&#xD;&#xA;&#x9;&#x9;   ,@messageId&#xD;&#xA;           ,@messageBody&#xD;&#xA;&#x9;&#x9;   ,@isRawFormat)&#xD;" StatementId="2" StatementCompId="3" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.0432926" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x2C8192F6ACF102D0" QueryPlanHash="0xCB73C7D433532CC2">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="false" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="32" CompileTime="7" CompileCPU="3" CompileMemory="168">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="1" PhysicalOp="Assert" LogicalOp="Assert" EstimateRows="1" EstimateIO="0" EstimateCPU="1.8e-007" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0432926" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <Assert StartupExpression="0">
+                <RelOp NodeId="2" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0432924" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Expr1010" />
+                  </OutputList>
+                  <NestedLoops Optimized="0">
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1010" />
+                      </DefinedValue>
+                    </DefinedValues>
+                    <OuterReferences>
+                      <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartPoisonMessage]" Column="AgentId" />
+                    </OuterReferences>
+                    <ProbeColumn>
+                      <ColumnReference Column="Expr1010" />
+                    </ProbeColumn>
+                    <RelOp NodeId="3" PhysicalOp="Clustered Index Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.04" EstimateCPU="4e-006" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0400052" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartPoisonMessage]" Column="AgentId" />
+                      </OutputList>
+                      <ScalarInsert DMLRequestSort="0">
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1004" />
+                            <ScalarOperator ScalarString="CONVERT_IMPLICIT(varchar(4096),[@exceptionStack],0)">
+                              <Convert DataType="varchar" Length="4096" Style="0" Implicit="1">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="@exceptionStack" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Convert>
+                            </ScalarOperator>
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1005" />
+                            <ScalarOperator ScalarString="CONVERT_IMPLICIT(datetime,sysutcdatetime(),0)">
+                              <Identifier>
+                                <ColumnReference Column="ConstExpr1009">
+                                  <ScalarOperator>
+                                    <Convert DataType="datetime" Style="0" Implicit="1">
+                                      <ScalarOperator>
+                                        <Intrinsic FunctionName="sysutcdatetime" />
+                                      </ScalarOperator>
+                                    </Convert>
+                                  </ScalarOperator>
+                                </ColumnReference>
+                              </Identifier>
+                            </ScalarOperator>
+                          </DefinedValue>
+                        </DefinedValues>
+                        <Object Database="[TexusResults]" Schema="[dbo]" Table="[DatamartPoisonMessage]" Index="[DatamartPoisonMessage_IDX_CreateTime]" IndexKind="Clustered" />
+                        <Object Database="[TexusResults]" Schema="[dbo]" Table="[DatamartPoisonMessage]" Index="[PK_DatamartPoisonMessage]" IndexKind="NonClustered" />
+                        <Object Database="[TexusResults]" Schema="[dbo]" Table="[DatamartPoisonMessage]" Index="[DatamartPoisonMessage_IDX_ErrorType]" IndexKind="NonClustered" />
+                        <Object Database="[TexusResults]" Schema="[dbo]" Table="[DatamartPoisonMessage]" Index="[DatamartPoisonMessage_IDX_MessageId]" IndexKind="NonClustered" />
+                        <SetPredicate>
+                          <ScalarOperator ScalarString="[TexusResults].[dbo].[DatamartPoisonMessage].[Id] = RaiseIfNullInsert([@id]),[TexusResults].[dbo].[DatamartPoisonMessage].[AgentId] = RaiseIfNullInsert([@agentId]),[TexusResults].[dbo].[DatamartPoisonMessage].[ErrorType] = RaiseIfNullInsert([@error]),[TexusResults].[dbo].[DatamartPoisonMessage].[Exception] = RaiseIfNullInsert([Expr1004]),[TexusResults].[dbo].[DatamartPoisonMessage].[MessageType] = RaiseIfNullInsert([@messageType]),[TexusResults].[dbo].[DatamartPoisonMessage].[MessageId] = RaiseIfNullInsert([@messageId]),[TexusResults].[dbo].[DatamartPoisonMessage].[MessageBody] = RaiseIfNullInsert([@messageBody]),[TexusResults].[dbo].[DatamartPoisonMessage].[InRawFormat] = RaiseIfNullInsert([@isRawFormat]),[TexusResults].[dbo].[DatamartPoisonMessage].[CreateTime] = RaiseIfNullInsert([Expr1005])">
+                            <ScalarExpressionList>
+                              <ScalarOperator>
+                                <MultipleAssign>
+                                  <Assign>
+                                    <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartPoisonMessage]" Column="Id" />
+                                    <ScalarOperator>
+                                      <Intrinsic FunctionName="RaiseIfNullInsert">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="@id" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Intrinsic>
+                                    </ScalarOperator>
+                                  </Assign>
+                                  <Assign>
+                                    <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartPoisonMessage]" Column="AgentId" />
+                                    <ScalarOperator>
+                                      <Intrinsic FunctionName="RaiseIfNullInsert">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="@agentId" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Intrinsic>
+                                    </ScalarOperator>
+                                  </Assign>
+                                  <Assign>
+                                    <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartPoisonMessage]" Column="ErrorType" />
+                                    <ScalarOperator>
+                                      <Intrinsic FunctionName="RaiseIfNullInsert">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="@error" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Intrinsic>
+                                    </ScalarOperator>
+                                  </Assign>
+                                  <Assign>
+                                    <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartPoisonMessage]" Column="Exception" />
+                                    <ScalarOperator>
+                                      <Intrinsic FunctionName="RaiseIfNullInsert">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="Expr1004" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Intrinsic>
+                                    </ScalarOperator>
+                                  </Assign>
+                                  <Assign>
+                                    <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartPoisonMessage]" Column="MessageType" />
+                                    <ScalarOperator>
+                                      <Intrinsic FunctionName="RaiseIfNullInsert">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="@messageType" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Intrinsic>
+                                    </ScalarOperator>
+                                  </Assign>
+                                  <Assign>
+                                    <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartPoisonMessage]" Column="MessageId" />
+                                    <ScalarOperator>
+                                      <Intrinsic FunctionName="RaiseIfNullInsert">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="@messageId" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Intrinsic>
+                                    </ScalarOperator>
+                                  </Assign>
+                                  <Assign>
+                                    <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartPoisonMessage]" Column="MessageBody" />
+                                    <ScalarOperator>
+                                      <Intrinsic FunctionName="RaiseIfNullInsert">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="@messageBody" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Intrinsic>
+                                    </ScalarOperator>
+                                  </Assign>
+                                  <Assign>
+                                    <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartPoisonMessage]" Column="InRawFormat" />
+                                    <ScalarOperator>
+                                      <Intrinsic FunctionName="RaiseIfNullInsert">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="@isRawFormat" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Intrinsic>
+                                    </ScalarOperator>
+                                  </Assign>
+                                  <Assign>
+                                    <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartPoisonMessage]" Column="CreateTime" />
+                                    <ScalarOperator>
+                                      <Intrinsic FunctionName="RaiseIfNullInsert">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="Expr1005" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Intrinsic>
+                                    </ScalarOperator>
+                                  </Assign>
+                                </MultipleAssign>
+                              </ScalarOperator>
+                            </ScalarExpressionList>
+                          </ScalarOperator>
+                        </SetPredicate>
+                      </ScalarInsert>
+                    </RelOp>
+                    <RelOp NodeId="4" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList />
+                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                        <DefinedValues />
+                        <Object Database="[TexusResults]" Schema="[dbo]" Table="[DatamartAgent]" Index="[PK_DatamartAgent]" IndexKind="Clustered" />
+                        <SeekPredicates>
+                          <SeekPredicateNew>
+                            <SeekKeys>
+                              <Prefix ScanType="EQ">
+                                <RangeColumns>
+                                  <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartAgent]" Column="Id" />
+                                </RangeColumns>
+                                <RangeExpressions>
+                                  <ScalarOperator ScalarString="[TexusResults].[dbo].[DatamartPoisonMessage].[AgentId]">
+                                    <Identifier>
+                                      <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartPoisonMessage]" Column="AgentId" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </RangeExpressions>
+                              </Prefix>
+                            </SeekKeys>
+                          </SeekPredicateNew>
+                        </SeekPredicates>
+                      </IndexScan>
+                    </RelOp>
+                  </NestedLoops>
+                </RelOp>
+                <Predicate>
+                  <ScalarOperator ScalarString="CASE WHEN [Expr1010] IS NULL THEN (0) ELSE NULL END">
+                    <IF>
+                      <Condition>
+                        <ScalarOperator>
+                          <Logical Operation="IS NULL">
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1010" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Logical>
+                        </ScalarOperator>
+                      </Condition>
+                      <Then>
+                        <ScalarOperator>
+                          <Const ConstValue="(0)" />
+                        </ScalarOperator>
+                      </Then>
+                      <Else>
+                        <ScalarOperator>
+                          <Const ConstValue="NULL" />
+                        </ScalarOperator>
+                      </Else>
+                    </IF>
+                  </ScalarOperator>
+                </Predicate>
+              </Assert>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@isRawFormat" ParameterCompiledValue="(0)" />
+              <ColumnReference Column="@messageBody" ParameterCompiledValue="0x3C003F0078006D006C002000760065007200730069006F006E003D00220031002E00300022003F003E000D000A003C005000720069006D0069007400690076006500200078006D006C006E0073003A007800730064003D00220068007400740070003A002F002F007700770077002E00770033002E006F00720067002F0032" />
+              <ColumnReference Column="@messageId" ParameterCompiledValue="'288230376340279304'" />
+              <ColumnReference Column="@messageType" ParameterCompiledValue="'TestCaseAnalysisResult'" />
+              <ColumnReference Column="@exceptionStack" ParameterCompiledValue="'Microsoft.Acuity.Tellus.InvalidPrimitiveException: MTBF TestCaseAnalysisResult specifies invalid metadata. Value of metadata CommandGroupName is StopHealthTracing_Health.&#xD;&#xA;   at Microsoft.Acuity.Tellus.PrimitiveWriters.TestCaseAnalysisResultWriter.TryAddMt'" />
+              <ColumnReference Column="@error" ParameterCompiledValue="'InvalidPrimitiveException'" />
+              <ColumnReference Column="@agentId" ParameterCompiledValue="(1)" />
+              <ColumnReference Column="@id" ParameterCompiledValue="{guid'AA930186-2C61-46CC-ADE5-404B3CC16FF8'}" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

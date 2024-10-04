@@ -1,0 +1,135 @@
+    @colorHeader: @color-dark;
+    @headerFore: @color-light;
+    @menuBackTopColor: @color-primary-5;
+    @menuBackColor: @color-primary-4;
+    @menuBackBottomColor: @color-primary-5;
+    
+
+    header {
+
+        .base-background();
+        background-repeat: repeat;
+        color: @headerFore;
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+        z-index: 40;
+        overflow: no-display;
+        height: @headerHeight;
+        .ad {
+            display: block;
+            width: 480px;
+            float: right; //margin-left: 310px;
+            margin-top: 10px;
+        }
+        .alt-ad {
+            display: block;
+            width: 480px;
+            float: right; //margin-left: 310px;
+            margin-top: 10px;
+        }
+        .logoicon {
+            background-image: url(i/master_icon_86x86.png);
+            background-repeat: no-repeat;
+            cursor: pointer;
+            width: 86px;
+            height: 86px;
+        }
+        .logo {
+            display: inline-block;
+            position: absolute;
+            background-image: url(i/logo_290x60_1d3e58.png);
+            background-repeat: no-repeat;
+            width: 290px;
+            cursor: pointer;
+            padding-top: 70px;
+            padding-left: 20px;
+            font-size: 0.95em;
+            margin-top: -1em;
+            text-align: center;
+        }
+        .drop {
+            border: 2px dashed #bcbcbc;
+            border-radius: 5px; // vertical-align: middle;
+            text-align: center;
+            color: #bcbcbc;
+            margin: 1.1em 0.8em 0.8em 0.8em;
+            padding-top: 1em;
+            padding-left: 1em;
+            padding-right: 1em;
+            padding-bottom: 1em;
+            overflow: hidden;
+            display: block;
+            float: right;
+            width: 15em;
+            z-index: 200;
+            font-size: 1.2em;
+        }
+        button {
+            cursor: pointer;
+            margin-top: 0.8em;
+            margin-right: 0.8em;
+            float: right;
+            color: #bcbcbc;
+            text-shadow: 1px 1px 2px #4d4d4d;
+            background-color: #4d4d4d;
+            background: linear-gradient(#4d4d4d, #333333, #404040);
+            border: 2px solid @colorHeader;
+            border-radius: 4px;
+            padding: 0.5em;
+            height: 60px;
+            line-height: 1.7em;
+        }
+        button:hover {
+            border: 2px solid #b6b6b6;
+        }
+        .linkbar {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 30px;
+            background-color: @menuBackColor;
+            background: linear-gradient(@menuBackTopColor, @menuBackColor, @menuBackBottomColor);
+            box-shadow: 0 -2px @menuBackColor;
+            margin: 0;
+            overflow: hidden;
+            div {
+                font-size: 1.2em;
+                text-transform: uppercase;
+                text-decoration: none;
+                cursor: pointer;
+                line-height: 30px;
+                height: 30px;
+                float: left;
+                display: block;
+                padding-right: 1em;
+                padding-left: 1em;
+                color: white;
+                text-shadow: 1px 1px #4b6592;
+                a {
+                    text-decoration: none;
+                }
+            }
+            div:hover {
+                background-color: @menuBackTopColor;
+                text-decoration: underline;
+                color: white;
+            }
+        }
+        a {
+            color: @headerFore;
+        }
+        a:visited {
+            color: @headerFore;
+        }
+        a:hover {
+            color: @headerFore;
+        }
+        @media screen and (max-width: 1100px) {
+            header .ad {
+                display: none;
+            }
+        }
+    }

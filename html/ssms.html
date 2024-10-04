@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>Supratimas</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="css/main.css" rel="stylesheet" />
+    <script src="js/lib.js"></script>
+    <script type="text/javascript" language="javascript">
+        define("knockout", ["require", "exports"], function(require, exports) {
+            exports.bindingHandlers = ko.bindingHandlers;
+            exports.computed = ko.computed;
+            exports.dataFor = ko.dataFor;
+            exports.observable = ko.observable;
+            exports.observableArray = ko.observableArray;
+            exports.pureComputed = ko.pureComputed;
+            exports.subscribable = ko.subscribable;
+        });
+        define("sax", ["require", "exports"], function(require, exports) {
+            exports.parser = sax.parser;
+            exports.SAXParser = sax.SAXParser;
+            exports.Tag = sax.Tag;
+        });
+    </script>
+    <script src="js/app.js"></script>
+</head>
+
+<body class="app">
+    <!-- ko if: plan -->
+    <!-- ko template: {name: 'plan-view-template', data: plan, as: 'plan'} -->
+    <!-- /ko -->
+    <!-- /ko -->
+    <!-- ko ifnot: plan -->
+    loading ...
+    <!-- /ko -->
+
+    <script type="text/javascript" language="javascript">
+        require.config({
+            baseUrl: "/",
+            waitSeconds: 15
+        });
+
+        document.addEventListener('readystatechange', event => {
+            if (event.target.readyState === "complete") {
+
+                console.log("browser: complete");
+
+                require(["ssms/app"], (ssmsapp) => {
+
+                    console.log("browser: ssms/app is ready");
+
+                    window.supratimas = ssmsapp;
+                    window.dispatchEvent(new Event("supratimas"));
+
+                    console.log("browser: before marshal.initialized();");
+
+                    window.marshal = marshal;
+                    marshal.initialized();
+
+                    console.log("browser: after marshal.initialized();");
+                });
+            }
+        });
+    </script>
+
+    @@include("./parts/plan-view-templates.html") @@include("./parts/storage.html") @@include("./parts/buttons.html")
+</body>
+
+</html>

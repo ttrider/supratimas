@@ -1,0 +1,2 @@
+IF NOT EXISTS(SELECT 1 FROM dbo.Cab WITH (NOLOCK) WHERE Id = @Id)
+    

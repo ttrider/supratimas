@@ -1,0 +1,309 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="CREATE PROCEDURE sp_jobhistory_row_limiter&#xD;&#xA;  @job_id UNIQUEIDENTIFIER&#xD;&#xA;AS&#xD;&#xA;BEGIN&#xD;&#xA;  DECLARE @max_total_rows         INT -- This value comes from the registry (MaxJobHistoryTableRows)&#xD;&#xA;  DECLARE @max_rows_per_job       INT -- This value comes from the registry (MaxJobHistoryRows)&#xD;&#xA;  DECLARE @rows_to_delete         INT&#xD;&#xA;  DECLARE @current_rows           INT&#xD;&#xA;  DECLARE @current_rows_per_job   INT&#xD;&#xA;&#xD;&#xA;  SET NOCOUNT ON&#xD;&#xA;&#xD;&#xA;  -- Get max-job-history-rows from the registry&#xD;&#xA; " StatementId="1" StatementCompId="2" StatementType="SET ON/OFF" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" EXECUTE master.dbo.xp_instance_regread N'HKEY_LOCAL_MACHINE',&#xD;&#xA;                                         N'SOFTWARE\Microsoft\MSSQLServer\SQLServerAgent',&#xD;&#xA;                                         N'JobHistoryMaxRows',&#xD;&#xA;                                         @max_total_rows OUTPUT,&#xD;&#xA;                                         N'no_output'&#xD;&#xA;&#xD;&#xA;  -- Check if we are limiting sysjobhistory rows&#xD;&#xA; " StatementId="2" StatementCompId="3" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+        <StmtCond StatementText=" IF (ISNULL(@max_total_rows, -1) = -1)&#xD;&#xA;   " StatementId="3" StatementCompId="4" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" RETURN(0)&#xD;&#xA;&#xD;&#xA;  -- Check that max_total_rows is more than 1&#xD;&#xA; " StatementId="4" StatementCompId="5" StatementType="RETURN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtCond StatementText=" IF (ISNULL(@max_total_rows, 0) &lt; 2)&#xD;&#xA; " StatementId="5" StatementCompId="7" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;    -- It isn't, so set the default to 1000 rows&#xD;&#xA;    SELECT @max_total_rows = 1000&#xD;&#xA;   " StatementId="6" StatementCompId="8" StatementType="ASSIGN" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" EXECUTE master.dbo.xp_instance_regwrite N'HKEY_LOCAL_MACHINE',&#xD;&#xA;                                            N'SOFTWARE\Microsoft\MSSQLServer\SQLServerAgent',&#xD;&#xA;                                            N'JobHistoryMaxRows',&#xD;&#xA;                                            N'REG_DWORD',&#xD;&#xA;                                            @max_total_rows&#xD;&#xA; " StatementId="7" StatementCompId="9" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtSimple StatementText=" END&#xD;&#xA;&#xD;&#xA;  -- Get the per-job maximum number of rows to keep&#xD;&#xA;  SELECT @max_rows_per_job = 0&#xD;&#xA; " StatementId="8" StatementCompId="11" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" EXECUTE master.dbo.xp_instance_regread N'HKEY_LOCAL_MACHINE',&#xD;&#xA;                                         N'SOFTWARE\Microsoft\MSSQLServer\SQLServerAgent',&#xD;&#xA;                                         N'JobHistoryMaxRowsPerJob',&#xD;&#xA;                                         @max_rows_per_job OUTPUT,&#xD;&#xA;                                         N'no_output'&#xD;&#xA;&#xD;&#xA;  -- Check that max_rows_per_job is &lt;= max_total_rows&#xD;&#xA; " StatementId="9" StatementCompId="12" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+        <StmtCond StatementText=" IF ((@max_rows_per_job &gt; @max_total_rows) OR (@max_rows_per_job &lt; 1))&#xD;&#xA; " StatementId="10" StatementCompId="13" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;    -- It isn't, so default the rows_per_job to max_total_rows&#xD;&#xA;    SELECT @max_rows_per_job = @max_total_rows&#xD;&#xA;   " StatementId="11" StatementCompId="14" StatementType="ASSIGN" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" EXECUTE master.dbo.xp_instance_regwrite N'HKEY_LOCAL_MACHINE',&#xD;&#xA;                                            N'SOFTWARE\Microsoft\MSSQLServer\SQLServerAgent',&#xD;&#xA;                                            N'JobHistoryMaxRowsPerJob',&#xD;&#xA;                                            N'REG_DWORD',&#xD;&#xA;                                            @max_rows_per_job&#xD;&#xA; " StatementId="12" StatementCompId="15" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtSimple StatementText=" END&#xD;&#xA;&#xD;&#xA;  BEGIN TRANSACTION&#xD;&#xA;&#xD;&#xA; " StatementId="13" StatementCompId="17" StatementType="BEGIN TRANSACTION" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" SELECT @current_rows_per_job = COUNT(*)&#xD;&#xA;  FROM msdb.dbo.sysjobhistory with (TABLOCKX)&#xD;&#xA;  WHERE (job_id = @job_id)&#xD;&#xA;&#xD;&#xA;  -- Delete the oldest history row(s) for the job being inserted if the new row has&#xD;&#xA;  -- pushed us over the per-job row limit (MaxJobHistoryRows)&#xD;&#xA; " StatementId="14" StatementCompId="18" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.00939647" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0xD9A25E3C661B93C4" QueryPlanHash="0x8AA5FB11F8A9DE66">
+          <StatementSetOptions QUOTED_IDENTIFIER="false" ARITHABORT="false" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="1" CompileCPU="1" CompileMemory="216">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="0.000600848" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00939647" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Column="Expr1003" />
+              </OutputList>
+              <ComputeScalar>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1003" />
+                    <ScalarOperator ScalarString="CONVERT_IMPLICIT(int,[Expr1004],0)">
+                      <Convert DataType="int" Style="0" Implicit="1">
+                        <ScalarOperator>
+                          <Identifier>
+                            <ColumnReference Column="Expr1004" />
+                          </Identifier>
+                        </ScalarOperator>
+                      </Convert>
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp NodeId="1" PhysicalOp="Stream Aggregate" LogicalOp="Aggregate" EstimateRows="1" EstimateIO="0" EstimateCPU="0.000600848" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00939647" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Expr1004" />
+                  </OutputList>
+                  <StreamAggregate>
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1004" />
+                        <ScalarOperator ScalarString="Count(*)">
+                          <Aggregate AggType="countstar" Distinct="0" />
+                        </ScalarOperator>
+                      </DefinedValue>
+                    </DefinedValues>
+                    <RelOp NodeId="2" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1000.58" EstimateIO="0.00753799" EstimateCPU="0.00125764" AvgRowSize="9" EstimatedTotalSubtreeCost="0.00879562" TableCardinality="6903" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList />
+                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                        <DefinedValues />
+                        <Object Database="[msdb]" Schema="[dbo]" Table="[sysjobhistory]" Index="[nc1]" IndexKind="NonClustered" />
+                        <SeekPredicates>
+                          <SeekPredicateNew>
+                            <SeekKeys>
+                              <Prefix ScanType="EQ">
+                                <RangeColumns>
+                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobhistory]" Column="job_id" />
+                                </RangeColumns>
+                                <RangeExpressions>
+                                  <ScalarOperator ScalarString="[@job_id]">
+                                    <Identifier>
+                                      <ColumnReference Column="@job_id" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </RangeExpressions>
+                              </Prefix>
+                            </SeekKeys>
+                          </SeekPredicateNew>
+                        </SeekPredicates>
+                      </IndexScan>
+                    </RelOp>
+                  </StreamAggregate>
+                </RelOp>
+              </ComputeScalar>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@job_id" ParameterCompiledValue="{guid'421CE494-16A5-4019-A912-DAE89A47B87E'}" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText=" SELECT @rows_to_delete = @current_rows_per_job - @max_rows_per_job&#xD;&#xA;&#xD;&#xA; " StatementId="15" StatementCompId="19" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtCond StatementText=" IF (@rows_to_delete &gt; 0)&#xD;&#xA; " StatementId="16" StatementCompId="20" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;    WITH RowsToDelete AS (&#xD;&#xA;      SELECT TOP (@rows_to_delete) *&#xD;&#xA;      FROM msdb.dbo.sysjobhistory&#xD;&#xA;      WHERE (job_id = @job_id)&#xD;&#xA;      ORDER BY instance_id&#xD;&#xA;    )&#xD;&#xA;    DELETE FROM RowsToDelete;&#xD;&#xA; " StatementId="17" StatementCompId="21" StatementType="DELETE" RetrievedFromCache="true" StatementSubTreeCost="0.12983" StatementEstRows="100" StatementOptmLevel="TRIVIAL" QueryHash="0xF9532E55B998BFF2" QueryPlanHash="0xE349D1F4804D105F">
+                <StatementSetOptions QUOTED_IDENTIFIER="false" ARITHABORT="false" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="24" CompileTime="1" CompileCPU="1" CompileMemory="328">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="0" PhysicalOp="Clustered Index Delete" LogicalOp="Delete" EstimateRows="100" EstimateIO="0.125791" EstimateCPU="0.0002" AvgRowSize="9" EstimatedTotalSubtreeCost="0.12983" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList />
+                    <Update WithUnorderedPrefetch="1" DMLRequestSort="0">
+                      <Object Database="[msdb]" Schema="[dbo]" Table="[sysjobhistory]" Index="[clust]" IndexKind="Clustered" />
+                      <Object Database="[msdb]" Schema="[dbo]" Table="[sysjobhistory]" Index="[nc1]" IndexKind="NonClustered" />
+                      <RelOp NodeId="2" PhysicalOp="Top" LogicalOp="Top" EstimateRows="100" EstimateIO="0" EstimateCPU="1e-005" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00383901" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList>
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobhistory]" Column="instance_id" />
+                        </OutputList>
+                        <Top RowCount="0" IsPercent="0" WithTies="0">
+                          <TopExpression>
+                            <ScalarOperator ScalarString="CONVERT_IMPLICIT(bigint,[@rows_to_delete],0)">
+                              <Identifier>
+                                <ColumnReference Column="ConstExpr1006">
+                                  <ScalarOperator>
+                                    <Convert DataType="bigint" Style="0" Implicit="1">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="@rows_to_delete" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Convert>
+                                  </ScalarOperator>
+                                </ColumnReference>
+                              </Identifier>
+                            </ScalarOperator>
+                          </TopExpression>
+                          <RelOp NodeId="3" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="100" EstimateIO="0.00753799" EstimateCPU="0.0012578" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00382901" TableCardinality="6904" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList>
+                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobhistory]" Column="instance_id" />
+                            </OutputList>
+                            <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                              <DefinedValues>
+                                <DefinedValue>
+                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobhistory]" Column="instance_id" />
+                                </DefinedValue>
+                              </DefinedValues>
+                              <Object Database="[msdb]" Schema="[dbo]" Table="[sysjobhistory]" Index="[nc1]" IndexKind="NonClustered" />
+                              <SeekPredicates>
+                                <SeekPredicateNew>
+                                  <SeekKeys>
+                                    <Prefix ScanType="EQ">
+                                      <RangeColumns>
+                                        <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobhistory]" Column="job_id" />
+                                      </RangeColumns>
+                                      <RangeExpressions>
+                                        <ScalarOperator ScalarString="[@job_id]">
+                                          <Identifier>
+                                            <ColumnReference Column="@job_id" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </RangeExpressions>
+                                    </Prefix>
+                                  </SeekKeys>
+                                </SeekPredicateNew>
+                              </SeekPredicates>
+                            </IndexScan>
+                          </RelOp>
+                        </Top>
+                      </RelOp>
+                    </Update>
+                  </RelOp>
+                  <ParameterList>
+                    <ColumnReference Column="@job_id" ParameterCompiledValue="{guid'421CE494-16A5-4019-A912-DAE89A47B87E'}" />
+                  </ParameterList>
+                </QueryPlan>
+              </StmtSimple>
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtSimple StatementText=" END&#xD;&#xA;&#xD;&#xA;  -- Delete the oldest history row(s) if inserting the new row has pushed us over the&#xD;&#xA;  -- global MaxJobHistoryTableRows limit.&#xD;&#xA;  SELECT @current_rows = COUNT(*)&#xD;&#xA;  FROM msdb.dbo.sysjobhistory&#xD;&#xA;&#xD;&#xA; " StatementId="18" StatementCompId="23" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0498341" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0xF957CC63C06D701B" QueryPlanHash="0x2FB84E0078F5B3D8">
+          <StatementSetOptions QUOTED_IDENTIFIER="false" ARITHABORT="false" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="0" CompileCPU="0" CompileMemory="208">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="0.0041429" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0498341" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Column="Expr1003" />
+              </OutputList>
+              <ComputeScalar>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1003" />
+                    <ScalarOperator ScalarString="CONVERT_IMPLICIT(int,[Expr1004],0)">
+                      <Convert DataType="int" Style="0" Implicit="1">
+                        <ScalarOperator>
+                          <Identifier>
+                            <ColumnReference Column="Expr1004" />
+                          </Identifier>
+                        </ScalarOperator>
+                      </Convert>
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp NodeId="1" PhysicalOp="Stream Aggregate" LogicalOp="Aggregate" EstimateRows="1" EstimateIO="0" EstimateCPU="0.0041429" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0498341" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Expr1004" />
+                  </OutputList>
+                  <StreamAggregate>
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1004" />
+                        <ScalarOperator ScalarString="Count(*)">
+                          <Aggregate AggType="countstar" Distinct="0" />
+                        </ScalarOperator>
+                      </DefinedValue>
+                    </DefinedValues>
+                    <RelOp NodeId="2" PhysicalOp="Index Scan" LogicalOp="Index Scan" EstimateRows="6904" EstimateIO="0.0379398" EstimateCPU="0.0077514" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0456912" TableCardinality="6904" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList />
+                      <IndexScan Ordered="0" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                        <DefinedValues />
+                        <Object Database="[msdb]" Schema="[dbo]" Table="[sysjobhistory]" Index="[nc1]" IndexKind="NonClustered" />
+                      </IndexScan>
+                    </RelOp>
+                  </StreamAggregate>
+                </RelOp>
+              </ComputeScalar>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText=" SELECT @rows_to_delete = @current_rows - @max_total_rows&#xD;&#xA;&#xD;&#xA; " StatementId="19" StatementCompId="24" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtCond StatementText=" IF (@rows_to_delete &gt; 0)&#xD;&#xA; " StatementId="20" StatementCompId="25" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;    WITH RowsToDelete AS (&#xD;&#xA;      SELECT TOP (@rows_to_delete) *&#xD;&#xA;      FROM msdb.dbo.sysjobhistory&#xD;&#xA;      ORDER BY instance_id&#xD;&#xA;    )&#xD;&#xA;    DELETE FROM RowsToDelete;&#xD;&#xA; " StatementId="21" StatementCompId="26" StatementType="DELETE" RetrievedFromCache="true" StatementSubTreeCost="0.141599" StatementEstRows="100" StatementOptmLevel="FULL" QueryHash="0x1B51B373057DEFA4" QueryPlanHash="0x7A28037466D90651" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+                <StatementSetOptions QUOTED_IDENTIFIER="false" ARITHABORT="false" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="1" CompileCPU="1" CompileMemory="312">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="0" PhysicalOp="Clustered Index Delete" LogicalOp="Delete" EstimateRows="100" EstimateIO="0.125791" EstimateCPU="0.0002" AvgRowSize="9" EstimatedTotalSubtreeCost="0.141599" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList />
+                    <Update DMLRequestSort="0">
+                      <Object Database="[msdb]" Schema="[dbo]" Table="[sysjobhistory]" Index="[clust]" IndexKind="Clustered" />
+                      <Object Database="[msdb]" Schema="[dbo]" Table="[sysjobhistory]" Index="[nc1]" IndexKind="NonClustered" />
+                      <RelOp NodeId="1" PhysicalOp="Top" LogicalOp="Top" EstimateRows="100" EstimateIO="0" EstimateCPU="1e-005" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0156083" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList>
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobhistory]" Column="instance_id" />
+                        </OutputList>
+                        <Top RowCount="0" IsPercent="0" WithTies="0">
+                          <TopExpression>
+                            <ScalarOperator ScalarString="CONVERT_IMPLICIT(bigint,[@rows_to_delete],0)">
+                              <Identifier>
+                                <ColumnReference Column="ConstExpr1006">
+                                  <ScalarOperator>
+                                    <Convert DataType="bigint" Style="0" Implicit="1">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="@rows_to_delete" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Convert>
+                                  </ScalarOperator>
+                                </ColumnReference>
+                              </Identifier>
+                            </ScalarOperator>
+                          </TopExpression>
+                          <RelOp NodeId="2" PhysicalOp="Clustered Index Scan" LogicalOp="Clustered Index Scan" EstimateRows="100" EstimateIO="0.854236" EstimateCPU="0.0077514" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0155983" TableCardinality="6904" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList>
+                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobhistory]" Column="instance_id" />
+                            </OutputList>
+                            <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                              <DefinedValues>
+                                <DefinedValue>
+                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobhistory]" Column="instance_id" />
+                                </DefinedValue>
+                              </DefinedValues>
+                              <Object Database="[msdb]" Schema="[dbo]" Table="[sysjobhistory]" Index="[clust]" IndexKind="Clustered" />
+                            </IndexScan>
+                          </RelOp>
+                        </Top>
+                      </RelOp>
+                    </Update>
+                  </RelOp>
+                </QueryPlan>
+              </StmtSimple>
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtCond StatementText=" END&#xD;&#xA;&#xD;&#xA;  IF (@@trancount &gt; 0)&#xD;&#xA;   " StatementId="22" StatementCompId="28" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" COMMIT TRANSACTION&#xD;&#xA;&#xD;&#xA; " StatementId="23" StatementCompId="29" StatementType="COMMIT TRANSACTION" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtSimple StatementText=" RETURN(0) -- Success&#xD;" StatementId="24" StatementCompId="31" StatementType="RETURN" RetrievedFromCache="true" />
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

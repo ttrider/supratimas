@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-16"?>
+<ShowPlanXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="1.2" Build="11.0.2100.60" xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple>
+          <UDF ProcName="[master].[dbo].[foo]">
+            <Statements>
+              <StmtSimple StatementCompId="11" StatementId="6" StatementText="--drop function foo;&#xD;&#xA;--drop function foo2;&#xD;&#xA;&#xD;&#xA;create function foo&#xD;&#xA;(@i int)&#xD;&#xA;returns int&#xD;&#xA;as&#xD;&#xA;begin&#xD;&#xA;return @i*10000;&#xD;" StatementType="RETURN" RetrievedFromCache="true" />
+            </Statements>
+          </UDF> 
+        </StmtSimple>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

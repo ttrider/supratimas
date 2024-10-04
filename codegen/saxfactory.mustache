@@ -1,0 +1,120 @@
+import { ParserContext } from "./saxparser";
+import * as binders from "./binders";
+
+{{> saxtypes}}
+
+{{> literals}}
+
+{{#classes}}
+{{#isCollectionClass}}
+function {{name}}Factory(context: ParserContext, element: InputElement) {
+    const items: {{collectionClassProperty.className}}[] = [];
+
+    context.startElement({
+        {{#isBatch}}isBatch: true,{{/isBatch}}{{#isStatement}}
+        isStatement: true,{{/isStatement}}{{#isNode}}
+        isNode: true,{{/isNode}}
+        item: items,
+        element: element,
+        {{#hasPropertyElements}}
+        childElements: {
+            {{#allPropertyElements}}
+            "{{name}}": {
+                initializer: {{className}}Factory,
+                setter: (value)=> { items.push(value); }
+            },
+            {{/allPropertyElements}}  
+        },
+        {{/hasPropertyElements}}
+    });
+}
+{{/isCollectionClass}}{{^isCollectionClass}}
+function {{name}}Factory(context: ParserContext, element: InputElement) {
+    const item = <any>element.attributes as {{name}};
+    {{#convertableProperties}}
+    item.{{propName}} = {{tsConvertor}}(element.attributes.{{name}});
+    {{/convertableProperties}}
+    {{#allPropertyElements}}
+    {{#isArray}}
+    item.{{name}} = [];{{/isArray}}
+    {{/allPropertyElements}}
+    context.startElement({
+        {{#isBatch}}isBatch: true,{{/isBatch}}{{#isStatement}}
+        isStatement: true,{{/isStatement}}{{#isNode}}
+        isNode: true,{{/isNode}}
+        item: item,
+        element: element,
+        {{#hasPropertyElements}}
+        childElements: {
+            {{#allPropertyElements}}
+            "{{name}}": {
+                initializer: {{className}}Factory,
+                setter: (value)=> { {{#isArray}}item.{{name}}.push(value); {{/isArray}}{{^isArray}}item.{{name}} = value;{{/isArray}} }
+            },
+            {{/allPropertyElements}}  
+        },
+        {{/hasPropertyElements}}
+        finalize: (self, context) => {
+            {{#hasPlanNode}}
+            if (self.planNode) {
+                const planNode = self.planNode;
+                binders.nameSetTitle(planNode, {{#hasTitle}}item.{{titlePropertyName}}{{/hasTitle}}{{^hasTitle}}null{{/hasTitle}}, {{#hasSubTitle}}item.{{subTitlePropertyName}}{{/hasSubTitle}}{{^hasSubTitle}}null{{/hasSubTitle}});
+                {{#genericNodeSetters}}
+                planNode.setValue("{{name}}", item.{{name}}{{#groupString}}, {{{groupString}}}{{/groupString}}{{#displayNameString}}, {{{displayNameString}}}{{/displayNameString}});
+                {{/genericNodeSetters}}
+                {{#nodeSetters}}
+                planNode.{{{planNodeSetter}}};
+                {{/nodeSetters}} 
+                {{#flags}}
+                {{{expression}}}
+                {{/flags}} 
+                {{#nameSets}}
+                {{{value}}}
+                {{/nameSets}}
+                {{#metrics}}
+                {{{value}}}
+                {{/metrics}} 
+                {{#nodeBinders}}
+                binders.{{property.definitionType}}Binder(planNode, "{{bindToNodeAs}}", item.{{name}});
+                {{/nodeBinders}} 
+            }
+            {{/hasPlanNode}}
+            {{#hasPlanStatement}}
+            if (context.currentStatement) {
+                const statement = context.currentStatement;
+                {{#genericStatementSetters}}
+                statement.setValue("{{name}}", item.{{name}}, {{{groupString}}}, {{{displayNameString}}});
+                {{/genericStatementSetters}}{{#statementSetters}}
+                statement.{{{statementSetter}}};
+                {{/statementSetters}}
+                {{#statementBinders}}
+                binders.{{property.definitionType}}Binder(context.currentStatement, "{{bindToStatementAs}}", item.{{name}});
+                {{/statementBinders}} 
+            }
+            {{/hasPlanStatement}} 
+        }
+    });
+}
+{{/isCollectionClass}}
+{{/classes}}
+{{#classes}}
+{{#isCollectionClass}}
+export declare type {{name}} = {{collectionClassProperty.definitionType}}[];
+{{/isCollectionClass}}{{^isCollectionClass}}
+export interface {{name}}{{#baseName}} extends {{baseName}}{{/baseName}} {
+    {{#properties}}
+    {{propName}}?: {{definedType}};
+    {{/properties}}
+    {{#propertyElements}}
+    {{#isArray}}
+    {{name}}: {{definitionType}}[];
+    {{/isArray}}
+    {{^isArray}}
+    {{name}}?: {{definitionType}};
+    {{/isArray}}
+    {{/propertyElements}}
+}
+
+{{/isCollectionClass}}
+{{/classes}}
+

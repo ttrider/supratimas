@@ -1,0 +1,91 @@
+.docs {
+    margin-top: @headerHeight;
+    .doc {
+        width: 50em;
+        font-size: 1.5em;
+        margin: 7em auto 2em auto;
+        padding-left: 1em;
+        padding-right: 1em;
+        text-align: justify;
+        color: @color-dark;
+        .title {
+            font-size: 1.7em;
+            margin-bottom: 0.5em;
+        }
+        a {
+            color: @color-dark;
+            text-decoration: underline;
+        }
+        a:visited {
+            color: @color-dark;
+            text-decoration: underline;
+        }
+        a:hover {
+            color: darken(@color-dark, 40%);
+            text-decoration: underline;
+        }
+        .body {
+            padding: 0 1em 1em 1em;
+            clear: both; 
+            .selector-section {
+                margin-top: 1em;
+                a.openPlan {
+                    float: right;
+                    color: @color-dark;
+                }
+                a.openPlan:hover {
+                    color: @color-dark;
+                }
+                a.openPlan:visited {
+                    color: @color-dark;
+                }
+                div.planText {
+                    border: 2px dashed @color-dark;
+                    border-radius: 5px;
+                    vertical-align: middle;
+                    text-align: center;
+                    color: @color-dark;
+                    padding-top: 1em;
+                    padding-left: 1em;
+                    padding-right: 1em;
+                    overflow: hidden;
+                    height: 10em;
+                    background-color: @color-light;
+                    p {
+                        font-size: 0.8em;
+                        margin-top: 5em;
+                    }
+                }
+            }
+            .section-title {
+                text-transform: uppercase;
+                font-size: 0.9em;
+                padding: 0.5em;
+                margin-bottom: 1em;
+                margin-top: 1em;
+                font-weight: bold;
+                clear: both;
+            }
+            .section-subtitle {
+                text-transform: uppercase;
+                font-size: 0.9em;
+                padding: 0.5em;
+                font-weight: bold;
+                clear: both;
+            }
+            .section-smallcontent {
+                font-size: 0.85em;
+                padding-left: 0.5em;
+                padding-right: 0.5em;
+            }
+            img {
+                text-align: center;
+                margin-left: auto;
+                margin-right: auto;
+                display: block;
+            }
+        }
+    }
+}
+
+

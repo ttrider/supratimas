@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title data-bind="text: planFile()?planFile().name+' - Supratimas':'Supratimas'">Supratimas</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script> -->
+    <link href="/css/main.css" rel="stylesheet" />
+    <script src="/js/lib.js"></script>
+    <script type="text/javascript" language="javascript">
+        define("knockout", ["require", "exports"], function(require, exports) {
+            exports.bindingHandlers = ko.bindingHandlers;
+            exports.computed = ko.computed;
+            exports.dataFor = ko.dataFor;
+            exports.observable = ko.observable;
+            exports.observableArray = ko.observableArray;
+            exports.pureComputed = ko.pureComputed;
+            exports.subscribable = ko.subscribable;
+        });
+        define("sax", ["require", "exports"], function(require, exports) {
+            exports.parser = sax.parser;
+            exports.SAXParser = sax.SAXParser;
+            exports.Tag = sax.Tag;
+        });
+    </script>
+    <script src="/js/app.js"></script>
+    </script>
+</head>
+
+<body class="app">
+    <!-- <div id="fb-root"></div>
+    <script>
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=288265101312963&version=v2.0";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script> -->
+
+    <!-- ko if: planFile -->
+    <!-- ko template: {name: 'plan-view-template', data: planFile().plan, as: 'plan'} -->
+    <!-- /ko -->
+    <!-- /ko -->
+
+
+
+    <header>
+
+        <div class="menubtn logo" data-bind="click: function(data,e){ data.notifications.hideAll(); }">
+
+            <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                <g>
+                    <title>Menu</title>
+                    <line x1="10" y1="50" x2="90" y2="50" />
+                    <line x1="10" y1="25" x2="90" y2="25" />
+                    <line x1="10" y1="75" x2="90" y2="75" />
+                </g>
+            </svg>
+        </div>
+
+        <!-- ko if: planFile -->
+        <div class="title" data-bind="text: planFile().name"></div>
+        <!-- /ko -->
+
+    </header>
+
+    <section class="ham-menu">
+        <div class="btn">
+            <a id="open_plan" href="#" data-bind="click: openFileDialog, clickBubble: false">Open Plan</a>
+        </div>
+        <div class="paste">
+            <textarea placeholder="paste query plan text here" data-bind="event: { paste: pastePlan }"></textarea>
+        </div>
+        <div class="sep"></div>
+        <!-- ko foreach: planFiles -->
+        <div class="btn">
+            <a href="#" data-bind="text:name, click: $parent.openRecentFile, clickBubble: false"></a>
+
+            <!-- ko if: $parent.planFileId() !== id -->
+            <a class="rbtn" data-bind="template: 'close-button', click: $parent.removeRecentFile, clickBubble: false"></a>
+            <!-- /ko -->
+        </div>
+        <!-- /ko -->
+        <div class="sep"></div>
+        <div class="btn">
+            <a id="close_plan" href="#" data-bind="click: closeWindow, clickBubble: false">Close</a>
+        </div>
+    </section>
+
+    <section class="notifications" data-bind="foreach: notifications.items, visible: notifications.items().length>0">
+        <div class="item" data-bind="text:text, click: function(data, e){ data.hide();}">loading ...</div>
+    </section>
+
+    <script type="text/javascript" language="javascript">
+        require.config({
+            baseUrl: "/",
+            waitSeconds: 15
+        });
+
+        document.addEventListener('readystatechange', event => {
+            if (event.target.readyState === "complete") {
+
+                require(["webapp/app"], (webapp) => {
+
+                    window.supratimas = webapp;
+
+                    var id = location.search.match(/plan.file.id=([0-9a-z]+)/);
+                    if (id && id.length >= 2) {
+                        webapp.run(id[1]);
+                    } else {
+                        webapp.run();
+                    }
+
+                    window.addEventListener('beforeunload', function(event) {
+                        webapp.close();
+                    });
+
+                    window.dispatchEvent(new Event("supratimas"));
+                });
+            }
+        });
+    </script>
+
+    @@include("../parts/plan-view-templates.html") @@include("../parts/storage.html") @@include("../parts/buttons.html")
+
+
+    <!-- ko ifnot: planFile -->
+    <section class="intro">
+
+
+        <svg viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
+            <g>
+                <path d="M145 145 c -60,-0 -90,0 -135,-135 l10 10 l-10 -10 l -2 14"/>
+            </g>
+        </svg>
+        <span>Click menu to begin</span>
+
+        <section style="text-align: center; margin-top: 8em;">
+            If you like Supratimas, please support us with your donation.
+            <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                <input type="hidden" name="cmd" value="_s-xclick">
+                <input type="hidden" name="hosted_button_id" value="PVVBQN37RHRZU">
+                <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+            </form>
+        </section>
+    </section>
+    <!-- /ko -->
+
+</body>
+
+</html>

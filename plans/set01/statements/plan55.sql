@@ -1,0 +1,3 @@
+SELECT @TEUIntId = Id FROM dbo.TEU WITH (NOLOCK) WHERE Guid = @TEUId
+
+    

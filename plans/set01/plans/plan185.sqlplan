@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="&#xD;&#xA;SELECT TP.Id FROM reporting.Testpasses TP with (nolock)  &#xD;&#xA;WHERE TP.StartDateTime &lt;= TRY_PARSE('1/25/2015 8:21:00 AM' AS DATETIME USING 'en-us') and TP.StartDateTime &gt; TRY_PARSE('1/25/2015 8:20:00 AM'  AS DATETIME USING 'en-us') and TP.EndDateTime is null" StatementId="1" StatementCompId="1" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="6.57577" StatementEstRows="437.49" StatementOptmLevel="FULL" QueryHash="0xF26A209BC549D7AF" QueryPlanHash="0x1EC0000B4D75BF65">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="3" CompileCPU="3" CompileMemory="352">
+            <MissingIndexes>
+              <MissingIndexGroup Impact="99.9531">
+                <MissingIndex Database="[OurLabReporting]" Schema="[Reporting]" Table="[Testpasses]">
+                  <ColumnGroup Usage="EQUALITY">
+                    <Column Name="[EndDateTime]" ColumnId="7" />
+                  </ColumnGroup>
+                  <ColumnGroup Usage="INEQUALITY">
+                    <Column Name="[StartDateTime]" ColumnId="6" />
+                  </ColumnGroup>
+                </MissingIndex>
+              </MissingIndexGroup>
+            </MissingIndexes>
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Index Scan" LogicalOp="Index Scan" EstimateRows="437.49" EstimateIO="5.01572" EstimateCPU="1.56005" AvgRowSize="27" EstimatedTotalSubtreeCost="6.57577" TableCardinality="1.41808e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Testpasses]" Alias="[TP]" Column="Id" />
+              </OutputList>
+              <IndexScan Ordered="0" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Testpasses]" Alias="[TP]" Column="Id" />
+                  </DefinedValue>
+                </DefinedValues>
+                <Object Database="[OurLabReporting]" Schema="[Reporting]" Table="[Testpasses]" Index="[IX_Testpass_Name]" Alias="[TP]" IndexKind="NonClustered" />
+                <Predicate>
+                  <ScalarOperator ScalarString="[OurLabReporting].[Reporting].[Testpasses].[StartDateTime] as [TP].[StartDateTime]&lt;=try_parse(N'1/25/2015 8:21:00 AM'  AS datetime USING N'en-us') AND [OurLabReporting].[Reporting].[Testpasses].[StartDateTime] as [TP].[StartDateTime]&gt;try_parse(N'1/25/2015 8:20:00 AM'  AS datetime USING N'en-us') AND [OurLabReporting].[Reporting].[Testpasses].[EndDateTime] as [TP].[EndDateTime] IS NULL">
+                    <Logical Operation="AND">
+                      <ScalarOperator>
+                        <Compare CompareOp="LE">
+                          <ScalarOperator>
+                            <Identifier>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Testpasses]" Alias="[TP]" Column="StartDateTime" />
+                            </Identifier>
+                          </ScalarOperator>
+                          <ScalarOperator>
+                            <Identifier>
+                              <ColumnReference Column="ConstExpr1002">
+                                <ScalarOperator>
+                                  <Intrinsic FunctionName="parse_datetime">
+                                    <ScalarOperator>
+                                      <Const ConstValue="N'1/25/2015 8:21:00 AM'" />
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Const ConstValue="N'en-us'" />
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Const ConstValue="(1)" />
+                                    </ScalarOperator>
+                                  </Intrinsic>
+                                </ScalarOperator>
+                              </ColumnReference>
+                            </Identifier>
+                          </ScalarOperator>
+                        </Compare>
+                      </ScalarOperator>
+                      <ScalarOperator>
+                        <Compare CompareOp="GT">
+                          <ScalarOperator>
+                            <Identifier>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Testpasses]" Alias="[TP]" Column="StartDateTime" />
+                            </Identifier>
+                          </ScalarOperator>
+                          <ScalarOperator>
+                            <Identifier>
+                              <ColumnReference Column="ConstExpr1003">
+                                <ScalarOperator>
+                                  <Intrinsic FunctionName="parse_datetime">
+                                    <ScalarOperator>
+                                      <Const ConstValue="N'1/25/2015 8:20:00 AM'" />
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Const ConstValue="N'en-us'" />
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Const ConstValue="(1)" />
+                                    </ScalarOperator>
+                                  </Intrinsic>
+                                </ScalarOperator>
+                              </ColumnReference>
+                            </Identifier>
+                          </ScalarOperator>
+                        </Compare>
+                      </ScalarOperator>
+                      <ScalarOperator>
+                        <Compare CompareOp="IS">
+                          <ScalarOperator>
+                            <Identifier>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[Testpasses]" Alias="[TP]" Column="EndDateTime" />
+                            </Identifier>
+                          </ScalarOperator>
+                          <ScalarOperator>
+                            <Const ConstValue="NULL" />
+                          </ScalarOperator>
+                        </Compare>
+                      </ScalarOperator>
+                    </Logical>
+                  </ScalarOperator>
+                </Predicate>
+              </IndexScan>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

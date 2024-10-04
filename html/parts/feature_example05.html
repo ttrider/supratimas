@@ -1,0 +1,122 @@
+<div class="join-node join-manual-node" style="position:relative;">
+
+
+    <div class="join-node-main join-node-border join-node-costly" data-bind="css:{'join-node-costly':isCostly}, style:{ background: showOutputColumns()?'#fff':'none'}" style="background: none;">
+        <div class="join-node-infoset" data-bind="css:{'join-node-infoset-centered':statistics.length===0}">
+
+            <div class="marked join-node-cost" data-bind="clickToSelectNode: {nodeId: parentNodeId, left: -100, top: -10, anchor: 'element'}, style:{'font-size': layoutManager.iconScale}" style="font-size: 1em;">
+                <span>❮</span>
+                <span data-bind="text: formattedCost">8.16%</span>
+            </div>
+        </div>
+        <div class="join-node-infoset" data-bind="css:{'join-node-infoset-centered':statistics.length===0}">
+
+            <div class="join-node-info">
+                <div class="join-node-icon" data-bind="clickToSelectNode: {nodeId: nodeId, scale:1},template:iconTemplate, style:{'font-size': layoutManager.iconScale}" style="font-size: 1em;">
+                    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+
+        <rect x="10" y="60" width="120" height="50" class="pi-normal-stroke pi-default-stroke pi-alt3-medium-fill"></rect>
+
+        <rect x="210" y="40" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill"></rect>
+        <rect x="210" y="80" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill"></rect>
+        <rect x="210" y="120" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill"></rect>
+        <rect x="210" y="160" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-alt3-medium-fill"></rect>
+        <rect x="210" y="200" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill"></rect>
+        <rect x="210" y="240" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill"></rect>
+
+        <path class="pi-normal-stroke pi-dark-fill" d="M200,160 l-35,-35 0,20 -80,0 0,-20 -30,0 0,50 110,0 0,20 z"></path>
+
+    </svg>
+                </div>
+            </div>
+
+
+            <div class="join-node-info join-node-stat-name" data-bind="foreach: statistics">
+                <div data-bind="text:name, css: {'join-node-stat-warning': warning}">IO:</div>
+
+                <div data-bind="text:name, css: {'join-node-stat-warning': warning}">CPU:</div>
+
+                <div data-bind="text:name, css: {'join-node-stat-warning': warning}">SIZE:</div>
+
+                <div data-bind="text:name, css: {'join-node-stat-warning': warning}">ROWS:</div>
+            </div>
+
+            <div class="join-node-info join-node-stat-value" data-bind="foreach: statistics">
+                <div data-bind="text: value, css: {'join-node-stat-warning': warning}">0.00%</div>
+
+                <div data-bind="text: value, css: {'join-node-stat-warning': warning}">22.46%</div>
+
+                <div data-bind="text: value, css: {'join-node-stat-warning': warning}">114 B</div>
+
+                <div data-bind="text: value, css: {'join-node-stat-warning': warning}">3</div>
+            </div>
+
+        </div>
+
+
+        <div class="join-node-nameset" data-bind="foreach: items, click:toggle, cancelBubble:true, css:{'clickable':collapsable}">
+            <div class="join-node-name" data-bind="text:value, attr:{'title':originalValue}" title="Aggregate">Aggregate</div>
+
+            <div class="join-node-name" data-bind="text:value, attr:{'title':originalValue}" title="Hash Match">Hash Match</div>
+        </div>
+
+        <div class="join-node-flags" data-bind="text:flags"></div>
+
+
+
+        <div class="join-node-propertyset" data-bind="click:toggle, cancelBubble:true">Properties</div>
+
+
+
+
+
+
+
+
+        <svg data-bind="click: toggleInputColumns, style:{'font-size': layoutManager.iconScale}, visible: hasInputPanelData" class="node-inputoutput-button" style="top: -0.8em; right: -0.8em; font-size: 1em;" viewBox="0 0 20 20" xmlns:xlink="http://www.w3.org/1999/xlink"
+            xmlns="http://www.w3.org/2000/svg">
+                <g>
+                    <circle cx="10" cy="10" r="9"></circle>
+                    <path d="M4,10 l5,5 l0,-3 l7,0 l0,-4 l-7,0 l0,-3 z"></path>
+                </g>
+            </svg>
+
+    </div>
+
+    <div class="node-input-panel" data-bind="foreach: inputPanelData">
+        <div class="node-inputoutput-header" data-bind="text: title">Build</div>
+
+        <div class="node-inputoutput-item" style="fornt-weight:bold; font-size:0.9em;" data-bind="text: columnsTitle, visible: !!columnsTitle">Hash Keys</div>
+
+        <div class="node-inputoutput-item" data-bind="text: displayName">[event_code]</div>
+
+
+
+        <div class="node-inputoutput-item" style="fornt-weight:bold; font-size:0.9em;" data-bind="text: expressionTitle, visible: !!expressionTitle">Residual</div>
+
+        <div class="node-inputoutput-item" data-bind="text: $data">[event_code] IS [event_code]</div>
+
+
+    </div>
+
+
+    <svg data-bind="click: toggleOutputColumns, style:{'font-size': layoutManager.iconScale}, visible: hasOutputPanelData" class="node-inputoutput-button" style="top: -0.8em; left: -0.8em; font-size: 1em;" viewBox="0 0 20 20" xmlns:xlink="http://www.w3.org/1999/xlink"
+        xmlns="http://www.w3.org/2000/svg">
+            <g>
+                <circle cx="10" cy="10" r="9"></circle>
+                <path d="M4,10 l5,5 l0,-3 l7,0 l0,-4 l-7,0 l0,-3 z"></path>
+            </g>
+        </svg>
+
+
+
+
+    <div class="join-node-incoming" data-bind="foreach: children">
+        <div class="join-node-incoming-item" data-bind="clickToSelectNode: {nodeId: nodeId, left: 50, top: -10, anchor: 'element'}, style:{'font-size': layoutManager.iconScale}" style="font-size: 1em;">
+            <span data-bind="text: formattedSubtreeCost">91.22%</span>
+            <span>❯</span>
+        </div>
+    </div>
+
+
+</div>

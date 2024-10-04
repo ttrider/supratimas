@@ -1,0 +1,685 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="CREATE PROCEDURE [dbo].[Uploader_GetOrCreateFeaturePath]&#xD;&#xA;@path VARCHAR (1000), @pathId INT OUTPUT, @sepChar CHAR (1)='\'&#xD;&#xA;AS&#xD;&#xA;BEGIN&#xD;&#xA;&#xD;&#xA;    DECLARE @stopwatchBeginTime datetime2 &#xD;&#xA;    SELECT @stopwatchBeginTime = [dbo].[fnBeginStopwatch]()&#xD;&#xA;&#xD;&#xA;" StatementId="1" StatementCompId="5" StatementType="ASSIGN WITH QUERY" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;DECLARE @productSchema nvarchar(60)&#xD;&#xA;&#x9;DECLARE @organization nvarchar(60)&#xD;&#xA;&#x9;DECLARE @featureTeam nvarchar(60)&#xD;&#xA;&#x9;DECLARE @area nvarchar(60)&#xD;&#xA;&#x9;DECLARE @subArea nvarchar(60)&#xD;&#xA;&#x9;DECLARE @component nvarchar(60)&#xD;&#xA;&#x9;DECLARE @subComponent nvarchar(60)&#xD;&#xA;&#x9;DECLARE @firstPathElement int&#xD;&#xA;&#x9;DECLARE @currentIndex int&#xD;&#xA;&#x9;DECLARE @pathElement nvarchar(max)&#xD;&#xA;&#x9;DECLARE @currentPath  nvarchar(max)&#xD;&#xA;&#x9;DECLARE @index int&#xD;&#xA;&#x9;DECLARE @nextIndex int&#xD;&#xA;&#x9;DECLARE @parentPathId int&#xD;&#xA;&#x9;DECLARE @depth int&#xD;&#xA;&#x9;DECLARE @pathTable TABLE(&#xD;&#xA;&#x9;&#x9;RowId int IDENTITY(1,1),&#xD;&#xA;&#x9;&#x9;PathElement nvarchar(max),&#xD;&#xA;&#x9;&#x9;[Path]  nvarchar(max),&#xD;&#xA;&#x9;&#x9;[index] int&#xD;&#xA;&#x9;)&#xD;&#xA;&#x9;DECLARE @pathCount int&#xD;&#xA;&#x9;&#xD;&#xA;&#x9;set @firstPathElement = 1&#xD;&#xA;" StatementId="2" StatementCompId="7" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;SET @productSchema = NULL&#xD;&#xA;" StatementId="3" StatementCompId="8" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;SET @currentIndex = 0&#xD;&#xA;&#x9;&#xD;&#xA;" StatementId="4" StatementCompId="9" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;SET @area = NULL&#xD;&#xA;" StatementId="5" StatementCompId="10" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;SET @subArea = NULL&#xD;&#xA;" StatementId="6" StatementCompId="11" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;SET @component = NULL&#xD;&#xA;" StatementId="7" StatementCompId="12" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;SET @subComponent = NULL&#xD;&#xA;" StatementId="8" StatementCompId="13" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;SET @organization = NULL&#xD;&#xA;" StatementId="9" StatementCompId="14" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;set @featureTeam = NULL&#xD;&#xA;" StatementId="10" StatementCompId="15" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;SET @pathId = NULL&#xD;&#xA;" StatementId="11" StatementCompId="16" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;SET @parentPathId = NULL&#xD;&#xA;" StatementId="12" StatementCompId="17" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;SET @depth = 0&#xD;&#xA;&#x9;&#xD;&#xA;   " StatementId="13" StatementCompId="18" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtCond StatementText=" if @sepchar is null&#xD;&#xA;     " StatementId="14" StatementCompId="19" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" begin&#xD;&#xA;            set @sepchar = '\'&#xD;&#xA;   " StatementId="15" StatementCompId="20" StatementType="ASSIGN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtCond StatementText=" end&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#x9;--&#xD;&#xA;&#x9;-- IF the first character is $ strip it out&#xD;&#xA;&#x9;--&#xD;&#xA;&#x9;IF LEFT(@path, 1) = '$' and LEN(@path) &gt; 2&#xD;&#xA;" StatementId="16" StatementCompId="22" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;SET @path = RIGHT(@path, LEN(@path) - 2)&#xD;&#xA;" StatementId="17" StatementCompId="23" StatementType="ASSIGN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+          <Else>
+            <Statements>
+              <StmtCond StatementText="&#x9;END&#xD;&#xA;    ELSE IF LEFT(@path, 1) = '\' and LEN(@path) &gt; 1&#xD;&#xA;" StatementId="18" StatementCompId="26" StatementType="COND" RetrievedFromCache="true">
+                <Condition />
+                <Then>
+                  <Statements>
+                    <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;SET @path = RIGHT(@path, LEN(@path) - 1)&#xD;&#xA;" StatementId="19" StatementCompId="27" StatementType="ASSIGN" RetrievedFromCache="true" />
+                  </Statements>
+                </Then>
+              </StmtCond>
+            </Statements>
+          </Else>
+        </StmtCond>
+        <StmtSimple StatementText="&#x9;END&#xD;&#xA;    &#xD;&#xA;&#x9;SET @pathId = NULL&#xD;&#xA;&#x9;--&#xD;&#xA;&#x9;-- See if we know about this path already&#xD;&#xA;&#x9;--&#xD;&#xA;" StatementId="20" StatementCompId="30" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;SELECT @pathId = Id FROM&#xD;&#xA;&#x9;dbo.FeaturePath&#xD;&#xA;&#x9;WHERE @path = Path&#xD;&#xA;&#x9;&#xD;&#xA;" StatementId="21" StatementCompId="31" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032831" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x2064A44AA65B8F3B" QueryPlanHash="0x1EDA1582A0B22FCD">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="1" CompileCPU="1" CompileMemory="488">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="7814" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FeaturePath]" Column="Id" />
+              </OutputList>
+              <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FeaturePath]" Column="Id" />
+                  </DefinedValue>
+                </DefinedValues>
+                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[FeaturePath]" Index="[FeaturePath_IDX_Path]" IndexKind="NonClustered" />
+                <SeekPredicates>
+                  <SeekPredicateNew>
+                    <SeekKeys>
+                      <Prefix ScanType="EQ">
+                        <RangeColumns>
+                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FeaturePath]" Column="Path" />
+                        </RangeColumns>
+                        <RangeExpressions>
+                          <ScalarOperator ScalarString="CONVERT_IMPLICIT(nvarchar(1000),[@path],0)">
+                            <Identifier>
+                              <ColumnReference Column="ConstExpr1003">
+                                <ScalarOperator>
+                                  <Convert DataType="nvarchar" Length="2000" Style="0" Implicit="1">
+                                    <ScalarOperator>
+                                      <Identifier>
+                                        <ColumnReference Column="@path" />
+                                      </Identifier>
+                                    </ScalarOperator>
+                                  </Convert>
+                                </ScalarOperator>
+                              </ColumnReference>
+                            </Identifier>
+                          </ScalarOperator>
+                        </RangeExpressions>
+                      </Prefix>
+                    </SeekKeys>
+                  </SeekPredicateNew>
+                </SeekPredicates>
+              </IndexScan>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@pathId" ParameterCompiledValue="NULL" />
+              <ColumnReference Column="@path" ParameterCompiledValue="'$\Threshold\CORE-OS Core\DEP-Developer Ecosystem Platform\APP-App Model\Modern Deployment (APPX, XAP)\DISM Provider'" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtCond StatementText="&#x9;IF @pathId IS NULL&#xD;&#xA;" StatementId="22" StatementCompId="32" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;--&#xD;&#xA;&#x9;&#x9;-- Split the path&#xD;&#xA;&#x9;&#x9;--&#xD;&#xA;&#xD;&#xA;&#x9;&#x9;--&#xD;&#xA;&#x9;&#x9;-- Put the path elements into an in memory table to avoid the &#xD;&#xA;&#x9;&#x9;-- use of a cursor&#xD;&#xA;&#x9;&#x9;INSERT @pathTable&#xD;&#xA;&#x9;&#x9;SELECT pathElement, path, [index] &#xD;&#xA;&#x9;&#x9;from dbo.Function_SplitPath(@path, @sepChar)&#xD;&#xA;&#xD;&#xA;&#x9;" StatementId="23" StatementCompId="33" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.0132874" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0xB117D17F4A1E40A8" QueryPlanHash="0x6E2EFA796F2E20CF" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+                <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="24" CompileTime="4" CompileCPU="4" CompileMemory="520">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="0" PhysicalOp="Sequence" LogicalOp="Sequence" EstimateRows="1" EstimateIO="0" EstimateCPU="2e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0132874" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList />
+                    <Sequence>
+                      <RelOp NodeId="1" PhysicalOp="Table-valued function" LogicalOp="Table-valued function" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList />
+                        <TableValuedFunction>
+                          <DefinedValues />
+                          <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Function_SplitPath]" />
+                          <ParameterList>
+                            <ScalarOperator ScalarString="CONVERT_IMPLICIT(nvarchar(max),[@path],0)">
+                              <Identifier>
+                                <ColumnReference Column="ConstExpr1008">
+                                  <ScalarOperator>
+                                    <Convert DataType="nvarchar(max)" Length="2147483647" Style="0" Implicit="1">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="@path" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Convert>
+                                  </ScalarOperator>
+                                </ColumnReference>
+                              </Identifier>
+                            </ScalarOperator>
+                            <ScalarOperator ScalarString="CONVERT_IMPLICIT(nchar(1),[@sepChar],0)">
+                              <Identifier>
+                                <ColumnReference Column="ConstExpr1009">
+                                  <ScalarOperator>
+                                    <Convert DataType="nchar" Length="2" Style="0" Implicit="1">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="@sepChar" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Convert>
+                                  </ScalarOperator>
+                                </ColumnReference>
+                              </Identifier>
+                            </ScalarOperator>
+                          </ParameterList>
+                        </TableValuedFunction>
+                      </RelOp>
+                      <RelOp NodeId="4" PhysicalOp="Table Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.01" EstimateCPU="1e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0132842" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList />
+                        <Update DMLRequestSort="0">
+                          <Object Table="[@pathTable]" />
+                          <SetPredicate>
+                            <ScalarOperator ScalarString="[PathElement] = [OurLabReporting].[dbo].[Function_SplitPath].[pathElement],[Path] = [OurLabReporting].[dbo].[Function_SplitPath].[path],[index] = [OurLabReporting].[dbo].[Function_SplitPath].[index],[RowId] = [Expr1006]">
+                              <ScalarExpressionList>
+                                <ScalarOperator>
+                                  <MultipleAssign>
+                                    <Assign>
+                                      <ColumnReference Column="PathElement" />
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Function_SplitPath]" Column="pathElement" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Assign>
+                                    <Assign>
+                                      <ColumnReference Column="Path" />
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Function_SplitPath]" Column="path" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Assign>
+                                    <Assign>
+                                      <ColumnReference Column="index" />
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Function_SplitPath]" Column="index" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Assign>
+                                    <Assign>
+                                      <ColumnReference Column="RowId" />
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="Expr1006" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Assign>
+                                  </MultipleAssign>
+                                </ScalarOperator>
+                              </ScalarExpressionList>
+                            </ScalarOperator>
+                          </SetPredicate>
+                          <RelOp NodeId="5" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="8069" EstimatedTotalSubtreeCost="0.0032832" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Function_SplitPath]" Column="pathElement" />
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Function_SplitPath]" Column="path" />
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Function_SplitPath]" Column="index" />
+                              <ColumnReference Column="Expr1006" />
+                            </OutputList>
+                            <ComputeScalar ComputeSequence="1">
+                              <DefinedValues>
+                                <DefinedValue>
+                                  <ColumnReference Column="Expr1006" />
+                                  <ScalarOperator ScalarString="getidentity((-1341411723),(2),N'@pathTable')">
+                                    <Intrinsic FunctionName="getidentity">
+                                      <ScalarOperator>
+                                        <Const ConstValue="(-1341411723)" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(2)" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="N'@pathTable'" />
+                                      </ScalarOperator>
+                                    </Intrinsic>
+                                  </ScalarOperator>
+                                </DefinedValue>
+                              </DefinedValues>
+                              <RelOp NodeId="6" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="8065" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Function_SplitPath]" Column="pathElement" />
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Function_SplitPath]" Column="path" />
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Function_SplitPath]" Column="index" />
+                                </OutputList>
+                                <TableScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                                  <DefinedValues>
+                                    <DefinedValue>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Function_SplitPath]" Column="pathElement" />
+                                    </DefinedValue>
+                                    <DefinedValue>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Function_SplitPath]" Column="path" />
+                                    </DefinedValue>
+                                    <DefinedValue>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Function_SplitPath]" Column="index" />
+                                    </DefinedValue>
+                                  </DefinedValues>
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Function_SplitPath]" />
+                                </TableScan>
+                              </RelOp>
+                            </ComputeScalar>
+                          </RelOp>
+                        </Update>
+                      </RelOp>
+                    </Sequence>
+                  </RelOp>
+                  <ParameterList>
+                    <ColumnReference Column="@sepChar" ParameterCompiledValue="'\'" />
+                    <ColumnReference Column="@path" ParameterCompiledValue="'$\Threshold\CORE-OS Core\DEP-Developer Ecosystem Platform\APP-App Model\Modern Deployment (APPX, XAP)\DISM Provider'" />
+                  </ParameterList>
+                </QueryPlan>
+              </StmtSimple>
+              <StmtSimple StatementText="&#x9;SET @pathCount = @@ROWCOUNT&#xD;&#xA;&#x9;&#x9;--&#xD;&#xA;&#x9;&#x9;-- IF the first element is Win7 or LH ignore it&#xD;&#xA;&#x9;&#x9;-- However we still need to add it to the db&#xD;&#xA;&#x9;&#x9;--&#xD;&#xA;&#xD;&#xA;&#x9;" StatementId="24" StatementCompId="34" StatementType="ASSIGN" RetrievedFromCache="true" />
+              <StmtSimple StatementText="&#x9;SELECT @pathElement = [PathElement],&#xD;&#xA;&#x9;&#x9;@currentPath = [Path],&#xD;&#xA;&#x9;&#x9;@index = [index]&#xD;&#xA;&#x9;&#x9;FROM @pathTable&#xD;&#xA;&#x9;&#x9;WHERE [RowId] = 1&#xD;&#xA;&#x9;&#xD;&#xA;&#x9;&#x9;&#xD;&#xA;&#x9;" StatementId="25" StatementCompId="35" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032831" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x13824C725336BEB" QueryPlanHash="0xF2A1C1C7BD06891E">
+                <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="0" CompileCPU="0" CompileMemory="440">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="0" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="1" EstimateIO="0.0032035" EstimateCPU="7.96e-005" AvgRowSize="8069" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList>
+                      <ColumnReference Column="PathElement" />
+                      <ColumnReference Column="Path" />
+                      <ColumnReference Column="index" />
+                    </OutputList>
+                    <TableScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                      <DefinedValues>
+                        <DefinedValue>
+                          <ColumnReference Column="PathElement" />
+                        </DefinedValue>
+                        <DefinedValue>
+                          <ColumnReference Column="Path" />
+                        </DefinedValue>
+                        <DefinedValue>
+                          <ColumnReference Column="index" />
+                        </DefinedValue>
+                      </DefinedValues>
+                      <Object Table="[@pathTable]" />
+                      <Predicate>
+                        <ScalarOperator ScalarString="[RowId]=(1)">
+                          <Compare CompareOp="EQ">
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="RowId" />
+                              </Identifier>
+                            </ScalarOperator>
+                            <ScalarOperator>
+                              <Const ConstValue="(1)" />
+                            </ScalarOperator>
+                          </Compare>
+                        </ScalarOperator>
+                      </Predicate>
+                    </TableScan>
+                  </RelOp>
+                </QueryPlan>
+              </StmtSimple>
+              <StmtCond StatementText="&#x9;IF UPPER(@pathElement) = 'LH'&#xD;&#xA;&#x9;" StatementId="26" StatementCompId="36" StatementType="COND" RetrievedFromCache="true">
+                <Condition />
+                <Then>
+                  <Statements>
+                    <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;&#x9;SET @firstPathElement = 2&#xD;&#xA;&#x9;&#x9;" StatementId="27" StatementCompId="37" StatementType="ASSIGN" RetrievedFromCache="true" />
+                    <StmtSimple StatementText="&#x9;SET @productSchema = 'Longhorn'&#xD;&#xA;&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;" StatementId="28" StatementCompId="38" StatementType="ASSIGN" RetrievedFromCache="true" />
+                    <StmtSimple StatementText="&#x9;EXECUTE dbo.Uploader_InsertFeaturePath  &#xD;&#xA;&#x9;&#x9;&#x9;   @pathId OUTPUT&#xD;&#xA;&#x9;&#x9;&#x9;  ,@currentPath&#xD;&#xA;&#x9;&#x9;&#x9;  ,@productSchema&#xD;&#xA;&#x9;&#x9;&#x9;  ,@organization&#xD;&#xA;&#x9;&#x9;&#x9;  ,@featureTeam&#xD;&#xA;&#x9;&#x9;&#x9;  ,@area&#xD;&#xA;&#x9;&#x9;&#x9;  ,@subArea&#xD;&#xA;&#x9;&#x9;&#x9;  ,@component&#xD;&#xA;&#x9;&#x9;&#x9;  ,@subComponent&#xD;&#xA;&#x9;&#x9;&#x9;  ,NULL&#xD;&#xA;&#x9;&#x9;&#x9;  ,@depth&#xD;&#xA;&#x9;&#x9;&#x9;  &#xD;&#xA;&#x9;&#x9;&#x9; " StatementId="29" StatementCompId="39" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+                    <StmtSimple StatementText=" SET @parentPathId = @pathId&#xD;&#xA;&#x9;&#x9;&#x9; " StatementId="30" StatementCompId="40" StatementType="ASSIGN" RetrievedFromCache="true" />
+                    <StmtSimple StatementText=" SET @depth = @depth + 1&#xD;&#xA;&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;" StatementId="31" StatementCompId="41" StatementType="ASSIGN" RetrievedFromCache="true" />
+                    <StmtSimple StatementText="&#x9;SELECT @pathElement = [PathElement],&#xD;&#xA;&#x9;&#x9;&#x9;@currentPath = [Path],&#xD;&#xA;&#x9;&#x9;&#x9;@index = [index]&#xD;&#xA;&#x9;&#x9;&#x9;FROM @pathTable&#xD;&#xA;&#x9;&#x9;&#x9;WHERE [RowId] = @firstPathElement&#xD;&#xA;&#x9;" StatementId="32" StatementCompId="42" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032831" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x13824C725336BEB" QueryPlanHash="0xF2A1C1C7BD06891E">
+                      <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                      <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="0" CompileCPU="0" CompileMemory="440">
+                        <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                        <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                        <RelOp NodeId="0" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="1" EstimateIO="0.0032035" EstimateCPU="7.96e-005" AvgRowSize="8069" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Column="PathElement" />
+                            <ColumnReference Column="Path" />
+                            <ColumnReference Column="index" />
+                          </OutputList>
+                          <TableScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Column="PathElement" />
+                              </DefinedValue>
+                              <DefinedValue>
+                                <ColumnReference Column="Path" />
+                              </DefinedValue>
+                              <DefinedValue>
+                                <ColumnReference Column="index" />
+                              </DefinedValue>
+                            </DefinedValues>
+                            <Object Table="[@pathTable]" />
+                            <Predicate>
+                              <ScalarOperator ScalarString="[RowId]=[@firstPathElement]">
+                                <Compare CompareOp="EQ">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="RowId" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="@firstPathElement" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Compare>
+                              </ScalarOperator>
+                            </Predicate>
+                          </TableScan>
+                        </RelOp>
+                      </QueryPlan>
+                    </StmtSimple>
+                  </Statements>
+                </Then>
+                <Else>
+                  <Statements>
+                    <StmtCond StatementText="&#x9;END&#xD;&#xA;&#x9;&#x9;ELSE IF UPPER(@pathElement) = 'WIN7'&#xD;&#xA;&#x9;" StatementId="33" StatementCompId="45" StatementType="COND" RetrievedFromCache="true">
+                      <Condition />
+                      <Then>
+                        <Statements>
+                          <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;&#x9;SET @firstPathElement = 2&#xD;&#xA;&#x9;&#x9;" StatementId="34" StatementCompId="46" StatementType="ASSIGN" RetrievedFromCache="true" />
+                          <StmtSimple StatementText="&#x9;SET @productSchema = 'Win7'&#xD;&#xA;&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;" StatementId="35" StatementCompId="47" StatementType="ASSIGN" RetrievedFromCache="true" />
+                          <StmtSimple StatementText="&#x9;EXECUTE dbo.Uploader_InsertFeaturePath  &#xD;&#xA;&#x9;&#x9;&#x9;   @pathId OUTPUT&#xD;&#xA;&#x9;&#x9;&#x9;  ,@currentPath&#xD;&#xA;&#x9;&#x9;&#x9;  ,@productSchema&#xD;&#xA;&#x9;&#x9;&#x9;  ,@organization&#xD;&#xA;&#x9;&#x9;&#x9;  ,@featureTeam&#xD;&#xA;&#x9;&#x9;&#x9;  ,@area&#xD;&#xA;&#x9;&#x9;&#x9;  ,@subArea&#xD;&#xA;&#x9;&#x9;&#x9;  ,@component&#xD;&#xA;&#x9;&#x9;&#x9;  ,@subComponent&#xD;&#xA;&#x9;&#x9;&#x9;  ,NULL&#xD;&#xA;&#x9;&#x9;&#x9;  ,@depth&#xD;&#xA;&#x9;&#x9;&#x9;  &#xD;&#xA;&#x9;&#x9;&#x9; " StatementId="36" StatementCompId="48" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+                          <StmtSimple StatementText=" SET @parentPathId = @pathId&#xD;&#xA;&#x9;&#x9;&#x9; " StatementId="37" StatementCompId="49" StatementType="ASSIGN" RetrievedFromCache="true" />
+                          <StmtSimple StatementText=" SET @depth = @depth + 1&#xD;&#xA;&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;" StatementId="38" StatementCompId="50" StatementType="ASSIGN" RetrievedFromCache="true" />
+                          <StmtSimple StatementText="&#x9;SELECT @pathElement = [PathElement],&#xD;&#xA;&#x9;&#x9;&#x9;@currentPath = [Path],&#xD;&#xA;&#x9;&#x9;&#x9;@index = [index]&#xD;&#xA;&#x9;&#x9;&#x9;FROM @pathTable&#xD;&#xA;&#x9;&#x9;&#x9;WHERE [RowId] = @firstPathElement&#xD;&#xA;&#x9;" StatementId="39" StatementCompId="51" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032831" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x13824C725336BEB" QueryPlanHash="0xF2A1C1C7BD06891E">
+                            <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                            <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="0" CompileCPU="0" CompileMemory="440">
+                              <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                              <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                              <RelOp NodeId="0" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="1" EstimateIO="0.0032035" EstimateCPU="7.96e-005" AvgRowSize="8069" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList>
+                                  <ColumnReference Column="PathElement" />
+                                  <ColumnReference Column="Path" />
+                                  <ColumnReference Column="index" />
+                                </OutputList>
+                                <TableScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                                  <DefinedValues>
+                                    <DefinedValue>
+                                      <ColumnReference Column="PathElement" />
+                                    </DefinedValue>
+                                    <DefinedValue>
+                                      <ColumnReference Column="Path" />
+                                    </DefinedValue>
+                                    <DefinedValue>
+                                      <ColumnReference Column="index" />
+                                    </DefinedValue>
+                                  </DefinedValues>
+                                  <Object Table="[@pathTable]" />
+                                  <Predicate>
+                                    <ScalarOperator ScalarString="[RowId]=[@firstPathElement]">
+                                      <Compare CompareOp="EQ">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="RowId" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="@firstPathElement" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Compare>
+                                    </ScalarOperator>
+                                  </Predicate>
+                                </TableScan>
+                              </RelOp>
+                            </QueryPlan>
+                          </StmtSimple>
+                        </Statements>
+                      </Then>
+                    </StmtCond>
+                  </Statements>
+                </Else>
+              </StmtCond>
+              <StmtSimple StatementText="&#x9;END&#xD;&#xA;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;SET @productSchema = 'Longhorn'&#xD;&#xA;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;--&#xD;&#xA;&#x9;&#x9;-- Look for Win7 schema&#xD;&#xA;&#x9;&#x9;--&#xD;&#xA;&#x9;" StatementId="40" StatementCompId="54" StatementType="ASSIGN" RetrievedFromCache="true" />
+              <StmtCond StatementText="&#x9;IF UPPER(LEFT(@pathElement,5)) = 'COSD-'&#xD;&#xA;&#x9;" StatementId="41" StatementCompId="55" StatementType="COND" RetrievedFromCache="true">
+                <Condition />
+                <Then>
+                  <Statements>
+                    <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;&#x9;SET @productSchema = 'Win7'&#xD;&#xA;&#x9;" StatementId="42" StatementCompId="56" StatementType="ASSIGN" RetrievedFromCache="true" />
+                  </Statements>
+                </Then>
+                <Else>
+                  <Statements>
+                    <StmtCond StatementText="&#x9;END&#xD;&#xA;&#x9;&#x9;ELSE IF UPPER(LEFT(@pathElement,7)) = 'SERVER-'&#xD;&#xA;&#x9;" StatementId="43" StatementCompId="59" StatementType="COND" RetrievedFromCache="true">
+                      <Condition />
+                      <Then>
+                        <Statements>
+                          <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;&#x9;SET @productSchema = 'Win7'&#xD;&#xA;&#x9;" StatementId="44" StatementCompId="60" StatementType="ASSIGN" RetrievedFromCache="true" />
+                        </Statements>
+                      </Then>
+                      <Else>
+                        <Statements>
+                          <StmtCond StatementText="&#x9;END&#xD;&#xA;&#x9;&#x9;ELSE IF UPPER(LEFT(@pathElement,4)) = 'WEX-'&#xD;&#xA;&#x9;" StatementId="45" StatementCompId="63" StatementType="COND" RetrievedFromCache="true">
+                            <Condition />
+                            <Then>
+                              <Statements>
+                                <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;&#x9;SET @productSchema = 'Win7'&#xD;&#xA;&#x9;" StatementId="46" StatementCompId="64" StatementType="ASSIGN" RetrievedFromCache="true" />
+                              </Statements>
+                            </Then>
+                            <Else>
+                              <Statements>
+                                <StmtCond StatementText="&#x9;END&#xD;&#xA;&#x9;&#x9;ELSE IF UPPER(@pathElement) = 'WINDOWS-PARTNERS'&#xD;&#xA;&#x9;" StatementId="47" StatementCompId="67" StatementType="COND" RetrievedFromCache="true">
+                                  <Condition />
+                                  <Then>
+                                    <Statements>
+                                      <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;&#x9;SET @productSchema = 'Win7'&#xD;&#xA;&#x9;" StatementId="48" StatementCompId="68" StatementType="ASSIGN" RetrievedFromCache="true" />
+                                    </Statements>
+                                  </Then>
+                                </StmtCond>
+                              </Statements>
+                            </Else>
+                          </StmtCond>
+                        </Statements>
+                      </Else>
+                    </StmtCond>
+                  </Statements>
+                </Else>
+              </StmtCond>
+              <StmtSimple StatementText="&#x9;END&#xD;&#xA;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;SET @nextIndex = @firstPathElement&#xD;&#xA;&#x9;" StatementId="49" StatementCompId="73" StatementType="ASSIGN" RetrievedFromCache="true" />
+              <StmtSimple StatementText="&#x9;SET @currentIndex = 0&#xD;&#xA;&#x9;&#x9;--&#xD;&#xA;&#x9;&#x9;-- Now build up the stuff for the longhorn schema&#xD;&#xA;&#x9;&#x9;--&#xD;&#xA;&#x9;" StatementId="50" StatementCompId="74" StatementType="ASSIGN" RetrievedFromCache="true" />
+              <StmtCond StatementText="&#x9;WHILE @nextIndex &lt;= @pathCount&#xD;&#xA;&#x9;" StatementId="51" StatementCompId="75" StatementType="COND" RetrievedFromCache="true">
+                <Condition />
+                <Then>
+                  <Statements>
+                    <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;&#x9;SELECT @pathElement = [PathElement],&#xD;&#xA;&#x9;&#x9;&#x9;@currentPath = [Path],&#xD;&#xA;&#x9;&#x9;&#x9;@index = [index]&#xD;&#xA;&#x9;&#x9;&#x9;FROM @pathTable&#xD;&#xA;&#x9;&#x9;&#x9;WHERE [RowId] = @nextIndex&#xD;&#xA;&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;" StatementId="52" StatementCompId="76" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032831" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x13824C725336BEB" QueryPlanHash="0xF2A1C1C7BD06891E">
+                      <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                      <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="0" CompileCPU="0" CompileMemory="440">
+                        <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                        <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                        <RelOp NodeId="0" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="1" EstimateIO="0.0032035" EstimateCPU="7.96e-005" AvgRowSize="8069" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Column="PathElement" />
+                            <ColumnReference Column="Path" />
+                            <ColumnReference Column="index" />
+                          </OutputList>
+                          <TableScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Column="PathElement" />
+                              </DefinedValue>
+                              <DefinedValue>
+                                <ColumnReference Column="Path" />
+                              </DefinedValue>
+                              <DefinedValue>
+                                <ColumnReference Column="index" />
+                              </DefinedValue>
+                            </DefinedValues>
+                            <Object Table="[@pathTable]" />
+                            <Predicate>
+                              <ScalarOperator ScalarString="[RowId]=[@nextIndex]">
+                                <Compare CompareOp="EQ">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="RowId" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="@nextIndex" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Compare>
+                              </ScalarOperator>
+                            </Predicate>
+                          </TableScan>
+                        </RelOp>
+                      </QueryPlan>
+                    </StmtSimple>
+                    <StmtCond StatementText="&#x9;IF @productSchema = 'Longhorn'&#xD;&#xA;&#x9;&#x9;" StatementId="53" StatementCompId="77" StatementType="COND" RetrievedFromCache="true">
+                      <Condition />
+                      <Then>
+                        <Statements>
+                          <StmtCond StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;IF @currentIndex = 0&#xD;&#xA;&#x9;&#x9;&#x9;" StatementId="54" StatementCompId="78" StatementType="COND" RetrievedFromCache="true">
+                            <Condition />
+                            <Then>
+                              <Statements>
+                                <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;SET @area = @pathElement&#xD;&#xA;&#x9;&#x9;&#x9;" StatementId="55" StatementCompId="79" StatementType="ASSIGN" RetrievedFromCache="true" />
+                              </Statements>
+                            </Then>
+                            <Else>
+                              <Statements>
+                                <StmtCond StatementText="&#x9;END&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;ELSE IF @currentIndex = 1&#xD;&#xA;&#x9;&#x9;&#x9;" StatementId="56" StatementCompId="82" StatementType="COND" RetrievedFromCache="true">
+                                  <Condition />
+                                  <Then>
+                                    <Statements>
+                                      <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;SET @subArea = @pathElement&#xD;&#xA;&#x9;&#x9;&#x9;" StatementId="57" StatementCompId="83" StatementType="ASSIGN" RetrievedFromCache="true" />
+                                    </Statements>
+                                  </Then>
+                                  <Else>
+                                    <Statements>
+                                      <StmtCond StatementText="&#x9;END&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;ELSE IF @currentIndex = 2&#xD;&#xA;&#x9;&#x9;&#x9;" StatementId="58" StatementCompId="86" StatementType="COND" RetrievedFromCache="true">
+                                        <Condition />
+                                        <Then>
+                                          <Statements>
+                                            <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;SET @component = @pathElement&#xD;&#xA;&#x9;&#x9;&#x9;" StatementId="59" StatementCompId="87" StatementType="ASSIGN" RetrievedFromCache="true" />
+                                          </Statements>
+                                        </Then>
+                                        <Else>
+                                          <Statements>
+                                            <StmtCond StatementText="&#x9;END&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;ELSE IF @currentIndex = 3&#xD;&#xA;&#x9;&#x9;&#x9;" StatementId="60" StatementCompId="90" StatementType="COND" RetrievedFromCache="true">
+                                              <Condition />
+                                              <Then>
+                                                <Statements>
+                                                  <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;SET @subComponent = @pathElement&#xD;&#xA;&#x9;&#x9;&#x9;" StatementId="61" StatementCompId="91" StatementType="ASSIGN" RetrievedFromCache="true" />
+                                                </Statements>
+                                              </Then>
+                                            </StmtCond>
+                                          </Statements>
+                                        </Else>
+                                      </StmtCond>
+                                    </Statements>
+                                  </Else>
+                                </StmtCond>
+                              </Statements>
+                            </Else>
+                          </StmtCond>
+                        </Statements>
+                      </Then>
+                      <Else>
+                        <Statements>
+                          <StmtCond StatementText="&#x9;END&#xD;&#xA;&#x9;&#x9;&#x9;END&#xD;&#xA;&#x9;&#x9;&#x9;--&#xD;&#xA;&#x9;&#x9;&#x9;-- Win7 schema&#xD;&#xA;&#x9;&#x9;&#x9;--&#xD;&#xA;&#x9;&#x9;&#x9;ELSE&#xD;&#xA;&#x9;&#x9;&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;IF @currentIndex = 0&#xD;&#xA;&#x9;&#x9;&#x9;" StatementId="62" StatementCompId="98" StatementType="COND" RetrievedFromCache="true">
+                            <Condition />
+                            <Then>
+                              <Statements>
+                                <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;SET @organization = @pathElement&#xD;&#xA;&#x9;&#x9;&#x9;" StatementId="63" StatementCompId="99" StatementType="ASSIGN" RetrievedFromCache="true" />
+                              </Statements>
+                            </Then>
+                            <Else>
+                              <Statements>
+                                <StmtCond StatementText="&#x9;END&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;ELSE IF @currentIndex = 1&#xD;&#xA;&#x9;&#x9;&#x9;" StatementId="64" StatementCompId="102" StatementType="COND" RetrievedFromCache="true">
+                                  <Condition />
+                                  <Then>
+                                    <Statements>
+                                      <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;SET @featureTeam = @pathElement&#xD;&#xA;&#x9;&#x9;&#x9;" StatementId="65" StatementCompId="103" StatementType="ASSIGN" RetrievedFromCache="true" />
+                                    </Statements>
+                                  </Then>
+                                  <Else>
+                                    <Statements>
+                                      <StmtCond StatementText="&#x9;END&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;ELSE IF @currentIndex = 2&#xD;&#xA;&#x9;&#x9;&#x9;" StatementId="66" StatementCompId="106" StatementType="COND" RetrievedFromCache="true">
+                                        <Condition />
+                                        <Then>
+                                          <Statements>
+                                            <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;SET @subArea = @pathElement&#xD;&#xA;&#x9;&#x9;&#x9;" StatementId="67" StatementCompId="107" StatementType="ASSIGN" RetrievedFromCache="true" />
+                                          </Statements>
+                                        </Then>
+                                        <Else>
+                                          <Statements>
+                                            <StmtCond StatementText="&#x9;END&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;ELSE IF @currentIndex = 3&#xD;&#xA;&#x9;&#x9;&#x9;" StatementId="68" StatementCompId="110" StatementType="COND" RetrievedFromCache="true">
+                                              <Condition />
+                                              <Then>
+                                                <Statements>
+                                                  <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;SET @component = @pathElement&#xD;&#xA;&#x9;&#x9;&#x9;" StatementId="69" StatementCompId="111" StatementType="ASSIGN" RetrievedFromCache="true" />
+                                                </Statements>
+                                              </Then>
+                                              <Else>
+                                                <Statements>
+                                                  <StmtCond StatementText="&#x9;END&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;ELSE IF @currentIndex = 4&#xD;&#xA;&#x9;&#x9;&#x9;" StatementId="70" StatementCompId="114" StatementType="COND" RetrievedFromCache="true">
+                                                    <Condition />
+                                                    <Then>
+                                                      <Statements>
+                                                        <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;SET @subComponent = @pathElement&#xD;&#xA;&#x9;&#x9;&#x9;" StatementId="71" StatementCompId="115" StatementType="ASSIGN" RetrievedFromCache="true" />
+                                                      </Statements>
+                                                    </Then>
+                                                  </StmtCond>
+                                                </Statements>
+                                              </Else>
+                                            </StmtCond>
+                                          </Statements>
+                                        </Else>
+                                      </StmtCond>
+                                    </Statements>
+                                  </Else>
+                                </StmtCond>
+                              </Statements>
+                            </Else>
+                          </StmtCond>
+                        </Statements>
+                      </Else>
+                    </StmtCond>
+                    <StmtSimple StatementText="&#x9;END&#xD;&#xA;&#x9;&#x9;&#x9;END&#xD;&#xA;&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;&#x9;EXECUTE dbo.Uploader_InsertFeaturePath  &#xD;&#xA;&#x9;&#x9;&#x9;   @pathId OUTPUT&#xD;&#xA;&#x9;&#x9;&#x9;  ,@currentPath&#xD;&#xA;&#x9;&#x9;&#x9;  ,@productSchema&#xD;&#xA;&#x9;&#x9;&#x9;  ,@organization&#xD;&#xA;&#x9;&#x9;&#x9;  ,@featureTeam&#xD;&#xA;&#x9;&#x9;&#x9;  ,@area&#xD;&#xA;&#x9;&#x9;&#x9;  ,@subArea&#xD;&#xA;&#x9;&#x9;&#x9;  ,@component&#xD;&#xA;&#x9;&#x9;&#x9;  ,@subComponent&#xD;&#xA;&#x9;&#x9;&#x9;  ,@parentPathId&#xD;&#xA;&#x9;&#x9;&#x9;  ,@depth&#xD;&#xA;&#x9;&#x9;&#x9;  &#x9;&#x9;&#xD;&#xA;&#x9;&#x9;" StatementId="72" StatementCompId="122" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+                    <StmtSimple StatementText="&#x9;SET @parentPathId = @pathId&#xD;&#xA;&#x9;&#x9;" StatementId="73" StatementCompId="123" StatementType="ASSIGN" RetrievedFromCache="true" />
+                    <StmtSimple StatementText="&#x9;SET @depth = @depth + 1&#xD;&#xA;&#x9;&#x9;" StatementId="74" StatementCompId="124" StatementType="ASSIGN" RetrievedFromCache="true" />
+                    <StmtSimple StatementText="&#x9;SET @currentIndex = @currentIndex + 1&#xD;&#xA;&#x9;&#x9;" StatementId="75" StatementCompId="125" StatementType="ASSIGN" RetrievedFromCache="true" />
+                    <StmtSimple StatementText="&#x9;SET @nextIndex = @firstPathElement + @currentIndex&#xD;&#xA;&#x9;" StatementId="76" StatementCompId="126" StatementType="ASSIGN" RetrievedFromCache="true" />
+                  </Statements>
+                </Then>
+              </StmtCond>
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtSimple StatementText="&#x9;END&#xD;&#xA;&#x9;END&#xD;&#xA;&#xD;&#xA;    DECLARE @objectName varchar(128) = (SELECT OBJECT_NAME(@@PROCID))&#xD;&#xA;   " StatementId="77" StatementCompId="130" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="1.257e-006" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x830C952D7490168E" QueryPlanHash="0x3B1EAEC0618BFE3F" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="2" CompileCPU="2" CompileMemory="488">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="75" EstimatedTotalSubtreeCost="1.257e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Column="Expr1001" />
+              </OutputList>
+              <ComputeScalar>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1001" />
+                    <ScalarOperator ScalarString="CONVERT_IMPLICIT(varchar(128),[Expr1000],0)">
+                      <Convert DataType="varchar" Length="128" Style="0" Implicit="1">
+                        <ScalarOperator>
+                          <Identifier>
+                            <ColumnReference Column="Expr1000" />
+                          </Identifier>
+                        </ScalarOperator>
+                      </Convert>
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp NodeId="1" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="139" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Expr1000" />
+                  </OutputList>
+                  <ConstantScan>
+                    <Values>
+                      <Row>
+                        <ScalarOperator ScalarString="object_name(@@procid)">
+                          <Intrinsic FunctionName="object_name">
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="@@procid" />
+                            </ScalarOperator>
+                            <ScalarOperator>
+                              <Const ConstValue="" />
+                            </ScalarOperator>
+                          </Intrinsic>
+                        </ScalarOperator>
+                      </Row>
+                    </Values>
+                  </ConstantScan>
+                </RelOp>
+              </ComputeScalar>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText=" EXEC [dbo].[spEndStopwatch] @objectName, @stopwatchBeginTime&#xD;" StatementId="78" StatementCompId="131" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

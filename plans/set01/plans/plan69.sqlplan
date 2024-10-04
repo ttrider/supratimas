@@ -1,0 +1,1805 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="CREATE PROCEDURE [dbo].[Uploader_CreateOrUpdateSchedule]&#xD;&#xA;        @scheduleId              UNIQUEIDENTIFIER&#xD;&#xA;        , @scheduledBy           NVARCHAR (50)&#xD;&#xA;        , @owner                 NVARCHAR (50)&#xD;&#xA;        , @startDate             DATETIME&#xD;&#xA;        , @endDate               DATETIME=NULL&#xD;&#xA;        , @rld                   VARCHAR (260)&#xD;&#xA;        , @status                VARCHAR (200)&#xD;&#xA;        , @testBuildId           INT&#xD;&#xA;        , @scheduleName          NVARCHAR (200)&#xD;&#xA;        , @definitionGuid        UNIQUEIDENTIFIER&#xD;&#xA;        , @isNewSchedule         BIT=1 OUTPUT&#xD;&#xA;        , @executionTool         NVARCHAR (50)=NULL&#xD;&#xA;        , @isValid               BIT=NULL&#xD;&#xA;        , @implementationDetails XML=NULL&#xD;&#xA;        , @ExecutionRequestedBy  NVARCHAR (50)=NULL&#xD;&#xA;        , @IsRerun               BIT=NULL&#xD;&#xA;        , @HasReruns             BIT=NULL&#xD;&#xA;        , @CanRerun              BIT=NULL&#xD;&#xA;        , @IsRerunning           BIT=NULL&#xD;&#xA;        , @parentGuid            UNIQUEIDENTIFIER = NULL&#xD;&#xA;AS&#xD;&#xA;BEGIN&#xD;&#xA;    DECLARE @stopwatchBeginTime datetime2 &#xD;&#xA;    SELECT @stopwatchBeginTime = [dbo].[fnBeginStopwatch]()&#xD;&#xA;&#xD;&#xA;   " StatementId="1" StatementCompId="2" StatementType="ASSIGN WITH QUERY" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" DECLARE @statusId int&#xD;&#xA;    DECLARE @statusType varchar(50)&#xD;&#xA;    DECLARE @ScheduleIntId INT&#xD;&#xA;    &#xD;&#xA;    SET @statusType = 'Schedule'&#xD;&#xA;   " StatementId="2" StatementCompId="3" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" EXEC dbo.Uploader_GetOrCreateStatusId @status, @statusType, @statusId OUTPUT&#xD;&#xA;&#xD;&#xA;   " StatementId="3" StatementCompId="4" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" SELECT @isNewSchedule = 0, @ScheduleIntId = Id&#xD;&#xA;    FROM dbo.Schedule WITH (NOLOCK)&#xD;&#xA;    WHERE [Guid] = @scheduleId&#xD;&#xA;&#xD;&#xA;   " StatementId="4" StatementCompId="5" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032832" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x1ED3AEB73E62AD4B" QueryPlanHash="0x1A37683506C0A4FA">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="1" CompileCPU="1" CompileMemory="296">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="12" EstimatedTotalSubtreeCost="0.0032832" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="Id" />
+                <ColumnReference Column="Expr1003" />
+              </OutputList>
+              <ComputeScalar>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1003" />
+                    <ScalarOperator ScalarString="(0)">
+                      <Const ConstValue="(0)" />
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp NodeId="1" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.44031e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="Id" />
+                  </OutputList>
+                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="Id" />
+                      </DefinedValue>
+                    </DefinedValues>
+                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Index="[Schedule_IDX_Guid]" IndexKind="NonClustered" />
+                    <SeekPredicates>
+                      <SeekPredicateNew>
+                        <SeekKeys>
+                          <Prefix ScanType="EQ">
+                            <RangeColumns>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="Guid" />
+                            </RangeColumns>
+                            <RangeExpressions>
+                              <ScalarOperator ScalarString="[@scheduleId]">
+                                <Identifier>
+                                  <ColumnReference Column="@scheduleId" />
+                                </Identifier>
+                              </ScalarOperator>
+                            </RangeExpressions>
+                          </Prefix>
+                        </SeekKeys>
+                      </SeekPredicateNew>
+                    </SeekPredicates>
+                  </IndexScan>
+                </RelOp>
+              </ComputeScalar>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@isNewSchedule" ParameterCompiledValue="NULL" />
+              <ColumnReference Column="@scheduleId" ParameterCompiledValue="{guid'E42B41D6-EE86-4C8A-8856-DCD8552FD8DB'}" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtCond StatementText=" IF @isNewSchedule = 0&#xD;&#xA;   " StatementId="5" StatementCompId="6" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;        BEGIN TRAN&#xD;&#xA;           " StatementId="6" StatementCompId="7" StatementType="BEGIN TRANSACTION" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" UPDATE [dbo].[Schedule]&#xD;&#xA;            SET [ScheduledBy] = @scheduledBy&#xD;&#xA;              ,[Owner] = @owner&#xD;&#xA;              ,[StartDate] = @startDate&#xD;&#xA;              ,[EndDate] = @endDate&#xD;&#xA;              ,[RunLogDirectory] = @rld&#xD;&#xA;              ,[StatusId] = @statusId&#xD;&#xA;              ,[BuildVersionId] = @testBuildId&#xD;&#xA;              ,[DefinitionGuid] = @definitionGuid&#xD;&#xA;              ,[Name] = @scheduleName&#xD;&#xA;              ,[ExecutionToolName] = @executionTool&#xD;&#xA;              ,[IsValidSchedule] = @isValid&#xD;&#xA;              ,[ImplementationDetails] = @implementationDetails&#xD;&#xA;              ,[ExecutionRequestedBy] = @ExecutionRequestedBy&#xD;&#xA;              ,[RecordLastUpdated] = GETDATE()&#xD;&#xA;            WHERE [Id] = @scheduleIntId&#xD;&#xA;&#xD;&#xA;       " StatementId="7" StatementCompId="8" StatementType="UPDATE" RetrievedFromCache="true" StatementSubTreeCost="0.059863" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x858A949CF60069E8" QueryPlanHash="0x1F3FCB1DEF64E7C6">
+                <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="88" CompileTime="5" CompileCPU="5" CompileMemory="856">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="1" PhysicalOp="Assert" LogicalOp="Assert" EstimateRows="1" EstimateIO="0" EstimateCPU="1.8e-007" AvgRowSize="9" EstimatedTotalSubtreeCost="0.059863" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList />
+                    <Assert StartupExpression="0">
+                      <RelOp NodeId="2" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0598629" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList>
+                          <ColumnReference Column="Expr1061" />
+                          <ColumnReference Column="Expr1062" />
+                        </OutputList>
+                        <NestedLoops Optimized="0">
+                          <DefinedValues>
+                            <DefinedValue>
+                              <ColumnReference Column="Expr1062" />
+                            </DefinedValue>
+                          </DefinedValues>
+                          <OuterReferences>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="BuildVersionId" />
+                          </OuterReferences>
+                          <ProbeColumn>
+                            <ColumnReference Column="Expr1062" />
+                          </ProbeColumn>
+                          <RelOp NodeId="3" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="12" EstimatedTotalSubtreeCost="0.0565756" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="BuildVersionId" />
+                              <ColumnReference Column="Expr1061" />
+                            </OutputList>
+                            <NestedLoops Optimized="0">
+                              <DefinedValues>
+                                <DefinedValue>
+                                  <ColumnReference Column="Expr1061" />
+                                </DefinedValue>
+                              </DefinedValues>
+                              <OuterReferences>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="StatusId" />
+                              </OuterReferences>
+                              <ProbeColumn>
+                                <ColumnReference Column="Expr1061" />
+                              </ProbeColumn>
+                              <RelOp NodeId="4" PhysicalOp="Clustered Index Update" LogicalOp="Update" EstimateRows="1" EstimateIO="0.05" EstimateCPU="5e-006" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0532883" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="BuildVersionId" />
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="StatusId" />
+                                </OutputList>
+                                <Update DMLRequestSort="0">
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Index="[Schedule_PK]" IndexKind="Clustered" />
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Index="[Schedule_IDX_BuildVersion]" IndexKind="NonClustered" />
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Index="[Schedule_IDX_IsValidSchedule]" IndexKind="NonClustered" />
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Index="[Schedule_IDX_LastUpdated]" IndexKind="NonClustered" />
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Index="[Schedule_IDX_StartDate]" IndexKind="NonClustered" />
+                                  <SetPredicate>
+                                    <ScalarOperator ScalarString="[OurLabReporting].[dbo].[Schedule].[ScheduledBy] = [@scheduledBy],[OurLabReporting].[dbo].[Schedule].[Owner] = RaiseIfNullUpdate([@owner]),[OurLabReporting].[dbo].[Schedule].[StartDate] = RaiseIfNullUpdate([@startDate]),[OurLabReporting].[dbo].[Schedule].[EndDate] = [@endDate],[OurLabReporting].[dbo].[Schedule].[RunLogDirectory] = RaiseIfNullUpdate([@rld]),[OurLabReporting].[dbo].[Schedule].[StatusId] = RaiseIfNullUpdate([@statusId]),[OurLabReporting].[dbo].[Schedule].[BuildVersionId] = RaiseIfNullUpdate([@testBuildId]),[OurLabReporting].[dbo].[Schedule].[DefinitionGuid] = RaiseIfNullUpdate([@definitionGuid]),[OurLabReporting].[dbo].[Schedule].[Name] = [@scheduleName],[OurLabReporting].[dbo].[Schedule].[ExecutionToolName] = [@executionTool],[OurLabReporting].[dbo].[Schedule].[IsValidSchedule] = RaiseIfNullUpdate([@isValid]),[OurLabReporting].[dbo].[Schedule].[ImplementationDetails] = [@implementationDetails],[OurLabReporting].[dbo].[Schedule].[ExecutionRequestedBy] = [@ExecutionRequestedBy],[OurLabReporting].[dbo].[Schedule].[RecordLastUpdated] = [Expr1003]">
+                                      <ScalarExpressionList>
+                                        <ScalarOperator>
+                                          <MultipleAssign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="ScheduledBy" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@scheduledBy" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="Owner" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullUpdate">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@owner" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="StartDate" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullUpdate">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@startDate" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="EndDate" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@endDate" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="RunLogDirectory" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullUpdate">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@rld" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="StatusId" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullUpdate">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@statusId" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="BuildVersionId" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullUpdate">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@testBuildId" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="DefinitionGuid" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullUpdate">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@definitionGuid" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="Name" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@scheduleName" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="ExecutionToolName" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@executionTool" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="IsValidSchedule" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullUpdate">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@isValid" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="ImplementationDetails" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@implementationDetails" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="ExecutionRequestedBy" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@ExecutionRequestedBy" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="RecordLastUpdated" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="Expr1003" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                          </MultipleAssign>
+                                        </ScalarOperator>
+                                      </ScalarExpressionList>
+                                    </ScalarOperator>
+                                  </SetPredicate>
+                                  <RelOp NodeId="5" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="35" EstimatedTotalSubtreeCost="0.0032833" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                    <OutputList>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="Id" />
+                                      <ColumnReference Column="Expr1003" />
+                                      <ColumnReference Column="Expr1053" />
+                                      <ColumnReference Column="Expr1054" />
+                                      <ColumnReference Column="Expr1055" />
+                                      <ColumnReference Column="Expr1056" />
+                                    </OutputList>
+                                    <ComputeScalar>
+                                      <DefinedValues>
+                                        <DefinedValue>
+                                          <ColumnReference Column="Expr1053" />
+                                          <ScalarOperator ScalarString="[Expr1053]">
+                                            <Identifier>
+                                              <ColumnReference Column="Expr1053" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </DefinedValue>
+                                        <DefinedValue>
+                                          <ColumnReference Column="Expr1054" />
+                                          <ScalarOperator ScalarString="[Expr1054]">
+                                            <Identifier>
+                                              <ColumnReference Column="Expr1054" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </DefinedValue>
+                                        <DefinedValue>
+                                          <ColumnReference Column="Expr1055" />
+                                          <ScalarOperator ScalarString="[Expr1055]">
+                                            <Identifier>
+                                              <ColumnReference Column="Expr1055" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </DefinedValue>
+                                        <DefinedValue>
+                                          <ColumnReference Column="Expr1056" />
+                                          <ScalarOperator ScalarString="[Expr1056]">
+                                            <Identifier>
+                                              <ColumnReference Column="Expr1056" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </DefinedValue>
+                                      </DefinedValues>
+                                      <RelOp NodeId="6" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="35" EstimatedTotalSubtreeCost="0.0032833" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                        <OutputList>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="Id" />
+                                          <ColumnReference Column="Expr1003" />
+                                          <ColumnReference Column="Expr1053" />
+                                          <ColumnReference Column="Expr1054" />
+                                          <ColumnReference Column="Expr1055" />
+                                          <ColumnReference Column="Expr1056" />
+                                        </OutputList>
+                                        <ComputeScalar>
+                                          <DefinedValues>
+                                            <DefinedValue>
+                                              <ColumnReference Column="Expr1003" />
+                                              <ScalarOperator ScalarString="getdate()">
+                                                <Identifier>
+                                                  <ColumnReference Column="ConstExpr1026">
+                                                    <ScalarOperator>
+                                                      <Intrinsic FunctionName="getdate" />
+                                                    </ScalarOperator>
+                                                  </ColumnReference>
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </DefinedValue>
+                                            <DefinedValue>
+                                              <ColumnReference Column="Expr1053" />
+                                              <ScalarOperator ScalarString="CASE WHEN CASE WHEN [OurLabReporting].[dbo].[Schedule].[BuildVersionId] = [@testBuildId] THEN (1) ELSE (0) END THEN (0) ELSE (1) END">
+                                                <IF>
+                                                  <Condition>
+                                                    <ScalarOperator>
+                                                      <IF>
+                                                        <Condition>
+                                                          <ScalarOperator>
+                                                            <Compare CompareOp="BINARY IS">
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="BuildVersionId" />
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Column="@testBuildId" />
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                            </Compare>
+                                                          </ScalarOperator>
+                                                        </Condition>
+                                                        <Then>
+                                                          <ScalarOperator>
+                                                            <Const ConstValue="(1)" />
+                                                          </ScalarOperator>
+                                                        </Then>
+                                                        <Else>
+                                                          <ScalarOperator>
+                                                            <Const ConstValue="(0)" />
+                                                          </ScalarOperator>
+                                                        </Else>
+                                                      </IF>
+                                                    </ScalarOperator>
+                                                  </Condition>
+                                                  <Then>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="(0)" />
+                                                    </ScalarOperator>
+                                                  </Then>
+                                                  <Else>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="(1)" />
+                                                    </ScalarOperator>
+                                                  </Else>
+                                                </IF>
+                                              </ScalarOperator>
+                                            </DefinedValue>
+                                            <DefinedValue>
+                                              <ColumnReference Column="Expr1054" />
+                                              <ScalarOperator ScalarString="CASE WHEN CASE WHEN [OurLabReporting].[dbo].[Schedule].[StartDate] = [@startDate] THEN (1) ELSE (0) END AND CASE WHEN [OurLabReporting].[dbo].[Schedule].[Name] = [@scheduleName] THEN (1) ELSE (0) END AND CASE WHEN [OurLabReporting].[dbo].[Schedule].[IsValidSchedule] = [@isValid] THEN (1) ELSE (0) END AND CASE WHEN [OurLabReporting].[dbo].[Schedule].[BuildVersionId] = [@testBuildId] THEN (1) ELSE (0) END AND CASE WHEN [OurLabReporting].[dbo].[Schedule].[StatusId] = [@statusId] THEN (1) ELSE (0) END THEN (0) ELSE (1) END">
+                                                <IF>
+                                                  <Condition>
+                                                    <ScalarOperator>
+                                                      <Logical Operation="AND">
+                                                        <ScalarOperator>
+                                                          <IF>
+                                                            <Condition>
+                                                              <ScalarOperator>
+                                                                <Compare CompareOp="BINARY IS">
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="StartDate" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Column="@startDate" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                </Compare>
+                                                              </ScalarOperator>
+                                                            </Condition>
+                                                            <Then>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(1)" />
+                                                              </ScalarOperator>
+                                                            </Then>
+                                                            <Else>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(0)" />
+                                                              </ScalarOperator>
+                                                            </Else>
+                                                          </IF>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator>
+                                                          <IF>
+                                                            <Condition>
+                                                              <ScalarOperator>
+                                                                <Compare CompareOp="BINARY IS">
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="Name" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Column="@scheduleName" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                </Compare>
+                                                              </ScalarOperator>
+                                                            </Condition>
+                                                            <Then>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(1)" />
+                                                              </ScalarOperator>
+                                                            </Then>
+                                                            <Else>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(0)" />
+                                                              </ScalarOperator>
+                                                            </Else>
+                                                          </IF>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator>
+                                                          <IF>
+                                                            <Condition>
+                                                              <ScalarOperator>
+                                                                <Compare CompareOp="BINARY IS">
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="IsValidSchedule" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Column="@isValid" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                </Compare>
+                                                              </ScalarOperator>
+                                                            </Condition>
+                                                            <Then>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(1)" />
+                                                              </ScalarOperator>
+                                                            </Then>
+                                                            <Else>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(0)" />
+                                                              </ScalarOperator>
+                                                            </Else>
+                                                          </IF>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator>
+                                                          <IF>
+                                                            <Condition>
+                                                              <ScalarOperator>
+                                                                <Compare CompareOp="BINARY IS">
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="BuildVersionId" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Column="@testBuildId" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                </Compare>
+                                                              </ScalarOperator>
+                                                            </Condition>
+                                                            <Then>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(1)" />
+                                                              </ScalarOperator>
+                                                            </Then>
+                                                            <Else>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(0)" />
+                                                              </ScalarOperator>
+                                                            </Else>
+                                                          </IF>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator>
+                                                          <IF>
+                                                            <Condition>
+                                                              <ScalarOperator>
+                                                                <Compare CompareOp="BINARY IS">
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="StatusId" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Column="@statusId" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                </Compare>
+                                                              </ScalarOperator>
+                                                            </Condition>
+                                                            <Then>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(1)" />
+                                                              </ScalarOperator>
+                                                            </Then>
+                                                            <Else>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(0)" />
+                                                              </ScalarOperator>
+                                                            </Else>
+                                                          </IF>
+                                                        </ScalarOperator>
+                                                      </Logical>
+                                                    </ScalarOperator>
+                                                  </Condition>
+                                                  <Then>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="(0)" />
+                                                    </ScalarOperator>
+                                                  </Then>
+                                                  <Else>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="(1)" />
+                                                    </ScalarOperator>
+                                                  </Else>
+                                                </IF>
+                                              </ScalarOperator>
+                                            </DefinedValue>
+                                            <DefinedValue>
+                                              <ColumnReference Column="Expr1055" />
+                                              <ScalarOperator ScalarString="CASE WHEN CASE WHEN [OurLabReporting].[dbo].[Schedule].[RecordLastUpdated] = getdate() THEN (1) ELSE (0) END THEN (0) ELSE (1) END">
+                                                <IF>
+                                                  <Condition>
+                                                    <ScalarOperator>
+                                                      <IF>
+                                                        <Condition>
+                                                          <ScalarOperator>
+                                                            <Compare CompareOp="BINARY IS">
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="RecordLastUpdated" />
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Column="ConstExpr1026">
+                                                                    <ScalarOperator>
+                                                                      <Intrinsic FunctionName="getdate" />
+                                                                    </ScalarOperator>
+                                                                  </ColumnReference>
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                            </Compare>
+                                                          </ScalarOperator>
+                                                        </Condition>
+                                                        <Then>
+                                                          <ScalarOperator>
+                                                            <Const ConstValue="(1)" />
+                                                          </ScalarOperator>
+                                                        </Then>
+                                                        <Else>
+                                                          <ScalarOperator>
+                                                            <Const ConstValue="(0)" />
+                                                          </ScalarOperator>
+                                                        </Else>
+                                                      </IF>
+                                                    </ScalarOperator>
+                                                  </Condition>
+                                                  <Then>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="(0)" />
+                                                    </ScalarOperator>
+                                                  </Then>
+                                                  <Else>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="(1)" />
+                                                    </ScalarOperator>
+                                                  </Else>
+                                                </IF>
+                                              </ScalarOperator>
+                                            </DefinedValue>
+                                            <DefinedValue>
+                                              <ColumnReference Column="Expr1056" />
+                                              <ScalarOperator ScalarString="CASE WHEN CASE WHEN [OurLabReporting].[dbo].[Schedule].[StartDate] = [@startDate] THEN (1) ELSE (0) END AND CASE WHEN [OurLabReporting].[dbo].[Schedule].[EndDate] = [@endDate] THEN (1) ELSE (0) END AND CASE WHEN [OurLabReporting].[dbo].[Schedule].[Name] = [@scheduleName] THEN (1) ELSE (0) END AND CASE WHEN [OurLabReporting].[dbo].[Schedule].[BuildVersionId] = [@testBuildId] THEN (1) ELSE (0) END AND CASE WHEN [OurLabReporting].[dbo].[Schedule].[StatusId] = [@statusId] THEN (1) ELSE (0) END THEN (0) ELSE (1) END">
+                                                <IF>
+                                                  <Condition>
+                                                    <ScalarOperator>
+                                                      <Logical Operation="AND">
+                                                        <ScalarOperator>
+                                                          <IF>
+                                                            <Condition>
+                                                              <ScalarOperator>
+                                                                <Compare CompareOp="BINARY IS">
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="StartDate" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Column="@startDate" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                </Compare>
+                                                              </ScalarOperator>
+                                                            </Condition>
+                                                            <Then>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(1)" />
+                                                              </ScalarOperator>
+                                                            </Then>
+                                                            <Else>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(0)" />
+                                                              </ScalarOperator>
+                                                            </Else>
+                                                          </IF>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator>
+                                                          <IF>
+                                                            <Condition>
+                                                              <ScalarOperator>
+                                                                <Compare CompareOp="BINARY IS">
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="EndDate" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Column="@endDate" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                </Compare>
+                                                              </ScalarOperator>
+                                                            </Condition>
+                                                            <Then>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(1)" />
+                                                              </ScalarOperator>
+                                                            </Then>
+                                                            <Else>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(0)" />
+                                                              </ScalarOperator>
+                                                            </Else>
+                                                          </IF>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator>
+                                                          <IF>
+                                                            <Condition>
+                                                              <ScalarOperator>
+                                                                <Compare CompareOp="BINARY IS">
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="Name" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Column="@scheduleName" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                </Compare>
+                                                              </ScalarOperator>
+                                                            </Condition>
+                                                            <Then>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(1)" />
+                                                              </ScalarOperator>
+                                                            </Then>
+                                                            <Else>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(0)" />
+                                                              </ScalarOperator>
+                                                            </Else>
+                                                          </IF>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator>
+                                                          <IF>
+                                                            <Condition>
+                                                              <ScalarOperator>
+                                                                <Compare CompareOp="BINARY IS">
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="BuildVersionId" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Column="@testBuildId" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                </Compare>
+                                                              </ScalarOperator>
+                                                            </Condition>
+                                                            <Then>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(1)" />
+                                                              </ScalarOperator>
+                                                            </Then>
+                                                            <Else>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(0)" />
+                                                              </ScalarOperator>
+                                                            </Else>
+                                                          </IF>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator>
+                                                          <IF>
+                                                            <Condition>
+                                                              <ScalarOperator>
+                                                                <Compare CompareOp="BINARY IS">
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="StatusId" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Column="@statusId" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                </Compare>
+                                                              </ScalarOperator>
+                                                            </Condition>
+                                                            <Then>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(1)" />
+                                                              </ScalarOperator>
+                                                            </Then>
+                                                            <Else>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="(0)" />
+                                                              </ScalarOperator>
+                                                            </Else>
+                                                          </IF>
+                                                        </ScalarOperator>
+                                                      </Logical>
+                                                    </ScalarOperator>
+                                                  </Condition>
+                                                  <Then>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="(0)" />
+                                                    </ScalarOperator>
+                                                  </Then>
+                                                  <Else>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="(1)" />
+                                                    </ScalarOperator>
+                                                  </Else>
+                                                </IF>
+                                              </ScalarOperator>
+                                            </DefinedValue>
+                                          </DefinedValues>
+                                          <RelOp NodeId="7" PhysicalOp="Top" LogicalOp="Top" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="248" EstimatedTotalSubtreeCost="0.0032832" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                            <OutputList>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="Id" />
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="StartDate" />
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="EndDate" />
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="Name" />
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="IsValidSchedule" />
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="BuildVersionId" />
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="StatusId" />
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="RecordLastUpdated" />
+                                            </OutputList>
+                                            <Top RowCount="0" IsPercent="0" WithTies="0">
+                                              <TopExpression>
+                                                <ScalarOperator ScalarString="(1)">
+                                                  <Const ConstValue="(1)" />
+                                                </ScalarOperator>
+                                              </TopExpression>
+                                              <RelOp NodeId="8" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="248" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.44031e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                <OutputList>
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="Id" />
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="StartDate" />
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="EndDate" />
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="Name" />
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="IsValidSchedule" />
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="BuildVersionId" />
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="StatusId" />
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="RecordLastUpdated" />
+                                                </OutputList>
+                                                <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                                  <DefinedValues>
+                                                    <DefinedValue>
+                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="Id" />
+                                                    </DefinedValue>
+                                                    <DefinedValue>
+                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="StartDate" />
+                                                    </DefinedValue>
+                                                    <DefinedValue>
+                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="EndDate" />
+                                                    </DefinedValue>
+                                                    <DefinedValue>
+                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="Name" />
+                                                    </DefinedValue>
+                                                    <DefinedValue>
+                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="IsValidSchedule" />
+                                                    </DefinedValue>
+                                                    <DefinedValue>
+                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="BuildVersionId" />
+                                                    </DefinedValue>
+                                                    <DefinedValue>
+                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="StatusId" />
+                                                    </DefinedValue>
+                                                    <DefinedValue>
+                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="RecordLastUpdated" />
+                                                    </DefinedValue>
+                                                  </DefinedValues>
+                                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Index="[Schedule_PK]" IndexKind="Clustered" />
+                                                  <SeekPredicates>
+                                                    <SeekPredicateNew>
+                                                      <SeekKeys>
+                                                        <Prefix ScanType="EQ">
+                                                          <RangeColumns>
+                                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="Id" />
+                                                          </RangeColumns>
+                                                          <RangeExpressions>
+                                                            <ScalarOperator ScalarString="[@ScheduleIntId]">
+                                                              <Identifier>
+                                                                <ColumnReference Column="@ScheduleIntId" />
+                                                              </Identifier>
+                                                            </ScalarOperator>
+                                                          </RangeExpressions>
+                                                        </Prefix>
+                                                      </SeekKeys>
+                                                    </SeekPredicateNew>
+                                                  </SeekPredicates>
+                                                </IndexScan>
+                                              </RelOp>
+                                            </Top>
+                                          </RelOp>
+                                        </ComputeScalar>
+                                      </RelOp>
+                                    </ComputeScalar>
+                                  </RelOp>
+                                </Update>
+                              </RelOp>
+                              <RelOp NodeId="30" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="96" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList />
+                                <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                  <DefinedValues />
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Index="[Status_PK]" IndexKind="Clustered" />
+                                  <SeekPredicates>
+                                    <SeekPredicateNew>
+                                      <SeekKeys>
+                                        <Prefix ScanType="EQ">
+                                          <RangeColumns>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Column="Id" />
+                                          </RangeColumns>
+                                          <RangeExpressions>
+                                            <ScalarOperator ScalarString="[OurLabReporting].[dbo].[Schedule].[StatusId]">
+                                              <Identifier>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="StatusId" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </RangeExpressions>
+                                        </Prefix>
+                                      </SeekKeys>
+                                    </SeekPredicateNew>
+                                  </SeekPredicates>
+                                </IndexScan>
+                              </RelOp>
+                            </NestedLoops>
+                          </RelOp>
+                          <RelOp NodeId="31" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="78971" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList />
+                            <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                              <DefinedValues />
+                              <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Index="[BuildVersion_PK]" IndexKind="Clustered" />
+                              <SeekPredicates>
+                                <SeekPredicateNew>
+                                  <SeekKeys>
+                                    <Prefix ScanType="EQ">
+                                      <RangeColumns>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Column="Id" />
+                                      </RangeColumns>
+                                      <RangeExpressions>
+                                        <ScalarOperator ScalarString="[OurLabReporting].[dbo].[Schedule].[BuildVersionId]">
+                                          <Identifier>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="BuildVersionId" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </RangeExpressions>
+                                    </Prefix>
+                                  </SeekKeys>
+                                </SeekPredicateNew>
+                              </SeekPredicates>
+                            </IndexScan>
+                          </RelOp>
+                        </NestedLoops>
+                      </RelOp>
+                      <Predicate>
+                        <ScalarOperator ScalarString="CASE WHEN [Expr1061] IS NULL THEN (0) ELSE CASE WHEN [Expr1062] IS NULL THEN (1) ELSE NULL END END">
+                          <IF>
+                            <Condition>
+                              <ScalarOperator>
+                                <Logical Operation="IS NULL">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Expr1061" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Logical>
+                              </ScalarOperator>
+                            </Condition>
+                            <Then>
+                              <ScalarOperator>
+                                <Const ConstValue="(0)" />
+                              </ScalarOperator>
+                            </Then>
+                            <Else>
+                              <ScalarOperator>
+                                <IF>
+                                  <Condition>
+                                    <ScalarOperator>
+                                      <Logical Operation="IS NULL">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="Expr1062" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Logical>
+                                    </ScalarOperator>
+                                  </Condition>
+                                  <Then>
+                                    <ScalarOperator>
+                                      <Const ConstValue="(1)" />
+                                    </ScalarOperator>
+                                  </Then>
+                                  <Else>
+                                    <ScalarOperator>
+                                      <Const ConstValue="NULL" />
+                                    </ScalarOperator>
+                                  </Else>
+                                </IF>
+                              </ScalarOperator>
+                            </Else>
+                          </IF>
+                        </ScalarOperator>
+                      </Predicate>
+                    </Assert>
+                  </RelOp>
+                  <ParameterList>
+                    <ColumnReference Column="@ExecutionRequestedBy" ParameterCompiledValue="N'osgttsa'" />
+                    <ColumnReference Column="@implementationDetails" ParameterCompiledValue="N'&lt;Implementation xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; QuiverVersion=&quot;1.7.1.9&quot; GUID=&quot;e42b41d6-ee86-4c8a-8856-dcd8552fd8db&quot;&gt;&lt;Metadata&gt;&lt;Data name=&quot;SKUL_DATA&quot; isLeaf=&quot;False&quot;&gt;&lt;Data name=&quot;RecoveryOptio'" />
+                    <ColumnReference Column="@isValid" ParameterCompiledValue="(1)" />
+                    <ColumnReference Column="@executionTool" ParameterCompiledValue="NULL" />
+                    <ColumnReference Column="@scheduleName" ParameterCompiledValue="N'Threshold~BITs~QRD8x26_ARMFRE_QPS-PLOC_480x800 (114707)'" />
+                    <ColumnReference Column="@definitionGuid" ParameterCompiledValue="{guid'E42B41D6-EE86-4C8A-8856-DCD8552FD8DB'}" />
+                    <ColumnReference Column="@testBuildId" ParameterCompiledValue="(80025)" />
+                    <ColumnReference Column="@rld" ParameterCompiledValue="'\\osgt3tsvc04\rld\150129\schedule_e42b41d6-ee86-4c8a-8856-dcd8552fd8db'" />
+                    <ColumnReference Column="@endDate" ParameterCompiledValue="'2015-01-29 18:39:56.287'" />
+                    <ColumnReference Column="@startDate" ParameterCompiledValue="'2015-01-29 15:48:40.630'" />
+                    <ColumnReference Column="@owner" ParameterCompiledValue="N'wptset'" />
+                    <ColumnReference Column="@scheduledBy" ParameterCompiledValue="NULL" />
+                  </ParameterList>
+                </QueryPlan>
+              </StmtSimple>
+              <StmtSimple StatementText=" COMMIT TRAN&#xD;&#xA;   " StatementId="8" StatementCompId="9" StatementType="COMMIT TRANSACTION" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+          <Else>
+            <Statements>
+              <StmtSimple StatementText=" END&#xD;&#xA;    ELSE&#xD;&#xA;    BEGIN&#x9;&#x9;&#xD;&#xA;        SET @isNewSchedule = 1&#xD;&#xA;       " StatementId="9" StatementCompId="12" StatementType="ASSIGN" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" DECLARE @NewId INT&#xD;&#xA;        BEGIN TRAN &#xD;&#xA;           " StatementId="10" StatementCompId="13" StatementType="BEGIN TRANSACTION" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" INSERT INTO [dbo].[Schedule]&#xD;&#xA;            (&#xD;&#xA;                [Guid]&#xD;&#xA;               ,[ScheduledBy]&#xD;&#xA;               ,[Owner]&#xD;&#xA;               ,[StartDate]&#xD;&#xA;               ,[EndDate]&#xD;&#xA;               ,[RunLogDirectory]&#xD;&#xA;               ,[StatusId]&#xD;&#xA;               ,[BuildVersionId]&#xD;&#xA;               ,[DefinitionGuid]&#xD;&#xA;               ,[Name]&#xD;&#xA;               ,[ExecutionToolName]&#xD;&#xA;               ,[IsValidSchedule]&#xD;&#xA;               ,[ImplementationDetails]&#xD;&#xA;               ,[ExecutionRequestedBy]&#xD;&#xA;            )&#xD;&#xA;            VALUES&#xD;&#xA;            (&#xD;&#xA;                @scheduleId&#xD;&#xA;               ,@scheduledBy&#xD;&#xA;               ,@owner&#xD;&#xA;               ,@startDate&#xD;&#xA;               ,@endDate&#xD;&#xA;               ,@rld&#xD;&#xA;               ,@statusId&#xD;&#xA;               ,@testBuildId&#xD;&#xA;               ,@definitionGuid&#xD;&#xA;               ,@scheduleName&#xD;&#xA;               ,@executionTool&#xD;&#xA;               ,@isValid&#xD;&#xA;               ,@implementationDetails&#xD;&#xA;               ,@ExecutionRequestedBy&#xD;&#xA;            )&#xD;&#xA;           " StatementId="11" StatementCompId="14" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.0665821" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0xD72D0B05361BB473" QueryPlanHash="0xB4CB7DBFCC895CE4">
+                <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="56" CompileTime="2" CompileCPU="2" CompileMemory="448">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="1" PhysicalOp="Assert" LogicalOp="Assert" EstimateRows="1" EstimateIO="0" EstimateCPU="1.8e-007" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0665821" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList />
+                    <Assert StartupExpression="0">
+                      <RelOp NodeId="2" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0665819" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList>
+                          <ColumnReference Column="Expr1016" />
+                          <ColumnReference Column="Expr1017" />
+                        </OutputList>
+                        <NestedLoops Optimized="0">
+                          <DefinedValues>
+                            <DefinedValue>
+                              <ColumnReference Column="Expr1017" />
+                            </DefinedValue>
+                          </DefinedValues>
+                          <OuterReferences>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="BuildVersionId" />
+                          </OuterReferences>
+                          <ProbeColumn>
+                            <ColumnReference Column="Expr1017" />
+                          </ProbeColumn>
+                          <RelOp NodeId="3" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="12" EstimatedTotalSubtreeCost="0.0632946" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="BuildVersionId" />
+                              <ColumnReference Column="Expr1016" />
+                            </OutputList>
+                            <NestedLoops Optimized="0">
+                              <DefinedValues>
+                                <DefinedValue>
+                                  <ColumnReference Column="Expr1016" />
+                                </DefinedValue>
+                              </DefinedValues>
+                              <OuterReferences>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="StatusId" />
+                              </OuterReferences>
+                              <ProbeColumn>
+                                <ColumnReference Column="Expr1016" />
+                              </ProbeColumn>
+                              <RelOp NodeId="4" PhysicalOp="Clustered Index Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.06" EstimateCPU="6e-006" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0600074" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="BuildVersionId" />
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="StatusId" />
+                                </OutputList>
+                                <Update DMLRequestSort="0">
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Index="[Schedule_PK]" IndexKind="Clustered" />
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Index="[Schedule_IDX_BuildVersion]" IndexKind="NonClustered" />
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Index="[Schedule_IDX_Guid]" IndexKind="NonClustered" />
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Index="[Schedule_IDX_IsValidSchedule]" IndexKind="NonClustered" />
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Index="[Schedule_IDX_LastUpdated]" IndexKind="NonClustered" />
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Index="[Schedule_IDX_StartDate]" IndexKind="NonClustered" />
+                                  <SetPredicate>
+                                    <ScalarOperator ScalarString="[OurLabReporting].[dbo].[Schedule].[Guid] = RaiseIfNullInsert([@scheduleId]),[OurLabReporting].[dbo].[Schedule].[ScheduledBy] = [@scheduledBy],[OurLabReporting].[dbo].[Schedule].[Owner] = RaiseIfNullInsert([@owner]),[OurLabReporting].[dbo].[Schedule].[StartDate] = RaiseIfNullInsert([@startDate]),[OurLabReporting].[dbo].[Schedule].[EndDate] = [@endDate],[OurLabReporting].[dbo].[Schedule].[RunLogDirectory] = RaiseIfNullInsert([@rld]),[OurLabReporting].[dbo].[Schedule].[StatusId] = RaiseIfNullInsert([@statusId]),[OurLabReporting].[dbo].[Schedule].[BuildVersionId] = RaiseIfNullInsert([@testBuildId]),[OurLabReporting].[dbo].[Schedule].[DefinitionGuid] = RaiseIfNullInsert([@definitionGuid]),[OurLabReporting].[dbo].[Schedule].[Name] = [@scheduleName],[OurLabReporting].[dbo].[Schedule].[ExecutionToolName] = [@executionTool],[OurLabReporting].[dbo].[Schedule].[IsValidSchedule] = RaiseIfNullInsert([@isValid]),[OurLabReporting].[dbo].[Schedule].[ImplementationDetails] = [@implementationDetails],[OurLabReporting].[dbo].[Schedule].[ExecutionRequestedBy] = [@ExecutionRequestedBy],[OurLabReporting].[dbo].[Schedule].[Id] = [Expr1003],[OurLabReporting].[dbo].[Schedule].[RecordLastUpdated] = [Expr1004],[OurLabReporting].[dbo].[Schedule].[DbTimeStamp] = [Expr1005],[OurLabReporting].[dbo].[Schedule].[InsertUtcTime] = [Expr1006],[OurLabReporting].[dbo].[Schedule].[Comments] = NULL,[OurLabReporting].[dbo].[Schedule].[CommentAddedBy] = NULL,[OurLabReporting].[dbo].[Schedule].[CommentUpdateTime] = NULL">
+                                      <ScalarExpressionList>
+                                        <ScalarOperator>
+                                          <MultipleAssign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="Guid" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@scheduleId" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="ScheduledBy" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@scheduledBy" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="Owner" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@owner" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="StartDate" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@startDate" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="EndDate" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@endDate" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="RunLogDirectory" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@rld" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="StatusId" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@statusId" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="BuildVersionId" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@testBuildId" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="DefinitionGuid" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@definitionGuid" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="Name" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@scheduleName" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="ExecutionToolName" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@executionTool" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="IsValidSchedule" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@isValid" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="ImplementationDetails" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@implementationDetails" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="ExecutionRequestedBy" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@ExecutionRequestedBy" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="Id" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="Expr1003" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="RecordLastUpdated" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="Expr1004" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="DbTimeStamp" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="Expr1005" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="InsertUtcTime" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="Expr1006" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="Comments" />
+                                              <ScalarOperator>
+                                                <Const ConstValue="NULL" />
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="CommentAddedBy" />
+                                              <ScalarOperator>
+                                                <Const ConstValue="NULL" />
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="CommentUpdateTime" />
+                                              <ScalarOperator>
+                                                <Const ConstValue="NULL" />
+                                              </ScalarOperator>
+                                            </Assign>
+                                          </MultipleAssign>
+                                        </ScalarOperator>
+                                      </ScalarExpressionList>
+                                    </ScalarOperator>
+                                  </SetPredicate>
+                                  <RelOp NodeId="5" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="34" EstimatedTotalSubtreeCost="1.357e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                    <OutputList>
+                                      <ColumnReference Column="Expr1003" />
+                                      <ColumnReference Column="Expr1004" />
+                                      <ColumnReference Column="Expr1005" />
+                                      <ColumnReference Column="Expr1006" />
+                                    </OutputList>
+                                    <ComputeScalar>
+                                      <DefinedValues>
+                                        <DefinedValue>
+                                          <ColumnReference Column="Expr1004" />
+                                          <ScalarOperator ScalarString="getdate()">
+                                            <Identifier>
+                                              <ColumnReference Column="ConstExpr1013">
+                                                <ScalarOperator>
+                                                  <Intrinsic FunctionName="getdate" />
+                                                </ScalarOperator>
+                                              </ColumnReference>
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </DefinedValue>
+                                        <DefinedValue>
+                                          <ColumnReference Column="Expr1005" />
+                                          <ScalarOperator ScalarString="CONVERT_IMPLICIT(datetime2(7),getutcdate(),0)">
+                                            <Identifier>
+                                              <ColumnReference Column="ConstExpr1014">
+                                                <ScalarOperator>
+                                                  <Convert DataType="datetime2" Style="0" Implicit="1">
+                                                    <ScalarOperator>
+                                                      <Intrinsic FunctionName="getutcdate" />
+                                                    </ScalarOperator>
+                                                  </Convert>
+                                                </ScalarOperator>
+                                              </ColumnReference>
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </DefinedValue>
+                                        <DefinedValue>
+                                          <ColumnReference Column="Expr1006" />
+                                          <ScalarOperator ScalarString="CONVERT_IMPLICIT(datetime2(3),getutcdate(),0)">
+                                            <Identifier>
+                                              <ColumnReference Column="ConstExpr1015">
+                                                <ScalarOperator>
+                                                  <Convert DataType="datetime2" Style="0" Implicit="1">
+                                                    <ScalarOperator>
+                                                      <Intrinsic FunctionName="getutcdate" />
+                                                    </ScalarOperator>
+                                                  </Convert>
+                                                </ScalarOperator>
+                                              </ColumnReference>
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </DefinedValue>
+                                      </DefinedValues>
+                                      <RelOp NodeId="6" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="1.257e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                        <OutputList>
+                                          <ColumnReference Column="Expr1003" />
+                                        </OutputList>
+                                        <ComputeScalar ComputeSequence="1">
+                                          <DefinedValues>
+                                            <DefinedValue>
+                                              <ColumnReference Column="Expr1003" />
+                                              <ScalarOperator ScalarString="getidentity((690101499),(6),NULL)">
+                                                <Intrinsic FunctionName="getidentity">
+                                                  <ScalarOperator>
+                                                    <Const ConstValue="(690101499)" />
+                                                  </ScalarOperator>
+                                                  <ScalarOperator>
+                                                    <Const ConstValue="(6)" />
+                                                  </ScalarOperator>
+                                                  <ScalarOperator>
+                                                    <Const ConstValue="NULL" />
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </DefinedValue>
+                                          </DefinedValues>
+                                          <RelOp NodeId="7" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                            <OutputList />
+                                            <ConstantScan />
+                                          </RelOp>
+                                        </ComputeScalar>
+                                      </RelOp>
+                                    </ComputeScalar>
+                                  </RelOp>
+                                </Update>
+                              </RelOp>
+                              <RelOp NodeId="18" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="96" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList />
+                                <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                  <DefinedValues />
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Index="[Status_PK]" IndexKind="Clustered" />
+                                  <SeekPredicates>
+                                    <SeekPredicateNew>
+                                      <SeekKeys>
+                                        <Prefix ScanType="EQ">
+                                          <RangeColumns>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Column="Id" />
+                                          </RangeColumns>
+                                          <RangeExpressions>
+                                            <ScalarOperator ScalarString="[OurLabReporting].[dbo].[Schedule].[StatusId]">
+                                              <Identifier>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="StatusId" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </RangeExpressions>
+                                        </Prefix>
+                                      </SeekKeys>
+                                    </SeekPredicateNew>
+                                  </SeekPredicates>
+                                </IndexScan>
+                              </RelOp>
+                            </NestedLoops>
+                          </RelOp>
+                          <RelOp NodeId="19" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="78971" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList />
+                            <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                              <DefinedValues />
+                              <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Index="[BuildVersion_PK]" IndexKind="Clustered" />
+                              <SeekPredicates>
+                                <SeekPredicateNew>
+                                  <SeekKeys>
+                                    <Prefix ScanType="EQ">
+                                      <RangeColumns>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Column="Id" />
+                                      </RangeColumns>
+                                      <RangeExpressions>
+                                        <ScalarOperator ScalarString="[OurLabReporting].[dbo].[Schedule].[BuildVersionId]">
+                                          <Identifier>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="BuildVersionId" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </RangeExpressions>
+                                    </Prefix>
+                                  </SeekKeys>
+                                </SeekPredicateNew>
+                              </SeekPredicates>
+                            </IndexScan>
+                          </RelOp>
+                        </NestedLoops>
+                      </RelOp>
+                      <Predicate>
+                        <ScalarOperator ScalarString="CASE WHEN [Expr1016] IS NULL THEN (0) ELSE CASE WHEN [Expr1017] IS NULL THEN (1) ELSE NULL END END">
+                          <IF>
+                            <Condition>
+                              <ScalarOperator>
+                                <Logical Operation="IS NULL">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Expr1016" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Logical>
+                              </ScalarOperator>
+                            </Condition>
+                            <Then>
+                              <ScalarOperator>
+                                <Const ConstValue="(0)" />
+                              </ScalarOperator>
+                            </Then>
+                            <Else>
+                              <ScalarOperator>
+                                <IF>
+                                  <Condition>
+                                    <ScalarOperator>
+                                      <Logical Operation="IS NULL">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="Expr1017" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Logical>
+                                    </ScalarOperator>
+                                  </Condition>
+                                  <Then>
+                                    <ScalarOperator>
+                                      <Const ConstValue="(1)" />
+                                    </ScalarOperator>
+                                  </Then>
+                                  <Else>
+                                    <ScalarOperator>
+                                      <Const ConstValue="NULL" />
+                                    </ScalarOperator>
+                                  </Else>
+                                </IF>
+                              </ScalarOperator>
+                            </Else>
+                          </IF>
+                        </ScalarOperator>
+                      </Predicate>
+                    </Assert>
+                  </RelOp>
+                  <ParameterList>
+                    <ColumnReference Column="@ExecutionRequestedBy" ParameterCompiledValue="N'osgttsa'" />
+                    <ColumnReference Column="@implementationDetails" ParameterCompiledValue="N'&lt;Implementation xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; QuiverVersion=&quot;1.7.1.9&quot; GUID=&quot;e42b41d6-ee86-4c8a-8856-dcd8552fd8db&quot;&gt;&lt;Metadata&gt;&lt;Data name=&quot;SKUL_DATA&quot; isLeaf=&quot;False&quot;&gt;&lt;Data name=&quot;RecoveryOptio'" />
+                    <ColumnReference Column="@isValid" ParameterCompiledValue="(1)" />
+                    <ColumnReference Column="@executionTool" ParameterCompiledValue="NULL" />
+                    <ColumnReference Column="@scheduleName" ParameterCompiledValue="N'Threshold~BITs~QRD8x26_ARMFRE_QPS-PLOC_480x800 (114707)'" />
+                    <ColumnReference Column="@definitionGuid" ParameterCompiledValue="{guid'E42B41D6-EE86-4C8A-8856-DCD8552FD8DB'}" />
+                    <ColumnReference Column="@testBuildId" ParameterCompiledValue="(80025)" />
+                    <ColumnReference Column="@rld" ParameterCompiledValue="'\\osgt3tsvc04\rld\150129\schedule_e42b41d6-ee86-4c8a-8856-dcd8552fd8db'" />
+                    <ColumnReference Column="@endDate" ParameterCompiledValue="'2015-01-29 18:39:56.287'" />
+                    <ColumnReference Column="@startDate" ParameterCompiledValue="'2015-01-29 15:48:40.630'" />
+                    <ColumnReference Column="@owner" ParameterCompiledValue="N'wptset'" />
+                    <ColumnReference Column="@scheduledBy" ParameterCompiledValue="NULL" />
+                    <ColumnReference Column="@scheduleId" ParameterCompiledValue="{guid'E42B41D6-EE86-4C8A-8856-DCD8552FD8DB'}" />
+                  </ParameterList>
+                </QueryPlan>
+              </StmtSimple>
+              <StmtSimple StatementText=" SET @NewId = SCOPE_IDENTITY()&#xD;&#xA;&#xD;&#xA;&#x9;&#x9;" StatementId="12" StatementCompId="15" StatementType="ASSIGN" RetrievedFromCache="true" />
+              <StmtCond StatementText="&#x9;IF (@parentGuid IS NOT NULL)&#xD;&#xA;&#x9;&#x9;" StatementId="13" StatementCompId="16" StatementType="COND" RetrievedFromCache="true">
+                <Condition />
+                <Then>
+                  <Statements>
+                    <StmtSimple StatementText="&#x9;BEGIN&#x9;&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;--check if parent schedule exists&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;DECLARE @parentId INT&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;SELECT @parentId = Id&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;FROM DBO.Schedule&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;WHERE Guid = @parentGuid&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;-- Add Mapping if parentId exists&#xD;&#xA;&#x9;&#x9;&#x9;" StatementId="14" StatementCompId="17" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032831" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x4FDB6DBE7A55F9AC" QueryPlanHash="0x8C9B5F3B49E40EF9">
+                      <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                      <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="0" CompileCPU="0" CompileMemory="288">
+                        <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                        <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                        <RelOp NodeId="0" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.44031e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="Id" />
+                          </OutputList>
+                          <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="Id" />
+                              </DefinedValue>
+                            </DefinedValues>
+                            <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Index="[Schedule_IDX_Guid]" IndexKind="NonClustered" />
+                            <SeekPredicates>
+                              <SeekPredicateNew>
+                                <SeekKeys>
+                                  <Prefix ScanType="EQ">
+                                    <RangeColumns>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="Guid" />
+                                    </RangeColumns>
+                                    <RangeExpressions>
+                                      <ScalarOperator ScalarString="[@parentGuid]">
+                                        <Identifier>
+                                          <ColumnReference Column="@parentGuid" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </RangeExpressions>
+                                  </Prefix>
+                                </SeekKeys>
+                              </SeekPredicateNew>
+                            </SeekPredicates>
+                          </IndexScan>
+                        </RelOp>
+                        <ParameterList>
+                          <ColumnReference Column="@parentGuid" ParameterCompiledValue="NULL" />
+                        </ParameterList>
+                      </QueryPlan>
+                    </StmtSimple>
+                    <StmtCond StatementText="&#x9;IF (@parentId IS NOT NULL)&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;&#x9;" StatementId="15" StatementCompId="18" StatementType="COND" RetrievedFromCache="true">
+                      <Condition />
+                      <Then>
+                        <Statements>
+                          <StmtSimple StatementText="&#x9;BEGIN&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;INSERT INTO [dbo].[ScheduleMapping]&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;(&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;[ParentScheduleId],&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;[ChildScheduleId]&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;)&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;VALUES&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;(&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;@parentId,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;@NewId&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;)&#xD;&#xA;&#x9;&#x9;&#x9;" StatementId="16" StatementCompId="19" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.0365789" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x71F2CD9B49F0EC2" QueryPlanHash="0xC38B54626A944E90">
+                            <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                            <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="24" CompileTime="1" CompileCPU="1" CompileMemory="352">
+                              <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                              <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                              <RelOp NodeId="1" PhysicalOp="Assert" LogicalOp="Assert" EstimateRows="1" EstimateIO="0" EstimateCPU="1.8e-007" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0365789" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList />
+                                <Assert StartupExpression="0">
+                                  <RelOp NodeId="2" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0365787" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                    <OutputList>
+                                      <ColumnReference Column="Expr1011" />
+                                      <ColumnReference Column="Expr1012" />
+                                    </OutputList>
+                                    <NestedLoops Optimized="0">
+                                      <DefinedValues>
+                                        <DefinedValue>
+                                          <ColumnReference Column="Expr1012" />
+                                        </DefinedValue>
+                                      </DefinedValues>
+                                      <OuterReferences>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ScheduleMapping]" Column="ChildScheduleId" />
+                                      </OuterReferences>
+                                      <ProbeColumn>
+                                        <ColumnReference Column="Expr1012" />
+                                      </ProbeColumn>
+                                      <RelOp NodeId="3" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="12" EstimatedTotalSubtreeCost="0.0332914" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                        <OutputList>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ScheduleMapping]" Column="ChildScheduleId" />
+                                          <ColumnReference Column="Expr1011" />
+                                        </OutputList>
+                                        <NestedLoops Optimized="0">
+                                          <DefinedValues>
+                                            <DefinedValue>
+                                              <ColumnReference Column="Expr1011" />
+                                            </DefinedValue>
+                                          </DefinedValues>
+                                          <OuterReferences>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ScheduleMapping]" Column="ParentScheduleId" />
+                                          </OuterReferences>
+                                          <ProbeColumn>
+                                            <ColumnReference Column="Expr1011" />
+                                          </ProbeColumn>
+                                          <RelOp NodeId="4" PhysicalOp="Clustered Index Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.03" EstimateCPU="3e-006" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0300042" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                            <OutputList>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ScheduleMapping]" Column="ParentScheduleId" />
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ScheduleMapping]" Column="ChildScheduleId" />
+                                            </OutputList>
+                                            <ScalarInsert DMLRequestSort="0">
+                                              <DefinedValues>
+                                                <DefinedValue>
+                                                  <ColumnReference Column="Expr1003" />
+                                                  <ScalarOperator ScalarString="getdate()">
+                                                    <Identifier>
+                                                      <ColumnReference Column="ConstExpr1010">
+                                                        <ScalarOperator>
+                                                          <Intrinsic FunctionName="getdate" />
+                                                        </ScalarOperator>
+                                                      </ColumnReference>
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </DefinedValue>
+                                              </DefinedValues>
+                                              <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[ScheduleMapping]" Index="[ScheduleMapping_PK]" IndexKind="Clustered" />
+                                              <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[ScheduleMapping]" Index="[IX_ScheduleMapping_LastUpdated]" IndexKind="NonClustered" />
+                                              <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[ScheduleMapping]" Index="[IX_ScheduleMapping_ParentScheduleId]" IndexKind="NonClustered" />
+                                              <SetPredicate>
+                                                <ScalarOperator ScalarString="[OurLabReporting].[dbo].[ScheduleMapping].[ParentScheduleId] = RaiseIfNullInsert([@parentId]),[OurLabReporting].[dbo].[ScheduleMapping].[ChildScheduleId] = RaiseIfNullInsert([@NewId]),[OurLabReporting].[dbo].[ScheduleMapping].[RecordLastUpdated] = [Expr1003]">
+                                                  <ScalarExpressionList>
+                                                    <ScalarOperator>
+                                                      <MultipleAssign>
+                                                        <Assign>
+                                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ScheduleMapping]" Column="ParentScheduleId" />
+                                                          <ScalarOperator>
+                                                            <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Column="@parentId" />
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                            </Intrinsic>
+                                                          </ScalarOperator>
+                                                        </Assign>
+                                                        <Assign>
+                                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ScheduleMapping]" Column="ChildScheduleId" />
+                                                          <ScalarOperator>
+                                                            <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Column="@NewId" />
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                            </Intrinsic>
+                                                          </ScalarOperator>
+                                                        </Assign>
+                                                        <Assign>
+                                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ScheduleMapping]" Column="RecordLastUpdated" />
+                                                          <ScalarOperator>
+                                                            <Identifier>
+                                                              <ColumnReference Column="Expr1003" />
+                                                            </Identifier>
+                                                          </ScalarOperator>
+                                                        </Assign>
+                                                      </MultipleAssign>
+                                                    </ScalarOperator>
+                                                  </ScalarExpressionList>
+                                                </ScalarOperator>
+                                              </SetPredicate>
+                                            </ScalarInsert>
+                                          </RelOp>
+                                          <RelOp NodeId="5" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.44031e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                            <OutputList />
+                                            <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                              <DefinedValues />
+                                              <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Index="[Schedule_PK]" IndexKind="Clustered" />
+                                              <SeekPredicates>
+                                                <SeekPredicateNew>
+                                                  <SeekKeys>
+                                                    <Prefix ScanType="EQ">
+                                                      <RangeColumns>
+                                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="Id" />
+                                                      </RangeColumns>
+                                                      <RangeExpressions>
+                                                        <ScalarOperator ScalarString="[OurLabReporting].[dbo].[ScheduleMapping].[ParentScheduleId]">
+                                                          <Identifier>
+                                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ScheduleMapping]" Column="ParentScheduleId" />
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                      </RangeExpressions>
+                                                    </Prefix>
+                                                  </SeekKeys>
+                                                </SeekPredicateNew>
+                                              </SeekPredicates>
+                                            </IndexScan>
+                                          </RelOp>
+                                        </NestedLoops>
+                                      </RelOp>
+                                      <RelOp NodeId="6" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.44031e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                        <OutputList />
+                                        <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                          <DefinedValues />
+                                          <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Index="[Schedule_PK]" IndexKind="Clustered" />
+                                          <SeekPredicates>
+                                            <SeekPredicateNew>
+                                              <SeekKeys>
+                                                <Prefix ScanType="EQ">
+                                                  <RangeColumns>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Column="Id" />
+                                                  </RangeColumns>
+                                                  <RangeExpressions>
+                                                    <ScalarOperator ScalarString="[OurLabReporting].[dbo].[ScheduleMapping].[ChildScheduleId]">
+                                                      <Identifier>
+                                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ScheduleMapping]" Column="ChildScheduleId" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                  </RangeExpressions>
+                                                </Prefix>
+                                              </SeekKeys>
+                                            </SeekPredicateNew>
+                                          </SeekPredicates>
+                                        </IndexScan>
+                                      </RelOp>
+                                    </NestedLoops>
+                                  </RelOp>
+                                  <Predicate>
+                                    <ScalarOperator ScalarString="CASE WHEN [Expr1011] IS NULL THEN (0) ELSE CASE WHEN [Expr1012] IS NULL THEN (1) ELSE NULL END END">
+                                      <IF>
+                                        <Condition>
+                                          <ScalarOperator>
+                                            <Logical Operation="IS NULL">
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="Expr1011" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Logical>
+                                          </ScalarOperator>
+                                        </Condition>
+                                        <Then>
+                                          <ScalarOperator>
+                                            <Const ConstValue="(0)" />
+                                          </ScalarOperator>
+                                        </Then>
+                                        <Else>
+                                          <ScalarOperator>
+                                            <IF>
+                                              <Condition>
+                                                <ScalarOperator>
+                                                  <Logical Operation="IS NULL">
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Column="Expr1012" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                  </Logical>
+                                                </ScalarOperator>
+                                              </Condition>
+                                              <Then>
+                                                <ScalarOperator>
+                                                  <Const ConstValue="(1)" />
+                                                </ScalarOperator>
+                                              </Then>
+                                              <Else>
+                                                <ScalarOperator>
+                                                  <Const ConstValue="NULL" />
+                                                </ScalarOperator>
+                                              </Else>
+                                            </IF>
+                                          </ScalarOperator>
+                                        </Else>
+                                      </IF>
+                                    </ScalarOperator>
+                                  </Predicate>
+                                </Assert>
+                              </RelOp>
+                            </QueryPlan>
+                          </StmtSimple>
+                        </Statements>
+                      </Then>
+                      <Else>
+                        <Statements>
+                          <StmtSimple StatementText="&#x9;END&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;ELSE&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;DECLARE @ErrorMsg varchar(1024)&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;SET @ErrorMsg = 'Unable to find Schedule for parentGuid ' + CAST(@parentGuid as varchar(255))&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;" StatementId="17" StatementCompId="22" StatementType="ASSIGN" RetrievedFromCache="true" />
+                          <StmtSimple StatementText="&#x9;RAISERROR(@ErrorMsg, 11 ,1)&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;&#x9;" StatementId="18" StatementCompId="23" StatementType="RAISERROR" RetrievedFromCache="true" />
+                        </Statements>
+                      </Else>
+                    </StmtCond>
+                  </Statements>
+                </Then>
+              </StmtCond>
+              <StmtSimple StatementText="&#x9;END&#x9;&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;&#x9;END&#xD;&#xA;        COMMIT TRAN&#xD;&#xA;   " StatementId="19" StatementCompId="26" StatementType="COMMIT TRANSACTION" RetrievedFromCache="true" />
+            </Statements>
+          </Else>
+        </StmtCond>
+        <StmtSimple StatementText=" END&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;    DECLARE @objectName varchar(128) = (SELECT OBJECT_NAME(@@PROCID))&#xD;&#xA;   " StatementId="20" StatementCompId="28" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="1.257e-006" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x830C952D7490168E" QueryPlanHash="0x3B1EAEC0618BFE3F" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="0" CompileCPU="0" CompileMemory="288">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="75" EstimatedTotalSubtreeCost="1.257e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Column="Expr1001" />
+              </OutputList>
+              <ComputeScalar>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1001" />
+                    <ScalarOperator ScalarString="CONVERT_IMPLICIT(varchar(128),[Expr1000],0)">
+                      <Convert DataType="varchar" Length="128" Style="0" Implicit="1">
+                        <ScalarOperator>
+                          <Identifier>
+                            <ColumnReference Column="Expr1000" />
+                          </Identifier>
+                        </ScalarOperator>
+                      </Convert>
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp NodeId="1" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="139" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Expr1000" />
+                  </OutputList>
+                  <ConstantScan>
+                    <Values>
+                      <Row>
+                        <ScalarOperator ScalarString="object_name(@@procid)">
+                          <Intrinsic FunctionName="object_name">
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="@@procid" />
+                            </ScalarOperator>
+                            <ScalarOperator>
+                              <Const ConstValue="" />
+                            </ScalarOperator>
+                          </Intrinsic>
+                        </ScalarOperator>
+                      </Row>
+                    </Values>
+                  </ConstantScan>
+                </RelOp>
+              </ComputeScalar>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText=" EXEC [dbo].[spEndStopwatch] @objectName, @stopwatchBeginTime&#xD;" StatementId="21" StatementCompId="29" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

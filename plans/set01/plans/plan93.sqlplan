@@ -1,0 +1,584 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="CREATE PROCEDURE [dbo].[Web_UpdateEndDateForTestpass]&#xD;&#xA;@TestpassId INT&#xD;&#xA;AS&#xD;&#xA;BEGIN&#xD;&#xA;&#x9;DECLARE @EndDate datetime&#xD;&#xA;&#x9;DECLARE @InProgressMixStatusList TABLE(StatusId int PRIMARY KEY)&#xD;&#xA;&#x9;DECLARE @IsInProgress BIT = 0&#xD;&#xA;&#xD;&#xA;" StatementId="1" StatementCompId="61" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;SET @EndDate = NULL&#xD;&#xA;&#x9;&#xD;&#xA;&#x9;-- Get a list of Mix status that indicate whether a mix is still in progress.&#xD;&#xA;" StatementId="2" StatementCompId="62" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;INSERT INTO @InProgressMixStatusList (StatusId)&#xD;&#xA;&#x9;&#x9;SELECT DISTINCT Id&#xD;&#xA;&#x9;&#x9;FROM dbo.[Status] &#xD;&#xA;&#x9;&#x9;WHERE Type='Mix' &#xD;&#xA;&#x9;&#x9;&#x9;AND [Status] IN ('InProgress', 'WaitingForBuild', 'ProcessingNewBuild')&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;" StatementId="3" StatementCompId="63" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.0132842" StatementEstRows="1.03125" StatementOptmLevel="FULL" QueryHash="0xF220376B88BD4113" QueryPlanHash="0x9654462FBDA2781" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="1" CompileCPU="1" CompileMemory="288">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Clustered Index Insert" LogicalOp="Insert" EstimateRows="1.03125" EstimateIO="0.01" EstimateCPU="1.03125e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0132842" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <Update DMLRequestSort="0">
+                <Object Table="[@InProgressMixStatusList]" Index="[PK__#B2B8877__C8EE2063E480EDCC]" />
+                <SetPredicate>
+                  <ScalarOperator ScalarString="[StatusId] = [OurLabReporting].[dbo].[Status].[Id]">
+                    <ScalarExpressionList>
+                      <ScalarOperator>
+                        <MultipleAssign>
+                          <Assign>
+                            <ColumnReference Column="StatusId" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Column="Id" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                        </MultipleAssign>
+                      </ScalarOperator>
+                    </ScalarExpressionList>
+                  </ScalarOperator>
+                </SetPredicate>
+                <RelOp NodeId="1" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1.03125" EstimateIO="0.003125" EstimateCPU="0.000158134" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328313" TableCardinality="96" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Column="Id" />
+                  </OutputList>
+                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Column="Id" />
+                      </DefinedValue>
+                    </DefinedValues>
+                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Index="[Status_AK]" IndexKind="NonClustered" />
+                    <SeekPredicates>
+                      <SeekPredicateNew>
+                        <SeekKeys>
+                          <Prefix ScanType="EQ">
+                            <RangeColumns>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Column="Type" />
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Column="Status" />
+                            </RangeColumns>
+                            <RangeExpressions>
+                              <ScalarOperator ScalarString="'Mix'">
+                                <Const ConstValue="'Mix'" />
+                              </ScalarOperator>
+                              <ScalarOperator ScalarString="'InProgress'">
+                                <Const ConstValue="'InProgress'" />
+                              </ScalarOperator>
+                            </RangeExpressions>
+                          </Prefix>
+                        </SeekKeys>
+                      </SeekPredicateNew>
+                      <SeekPredicateNew>
+                        <SeekKeys>
+                          <Prefix ScanType="EQ">
+                            <RangeColumns>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Column="Type" />
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Column="Status" />
+                            </RangeColumns>
+                            <RangeExpressions>
+                              <ScalarOperator ScalarString="'Mix'">
+                                <Const ConstValue="'Mix'" />
+                              </ScalarOperator>
+                              <ScalarOperator ScalarString="'ProcessingNewBuild'">
+                                <Const ConstValue="'ProcessingNewBuild'" />
+                              </ScalarOperator>
+                            </RangeExpressions>
+                          </Prefix>
+                        </SeekKeys>
+                      </SeekPredicateNew>
+                      <SeekPredicateNew>
+                        <SeekKeys>
+                          <Prefix ScanType="EQ">
+                            <RangeColumns>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Column="Type" />
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Column="Status" />
+                            </RangeColumns>
+                            <RangeExpressions>
+                              <ScalarOperator ScalarString="'Mix'">
+                                <Const ConstValue="'Mix'" />
+                              </ScalarOperator>
+                              <ScalarOperator ScalarString="'WaitingForBuild'">
+                                <Const ConstValue="'WaitingForBuild'" />
+                              </ScalarOperator>
+                            </RangeExpressions>
+                          </Prefix>
+                        </SeekKeys>
+                      </SeekPredicateNew>
+                    </SeekPredicates>
+                  </IndexScan>
+                </RelOp>
+              </Update>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtCond StatementText="&#x9;IF EXISTS(&#xD;&#xA;&#x9;&#x9;&#x9;SELECT TOP 1 1&#xD;&#xA;&#x9;&#x9;&#x9;FROM dbo.Mix as mix WITH (NOLOCK)&#xD;&#xA;&#x9;&#x9;&#x9;INNER JOIN dbo.TestpassPackageMapping AS tpmap WITH (NOLOCK) &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;ON tpMap.MixId = mix.Id&#xD;&#xA;&#x9;&#x9;&#x9;INNER JOIN @InProgressMixStatusList AS progressList &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;ON progressList.StatusId = mix.StatusId&#xD;&#xA;&#x9;&#x9;&#x9;WHERE tpMap.TestpassId = @TestpassId&#x9;&#x9;&#x9; &#xD;&#xA;&#x9;&#x9;)&#xD;&#xA;" StatementId="4" StatementCompId="64" StatementType="COND WITH QUERY" RetrievedFromCache="true" StatementSubTreeCost="0.0102333" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x23F740DDBE982027" QueryPlanHash="0x496C540C4F0FFD24" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <Condition>
+            <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="32" CompileTime="8" CompileCPU="8" CompileMemory="648">
+              <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+              <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+              <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0102333" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                <OutputList>
+                  <ColumnReference Column="Expr1007" />
+                </OutputList>
+                <ComputeScalar>
+                  <DefinedValues>
+                    <DefinedValue>
+                      <ColumnReference Column="Expr1007" />
+                      <ScalarOperator ScalarString="CASE WHEN [Expr1008] THEN (1) ELSE (0) END">
+                        <IF>
+                          <Condition>
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1008" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Condition>
+                          <Then>
+                            <ScalarOperator>
+                              <Const ConstValue="(1)" />
+                            </ScalarOperator>
+                          </Then>
+                          <Else>
+                            <ScalarOperator>
+                              <Const ConstValue="(0)" />
+                            </ScalarOperator>
+                          </Else>
+                        </IF>
+                      </ScalarOperator>
+                    </DefinedValue>
+                  </DefinedValues>
+                  <RelOp NodeId="1" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0102332" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList>
+                      <ColumnReference Column="Expr1008" />
+                    </OutputList>
+                    <NestedLoops Optimized="0">
+                      <DefinedValues>
+                        <DefinedValue>
+                          <ColumnReference Column="Expr1008" />
+                        </DefinedValue>
+                      </DefinedValues>
+                      <ProbeColumn>
+                        <ColumnReference Column="Expr1008" />
+                      </ProbeColumn>
+                      <RelOp NodeId="2" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList />
+                        <ConstantScan />
+                      </RelOp>
+                      <RelOp NodeId="3" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="5.38779e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0102278" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList />
+                        <NestedLoops Optimized="0">
+                          <Predicate>
+                            <ScalarOperator ScalarString="@InProgressMixStatusList.[StatusId] as [progressList].[StatusId]=[OurLabReporting].[dbo].[Mix].[StatusId] as [mix].[StatusId]">
+                              <Compare CompareOp="EQ">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Table="@InProgressMixStatusList" Alias="[progressList]" Column="StatusId" />
+                                  </Identifier>
+                                </ScalarOperator>
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Alias="[mix]" Column="StatusId" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Compare>
+                            </ScalarOperator>
+                          </Predicate>
+                          <RelOp NodeId="4" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1.23929" EstimateIO="0" EstimateCPU="5.38779e-006" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00692014" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Alias="[mix]" Column="StatusId" />
+                            </OutputList>
+                            <NestedLoops Optimized="0">
+                              <OuterReferences>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassPackageMapping]" Alias="[tpmap]" Column="MixId" />
+                              </OuterReferences>
+                              <RelOp NodeId="5" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1.23929" EstimateIO="0.003125" EstimateCPU="0.000158418" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328336" TableCardinality="1.48174e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassPackageMapping]" Alias="[tpmap]" Column="MixId" />
+                                </OutputList>
+                                <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                  <DefinedValues>
+                                    <DefinedValue>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassPackageMapping]" Alias="[tpmap]" Column="MixId" />
+                                    </DefinedValue>
+                                  </DefinedValues>
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassPackageMapping]" Index="[TestpassPackageMapping_IDX_TestpassId]" Alias="[tpmap]" IndexKind="NonClustered" />
+                                  <SeekPredicates>
+                                    <SeekPredicateNew>
+                                      <SeekKeys>
+                                        <Prefix ScanType="EQ">
+                                          <RangeColumns>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassPackageMapping]" Alias="[tpmap]" Column="TestpassId" />
+                                          </RangeColumns>
+                                          <RangeExpressions>
+                                            <ScalarOperator ScalarString="[@TestpassId]">
+                                              <Identifier>
+                                                <ColumnReference Column="@TestpassId" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </RangeExpressions>
+                                        </Prefix>
+                                      </SeekKeys>
+                                    </SeekPredicateNew>
+                                  </SeekPredicates>
+                                </IndexScan>
+                              </RelOp>
+                              <RelOp NodeId="6" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00364556" TableCardinality="1.48176e+006" Parallel="0" EstimateRebinds="0.288946" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Alias="[mix]" Column="StatusId" />
+                                </OutputList>
+                                <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                  <DefinedValues>
+                                    <DefinedValue>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Alias="[mix]" Column="StatusId" />
+                                    </DefinedValue>
+                                  </DefinedValues>
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Index="[Mix_IDX_Id]" Alias="[mix]" IndexKind="NonClustered" />
+                                  <SeekPredicates>
+                                    <SeekPredicateNew>
+                                      <SeekKeys>
+                                        <Prefix ScanType="EQ">
+                                          <RangeColumns>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Alias="[mix]" Column="Id" />
+                                          </RangeColumns>
+                                          <RangeExpressions>
+                                            <ScalarOperator ScalarString="[OurLabReporting].[dbo].[TestpassPackageMapping].[MixId] as [tpmap].[MixId]">
+                                              <Identifier>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassPackageMapping]" Alias="[tpmap]" Column="MixId" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </RangeExpressions>
+                                        </Prefix>
+                                      </SeekKeys>
+                                    </SeekPredicateNew>
+                                  </SeekPredicates>
+                                </IndexScan>
+                              </RelOp>
+                            </NestedLoops>
+                          </RelOp>
+                          <RelOp NodeId="7" PhysicalOp="Clustered Index Scan" LogicalOp="Clustered Index Scan" EstimateRows="1" EstimateIO="0.0032035" EstimateCPU="7.96e-005" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0033061" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0.288946" EstimatedExecutionMode="Row">
+                            <OutputList>
+                              <ColumnReference Table="@InProgressMixStatusList" Alias="[progressList]" Column="StatusId" />
+                            </OutputList>
+                            <IndexScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                              <DefinedValues>
+                                <DefinedValue>
+                                  <ColumnReference Table="@InProgressMixStatusList" Alias="[progressList]" Column="StatusId" />
+                                </DefinedValue>
+                              </DefinedValues>
+                              <Object Table="[@InProgressMixStatusList]" Index="[PK__#B2B8877__C8EE2063E480EDCC]" Alias="[progressList]" />
+                            </IndexScan>
+                          </RelOp>
+                        </NestedLoops>
+                      </RelOp>
+                    </NestedLoops>
+                  </RelOp>
+                </ComputeScalar>
+              </RelOp>
+              <ParameterList>
+                <ColumnReference Column="@TestpassId" ParameterCompiledValue="(1418631)" />
+              </ParameterList>
+            </QueryPlan>
+          </Condition>
+          <Then>
+            <Statements>
+              <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;SET @IsInProgress = 1&#xD;&#xA;" StatementId="5" StatementCompId="65" StatementType="ASSIGN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtCond StatementText="&#x9;END&#xD;&#xA;&#xD;&#xA;&#x9;IF (@IsInProgress = 0)&#xD;&#xA;" StatementId="6" StatementCompId="67" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;SELECT @EndDate = MAX(mix.EndDate)&#xD;&#xA;&#x9;&#x9;FROM dbo.Mix as mix WITH (NOLOCK)&#xD;&#xA;&#x9;&#x9;INNER JOIN dbo.TestpassPackageMapping AS tpmap WITH (NOLOCK) &#xD;&#xA;&#x9;&#x9;&#x9;ON tpMap.MixId = mix.Id&#xD;&#xA;&#x9;&#x9;WHERE tpMap.TestpassId = @TestpassId&#xD;&#xA;" StatementId="7" StatementCompId="68" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.00693563" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x516EDAD2BD021088" QueryPlanHash="0x2A4F0407AD876951" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+                <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="24" CompileTime="3" CompileCPU="3" CompileMemory="400">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="0" PhysicalOp="Stream Aggregate" LogicalOp="Aggregate" EstimateRows="1" EstimateIO="0" EstimateCPU="1.27337e-006" AvgRowSize="15" EstimatedTotalSubtreeCost="0.00693563" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList>
+                      <ColumnReference Column="Expr1004" />
+                    </OutputList>
+                    <StreamAggregate>
+                      <DefinedValues>
+                        <DefinedValue>
+                          <ColumnReference Column="Expr1004" />
+                          <ScalarOperator ScalarString="MAX([OurLabReporting].[dbo].[Mix].[EndDate] as [mix].[EndDate])">
+                            <Aggregate Distinct="0" AggType="MAX">
+                              <ScalarOperator>
+                                <Identifier>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Alias="[mix]" Column="EndDate" />
+                                </Identifier>
+                              </ScalarOperator>
+                            </Aggregate>
+                          </ScalarOperator>
+                        </DefinedValue>
+                      </DefinedValues>
+                      <RelOp NodeId="1" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1.28895" EstimateIO="0" EstimateCPU="5.38779e-006" AvgRowSize="15" EstimatedTotalSubtreeCost="0.00693436" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList>
+                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Alias="[mix]" Column="EndDate" />
+                        </OutputList>
+                        <NestedLoops Optimized="0">
+                          <OuterReferences>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassPackageMapping]" Alias="[tpmap]" Column="MixId" />
+                          </OuterReferences>
+                          <RelOp NodeId="2" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1.28895" EstimateIO="0.003125" EstimateCPU="0.000158418" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328342" TableCardinality="1.48174e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassPackageMapping]" Alias="[tpmap]" Column="MixId" />
+                            </OutputList>
+                            <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                              <DefinedValues>
+                                <DefinedValue>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassPackageMapping]" Alias="[tpmap]" Column="MixId" />
+                                </DefinedValue>
+                              </DefinedValues>
+                              <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassPackageMapping]" Index="[TestpassPackageMapping_IDX_TestpassId]" Alias="[tpmap]" IndexKind="NonClustered" />
+                              <SeekPredicates>
+                                <SeekPredicateNew>
+                                  <SeekKeys>
+                                    <Prefix ScanType="EQ">
+                                      <RangeColumns>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassPackageMapping]" Alias="[tpmap]" Column="TestpassId" />
+                                      </RangeColumns>
+                                      <RangeExpressions>
+                                        <ScalarOperator ScalarString="[@TestpassId]">
+                                          <Identifier>
+                                            <ColumnReference Column="@TestpassId" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </RangeExpressions>
+                                    </Prefix>
+                                  </SeekKeys>
+                                </SeekPredicateNew>
+                              </SeekPredicates>
+                            </IndexScan>
+                          </RelOp>
+                          <RelOp NodeId="3" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="15" EstimatedTotalSubtreeCost="0.00364556" TableCardinality="1.48176e+006" Parallel="0" EstimateRebinds="0.288946" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Alias="[mix]" Column="EndDate" />
+                            </OutputList>
+                            <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                              <DefinedValues>
+                                <DefinedValue>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Alias="[mix]" Column="EndDate" />
+                                </DefinedValue>
+                              </DefinedValues>
+                              <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Index="[Mix_IDX_Id]" Alias="[mix]" IndexKind="NonClustered" />
+                              <SeekPredicates>
+                                <SeekPredicateNew>
+                                  <SeekKeys>
+                                    <Prefix ScanType="EQ">
+                                      <RangeColumns>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Alias="[mix]" Column="Id" />
+                                      </RangeColumns>
+                                      <RangeExpressions>
+                                        <ScalarOperator ScalarString="[OurLabReporting].[dbo].[TestpassPackageMapping].[MixId] as [tpmap].[MixId]">
+                                          <Identifier>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassPackageMapping]" Alias="[tpmap]" Column="MixId" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </RangeExpressions>
+                                    </Prefix>
+                                  </SeekKeys>
+                                </SeekPredicateNew>
+                              </SeekPredicates>
+                            </IndexScan>
+                          </RelOp>
+                        </NestedLoops>
+                      </RelOp>
+                    </StreamAggregate>
+                  </RelOp>
+                  <ParameterList>
+                    <ColumnReference Column="@TestpassId" ParameterCompiledValue="(1418631)" />
+                  </ParameterList>
+                </QueryPlan>
+              </StmtSimple>
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtSimple StatementText="&#x9;END&#xD;&#xA;&#xD;&#xA;&#x9;-- Update the Testpass table with End Date&#xD;&#xA;&#x9;BEGIN TRAN&#xD;&#xA;&#x9;" StatementId="8" StatementCompId="70" StatementType="BEGIN TRANSACTION" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;UPDATE dbo.Testpass&#xD;&#xA;&#x9;&#x9;SET EndDate = @EndDate &#xD;&#xA;&#x9;&#x9;&#x9;,RecordLastUpdated = GETDATE()&#xD;&#xA;&#x9;&#x9;WHERE Id = @TestpassId&#xD;&#xA;" StatementId="9" StatementCompId="71" StatementType="UPDATE" RetrievedFromCache="true" StatementSubTreeCost="0.0232853" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x19F0B3203B9B410D" QueryPlanHash="0xD97ACE2FF9C75CF">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="32" CompileTime="4" CompileCPU="4" CompileMemory="648">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="1" PhysicalOp="Clustered Index Update" LogicalOp="Update" EstimateRows="1" EstimateIO="0.02" EstimateCPU="2e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0232853" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <Update DMLRequestSort="0">
+                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Testpass]" Index="[Testpass_PK]" IndexKind="Clustered" />
+                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Testpass]" Index="[Testpass_IDX_LastUpdated]" IndexKind="NonClustered" />
+                <SetPredicate>
+                  <ScalarOperator ScalarString="[OurLabReporting].[dbo].[Testpass].[EndDate] = [@EndDate],[OurLabReporting].[dbo].[Testpass].[RecordLastUpdated] = [Expr1003]">
+                    <ScalarExpressionList>
+                      <ScalarOperator>
+                        <MultipleAssign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Testpass]" Column="EndDate" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="@EndDate" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Testpass]" Column="RecordLastUpdated" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1003" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                        </MultipleAssign>
+                      </ScalarOperator>
+                    </ScalarExpressionList>
+                  </ScalarOperator>
+                </SetPredicate>
+                <RelOp NodeId="2" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="23" EstimatedTotalSubtreeCost="0.0032833" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Testpass]" Column="Id" />
+                    <ColumnReference Column="Expr1003" />
+                    <ColumnReference Column="Expr1029" />
+                  </OutputList>
+                  <ComputeScalar>
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1029" />
+                        <ScalarOperator ScalarString="[Expr1029]">
+                          <Identifier>
+                            <ColumnReference Column="Expr1029" />
+                          </Identifier>
+                        </ScalarOperator>
+                      </DefinedValue>
+                    </DefinedValues>
+                    <RelOp NodeId="3" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="23" EstimatedTotalSubtreeCost="0.0032833" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Testpass]" Column="Id" />
+                        <ColumnReference Column="Expr1003" />
+                        <ColumnReference Column="Expr1029" />
+                      </OutputList>
+                      <ComputeScalar>
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1003" />
+                            <ScalarOperator ScalarString="getdate()">
+                              <Identifier>
+                                <ColumnReference Column="ConstExpr1024">
+                                  <ScalarOperator>
+                                    <Intrinsic FunctionName="getdate" />
+                                  </ScalarOperator>
+                                </ColumnReference>
+                              </Identifier>
+                            </ScalarOperator>
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1029" />
+                            <ScalarOperator ScalarString="CASE WHEN CASE WHEN [OurLabReporting].[dbo].[Testpass].[RecordLastUpdated] = getdate() THEN (1) ELSE (0) END THEN (0) ELSE (1) END">
+                              <IF>
+                                <Condition>
+                                  <ScalarOperator>
+                                    <IF>
+                                      <Condition>
+                                        <ScalarOperator>
+                                          <Compare CompareOp="BINARY IS">
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Testpass]" Column="RecordLastUpdated" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Column="ConstExpr1024">
+                                                  <ScalarOperator>
+                                                    <Intrinsic FunctionName="getdate" />
+                                                  </ScalarOperator>
+                                                </ColumnReference>
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </Compare>
+                                        </ScalarOperator>
+                                      </Condition>
+                                      <Then>
+                                        <ScalarOperator>
+                                          <Const ConstValue="(1)" />
+                                        </ScalarOperator>
+                                      </Then>
+                                      <Else>
+                                        <ScalarOperator>
+                                          <Const ConstValue="(0)" />
+                                        </ScalarOperator>
+                                      </Else>
+                                    </IF>
+                                  </ScalarOperator>
+                                </Condition>
+                                <Then>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(0)" />
+                                  </ScalarOperator>
+                                </Then>
+                                <Else>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(1)" />
+                                  </ScalarOperator>
+                                </Else>
+                              </IF>
+                            </ScalarOperator>
+                          </DefinedValue>
+                        </DefinedValues>
+                        <RelOp NodeId="4" PhysicalOp="Top" LogicalOp="Top" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="19" EstimatedTotalSubtreeCost="0.0032832" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Testpass]" Column="Id" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Testpass]" Column="RecordLastUpdated" />
+                          </OutputList>
+                          <Top RowCount="0" IsPercent="0" WithTies="0">
+                            <TopExpression>
+                              <ScalarOperator ScalarString="(1)">
+                                <Const ConstValue="(1)" />
+                              </ScalarOperator>
+                            </TopExpression>
+                            <RelOp NodeId="5" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="19" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.41186e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Testpass]" Column="Id" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Testpass]" Column="RecordLastUpdated" />
+                              </OutputList>
+                              <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Testpass]" Column="Id" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Testpass]" Column="RecordLastUpdated" />
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Testpass]" Index="[Testpass_PK]" IndexKind="Clustered" />
+                                <SeekPredicates>
+                                  <SeekPredicateNew>
+                                    <SeekKeys>
+                                      <Prefix ScanType="EQ">
+                                        <RangeColumns>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Testpass]" Column="Id" />
+                                        </RangeColumns>
+                                        <RangeExpressions>
+                                          <ScalarOperator ScalarString="[@TestpassId]">
+                                            <Identifier>
+                                              <ColumnReference Column="@TestpassId" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </RangeExpressions>
+                                      </Prefix>
+                                    </SeekKeys>
+                                  </SeekPredicateNew>
+                                </SeekPredicates>
+                              </IndexScan>
+                            </RelOp>
+                          </Top>
+                        </RelOp>
+                      </ComputeScalar>
+                    </RelOp>
+                  </ComputeScalar>
+                </RelOp>
+              </Update>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@TestpassId" ParameterCompiledValue="(1418631)" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText="&#x9;COMMIT TRAN&#xD;" StatementId="10" StatementCompId="72" StatementType="COMMIT TRANSACTION" RetrievedFromCache="true" />
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

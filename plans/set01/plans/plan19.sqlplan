@@ -1,0 +1,249 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="CREATE TRIGGER [TEUCountsByResolvedTED_Update]&#xD;&#xA;ON [dbo].[TEUCountsByResolvedTED]&#xD;&#xA;AFTER UPDATE &#xD;&#xA;AS &#xD;&#xA;BEGIN&#xD;&#xA;    &#x9;SET NOCOUNT ON&#xD;&#xA;&#xD;&#xA;&#x9;" StatementId="1" StatementCompId="147" StatementType="SET ON/OFF" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;UPDATE [dbo].[TEUCountsByResolvedTED]&#xD;&#xA;&#x9;&#x9;SET [LastUpdateTime] = GETDATE()&#xD;&#xA;&#x9;&#x9;WHERE ResolvedTEDId IN (SELECT ResolvedTEDId FROM inserted) &#xD;" StatementId="2" StatementCompId="148" StatementType="UPDATE" RetrievedFromCache="true" StatementSubTreeCost="0.0365736" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0xAC979D344F6DBFCD" QueryPlanHash="0xB1B0C3A4F1F2A424" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="40" CompileTime="24" CompileCPU="24" CompileMemory="504">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="1" PhysicalOp="Clustered Index Update" LogicalOp="Update" EstimateRows="1" EstimateIO="0.03" EstimateCPU="3e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0365736" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <Update DMLRequestSort="0">
+                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TEUCountsByResolvedTED]" Index="[TEUCountsByResolvedTED_PK]" IndexKind="Clustered" />
+                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TEUCountsByResolvedTED]" Index="[TEUCountsByResolvedTED_IDX_LastUpdated]" IndexKind="NonClustered" />
+                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TEUCountsByResolvedTED]" Index="[TEUCountsByResolvedTED_IDX_Timestamp]" IndexKind="NonClustered" />
+                <SetPredicate>
+                  <ScalarOperator ScalarString="[OurLabReporting].[dbo].[TEUCountsByResolvedTED].[LastUpdateTime] = RaiseIfNullUpdate([Expr1005])">
+                    <ScalarExpressionList>
+                      <ScalarOperator>
+                        <MultipleAssign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEUCountsByResolvedTED]" Column="LastUpdateTime" />
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="RaiseIfNullUpdate">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="Expr1005" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </Assign>
+                        </MultipleAssign>
+                      </ScalarOperator>
+                    </ScalarExpressionList>
+                  </ScalarOperator>
+                </SetPredicate>
+                <RelOp NodeId="2" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="27" EstimatedTotalSubtreeCost="0.00657058" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEUCountsByResolvedTED]" Column="ResolvedTEDId" />
+                    <ColumnReference Column="Expr1005" />
+                    <ColumnReference Column="Expr1013" />
+                    <ColumnReference Column="Expr1014" />
+                  </OutputList>
+                  <ComputeScalar>
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1013" />
+                        <ScalarOperator ScalarString="[Expr1013]">
+                          <Identifier>
+                            <ColumnReference Column="Expr1013" />
+                          </Identifier>
+                        </ScalarOperator>
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1014" />
+                        <ScalarOperator ScalarString="[Expr1014]">
+                          <Identifier>
+                            <ColumnReference Column="Expr1014" />
+                          </Identifier>
+                        </ScalarOperator>
+                      </DefinedValue>
+                    </DefinedValues>
+                    <RelOp NodeId="3" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="27" EstimatedTotalSubtreeCost="0.00657058" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEUCountsByResolvedTED]" Column="ResolvedTEDId" />
+                        <ColumnReference Column="Expr1005" />
+                        <ColumnReference Column="Expr1013" />
+                        <ColumnReference Column="Expr1014" />
+                      </OutputList>
+                      <ComputeScalar>
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1013" />
+                            <ScalarOperator ScalarString="CASE WHEN [Expr1009] THEN (0) ELSE (1) END">
+                              <IF>
+                                <Condition>
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Expr1009" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Condition>
+                                <Then>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(0)" />
+                                  </ScalarOperator>
+                                </Then>
+                                <Else>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(1)" />
+                                  </ScalarOperator>
+                                </Else>
+                              </IF>
+                            </ScalarOperator>
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1014" />
+                            <ScalarOperator ScalarString="CASE WHEN [Expr1009] THEN (0) ELSE (1) END">
+                              <IF>
+                                <Condition>
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Expr1009" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Condition>
+                                <Then>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(0)" />
+                                  </ScalarOperator>
+                                </Then>
+                                <Else>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(1)" />
+                                  </ScalarOperator>
+                                </Else>
+                              </IF>
+                            </ScalarOperator>
+                          </DefinedValue>
+                        </DefinedValues>
+                        <RelOp NodeId="4" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="20" EstimatedTotalSubtreeCost="0.00657048" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEUCountsByResolvedTED]" Column="ResolvedTEDId" />
+                            <ColumnReference Column="Expr1005" />
+                            <ColumnReference Column="Expr1009" />
+                          </OutputList>
+                          <ComputeScalar>
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Column="Expr1005" />
+                                <ScalarOperator ScalarString="getdate()">
+                                  <Identifier>
+                                    <ColumnReference Column="ConstExpr1010">
+                                      <ScalarOperator>
+                                        <Intrinsic FunctionName="getdate" />
+                                      </ScalarOperator>
+                                    </ColumnReference>
+                                  </Identifier>
+                                </ScalarOperator>
+                              </DefinedValue>
+                              <DefinedValue>
+                                <ColumnReference Column="Expr1009" />
+                                <ScalarOperator ScalarString="CASE WHEN [OurLabReporting].[dbo].[TEUCountsByResolvedTED].[LastUpdateTime] = getdate() THEN (1) ELSE (0) END">
+                                  <IF>
+                                    <Condition>
+                                      <ScalarOperator>
+                                        <Compare CompareOp="BINARY IS">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEUCountsByResolvedTED]" Column="LastUpdateTime" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Column="ConstExpr1010">
+                                                <ScalarOperator>
+                                                  <Intrinsic FunctionName="getdate" />
+                                                </ScalarOperator>
+                                              </ColumnReference>
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </Compare>
+                                      </ScalarOperator>
+                                    </Condition>
+                                    <Then>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(1)" />
+                                      </ScalarOperator>
+                                    </Then>
+                                    <Else>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(0)" />
+                                      </ScalarOperator>
+                                    </Else>
+                                  </IF>
+                                </ScalarOperator>
+                              </DefinedValue>
+                            </DefinedValues>
+                            <RelOp NodeId="6" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="19" EstimatedTotalSubtreeCost="0.00657038" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEUCountsByResolvedTED]" Column="ResolvedTEDId" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEUCountsByResolvedTED]" Column="LastUpdateTime" />
+                              </OutputList>
+                              <NestedLoops Optimized="0">
+                                <OuterReferences>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEUCountsByResolvedTED]" Column="ResolvedTEDId" />
+                                </OuterReferences>
+                                <RelOp NodeId="7" PhysicalOp="Inserted Scan" LogicalOp="Inserted Scan" EstimateRows="1" EstimateIO="0.0032035" EstimateCPU="7.96e-005" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEUCountsByResolvedTED]" Column="ResolvedTEDId" />
+                                  </OutputList>
+                                  <InsertedScan>
+                                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TEUCountsByResolvedTED]" Index="[TEUCountsByResolvedTED_PK]" TableReferenceId="2" IndexKind="Clustered" />
+                                  </InsertedScan>
+                                </RelOp>
+                                <RelOp NodeId="8" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="19" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.37084e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEUCountsByResolvedTED]" Column="ResolvedTEDId" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEUCountsByResolvedTED]" Column="LastUpdateTime" />
+                                  </OutputList>
+                                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                    <DefinedValues>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEUCountsByResolvedTED]" Column="ResolvedTEDId" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEUCountsByResolvedTED]" Column="LastUpdateTime" />
+                                      </DefinedValue>
+                                    </DefinedValues>
+                                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TEUCountsByResolvedTED]" Index="[TEUCountsByResolvedTED_PK]" TableReferenceId="1" IndexKind="Clustered" />
+                                    <SeekPredicates>
+                                      <SeekPredicateNew>
+                                        <SeekKeys>
+                                          <Prefix ScanType="EQ">
+                                            <RangeColumns>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEUCountsByResolvedTED]" Column="ResolvedTEDId" />
+                                            </RangeColumns>
+                                            <RangeExpressions>
+                                              <ScalarOperator ScalarString="[OurLabReporting].[dbo].[TEUCountsByResolvedTED].[ResolvedTEDId]">
+                                                <Identifier>
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEUCountsByResolvedTED]" Column="ResolvedTEDId" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </RangeExpressions>
+                                          </Prefix>
+                                        </SeekKeys>
+                                      </SeekPredicateNew>
+                                    </SeekPredicates>
+                                  </IndexScan>
+                                </RelOp>
+                              </NestedLoops>
+                            </RelOp>
+                          </ComputeScalar>
+                        </RelOp>
+                      </ComputeScalar>
+                    </RelOp>
+                  </ComputeScalar>
+                </RelOp>
+              </Update>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

@@ -1,0 +1,1905 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="CREATE PROCEDURE [dbo].[Web_AddNonT3Failures]&#xD;&#xA;&#x9;@Failures dbo.FailureCollection READONLY&#xD;&#xA;AS&#xD;&#xA;&#x9;SET NOCOUNT ON;&#xD;&#xA;&#x9;&#xD;&#xA;" StatementId="1" StatementCompId="3" StatementType="SET ON/OFF" RetrievedFromCache="true" />
+        <StmtCond StatementText="&#x9;IF OBJECT_ID('tempdb..#FailureCollection') IS NOT NULL&#xD;&#xA;&#x9;" StatementId="2" StatementCompId="4" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText="&#x9;DROP TABLE #FailureCollection&#xD;&#xA;&#xD;&#xA;" StatementId="3" StatementCompId="5" StatementType="DROP OBJECT" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtSimple StatementText="&#x9;CREATE TABLE #FailureCollection&#xD;&#xA;&#x9;(&#xD;&#xA;&#x9;&#x9;Id INT IDENTITY(1,1),&#xD;&#xA;&#x9;&#x9;InternalTestpassId INT NULL,&#xD;&#xA;&#x9;&#x9;TestpassUniqueKey NVARCHAR(250) NULL,&#xD;&#xA;&#x9;&#x9;TestpassDefinitionId INT NULL,&#xD;&#xA;&#x9;&#x9;TestpassDefinitionName NVARCHAR(150) NULL,&#xD;&#xA;&#x9;&#x9;FailureType NVARCHAR(100) NOT NULL,&#xD;&#xA;&#x9;&#x9;FailureCategory NVARCHAR(50) NOT NULL,&#xD;&#xA;&#x9;&#x9;FailureSubCategory NVARCHAR(50) NOT NULL,&#xD;&#xA;&#x9;&#x9;FailureGuid UNIQUEIDENTIFIER NOT NULL,&#xD;&#xA;&#x9;&#x9;FailureStatus NVARCHAR(200) NOT NULL,&#xD;&#xA;&#x9;&#x9;FailureTriageOwner NVARCHAR(50) NOT NULL,&#xD;&#xA;&#x9;&#x9;FailureAssignedTo NVARCHAR(50) NOT NULL,&#xD;&#xA;&#x9;&#x9;FailureTitle NVARCHAR(200) NOT NULL,&#xD;&#xA;&#x9;&#x9;IsAutoResolved BIT NOT NULL,&#xD;&#xA;&#x9;&#x9;DoNotUseForAutoAnalysis BIT NOT NULL&#xD;&#xA;&#x9;)&#xD;&#xA;&#xD;&#xA;" StatementId="4" StatementCompId="7" StatementType="CREATE TABLE" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;CREATE CLUSTERED INDEX CIX_FailureCollection_InternalTestpassId ON #FailureCollection(InternalTestpassId)&#xD;&#xA;" StatementId="5" StatementCompId="8" StatementType="CREATE INDEX" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;CREATE INDEX IDX_FailureCollection_FailureGuid ON #FailureCollection(FailureGuid)&#xD;&#xA;&#xD;&#xA;" StatementId="6" StatementCompId="9" StatementType="CREATE INDEX" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;INSERT INTO #FailureCollection&#xD;&#xA;&#x9;(&#xD;&#xA;&#x9;&#x9;InternalTestpassId,&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;TestpassUniqueKey,&#x9;&#xD;&#xA;&#x9;&#x9;TestpassDefinitionName, &#xD;&#xA;&#x9;&#x9;FailureType, &#xD;&#xA;&#x9;&#x9;FailureCategory,&#xD;&#xA;&#x9;&#x9;FailureSubCategory,&#xD;&#xA;&#x9;&#x9;FailureGuid,&#xD;&#xA;&#x9;&#x9;FailureStatus,&#xD;&#xA;&#x9;&#x9;FailureTriageOwner,&#xD;&#xA;&#x9;&#x9;FailureAssignedTo,&#xD;&#xA;&#x9;&#x9;FailureTitle,&#xD;&#xA;&#x9;&#x9;IsAutoResolved,&#xD;&#xA;&#x9;&#x9;DoNotUseForAutoAnalysis&#xD;&#xA;&#x9;)&#xD;&#xA;&#x9;SELECT  FT.InternalTestpassId,&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;&#x9;FT.TestpassUniqueKey,&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;&#x9;FT.TestpassDefinitionName, &#xD;&#xA;&#x9;&#x9;&#x9;FT.FailureType, &#xD;&#xA;&#x9;&#x9;&#x9;FT.FailureCategory,&#xD;&#xA;&#x9;&#x9;&#x9;FT.FailureSubCategory,&#xD;&#xA;&#x9;&#x9;&#x9;FT.FailureGuid,&#xD;&#xA;&#x9;&#x9;&#x9;FT.FailureStatus,&#xD;&#xA;&#x9;&#x9;&#x9;FT.FailureTriageOwner,&#xD;&#xA;&#x9;&#x9;&#x9;FT.FailureAssignedTo,&#xD;&#xA;&#x9;&#x9;&#x9;FT.FailureTitle,&#xD;&#xA;&#x9;&#x9;&#x9;FT.IsAutoResolved,&#xD;&#xA;&#x9;&#x9;&#x9;FT.DoNotUseForAutoAnalysis&#xD;&#xA;&#x9;FROM @Failures FT&#xD;&#xA;&#x9;-- If not already exists&#xD;&#xA;&#x9;LEFT OUTER JOIN dbo.Failure F WITH(NOLOCK)&#xD;&#xA;&#x9;ON&#xD;&#xA;&#x9;&#x9;FT.FailureGuid = F.[Guid]&#xD;&#xA;&#x9;WHERE F.Id IS NULL&#xD;&#xA;&#xD;&#xA;&#x9;-- Remove duplicates (If any)&#xD;&#xA;" StatementId="7" StatementCompId="10" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.026573" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0xFFF4FA23EB3C06B2" QueryPlanHash="0xA7B6F9D153ECE92" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="48" CompileTime="2" CompileCPU="2" CompileMemory="328">
+            <MemoryGrantInfo SerialRequiredMemory="512" SerialDesiredMemory="544" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Clustered Index Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.02" EstimateCPU="2e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.026573" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <Update DMLRequestSort="0">
+                <Object Database="[tempdb]" Schema="[dbo]" Table="[#FailureCollection]" Index="[CIX_FailureCollection_InternalTestpassId]" />
+                <Object Database="[tempdb]" Schema="[dbo]" Table="[#FailureCollection]" Index="[IDX_FailureCollection_FailureGuid]" />
+                <SetPredicate>
+                  <ScalarOperator ScalarString="[#FailureCollection].[InternalTestpassId] = @Failures.[InternalTestpassId] as [FT].[InternalTestpassId],[#FailureCollection].[TestpassUniqueKey] = @Failures.[TestpassUniqueKey] as [FT].[TestpassUniqueKey],[#FailureCollection].[TestpassDefinitionName] = @Failures.[TestpassDefinitionName] as [FT].[TestpassDefinitionName],[#FailureCollection].[FailureType] = @Failures.[FailureType] as [FT].[FailureType],[#FailureCollection].[FailureCategory] = @Failures.[FailureCategory] as [FT].[FailureCategory],[#FailureCollection].[FailureSubCategory] = @Failures.[FailureSubCategory] as [FT].[FailureSubCategory],[#FailureCollection].[FailureGuid] = @Failures.[FailureGuid] as [FT].[FailureGuid],[#FailureCollection].[FailureStatus] = @Failures.[FailureStatus] as [FT].[FailureStatus],[#FailureCollection].[FailureTriageOwner] = @Failures.[FailureTriageOwner] as [FT].[FailureTriageOwner],[#FailureCollection].[FailureAssignedTo] = @Failures.[FailureAssignedTo] as [FT].[FailureAssignedTo],[#FailureCollection].[FailureTitle] = @Failures.[FailureTitle] as [FT].[FailureTitle],[#FailureCollection].[IsAutoResolved] = @Failures.[IsAutoResolved] as [FT].[IsAutoResolved],[#FailureCollection].[DoNotUseForAutoAnalysis] = @Failures.[DoNotUseForAutoAnalysis] as [FT].[DoNotUseForAutoAnalysis],[#FailureCollection].[Id] = [Expr1009],[#FailureCollection].[TestpassDefinitionId] = NULL">
+                    <ScalarExpressionList>
+                      <ScalarOperator>
+                        <MultipleAssign>
+                          <Assign>
+                            <ColumnReference Table="[#FailureCollection]" Column="InternalTestpassId" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Table="@Failures" Alias="[FT]" Column="InternalTestpassId" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Table="[#FailureCollection]" Column="TestpassUniqueKey" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Table="@Failures" Alias="[FT]" Column="TestpassUniqueKey" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Table="[#FailureCollection]" Column="TestpassDefinitionName" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Table="@Failures" Alias="[FT]" Column="TestpassDefinitionName" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Table="[#FailureCollection]" Column="FailureType" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureType" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Table="[#FailureCollection]" Column="FailureCategory" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureCategory" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Table="[#FailureCollection]" Column="FailureSubCategory" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureSubCategory" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Table="[#FailureCollection]" Column="FailureGuid" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureGuid" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Table="[#FailureCollection]" Column="FailureStatus" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureStatus" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Table="[#FailureCollection]" Column="FailureTriageOwner" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureTriageOwner" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Table="[#FailureCollection]" Column="FailureAssignedTo" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureAssignedTo" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Table="[#FailureCollection]" Column="FailureTitle" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureTitle" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Table="[#FailureCollection]" Column="IsAutoResolved" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Table="@Failures" Alias="[FT]" Column="IsAutoResolved" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Table="[#FailureCollection]" Column="DoNotUseForAutoAnalysis" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Table="@Failures" Alias="[FT]" Column="DoNotUseForAutoAnalysis" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Table="[#FailureCollection]" Column="Id" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1009" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Table="[#FailureCollection]" Column="TestpassDefinitionId" />
+                            <ScalarOperator>
+                              <Const ConstValue="NULL" />
+                            </ScalarOperator>
+                          </Assign>
+                        </MultipleAssign>
+                      </ScalarOperator>
+                    </ScalarExpressionList>
+                  </ScalarOperator>
+                </SetPredicate>
+                <RelOp NodeId="1" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="1153" EstimatedTotalSubtreeCost="0.00657096" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Table="@Failures" Alias="[FT]" Column="InternalTestpassId" />
+                    <ColumnReference Table="@Failures" Alias="[FT]" Column="TestpassUniqueKey" />
+                    <ColumnReference Table="@Failures" Alias="[FT]" Column="TestpassDefinitionName" />
+                    <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureType" />
+                    <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureCategory" />
+                    <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureSubCategory" />
+                    <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureGuid" />
+                    <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureStatus" />
+                    <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureTriageOwner" />
+                    <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureAssignedTo" />
+                    <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureTitle" />
+                    <ColumnReference Table="@Failures" Alias="[FT]" Column="IsAutoResolved" />
+                    <ColumnReference Table="@Failures" Alias="[FT]" Column="DoNotUseForAutoAnalysis" />
+                    <ColumnReference Column="Expr1009" />
+                  </OutputList>
+                  <ComputeScalar ComputeSequence="1">
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1009" />
+                        <ScalarOperator ScalarString="getidentity((-1089036613),(2),N'#FailureCollection')">
+                          <Intrinsic FunctionName="getidentity">
+                            <ScalarOperator>
+                              <Const ConstValue="(-1089036613)" />
+                            </ScalarOperator>
+                            <ScalarOperator>
+                              <Const ConstValue="(2)" />
+                            </ScalarOperator>
+                            <ScalarOperator>
+                              <Const ConstValue="N'#FailureCollection'" />
+                            </ScalarOperator>
+                          </Intrinsic>
+                        </ScalarOperator>
+                      </DefinedValue>
+                    </DefinedValues>
+                    <RelOp NodeId="2" PhysicalOp="Filter" LogicalOp="Filter" EstimateRows="1" EstimateIO="0" EstimateCPU="4.8e-007" AvgRowSize="1149" EstimatedTotalSubtreeCost="0.00657086" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Table="@Failures" Alias="[FT]" Column="InternalTestpassId" />
+                        <ColumnReference Table="@Failures" Alias="[FT]" Column="TestpassUniqueKey" />
+                        <ColumnReference Table="@Failures" Alias="[FT]" Column="TestpassDefinitionName" />
+                        <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureType" />
+                        <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureCategory" />
+                        <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureSubCategory" />
+                        <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureGuid" />
+                        <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureStatus" />
+                        <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureTriageOwner" />
+                        <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureAssignedTo" />
+                        <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureTitle" />
+                        <ColumnReference Table="@Failures" Alias="[FT]" Column="IsAutoResolved" />
+                        <ColumnReference Table="@Failures" Alias="[FT]" Column="DoNotUseForAutoAnalysis" />
+                      </OutputList>
+                      <Filter StartupExpression="0">
+                        <RelOp NodeId="3" PhysicalOp="Nested Loops" LogicalOp="Left Outer Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="1153" EstimatedTotalSubtreeCost="0.00657038" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Table="@Failures" Alias="[FT]" Column="InternalTestpassId" />
+                            <ColumnReference Table="@Failures" Alias="[FT]" Column="TestpassUniqueKey" />
+                            <ColumnReference Table="@Failures" Alias="[FT]" Column="TestpassDefinitionName" />
+                            <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureType" />
+                            <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureCategory" />
+                            <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureSubCategory" />
+                            <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureGuid" />
+                            <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureStatus" />
+                            <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureTriageOwner" />
+                            <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureAssignedTo" />
+                            <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureTitle" />
+                            <ColumnReference Table="@Failures" Alias="[FT]" Column="IsAutoResolved" />
+                            <ColumnReference Table="@Failures" Alias="[FT]" Column="DoNotUseForAutoAnalysis" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Alias="[F]" Column="Id" />
+                          </OutputList>
+                          <NestedLoops Optimized="1">
+                            <OuterReferences>
+                              <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureGuid" />
+                            </OuterReferences>
+                            <RelOp NodeId="5" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="1149" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Table="@Failures" Alias="[FT]" Column="InternalTestpassId" />
+                                <ColumnReference Table="@Failures" Alias="[FT]" Column="TestpassUniqueKey" />
+                                <ColumnReference Table="@Failures" Alias="[FT]" Column="TestpassDefinitionName" />
+                                <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureType" />
+                                <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureCategory" />
+                                <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureSubCategory" />
+                                <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureGuid" />
+                                <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureStatus" />
+                                <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureTriageOwner" />
+                                <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureAssignedTo" />
+                                <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureTitle" />
+                                <ColumnReference Table="@Failures" Alias="[FT]" Column="IsAutoResolved" />
+                                <ColumnReference Table="@Failures" Alias="[FT]" Column="DoNotUseForAutoAnalysis" />
+                              </OutputList>
+                              <TableScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Table="@Failures" Alias="[FT]" Column="InternalTestpassId" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Table="@Failures" Alias="[FT]" Column="TestpassUniqueKey" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Table="@Failures" Alias="[FT]" Column="TestpassDefinitionName" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureType" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureCategory" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureSubCategory" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureGuid" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureStatus" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureTriageOwner" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureAssignedTo" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureTitle" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Table="@Failures" Alias="[FT]" Column="IsAutoResolved" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Table="@Failures" Alias="[FT]" Column="DoNotUseForAutoAnalysis" />
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <Object Table="[@Failures]" Alias="[FT]" />
+                              </TableScan>
+                            </RelOp>
+                            <RelOp NodeId="6" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="3.38967e+007" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Alias="[F]" Column="Id" />
+                              </OutputList>
+                              <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Alias="[F]" Column="Id" />
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Index="[Failure_IDX_Guid]" Alias="[F]" IndexKind="NonClustered" />
+                                <SeekPredicates>
+                                  <SeekPredicateNew>
+                                    <SeekKeys>
+                                      <Prefix ScanType="EQ">
+                                        <RangeColumns>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Alias="[F]" Column="Guid" />
+                                        </RangeColumns>
+                                        <RangeExpressions>
+                                          <ScalarOperator ScalarString="@Failures.[FailureGuid] as [FT].[FailureGuid]">
+                                            <Identifier>
+                                              <ColumnReference Table="@Failures" Alias="[FT]" Column="FailureGuid" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </RangeExpressions>
+                                      </Prefix>
+                                    </SeekKeys>
+                                  </SeekPredicateNew>
+                                </SeekPredicates>
+                              </IndexScan>
+                            </RelOp>
+                          </NestedLoops>
+                        </RelOp>
+                        <Predicate>
+                          <ScalarOperator ScalarString="[OurLabReporting].[dbo].[Failure].[Id] as [F].[Id] IS NULL">
+                            <Compare CompareOp="IS">
+                              <ScalarOperator>
+                                <Identifier>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Alias="[F]" Column="Id" />
+                                </Identifier>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Const ConstValue="NULL" />
+                              </ScalarOperator>
+                            </Compare>
+                          </ScalarOperator>
+                        </Predicate>
+                      </Filter>
+                    </RelOp>
+                  </ComputeScalar>
+                </RelOp>
+              </Update>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText="&#x9;DELETE FROM F&#xD;&#xA;&#x9;FROM #FailureCollection F&#xD;&#xA;&#x9;INNER JOIN&#xD;&#xA;&#x9;(&#xD;&#xA;&#x9;&#x9;SELECT F.FailureGuid, &#xD;&#xA;&#x9;&#x9;&#x9;   MIN(Id) AS DistinctId&#xD;&#xA;&#x9;&#x9;FROM #FailureCollection F&#xD;&#xA;&#x9;&#x9;GROUP BY F.FailureGuid&#xD;&#xA;&#x9;) AS Duplicates&#xD;&#xA;&#x9;ON&#xD;&#xA;&#x9;&#x9;F.FailureGuid = Duplicates.FailureGuid&#xD;&#xA;&#x9;WHERE F.Id &lt;&gt; Duplicates.DistinctId&#xD;&#xA;&#xD;&#xA;&#x9;-- Resolve TestpassDefinitionId (If needed)&#xD;&#xA;" StatementId="8" StatementCompId="11" StatementType="DELETE" RetrievedFromCache="true" StatementSubTreeCost="0.0346744" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x3EA1499E66FF896" QueryPlanHash="0xE79B1C4A712BCF65" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="32" CompileTime="4" CompileCPU="4" CompileMemory="392">
+            <MemoryGrantInfo SerialRequiredMemory="512" SerialDesiredMemory="544" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Clustered Index Delete" LogicalOp="Delete" EstimateRows="1" EstimateIO="0.02" EstimateCPU="2e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0346744" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <Update DMLRequestSort="0">
+                <Object Database="[tempdb]" Schema="[dbo]" Table="[#FailureCollection]" Index="[CIX_FailureCollection_InternalTestpassId]" Alias="[F]" />
+                <Object Database="[tempdb]" Schema="[dbo]" Table="[#FailureCollection]" Index="[IDX_FailureCollection_FailureGuid]" Alias="[F]" />
+                <RelOp NodeId="2" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="2.156e-005" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0146724" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Uniq1002" />
+                    <ColumnReference Table="#FailureCollection" Alias="[F]" Column="InternalTestpassId" />
+                  </OutputList>
+                  <NestedLoops Optimized="0">
+                    <RelOp NodeId="3" PhysicalOp="Table Spool" LogicalOp="Lazy Spool" EstimateRows="1" EstimateIO="0" EstimateCPU="0" AvgRowSize="35" EstimatedTotalSubtreeCost="0.01465" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Column="Uniq1002" />
+                        <ColumnReference Table="#FailureCollection" Alias="[F]" Column="Id" />
+                        <ColumnReference Table="#FailureCollection" Alias="[F]" Column="InternalTestpassId" />
+                        <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureGuid" />
+                      </OutputList>
+                      <Spool>
+                        <RelOp NodeId="4" PhysicalOp="Segment" LogicalOp="Segment" EstimateRows="1" EstimateIO="0" EstimateCPU="2.8e-006" AvgRowSize="35" EstimatedTotalSubtreeCost="0.0146472" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Column="Uniq1002" />
+                            <ColumnReference Table="#FailureCollection" Alias="[F]" Column="Id" />
+                            <ColumnReference Table="#FailureCollection" Alias="[F]" Column="InternalTestpassId" />
+                            <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureGuid" />
+                            <ColumnReference Column="Segment1011" />
+                          </OutputList>
+                          <Segment>
+                            <GroupBy>
+                              <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureGuid" />
+                            </GroupBy>
+                            <SegmentColumn>
+                              <ColumnReference Column="Segment1011" />
+                            </SegmentColumn>
+                            <RelOp NodeId="5" PhysicalOp="Sort" LogicalOp="Sort" EstimateRows="1" EstimateIO="0.0112613" EstimateCPU="0.000100035" AvgRowSize="35" EstimatedTotalSubtreeCost="0.0146444" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Column="Uniq1002" />
+                                <ColumnReference Table="#FailureCollection" Alias="[F]" Column="Id" />
+                                <ColumnReference Table="#FailureCollection" Alias="[F]" Column="InternalTestpassId" />
+                                <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureGuid" />
+                              </OutputList>
+                              <MemoryFractions Input="1" Output="1" />
+                              <Sort Distinct="0">
+                                <OrderBy>
+                                  <OrderByColumn Ascending="1">
+                                    <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureGuid" />
+                                  </OrderByColumn>
+                                </OrderBy>
+                                <RelOp NodeId="6" PhysicalOp="Clustered Index Scan" LogicalOp="Clustered Index Scan" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="35" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Column="Uniq1002" />
+                                    <ColumnReference Table="#FailureCollection" Alias="[F]" Column="Id" />
+                                    <ColumnReference Table="#FailureCollection" Alias="[F]" Column="InternalTestpassId" />
+                                    <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureGuid" />
+                                  </OutputList>
+                                  <IndexScan Ordered="1" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                                    <DefinedValues>
+                                      <DefinedValue>
+                                        <ColumnReference Column="Uniq1002" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Table="#FailureCollection" Alias="[F]" Column="Id" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Table="#FailureCollection" Alias="[F]" Column="InternalTestpassId" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureGuid" />
+                                      </DefinedValue>
+                                    </DefinedValues>
+                                    <Object Database="[tempdb]" Schema="[dbo]" Table="[#FailureCollection]" Index="[CIX_FailureCollection_InternalTestpassId]" Alias="[F]" TableReferenceId="1" />
+                                  </IndexScan>
+                                </RelOp>
+                              </Sort>
+                            </RelOp>
+                          </Segment>
+                        </RelOp>
+                      </Spool>
+                    </RelOp>
+                    <RelOp NodeId="7" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="2.8e-007" AvgRowSize="35" EstimatedTotalSubtreeCost="5.6e-007" Parallel="0" EstimateRebinds="1" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Column="Uniq1002" />
+                        <ColumnReference Table="#FailureCollection" Alias="[F]" Column="InternalTestpassId" />
+                      </OutputList>
+                      <NestedLoops Optimized="0">
+                        <Predicate>
+                          <ScalarOperator ScalarString="#FailureCollection.[Id] as [F].[Id]&lt;&gt;[Expr1006]">
+                            <Compare CompareOp="NE">
+                              <ScalarOperator>
+                                <Identifier>
+                                  <ColumnReference Table="#FailureCollection" Alias="[F]" Column="Id" />
+                                </Identifier>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Identifier>
+                                  <ColumnReference Column="Expr1006" />
+                                </Identifier>
+                              </ScalarOperator>
+                            </Compare>
+                          </ScalarOperator>
+                        </Predicate>
+                        <RelOp NodeId="8" PhysicalOp="Stream Aggregate" LogicalOp="Aggregate" EstimateRows="1" EstimateIO="0" EstimateCPU="2.8e-007" AvgRowSize="35" EstimatedTotalSubtreeCost="2.8e-007" Parallel="0" EstimateRebinds="1" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Column="Expr1006" />
+                          </OutputList>
+                          <StreamAggregate>
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Column="Expr1006" />
+                                <ScalarOperator ScalarString="MIN(#FailureCollection.[Id] as [F].[Id])">
+                                  <Aggregate Distinct="0" AggType="MIN">
+                                    <ScalarOperator>
+                                      <Identifier>
+                                        <ColumnReference Table="#FailureCollection" Alias="[F]" Column="Id" />
+                                      </Identifier>
+                                    </ScalarOperator>
+                                  </Aggregate>
+                                </ScalarOperator>
+                              </DefinedValue>
+                            </DefinedValues>
+                            <RelOp NodeId="9" PhysicalOp="Table Spool" LogicalOp="Lazy Spool" EstimateRows="1" EstimateIO="0" EstimateCPU="0" AvgRowSize="35" EstimatedTotalSubtreeCost="0" Parallel="0" EstimateRebinds="1" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Column="Uniq1002" />
+                                <ColumnReference Table="#FailureCollection" Alias="[F]" Column="Id" />
+                                <ColumnReference Table="#FailureCollection" Alias="[F]" Column="InternalTestpassId" />
+                                <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureGuid" />
+                              </OutputList>
+                              <Spool PrimaryNodeId="3" />
+                            </RelOp>
+                          </StreamAggregate>
+                        </RelOp>
+                        <RelOp NodeId="13" PhysicalOp="Table Spool" LogicalOp="Lazy Spool" EstimateRows="1" EstimateIO="0" EstimateCPU="0" AvgRowSize="35" EstimatedTotalSubtreeCost="0" Parallel="0" EstimateRebinds="1" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Column="Uniq1002" />
+                            <ColumnReference Table="#FailureCollection" Alias="[F]" Column="Id" />
+                            <ColumnReference Table="#FailureCollection" Alias="[F]" Column="InternalTestpassId" />
+                            <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureGuid" />
+                          </OutputList>
+                          <Spool PrimaryNodeId="3" />
+                        </RelOp>
+                      </NestedLoops>
+                    </RelOp>
+                  </NestedLoops>
+                </RelOp>
+              </Update>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText="&#x9;UPDATE F&#xD;&#xA;&#x9;SET F.TestpassDefinitionId = TD.Id&#xD;&#xA;&#x9;FROM #FailureCollection F&#xD;&#xA;&#x9;INNER JOIN dbo.TestpassDefinition TD WITH(NOLOCK) &#xD;&#xA;&#x9;ON&#xD;&#xA;&#x9;&#x9;F.TestpassDefinitionName = TD.Name&#xD;&#xA;&#x9;WHERE F.InternalTestpassId IS NULL&#xD;&#xA;&#xD;&#xA;&#x9;-- Resolve TestpassId (If needed)&#xD;&#xA;" StatementId="9" StatementCompId="12" StatementType="UPDATE" RetrievedFromCache="true" StatementSubTreeCost="0.0165724" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x64C98BD2F291B385" QueryPlanHash="0xE6261F418DFEADED" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="32" CompileTime="3" CompileCPU="3" CompileMemory="320">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Clustered Index Update" LogicalOp="Update" EstimateRows="1" EstimateIO="0.01" EstimateCPU="1e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0165724" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <Update DMLRequestSort="0">
+                <Object Database="[tempdb]" Schema="[dbo]" Table="[#FailureCollection]" Index="[CIX_FailureCollection_InternalTestpassId]" Alias="[F]" />
+                <SetPredicate>
+                  <ScalarOperator ScalarString="#FailureCollection.[TestpassDefinitionId] as [F].[TestpassDefinitionId] = [OurLabReporting].[dbo].[TestpassDefinition].[Id] as [TD].[Id]">
+                    <ScalarExpressionList>
+                      <ScalarOperator>
+                        <MultipleAssign>
+                          <Assign>
+                            <ColumnReference Table="#FailureCollection" Alias="[F]" Column="TestpassDefinitionId" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Alias="[TD]" Column="Id" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                        </MultipleAssign>
+                      </ScalarOperator>
+                    </ScalarExpressionList>
+                  </ScalarOperator>
+                </SetPredicate>
+                <RelOp NodeId="1" PhysicalOp="Stream Aggregate" LogicalOp="Aggregate" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-006" AvgRowSize="19" EstimatedTotalSubtreeCost="0.00657138" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Uniq1002" />
+                    <ColumnReference Table="#FailureCollection" Alias="[F]" Column="InternalTestpassId" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Alias="[TD]" Column="Id" />
+                  </OutputList>
+                  <StreamAggregate>
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Table="#FailureCollection" Alias="[F]" Column="InternalTestpassId" />
+                        <ScalarOperator ScalarString="ANY(#FailureCollection.[InternalTestpassId] as [F].[InternalTestpassId])">
+                          <Aggregate Distinct="0" AggType="ANY">
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Table="#FailureCollection" Alias="[F]" Column="InternalTestpassId" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Aggregate>
+                        </ScalarOperator>
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Alias="[TD]" Column="Id" />
+                        <ScalarOperator ScalarString="ANY([OurLabReporting].[dbo].[TestpassDefinition].[Id] as [TD].[Id])">
+                          <Aggregate Distinct="0" AggType="ANY">
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Alias="[TD]" Column="Id" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Aggregate>
+                        </ScalarOperator>
+                      </DefinedValue>
+                    </DefinedValues>
+                    <GroupBy>
+                      <ColumnReference Column="Uniq1002" />
+                    </GroupBy>
+                    <RelOp NodeId="2" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="19" EstimatedTotalSubtreeCost="0.00657038" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Column="Uniq1002" />
+                        <ColumnReference Table="#FailureCollection" Alias="[F]" Column="InternalTestpassId" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Alias="[TD]" Column="Id" />
+                      </OutputList>
+                      <NestedLoops Optimized="0">
+                        <OuterReferences>
+                          <ColumnReference Table="#FailureCollection" Alias="[F]" Column="TestpassDefinitionName" />
+                        </OuterReferences>
+                        <RelOp NodeId="3" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="20" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Column="Uniq1002" />
+                            <ColumnReference Table="#FailureCollection" Alias="[F]" Column="InternalTestpassId" />
+                            <ColumnReference Table="#FailureCollection" Alias="[F]" Column="TestpassDefinitionName" />
+                          </OutputList>
+                          <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Column="Uniq1002" />
+                              </DefinedValue>
+                              <DefinedValue>
+                                <ColumnReference Table="#FailureCollection" Alias="[F]" Column="InternalTestpassId" />
+                              </DefinedValue>
+                              <DefinedValue>
+                                <ColumnReference Table="#FailureCollection" Alias="[F]" Column="TestpassDefinitionName" />
+                              </DefinedValue>
+                            </DefinedValues>
+                            <Object Database="[tempdb]" Schema="[dbo]" Table="[#FailureCollection]" Index="[CIX_FailureCollection_InternalTestpassId]" Alias="[F]" />
+                            <SeekPredicates>
+                              <SeekPredicateNew>
+                                <SeekKeys>
+                                  <Prefix ScanType="EQ">
+                                    <RangeColumns>
+                                      <ColumnReference Table="#FailureCollection" Alias="[F]" Column="InternalTestpassId" />
+                                    </RangeColumns>
+                                    <RangeExpressions>
+                                      <ScalarOperator ScalarString="NULL">
+                                        <Const ConstValue="NULL" />
+                                      </ScalarOperator>
+                                    </RangeExpressions>
+                                  </Prefix>
+                                </SeekKeys>
+                              </SeekPredicateNew>
+                            </SeekPredicates>
+                          </IndexScan>
+                        </RelOp>
+                        <RelOp NodeId="4" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1875" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Alias="[TD]" Column="Id" />
+                          </OutputList>
+                          <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Alias="[TD]" Column="Id" />
+                              </DefinedValue>
+                            </DefinedValues>
+                            <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Index="[IX_TestpassDefinition_Name_Include_Id]" Alias="[TD]" IndexKind="NonClustered" />
+                            <SeekPredicates>
+                              <SeekPredicateNew>
+                                <SeekKeys>
+                                  <Prefix ScanType="EQ">
+                                    <RangeColumns>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Alias="[TD]" Column="Name" />
+                                    </RangeColumns>
+                                    <RangeExpressions>
+                                      <ScalarOperator ScalarString="#FailureCollection.[TestpassDefinitionName] as [F].[TestpassDefinitionName]">
+                                        <Identifier>
+                                          <ColumnReference Table="#FailureCollection" Alias="[F]" Column="TestpassDefinitionName" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </RangeExpressions>
+                                  </Prefix>
+                                </SeekKeys>
+                              </SeekPredicateNew>
+                            </SeekPredicates>
+                          </IndexScan>
+                        </RelOp>
+                      </NestedLoops>
+                    </RelOp>
+                  </StreamAggregate>
+                </RelOp>
+              </Update>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText="&#x9;UPDATE F&#xD;&#xA;&#x9;SET F.InternalTestpassId = T.Id&#xD;&#xA;&#x9;FROM #FailureCollection F&#xD;&#xA;&#x9;INNER JOIN dbo.Testpass T WITH(NOLOCK)&#xD;&#xA;&#x9;ON&#xD;&#xA;&#x9;&#x9;F.TestpassUniqueKey = T.UniqueKey&#xD;&#xA;&#x9;&#x9;AND F.TestpassDefinitionId = T.TestpassDefinitionId&#xD;&#xA;&#x9;WHERE F.InternalTestpassId IS NULL&#xD;&#xA;&#xD;&#xA;" StatementId="10" StatementCompId="13" StatementType="UPDATE" RetrievedFromCache="true" StatementSubTreeCost="0.0265724" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0xB46CFCBA10887A85" QueryPlanHash="0xEAAB53AA3491996A" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="24" CompileTime="3" CompileCPU="3" CompileMemory="368">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Clustered Index Update" LogicalOp="Update" EstimateRows="1" EstimateIO="0.02" EstimateCPU="2e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0265724" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <Update DMLRequestSort="0">
+                <Object Database="[tempdb]" Schema="[dbo]" Table="[#FailureCollection]" Index="[CIX_FailureCollection_InternalTestpassId]" Alias="[F]" />
+                <Object Database="[tempdb]" Schema="[dbo]" Table="[#FailureCollection]" Index="[IDX_FailureCollection_FailureGuid]" Alias="[F]" />
+                <SetPredicate>
+                  <ScalarOperator ScalarString="#FailureCollection.[InternalTestpassId] as [F].[InternalTestpassId] = [OurLabReporting].[dbo].[Testpass].[Id] as [T].[Id]">
+                    <ScalarExpressionList>
+                      <ScalarOperator>
+                        <MultipleAssign>
+                          <Assign>
+                            <ColumnReference Table="#FailureCollection" Alias="[F]" Column="InternalTestpassId" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Testpass]" Alias="[T]" Column="Id" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                        </MultipleAssign>
+                      </ScalarOperator>
+                    </ScalarExpressionList>
+                  </ScalarOperator>
+                </SetPredicate>
+                <RelOp NodeId="1" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="19" EstimatedTotalSubtreeCost="0.00657038" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Uniq1002" />
+                    <ColumnReference Table="#FailureCollection" Alias="[F]" Column="InternalTestpassId" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Testpass]" Alias="[T]" Column="Id" />
+                  </OutputList>
+                  <NestedLoops Optimized="0">
+                    <OuterReferences>
+                      <ColumnReference Table="#FailureCollection" Alias="[F]" Column="TestpassUniqueKey" />
+                      <ColumnReference Table="#FailureCollection" Alias="[F]" Column="TestpassDefinitionId" />
+                    </OuterReferences>
+                    <RelOp NodeId="2" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="24" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Column="Uniq1002" />
+                        <ColumnReference Table="#FailureCollection" Alias="[F]" Column="InternalTestpassId" />
+                        <ColumnReference Table="#FailureCollection" Alias="[F]" Column="TestpassUniqueKey" />
+                        <ColumnReference Table="#FailureCollection" Alias="[F]" Column="TestpassDefinitionId" />
+                      </OutputList>
+                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Uniq1002" />
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Table="#FailureCollection" Alias="[F]" Column="InternalTestpassId" />
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Table="#FailureCollection" Alias="[F]" Column="TestpassUniqueKey" />
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Table="#FailureCollection" Alias="[F]" Column="TestpassDefinitionId" />
+                          </DefinedValue>
+                        </DefinedValues>
+                        <Object Database="[tempdb]" Schema="[dbo]" Table="[#FailureCollection]" Index="[CIX_FailureCollection_InternalTestpassId]" Alias="[F]" />
+                        <SeekPredicates>
+                          <SeekPredicateNew>
+                            <SeekKeys>
+                              <Prefix ScanType="EQ">
+                                <RangeColumns>
+                                  <ColumnReference Table="#FailureCollection" Alias="[F]" Column="InternalTestpassId" />
+                                </RangeColumns>
+                                <RangeExpressions>
+                                  <ScalarOperator ScalarString="NULL">
+                                    <Const ConstValue="NULL" />
+                                  </ScalarOperator>
+                                </RangeExpressions>
+                              </Prefix>
+                            </SeekKeys>
+                          </SeekPredicateNew>
+                        </SeekPredicates>
+                      </IndexScan>
+                    </RelOp>
+                    <RelOp NodeId="3" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.41187e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Testpass]" Alias="[T]" Column="Id" />
+                      </OutputList>
+                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Testpass]" Alias="[T]" Column="Id" />
+                          </DefinedValue>
+                        </DefinedValues>
+                        <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Testpass]" Index="[Testpass_IDX_UniqueKey]" Alias="[T]" IndexKind="NonClustered" />
+                        <SeekPredicates>
+                          <SeekPredicateNew>
+                            <SeekKeys>
+                              <Prefix ScanType="EQ">
+                                <RangeColumns>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Testpass]" Alias="[T]" Column="TestpassDefinitionId" />
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Testpass]" Alias="[T]" Column="UniqueKey" />
+                                </RangeColumns>
+                                <RangeExpressions>
+                                  <ScalarOperator ScalarString="#FailureCollection.[TestpassDefinitionId] as [F].[TestpassDefinitionId]">
+                                    <Identifier>
+                                      <ColumnReference Table="#FailureCollection" Alias="[F]" Column="TestpassDefinitionId" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator ScalarString="#FailureCollection.[TestpassUniqueKey] as [F].[TestpassUniqueKey]">
+                                    <Identifier>
+                                      <ColumnReference Table="#FailureCollection" Alias="[F]" Column="TestpassUniqueKey" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </RangeExpressions>
+                              </Prefix>
+                            </SeekKeys>
+                          </SeekPredicateNew>
+                        </SeekPredicates>
+                      </IndexScan>
+                    </RelOp>
+                  </NestedLoops>
+                </RelOp>
+              </Update>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText="&#x9;INSERT INTO [dbo].[Failure]&#xD;&#xA;&#x9;&#x9;&#x9;   (&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;[Guid]&#xD;&#xA;&#x9;&#x9;&#x9;   ,[TriageOwner]&#xD;&#xA;&#x9;&#x9;&#x9;   ,[StatusId]&#xD;&#xA;&#x9;&#x9;&#x9;   ,[TestpassId]&#xD;&#xA;&#x9;&#x9;&#x9;   ,[AssignedTo]&#xD;&#xA;&#x9;&#x9;&#x9;   ,[Title]&#xD;&#xA;&#x9;&#x9;&#x9;   ,[LastUpdateTime]&#xD;&#xA;&#x9;&#x9;&#x9;   ,[FailureCategoryId]&#xD;&#xA;&#x9;&#x9;&#x9;   ,[FailureSubCategoryId]&#xD;&#xA;&#x9;&#x9;&#x9;   ,[AutoResolved]&#xD;&#xA;&#x9;&#x9;&#x9;   ,[DoNotUseForAutoAnalysis]&#xD;&#xA;&#x9;&#x9;&#x9;   ,[FailureTypeId]&#xD;&#xA;&#x9;&#x9;&#x9;   ,[RecordLastUpdated]&#xD;&#xA;&#x9;&#x9;&#x9;   )&#xD;&#xA;&#x9;SELECT F.FailureGuid,&#xD;&#xA;&#x9;&#x9;   F.FailureTriageOwner,&#xD;&#xA;&#x9;&#x9;   FS.Id,&#xD;&#xA;&#x9;&#x9;   F.InternalTestpassId,&#xD;&#xA;&#x9;&#x9;   F.FailureAssignedTo,&#xD;&#xA;&#x9;&#x9;   F.FailureTitle,&#xD;&#xA;&#x9;&#x9;   GETDATE(),&#xD;&#xA;&#x9;&#x9;   FC.Id,&#xD;&#xA;&#x9;&#x9;   FSC.Id,&#xD;&#xA;&#x9;&#x9;   F.IsAutoResolved,&#xD;&#xA;&#x9;&#x9;   F.DoNotUseForAutoAnalysis,&#xD;&#xA;&#x9;&#x9;   FT.Id,&#xD;&#xA;&#x9;&#x9;   GETDATE()&#xD;&#xA;&#x9;FROM #FailureCollection F&#xD;&#xA;&#x9;INNER JOIN dbo.[Status] FS WITH(NOLOCK)&#xD;&#xA;&#x9;ON&#xD;&#xA;&#x9;&#x9;F.FailureStatus = FS.[Status]&#xD;&#xA;&#x9;&#x9;AND FS.[Type] = 'Failure'&#xD;&#xA;&#x9;INNER JOIN dbo.FailureType FT WITH(NOLOCK)&#xD;&#xA;&#x9;ON&#xD;&#xA;&#x9;&#x9;F.FailureType = FT.[Type]&#xD;&#xA;&#x9;INNER JOIN dbo.FailureCategory FC WITH(NOLOCK)&#xD;&#xA;&#x9;ON&#xD;&#xA;&#x9;&#x9;F.FailureCategory = FC.Name&#xD;&#xA;&#x9;INNER JOIN dbo.FailureSubCategory FSC WITH(NOLOCK)&#xD;&#xA;&#x9;ON&#xD;&#xA;&#x9;&#x9;F.FailureSubCategory = FSC.Name&#xD;&#xA;&#x9;&#x9;AND FC.Id = FSC.FailureCategoryId&#xD;&#xA;&#x9;&#x9;AND FT.Id = FSC.FailureTypeId&#xD;&#xA;&#x9;-- Ensure that no rows without testpass information is inserted&#xD;&#xA;&#x9;-- (These rows will be caught as outliers at the end)&#xD;&#xA;&#x9;WHERE F.InternalTestpassId IS NOT NULL&#xD;&#xA;&#xD;&#xA;" StatementId="11" StatementCompId="14" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.197887" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x4D625127043C57FC" QueryPlanHash="0xB02E49C77C947BE9" StatementOptmEarlyAbortReason="TimeOut">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="192" CompileTime="27" CompileCPU="27" CompileMemory="1840">
+            <Warnings>
+              <PlanAffectingConvert ConvertIssue="Cardinality Estimate" Expression="CONVERT_IMPLICIT(nvarchar(200),[FS].[Status],0)" />
+              <PlanAffectingConvert ConvertIssue="Seek Plan" Expression="[F].[FailureStatus]=CONVERT_IMPLICIT(nvarchar(200),[FS].[Status],0)" />
+            </Warnings>
+            <MemoryGrantInfo SerialRequiredMemory="2048" SerialDesiredMemory="2112" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="1" PhysicalOp="Assert" LogicalOp="Assert" EstimateRows="1" EstimateIO="0" EstimateCPU="1.08e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.197887" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <Assert StartupExpression="0">
+                <RelOp NodeId="2" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.197886" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Expr1050" />
+                    <ColumnReference Column="Expr1051" />
+                    <ColumnReference Column="Expr1052" />
+                    <ColumnReference Column="Expr1053" />
+                  </OutputList>
+                  <NestedLoops Optimized="0">
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1053" />
+                      </DefinedValue>
+                    </DefinedValues>
+                    <OuterReferences>
+                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="TestpassId" />
+                    </OuterReferences>
+                    <ProbeColumn>
+                      <ColumnReference Column="Expr1053" />
+                    </ProbeColumn>
+                    <RelOp NodeId="3" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="12" EstimatedTotalSubtreeCost="0.194599" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="TestpassId" />
+                        <ColumnReference Column="Expr1050" />
+                        <ColumnReference Column="Expr1051" />
+                        <ColumnReference Column="Expr1052" />
+                      </OutputList>
+                      <NestedLoops Optimized="0">
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1052" />
+                          </DefinedValue>
+                        </DefinedValues>
+                        <OuterReferences>
+                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="StatusId" />
+                        </OuterReferences>
+                        <ProbeColumn>
+                          <ColumnReference Column="Expr1052" />
+                        </ProbeColumn>
+                        <RelOp NodeId="4" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="16" EstimatedTotalSubtreeCost="0.191312" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="StatusId" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="TestpassId" />
+                            <ColumnReference Column="Expr1050" />
+                            <ColumnReference Column="Expr1051" />
+                          </OutputList>
+                          <NestedLoops Optimized="0">
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Column="Expr1051" />
+                              </DefinedValue>
+                            </DefinedValues>
+                            <OuterReferences>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="FailureSubCategoryId" />
+                            </OuterReferences>
+                            <ProbeColumn>
+                              <ColumnReference Column="Expr1051" />
+                            </ProbeColumn>
+                            <RelOp NodeId="5" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="20" EstimatedTotalSubtreeCost="0.188024" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="StatusId" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="TestpassId" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="FailureSubCategoryId" />
+                                <ColumnReference Column="Expr1050" />
+                              </OutputList>
+                              <NestedLoops Optimized="0">
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Column="Expr1050" />
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <OuterReferences>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="FailureCategoryId" />
+                                </OuterReferences>
+                                <ProbeColumn>
+                                  <ColumnReference Column="Expr1050" />
+                                </ProbeColumn>
+                                <RelOp NodeId="6" PhysicalOp="Clustered Index Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.13" EstimateCPU="1.3e-005" AvgRowSize="21" EstimatedTotalSubtreeCost="0.184737" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="StatusId" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="TestpassId" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="FailureCategoryId" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="FailureSubCategoryId" />
+                                  </OutputList>
+                                  <Update DMLRequestSort="0">
+                                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Index="[Failure_PK]" IndexKind="Clustered" />
+                                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Index="[Failure_IDX_AssignedTo]" IndexKind="NonClustered" />
+                                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Index="[Failure_IDX_FailureType]" IndexKind="NonClustered" />
+                                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Index="[Failure_IDX_Guid]" IndexKind="NonClustered" />
+                                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Index="[Failure_IDX_LastUpdated]" IndexKind="NonClustered" />
+                                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Index="[Failure_IDX_Mix]" IndexKind="NonClustered" />
+                                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Index="[Failure_IDX_ResolvedTED]" IndexKind="NonClustered" />
+                                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Index="[Failure_IDX_Schedule]" IndexKind="NonClustered" />
+                                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Index="[Failure_IDX_Status]" IndexKind="NonClustered" />
+                                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Index="[Failure_IDX_TestCaseResult]" IndexKind="NonClustered" />
+                                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Index="[Failure_IDX_TestPass]" IndexKind="NonClustered" />
+                                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Index="[Failure_IDX_TEU]" IndexKind="NonClustered" />
+                                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Index="[Failure_IDX_FailureCategoryId_LastUpdateTime_TEUId]" IndexKind="NonClustered" />
+                                    <SetPredicate>
+                                      <ScalarOperator ScalarString="[OurLabReporting].[dbo].[Failure].[Guid] = #FailureCollection.[FailureGuid] as [F].[FailureGuid],[OurLabReporting].[dbo].[Failure].[TriageOwner] = #FailureCollection.[FailureTriageOwner] as [F].[FailureTriageOwner],[OurLabReporting].[dbo].[Failure].[StatusId] = [OurLabReporting].[dbo].[Status].[Id] as [FS].[Id],[OurLabReporting].[dbo].[Failure].[TestpassId] = #FailureCollection.[InternalTestpassId] as [F].[InternalTestpassId],[OurLabReporting].[dbo].[Failure].[AssignedTo] = #FailureCollection.[FailureAssignedTo] as [F].[FailureAssignedTo],[OurLabReporting].[dbo].[Failure].[Title] = #FailureCollection.[FailureTitle] as [F].[FailureTitle],[OurLabReporting].[dbo].[Failure].[LastUpdateTime] = RaiseIfNullInsert([Expr1015]),[OurLabReporting].[dbo].[Failure].[FailureCategoryId] = [OurLabReporting].[dbo].[FailureCategory].[Id] as [FC].[Id],[OurLabReporting].[dbo].[Failure].[FailureSubCategoryId] = [OurLabReporting].[dbo].[FailureSubCategory].[Id] as [FSC].[Id],[OurLabReporting].[dbo].[Failure].[AutoResolved] = #FailureCollection.[IsAutoResolved] as [F].[IsAutoResolved],[OurLabReporting].[dbo].[Failure].[DoNotUseForAutoAnalysis] = #FailureCollection.[DoNotUseForAutoAnalysis] as [F].[DoNotUseForAutoAnalysis],[OurLabReporting].[dbo].[Failure].[FailureTypeId] = [OurLabReporting].[dbo].[FailureType].[Id] as [FT].[Id],[OurLabReporting].[dbo].[Failure].[RecordLastUpdated] = [Expr1016],[OurLabReporting].[dbo].[Failure].[Id] = [Expr1014],[OurLabReporting].[dbo].[Failure].[DbTimestamp] = [Expr1017],[OurLabReporting].[dbo].[Failure].[MachineSetId] = NULL,[OurLabReporting].[dbo].[Failure].[MixId] = NULL,[OurLabReporting].[dbo].[Failure].[ResolvedTEDId] = NULL,[OurLabReporting].[dbo].[Failure].[ScheduleId] = NULL,[OurLabReporting].[dbo].[Failure].[TestCaseResultId] = NULL,[OurLabReporting].[dbo].[Failure].[TEUId] = NULL,[OurLabReporting].[dbo].[Failure].[TeuNameHash] = NULL,[OurLabReporting].[dbo].[Failure].[UEUId] = NULL,[OurLabReporting].[dbo].[Failure].[Comments] = NULL,[OurLabReporting].[dbo].[Failure].[LastUpdateBy] = NULL,[OurLabReporting].[dbo].[Failure].[NonBugResolutionReasonId] = NULL,[OurLabReporting].[dbo].[Failure].[CallStack] = NULL,[OurLabReporting].[dbo].[Failure].[Remote] = NULL,[OurLabReporting].[dbo].[Failure].[WttFailureId] = NULL,[OurLabReporting].[dbo].[Failure].[ResolutionId] = NULL,[OurLabReporting].[dbo].[Failure].[LogFilePathId] = NULL,[OurLabReporting].[dbo].[Failure].[DumpFilePathId] = NULL">
+                                        <ScalarExpressionList>
+                                          <ScalarOperator>
+                                            <MultipleAssign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="Guid" />
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureGuid" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                              </Assign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="TriageOwner" />
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureTriageOwner" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                              </Assign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="StatusId" />
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Alias="[FS]" Column="Id" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                              </Assign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="TestpassId" />
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Table="#FailureCollection" Alias="[F]" Column="InternalTestpassId" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                              </Assign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="AssignedTo" />
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureAssignedTo" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                              </Assign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="Title" />
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureTitle" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                              </Assign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="LastUpdateTime" />
+                                                <ScalarOperator>
+                                                  <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Column="Expr1015" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                  </Intrinsic>
+                                                </ScalarOperator>
+                                              </Assign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="FailureCategoryId" />
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureCategory]" Alias="[FC]" Column="Id" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                              </Assign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="FailureSubCategoryId" />
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureSubCategory]" Alias="[FSC]" Column="Id" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                              </Assign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="AutoResolved" />
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Table="#FailureCollection" Alias="[F]" Column="IsAutoResolved" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                              </Assign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="DoNotUseForAutoAnalysis" />
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Table="#FailureCollection" Alias="[F]" Column="DoNotUseForAutoAnalysis" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                              </Assign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="FailureTypeId" />
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureType]" Alias="[FT]" Column="Id" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                              </Assign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="RecordLastUpdated" />
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Column="Expr1016" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                              </Assign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="Id" />
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Column="Expr1014" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                              </Assign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="DbTimestamp" />
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Column="Expr1017" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                              </Assign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="MachineSetId" />
+                                                <ScalarOperator>
+                                                  <Const ConstValue="NULL" />
+                                                </ScalarOperator>
+                                              </Assign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="MixId" />
+                                                <ScalarOperator>
+                                                  <Const ConstValue="NULL" />
+                                                </ScalarOperator>
+                                              </Assign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="ResolvedTEDId" />
+                                                <ScalarOperator>
+                                                  <Const ConstValue="NULL" />
+                                                </ScalarOperator>
+                                              </Assign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="ScheduleId" />
+                                                <ScalarOperator>
+                                                  <Const ConstValue="NULL" />
+                                                </ScalarOperator>
+                                              </Assign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="TestCaseResultId" />
+                                                <ScalarOperator>
+                                                  <Const ConstValue="NULL" />
+                                                </ScalarOperator>
+                                              </Assign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="TEUId" />
+                                                <ScalarOperator>
+                                                  <Const ConstValue="NULL" />
+                                                </ScalarOperator>
+                                              </Assign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="TeuNameHash" />
+                                                <ScalarOperator>
+                                                  <Const ConstValue="NULL" />
+                                                </ScalarOperator>
+                                              </Assign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="UEUId" />
+                                                <ScalarOperator>
+                                                  <Const ConstValue="NULL" />
+                                                </ScalarOperator>
+                                              </Assign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="Comments" />
+                                                <ScalarOperator>
+                                                  <Const ConstValue="NULL" />
+                                                </ScalarOperator>
+                                              </Assign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="LastUpdateBy" />
+                                                <ScalarOperator>
+                                                  <Const ConstValue="NULL" />
+                                                </ScalarOperator>
+                                              </Assign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="NonBugResolutionReasonId" />
+                                                <ScalarOperator>
+                                                  <Const ConstValue="NULL" />
+                                                </ScalarOperator>
+                                              </Assign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="CallStack" />
+                                                <ScalarOperator>
+                                                  <Const ConstValue="NULL" />
+                                                </ScalarOperator>
+                                              </Assign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="Remote" />
+                                                <ScalarOperator>
+                                                  <Const ConstValue="NULL" />
+                                                </ScalarOperator>
+                                              </Assign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="WttFailureId" />
+                                                <ScalarOperator>
+                                                  <Const ConstValue="NULL" />
+                                                </ScalarOperator>
+                                              </Assign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="ResolutionId" />
+                                                <ScalarOperator>
+                                                  <Const ConstValue="NULL" />
+                                                </ScalarOperator>
+                                              </Assign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="LogFilePathId" />
+                                                <ScalarOperator>
+                                                  <Const ConstValue="NULL" />
+                                                </ScalarOperator>
+                                              </Assign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="DumpFilePathId" />
+                                                <ScalarOperator>
+                                                  <Const ConstValue="NULL" />
+                                                </ScalarOperator>
+                                              </Assign>
+                                            </MultipleAssign>
+                                          </ScalarOperator>
+                                        </ScalarExpressionList>
+                                      </ScalarOperator>
+                                    </SetPredicate>
+                                    <RelOp NodeId="7" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="379" EstimatedTotalSubtreeCost="0.054724" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList>
+                                        <ColumnReference Table="#FailureCollection" Alias="[F]" Column="InternalTestpassId" />
+                                        <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureGuid" />
+                                        <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureTriageOwner" />
+                                        <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureAssignedTo" />
+                                        <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureTitle" />
+                                        <ColumnReference Table="#FailureCollection" Alias="[F]" Column="IsAutoResolved" />
+                                        <ColumnReference Table="#FailureCollection" Alias="[F]" Column="DoNotUseForAutoAnalysis" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Alias="[FS]" Column="Id" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureType]" Alias="[FT]" Column="Id" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureCategory]" Alias="[FC]" Column="Id" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureSubCategory]" Alias="[FSC]" Column="Id" />
+                                        <ColumnReference Column="Expr1014" />
+                                        <ColumnReference Column="Expr1015" />
+                                        <ColumnReference Column="Expr1016" />
+                                        <ColumnReference Column="Expr1017" />
+                                      </OutputList>
+                                      <ComputeScalar>
+                                        <DefinedValues>
+                                          <DefinedValue>
+                                            <ColumnReference Column="Expr1015" />
+                                            <ScalarOperator ScalarString="getdate()">
+                                              <Identifier>
+                                                <ColumnReference Column="ConstExpr1046">
+                                                  <ScalarOperator>
+                                                    <Intrinsic FunctionName="getdate" />
+                                                  </ScalarOperator>
+                                                </ColumnReference>
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </DefinedValue>
+                                          <DefinedValue>
+                                            <ColumnReference Column="Expr1016" />
+                                            <ScalarOperator ScalarString="getdate()">
+                                              <Identifier>
+                                                <ColumnReference Column="ConstExpr1047">
+                                                  <ScalarOperator>
+                                                    <Intrinsic FunctionName="getdate" />
+                                                  </ScalarOperator>
+                                                </ColumnReference>
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </DefinedValue>
+                                          <DefinedValue>
+                                            <ColumnReference Column="Expr1017" />
+                                            <ScalarOperator ScalarString="CONVERT_IMPLICIT(datetime2(7),getutcdate(),0)">
+                                              <Identifier>
+                                                <ColumnReference Column="ConstExpr1048">
+                                                  <ScalarOperator>
+                                                    <Convert DataType="datetime2" Style="0" Implicit="1">
+                                                      <ScalarOperator>
+                                                        <Intrinsic FunctionName="getutcdate" />
+                                                      </ScalarOperator>
+                                                    </Convert>
+                                                  </ScalarOperator>
+                                                </ColumnReference>
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </DefinedValue>
+                                        </DefinedValues>
+                                        <RelOp NodeId="8" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="355" EstimatedTotalSubtreeCost="0.0547239" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                          <OutputList>
+                                            <ColumnReference Table="#FailureCollection" Alias="[F]" Column="InternalTestpassId" />
+                                            <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureGuid" />
+                                            <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureTriageOwner" />
+                                            <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureAssignedTo" />
+                                            <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureTitle" />
+                                            <ColumnReference Table="#FailureCollection" Alias="[F]" Column="IsAutoResolved" />
+                                            <ColumnReference Table="#FailureCollection" Alias="[F]" Column="DoNotUseForAutoAnalysis" />
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Alias="[FS]" Column="Id" />
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureType]" Alias="[FT]" Column="Id" />
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureCategory]" Alias="[FC]" Column="Id" />
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureSubCategory]" Alias="[FSC]" Column="Id" />
+                                            <ColumnReference Column="Expr1014" />
+                                          </OutputList>
+                                          <ComputeScalar ComputeSequence="1">
+                                            <DefinedValues>
+                                              <DefinedValue>
+                                                <ColumnReference Column="Expr1014" />
+                                                <ScalarOperator ScalarString="getidentity((1173579219),(6),NULL)">
+                                                  <Intrinsic FunctionName="getidentity">
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="(1173579219)" />
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="(6)" />
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="NULL" />
+                                                    </ScalarOperator>
+                                                  </Intrinsic>
+                                                </ScalarOperator>
+                                              </DefinedValue>
+                                            </DefinedValues>
+                                            <RelOp NodeId="9" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="351" EstimatedTotalSubtreeCost="0.0547238" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                              <OutputList>
+                                                <ColumnReference Table="#FailureCollection" Alias="[F]" Column="InternalTestpassId" />
+                                                <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureGuid" />
+                                                <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureTriageOwner" />
+                                                <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureAssignedTo" />
+                                                <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureTitle" />
+                                                <ColumnReference Table="#FailureCollection" Alias="[F]" Column="IsAutoResolved" />
+                                                <ColumnReference Table="#FailureCollection" Alias="[F]" Column="DoNotUseForAutoAnalysis" />
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Alias="[FS]" Column="Id" />
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureType]" Alias="[FT]" Column="Id" />
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureCategory]" Alias="[FC]" Column="Id" />
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureSubCategory]" Alias="[FSC]" Column="Id" />
+                                              </OutputList>
+                                              <NestedLoops Optimized="0">
+                                                <OuterReferences>
+                                                  <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureType" />
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureSubCategory]" Alias="[FSC]" Column="FailureTypeId" />
+                                                </OuterReferences>
+                                                <RelOp NodeId="10" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="351" EstimatedTotalSubtreeCost="0.0514361" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                  <OutputList>
+                                                    <ColumnReference Table="#FailureCollection" Alias="[F]" Column="InternalTestpassId" />
+                                                    <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureType" />
+                                                    <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureGuid" />
+                                                    <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureTriageOwner" />
+                                                    <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureAssignedTo" />
+                                                    <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureTitle" />
+                                                    <ColumnReference Table="#FailureCollection" Alias="[F]" Column="IsAutoResolved" />
+                                                    <ColumnReference Table="#FailureCollection" Alias="[F]" Column="DoNotUseForAutoAnalysis" />
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Alias="[FS]" Column="Id" />
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureCategory]" Alias="[FC]" Column="Id" />
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureSubCategory]" Alias="[FSC]" Column="Id" />
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureSubCategory]" Alias="[FSC]" Column="FailureTypeId" />
+                                                  </OutputList>
+                                                  <NestedLoops Optimized="0">
+                                                    <OuterReferences>
+                                                      <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureCategory" />
+                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureSubCategory]" Alias="[FSC]" Column="FailureCategoryId" />
+                                                    </OuterReferences>
+                                                    <RelOp NodeId="11" PhysicalOp="Hash Match" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="0.0184855" AvgRowSize="354" EstimatedTotalSubtreeCost="0.0481483" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                      <OutputList>
+                                                        <ColumnReference Table="#FailureCollection" Alias="[F]" Column="InternalTestpassId" />
+                                                        <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureType" />
+                                                        <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureCategory" />
+                                                        <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureGuid" />
+                                                        <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureTriageOwner" />
+                                                        <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureAssignedTo" />
+                                                        <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureTitle" />
+                                                        <ColumnReference Table="#FailureCollection" Alias="[F]" Column="IsAutoResolved" />
+                                                        <ColumnReference Table="#FailureCollection" Alias="[F]" Column="DoNotUseForAutoAnalysis" />
+                                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Alias="[FS]" Column="Id" />
+                                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureSubCategory]" Alias="[FSC]" Column="Id" />
+                                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureSubCategory]" Alias="[FSC]" Column="FailureCategoryId" />
+                                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureSubCategory]" Alias="[FSC]" Column="FailureTypeId" />
+                                                      </OutputList>
+                                                      <MemoryFractions Input="0.5" Output="1" />
+                                                      <Hash>
+                                                        <DefinedValues />
+                                                        <HashKeysBuild>
+                                                          <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureSubCategory" />
+                                                        </HashKeysBuild>
+                                                        <HashKeysProbe>
+                                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureSubCategory]" Alias="[FSC]" Column="Name" />
+                                                        </HashKeysProbe>
+                                                        <ProbeResidual>
+                                                          <ScalarOperator ScalarString="#FailureCollection.[FailureSubCategory] as [F].[FailureSubCategory]=[OurLabReporting].[dbo].[FailureSubCategory].[Name] as [FSC].[Name]">
+                                                            <Compare CompareOp="EQ">
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureSubCategory" />
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureSubCategory]" Alias="[FSC]" Column="Name" />
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                            </Compare>
+                                                          </ScalarOperator>
+                                                        </ProbeResidual>
+                                                        <RelOp NodeId="12" PhysicalOp="Hash Match" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="0.0182642" AvgRowSize="350" EstimatedTotalSubtreeCost="0.0248347" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                          <OutputList>
+                                                            <ColumnReference Table="#FailureCollection" Alias="[F]" Column="InternalTestpassId" />
+                                                            <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureType" />
+                                                            <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureCategory" />
+                                                            <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureSubCategory" />
+                                                            <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureGuid" />
+                                                            <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureTriageOwner" />
+                                                            <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureAssignedTo" />
+                                                            <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureTitle" />
+                                                            <ColumnReference Table="#FailureCollection" Alias="[F]" Column="IsAutoResolved" />
+                                                            <ColumnReference Table="#FailureCollection" Alias="[F]" Column="DoNotUseForAutoAnalysis" />
+                                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Alias="[FS]" Column="Id" />
+                                                          </OutputList>
+                                                          <MemoryFractions Input="1" Output="0.5" />
+                                                          <Hash>
+                                                            <DefinedValues />
+                                                            <HashKeysBuild>
+                                                              <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureStatus" />
+                                                            </HashKeysBuild>
+                                                            <HashKeysProbe>
+                                                              <ColumnReference Column="Expr1049" />
+                                                            </HashKeysProbe>
+                                                            <ProbeResidual>
+                                                              <ScalarOperator ScalarString="#FailureCollection.[FailureStatus] as [F].[FailureStatus]=[Expr1049]">
+                                                                <Compare CompareOp="EQ">
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureStatus" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Column="Expr1049" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                </Compare>
+                                                              </ScalarOperator>
+                                                            </ProbeResidual>
+                                                            <RelOp NodeId="13" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="349" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                              <OutputList>
+                                                                <ColumnReference Table="#FailureCollection" Alias="[F]" Column="InternalTestpassId" />
+                                                                <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureType" />
+                                                                <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureCategory" />
+                                                                <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureSubCategory" />
+                                                                <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureGuid" />
+                                                                <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureStatus" />
+                                                                <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureTriageOwner" />
+                                                                <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureAssignedTo" />
+                                                                <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureTitle" />
+                                                                <ColumnReference Table="#FailureCollection" Alias="[F]" Column="IsAutoResolved" />
+                                                                <ColumnReference Table="#FailureCollection" Alias="[F]" Column="DoNotUseForAutoAnalysis" />
+                                                              </OutputList>
+                                                              <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                                                <DefinedValues>
+                                                                  <DefinedValue>
+                                                                    <ColumnReference Table="#FailureCollection" Alias="[F]" Column="InternalTestpassId" />
+                                                                  </DefinedValue>
+                                                                  <DefinedValue>
+                                                                    <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureType" />
+                                                                  </DefinedValue>
+                                                                  <DefinedValue>
+                                                                    <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureCategory" />
+                                                                  </DefinedValue>
+                                                                  <DefinedValue>
+                                                                    <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureSubCategory" />
+                                                                  </DefinedValue>
+                                                                  <DefinedValue>
+                                                                    <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureGuid" />
+                                                                  </DefinedValue>
+                                                                  <DefinedValue>
+                                                                    <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureStatus" />
+                                                                  </DefinedValue>
+                                                                  <DefinedValue>
+                                                                    <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureTriageOwner" />
+                                                                  </DefinedValue>
+                                                                  <DefinedValue>
+                                                                    <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureAssignedTo" />
+                                                                  </DefinedValue>
+                                                                  <DefinedValue>
+                                                                    <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureTitle" />
+                                                                  </DefinedValue>
+                                                                  <DefinedValue>
+                                                                    <ColumnReference Table="#FailureCollection" Alias="[F]" Column="IsAutoResolved" />
+                                                                  </DefinedValue>
+                                                                  <DefinedValue>
+                                                                    <ColumnReference Table="#FailureCollection" Alias="[F]" Column="DoNotUseForAutoAnalysis" />
+                                                                  </DefinedValue>
+                                                                </DefinedValues>
+                                                                <Object Database="[tempdb]" Schema="[dbo]" Table="[#FailureCollection]" Index="[CIX_FailureCollection_InternalTestpassId]" Alias="[F]" />
+                                                                <SeekPredicates>
+                                                                  <SeekPredicateNew>
+                                                                    <SeekKeys>
+                                                                      <IsNotNull>
+                                                                        <ColumnReference Table="#FailureCollection" Alias="[F]" Column="InternalTestpassId" />
+                                                                      </IsNotNull>
+                                                                    </SeekKeys>
+                                                                  </SeekPredicateNew>
+                                                                </SeekPredicates>
+                                                              </IndexScan>
+                                                            </RelOp>
+                                                            <RelOp NodeId="14" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="2" EstimateIO="0" EstimateCPU="2e-007" AvgRowSize="28" EstimatedTotalSubtreeCost="0.0032844" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                              <OutputList>
+                                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Alias="[FS]" Column="Id" />
+                                                                <ColumnReference Column="Expr1049" />
+                                                              </OutputList>
+                                                              <ComputeScalar>
+                                                                <DefinedValues>
+                                                                  <DefinedValue>
+                                                                    <ColumnReference Column="Expr1049" />
+                                                                    <ScalarOperator ScalarString="CONVERT_IMPLICIT(nvarchar(200),[OurLabReporting].[dbo].[Status].[Status] as [FS].[Status],0)">
+                                                                      <Convert DataType="nvarchar" Length="400" Style="0" Implicit="1">
+                                                                        <ScalarOperator>
+                                                                          <Identifier>
+                                                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Alias="[FS]" Column="Status" />
+                                                                          </Identifier>
+                                                                        </ScalarOperator>
+                                                                      </Convert>
+                                                                    </ScalarOperator>
+                                                                  </DefinedValue>
+                                                                </DefinedValues>
+                                                                <RelOp NodeId="15" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="2" EstimateIO="0.003125" EstimateCPU="0.0001592" AvgRowSize="28" EstimatedTotalSubtreeCost="0.0032842" TableCardinality="96" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                                  <OutputList>
+                                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Alias="[FS]" Column="Id" />
+                                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Alias="[FS]" Column="Status" />
+                                                                  </OutputList>
+                                                                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                                                    <DefinedValues>
+                                                                      <DefinedValue>
+                                                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Alias="[FS]" Column="Id" />
+                                                                      </DefinedValue>
+                                                                      <DefinedValue>
+                                                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Alias="[FS]" Column="Status" />
+                                                                      </DefinedValue>
+                                                                    </DefinedValues>
+                                                                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Index="[Status_AK]" Alias="[FS]" IndexKind="NonClustered" />
+                                                                    <SeekPredicates>
+                                                                      <SeekPredicateNew>
+                                                                        <SeekKeys>
+                                                                          <Prefix ScanType="EQ">
+                                                                            <RangeColumns>
+                                                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Alias="[FS]" Column="Type" />
+                                                                            </RangeColumns>
+                                                                            <RangeExpressions>
+                                                                              <ScalarOperator ScalarString="'Failure'">
+                                                                                <Const ConstValue="'Failure'" />
+                                                                              </ScalarOperator>
+                                                                            </RangeExpressions>
+                                                                          </Prefix>
+                                                                        </SeekKeys>
+                                                                      </SeekPredicateNew>
+                                                                    </SeekPredicates>
+                                                                  </IndexScan>
+                                                                </RelOp>
+                                                              </ComputeScalar>
+                                                            </RelOp>
+                                                          </Hash>
+                                                        </RelOp>
+                                                        <RelOp NodeId="20" PhysicalOp="Clustered Index Scan" LogicalOp="Clustered Index Scan" EstimateRows="56" EstimateIO="0.00460648" EstimateCPU="0.0002186" AvgRowSize="52" EstimatedTotalSubtreeCost="0.00482508" TableCardinality="56" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                          <OutputList>
+                                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureSubCategory]" Alias="[FSC]" Column="Id" />
+                                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureSubCategory]" Alias="[FSC]" Column="Name" />
+                                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureSubCategory]" Alias="[FSC]" Column="FailureCategoryId" />
+                                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureSubCategory]" Alias="[FSC]" Column="FailureTypeId" />
+                                                          </OutputList>
+                                                          <IndexScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                                                            <DefinedValues>
+                                                              <DefinedValue>
+                                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureSubCategory]" Alias="[FSC]" Column="Id" />
+                                                              </DefinedValue>
+                                                              <DefinedValue>
+                                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureSubCategory]" Alias="[FSC]" Column="Name" />
+                                                              </DefinedValue>
+                                                              <DefinedValue>
+                                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureSubCategory]" Alias="[FSC]" Column="FailureCategoryId" />
+                                                              </DefinedValue>
+                                                              <DefinedValue>
+                                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureSubCategory]" Alias="[FSC]" Column="FailureTypeId" />
+                                                              </DefinedValue>
+                                                            </DefinedValues>
+                                                            <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureSubCategory]" Index="[PK_FailureSubCategory]" Alias="[FSC]" IndexKind="Clustered" />
+                                                          </IndexScan>
+                                                        </RelOp>
+                                                      </Hash>
+                                                    </RelOp>
+                                                    <RelOp NodeId="22" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="41" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="14" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                      <OutputList>
+                                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureCategory]" Alias="[FC]" Column="Id" />
+                                                      </OutputList>
+                                                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                                        <DefinedValues>
+                                                          <DefinedValue>
+                                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureCategory]" Alias="[FC]" Column="Id" />
+                                                          </DefinedValue>
+                                                        </DefinedValues>
+                                                        <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureCategory]" Index="[PK_FailureCategory]" Alias="[FC]" IndexKind="Clustered" />
+                                                        <SeekPredicates>
+                                                          <SeekPredicateNew>
+                                                            <SeekKeys>
+                                                              <Prefix ScanType="EQ">
+                                                                <RangeColumns>
+                                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureCategory]" Alias="[FC]" Column="Id" />
+                                                                </RangeColumns>
+                                                                <RangeExpressions>
+                                                                  <ScalarOperator ScalarString="[OurLabReporting].[dbo].[FailureSubCategory].[FailureCategoryId] as [FSC].[FailureCategoryId]">
+                                                                    <Identifier>
+                                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureSubCategory]" Alias="[FSC]" Column="FailureCategoryId" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                </RangeExpressions>
+                                                              </Prefix>
+                                                            </SeekKeys>
+                                                          </SeekPredicateNew>
+                                                        </SeekPredicates>
+                                                        <Predicate>
+                                                          <ScalarOperator ScalarString="#FailureCollection.[FailureCategory] as [F].[FailureCategory]=[OurLabReporting].[dbo].[FailureCategory].[Name] as [FC].[Name]">
+                                                            <Compare CompareOp="EQ">
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureCategory" />
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureCategory]" Alias="[FC]" Column="Name" />
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                            </Compare>
+                                                          </ScalarOperator>
+                                                        </Predicate>
+                                                      </IndexScan>
+                                                    </RelOp>
+                                                  </NestedLoops>
+                                                </RelOp>
+                                                <RelOp NodeId="23" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="38" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="6" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                  <OutputList>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureType]" Alias="[FT]" Column="Id" />
+                                                  </OutputList>
+                                                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                                    <DefinedValues>
+                                                      <DefinedValue>
+                                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureType]" Alias="[FT]" Column="Id" />
+                                                      </DefinedValue>
+                                                    </DefinedValues>
+                                                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureType]" Index="[FailureType_PK]" Alias="[FT]" IndexKind="Clustered" />
+                                                    <SeekPredicates>
+                                                      <SeekPredicateNew>
+                                                        <SeekKeys>
+                                                          <Prefix ScanType="EQ">
+                                                            <RangeColumns>
+                                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureType]" Alias="[FT]" Column="Id" />
+                                                            </RangeColumns>
+                                                            <RangeExpressions>
+                                                              <ScalarOperator ScalarString="[OurLabReporting].[dbo].[FailureSubCategory].[FailureTypeId] as [FSC].[FailureTypeId]">
+                                                                <Identifier>
+                                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureSubCategory]" Alias="[FSC]" Column="FailureTypeId" />
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                            </RangeExpressions>
+                                                          </Prefix>
+                                                        </SeekKeys>
+                                                      </SeekPredicateNew>
+                                                    </SeekPredicates>
+                                                    <Predicate>
+                                                      <ScalarOperator ScalarString="#FailureCollection.[FailureType] as [F].[FailureType]=[OurLabReporting].[dbo].[FailureType].[Type] as [FT].[Type]">
+                                                        <Compare CompareOp="EQ">
+                                                          <ScalarOperator>
+                                                            <Identifier>
+                                                              <ColumnReference Table="#FailureCollection" Alias="[F]" Column="FailureType" />
+                                                            </Identifier>
+                                                          </ScalarOperator>
+                                                          <ScalarOperator>
+                                                            <Identifier>
+                                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureType]" Alias="[FT]" Column="Type" />
+                                                            </Identifier>
+                                                          </ScalarOperator>
+                                                        </Compare>
+                                                      </ScalarOperator>
+                                                    </Predicate>
+                                                  </IndexScan>
+                                                </RelOp>
+                                              </NestedLoops>
+                                            </RelOp>
+                                          </ComputeScalar>
+                                        </RelOp>
+                                      </ComputeScalar>
+                                    </RelOp>
+                                  </Update>
+                                </RelOp>
+                                <RelOp NodeId="34" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="14" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList />
+                                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                    <DefinedValues />
+                                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureCategory]" Index="[PK_FailureCategory]" IndexKind="Clustered" />
+                                    <SeekPredicates>
+                                      <SeekPredicateNew>
+                                        <SeekKeys>
+                                          <Prefix ScanType="EQ">
+                                            <RangeColumns>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureCategory]" Column="Id" />
+                                            </RangeColumns>
+                                            <RangeExpressions>
+                                              <ScalarOperator ScalarString="[OurLabReporting].[dbo].[Failure].[FailureCategoryId]">
+                                                <Identifier>
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="FailureCategoryId" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </RangeExpressions>
+                                          </Prefix>
+                                        </SeekKeys>
+                                      </SeekPredicateNew>
+                                    </SeekPredicates>
+                                  </IndexScan>
+                                </RelOp>
+                              </NestedLoops>
+                            </RelOp>
+                            <RelOp NodeId="35" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="56" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList />
+                              <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                <DefinedValues />
+                                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureSubCategory]" Index="[PK_FailureSubCategory]" IndexKind="Clustered" />
+                                <SeekPredicates>
+                                  <SeekPredicateNew>
+                                    <SeekKeys>
+                                      <Prefix ScanType="EQ">
+                                        <RangeColumns>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FailureSubCategory]" Column="Id" />
+                                        </RangeColumns>
+                                        <RangeExpressions>
+                                          <ScalarOperator ScalarString="[OurLabReporting].[dbo].[Failure].[FailureSubCategoryId]">
+                                            <Identifier>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="FailureSubCategoryId" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </RangeExpressions>
+                                      </Prefix>
+                                    </SeekKeys>
+                                  </SeekPredicateNew>
+                                </SeekPredicates>
+                              </IndexScan>
+                            </RelOp>
+                          </NestedLoops>
+                        </RelOp>
+                        <RelOp NodeId="36" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="96" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList />
+                          <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                            <DefinedValues />
+                            <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Index="[Status_PK]" IndexKind="Clustered" />
+                            <SeekPredicates>
+                              <SeekPredicateNew>
+                                <SeekKeys>
+                                  <Prefix ScanType="EQ">
+                                    <RangeColumns>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Column="Id" />
+                                    </RangeColumns>
+                                    <RangeExpressions>
+                                      <ScalarOperator ScalarString="[OurLabReporting].[dbo].[Failure].[StatusId]">
+                                        <Identifier>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="StatusId" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </RangeExpressions>
+                                  </Prefix>
+                                </SeekKeys>
+                              </SeekPredicateNew>
+                            </SeekPredicates>
+                          </IndexScan>
+                        </RelOp>
+                      </NestedLoops>
+                    </RelOp>
+                    <RelOp NodeId="37" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.41187e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList />
+                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                        <DefinedValues />
+                        <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Testpass]" Index="[Testpass_PK]" IndexKind="Clustered" />
+                        <SeekPredicates>
+                          <SeekPredicateNew>
+                            <SeekKeys>
+                              <Prefix ScanType="EQ">
+                                <RangeColumns>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Testpass]" Column="Id" />
+                                </RangeColumns>
+                                <RangeExpressions>
+                                  <ScalarOperator ScalarString="[OurLabReporting].[dbo].[Failure].[TestpassId]">
+                                    <Identifier>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="TestpassId" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </RangeExpressions>
+                              </Prefix>
+                            </SeekKeys>
+                          </SeekPredicateNew>
+                        </SeekPredicates>
+                      </IndexScan>
+                    </RelOp>
+                  </NestedLoops>
+                </RelOp>
+                <Predicate>
+                  <ScalarOperator ScalarString="CASE WHEN [Expr1050] IS NULL THEN (0) ELSE CASE WHEN [Expr1051] IS NULL THEN (1) ELSE CASE WHEN [Expr1052] IS NULL THEN (2) ELSE CASE WHEN [Expr1053] IS NULL THEN (3) ELSE NULL END END END END">
+                    <IF>
+                      <Condition>
+                        <ScalarOperator>
+                          <Logical Operation="IS NULL">
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1050" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Logical>
+                        </ScalarOperator>
+                      </Condition>
+                      <Then>
+                        <ScalarOperator>
+                          <Const ConstValue="(0)" />
+                        </ScalarOperator>
+                      </Then>
+                      <Else>
+                        <ScalarOperator>
+                          <IF>
+                            <Condition>
+                              <ScalarOperator>
+                                <Logical Operation="IS NULL">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Expr1051" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Logical>
+                              </ScalarOperator>
+                            </Condition>
+                            <Then>
+                              <ScalarOperator>
+                                <Const ConstValue="(1)" />
+                              </ScalarOperator>
+                            </Then>
+                            <Else>
+                              <ScalarOperator>
+                                <IF>
+                                  <Condition>
+                                    <ScalarOperator>
+                                      <Logical Operation="IS NULL">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="Expr1052" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Logical>
+                                    </ScalarOperator>
+                                  </Condition>
+                                  <Then>
+                                    <ScalarOperator>
+                                      <Const ConstValue="(2)" />
+                                    </ScalarOperator>
+                                  </Then>
+                                  <Else>
+                                    <ScalarOperator>
+                                      <IF>
+                                        <Condition>
+                                          <ScalarOperator>
+                                            <Logical Operation="IS NULL">
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="Expr1053" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Logical>
+                                          </ScalarOperator>
+                                        </Condition>
+                                        <Then>
+                                          <ScalarOperator>
+                                            <Const ConstValue="(3)" />
+                                          </ScalarOperator>
+                                        </Then>
+                                        <Else>
+                                          <ScalarOperator>
+                                            <Const ConstValue="NULL" />
+                                          </ScalarOperator>
+                                        </Else>
+                                      </IF>
+                                    </ScalarOperator>
+                                  </Else>
+                                </IF>
+                              </ScalarOperator>
+                            </Else>
+                          </IF>
+                        </ScalarOperator>
+                      </Else>
+                    </IF>
+                  </ScalarOperator>
+                </Predicate>
+              </Assert>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText="&#x9;DROP TABLE #FailureCollection&#xD;&#xA;&#x9;&#xD;&#xA;&#x9;-- Return outliers (= Rows in @Failures that are not inserted in dbo.Failure)&#xD;&#xA;" StatementId="12" StatementCompId="15" StatementType="DROP OBJECT" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;SELECT  F.InternalTestpassId,&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;&#x9;F.TestpassUniqueKey,&#x9;&#xD;&#xA;&#x9;&#x9;&#x9;F.TestpassDefinitionName, &#xD;&#xA;&#x9;&#x9;&#x9;F.FailureType, &#xD;&#xA;&#x9;&#x9;&#x9;F.FailureCategory,&#xD;&#xA;&#x9;&#x9;&#x9;F.FailureSubCategory,&#xD;&#xA;&#x9;&#x9;&#x9;F.FailureGuid,&#xD;&#xA;&#x9;&#x9;&#x9;F.FailureStatus,&#xD;&#xA;&#x9;&#x9;&#x9;F.FailureTriageOwner,&#xD;&#xA;&#x9;&#x9;&#x9;F.FailureAssignedTo,&#xD;&#xA;&#x9;&#x9;&#x9;F.FailureTitle,&#xD;&#xA;&#x9;&#x9;&#x9;F.IsAutoResolved,&#xD;&#xA;&#x9;&#x9;&#x9;F.DoNotUseForAutoAnalysis &#xD;&#xA;&#x9;FROM @Failures F&#xD;&#xA;&#x9;WHERE NOT EXISTS&#xD;&#xA;&#x9;(&#xD;&#xA;&#x9;&#x9;SELECT TOP 1 1 FROM dbo.Failure WITH(NOLOCK)&#xD;&#xA;&#x9;&#x9;WHERE [Guid] = F.FailureGuid&#xD;&#xA;&#x9;)&#xD;&#xA;&#xD;" StatementId="13" StatementCompId="16" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.00657038" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0xC532610D225A271" QueryPlanHash="0x6DB2622668BB2DFF" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="32" CompileTime="1" CompileCPU="1" CompileMemory="408">
+            <MemoryGrantInfo SerialRequiredMemory="512" SerialDesiredMemory="544" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Nested Loops" LogicalOp="Left Anti Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="1149" EstimatedTotalSubtreeCost="0.00657038" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Table="@Failures" Alias="[F]" Column="InternalTestpassId" />
+                <ColumnReference Table="@Failures" Alias="[F]" Column="TestpassUniqueKey" />
+                <ColumnReference Table="@Failures" Alias="[F]" Column="TestpassDefinitionName" />
+                <ColumnReference Table="@Failures" Alias="[F]" Column="FailureType" />
+                <ColumnReference Table="@Failures" Alias="[F]" Column="FailureCategory" />
+                <ColumnReference Table="@Failures" Alias="[F]" Column="FailureSubCategory" />
+                <ColumnReference Table="@Failures" Alias="[F]" Column="FailureGuid" />
+                <ColumnReference Table="@Failures" Alias="[F]" Column="FailureStatus" />
+                <ColumnReference Table="@Failures" Alias="[F]" Column="FailureTriageOwner" />
+                <ColumnReference Table="@Failures" Alias="[F]" Column="FailureAssignedTo" />
+                <ColumnReference Table="@Failures" Alias="[F]" Column="FailureTitle" />
+                <ColumnReference Table="@Failures" Alias="[F]" Column="IsAutoResolved" />
+                <ColumnReference Table="@Failures" Alias="[F]" Column="DoNotUseForAutoAnalysis" />
+              </OutputList>
+              <NestedLoops Optimized="1">
+                <OuterReferences>
+                  <ColumnReference Table="@Failures" Alias="[F]" Column="FailureGuid" />
+                </OuterReferences>
+                <RelOp NodeId="2" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="1149" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Table="@Failures" Alias="[F]" Column="InternalTestpassId" />
+                    <ColumnReference Table="@Failures" Alias="[F]" Column="TestpassUniqueKey" />
+                    <ColumnReference Table="@Failures" Alias="[F]" Column="TestpassDefinitionName" />
+                    <ColumnReference Table="@Failures" Alias="[F]" Column="FailureType" />
+                    <ColumnReference Table="@Failures" Alias="[F]" Column="FailureCategory" />
+                    <ColumnReference Table="@Failures" Alias="[F]" Column="FailureSubCategory" />
+                    <ColumnReference Table="@Failures" Alias="[F]" Column="FailureGuid" />
+                    <ColumnReference Table="@Failures" Alias="[F]" Column="FailureStatus" />
+                    <ColumnReference Table="@Failures" Alias="[F]" Column="FailureTriageOwner" />
+                    <ColumnReference Table="@Failures" Alias="[F]" Column="FailureAssignedTo" />
+                    <ColumnReference Table="@Failures" Alias="[F]" Column="FailureTitle" />
+                    <ColumnReference Table="@Failures" Alias="[F]" Column="IsAutoResolved" />
+                    <ColumnReference Table="@Failures" Alias="[F]" Column="DoNotUseForAutoAnalysis" />
+                  </OutputList>
+                  <TableScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Table="@Failures" Alias="[F]" Column="InternalTestpassId" />
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Table="@Failures" Alias="[F]" Column="TestpassUniqueKey" />
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Table="@Failures" Alias="[F]" Column="TestpassDefinitionName" />
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Table="@Failures" Alias="[F]" Column="FailureType" />
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Table="@Failures" Alias="[F]" Column="FailureCategory" />
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Table="@Failures" Alias="[F]" Column="FailureSubCategory" />
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Table="@Failures" Alias="[F]" Column="FailureGuid" />
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Table="@Failures" Alias="[F]" Column="FailureStatus" />
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Table="@Failures" Alias="[F]" Column="FailureTriageOwner" />
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Table="@Failures" Alias="[F]" Column="FailureAssignedTo" />
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Table="@Failures" Alias="[F]" Column="FailureTitle" />
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Table="@Failures" Alias="[F]" Column="IsAutoResolved" />
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Table="@Failures" Alias="[F]" Column="DoNotUseForAutoAnalysis" />
+                      </DefinedValue>
+                    </DefinedValues>
+                    <Object Table="[@Failures]" Alias="[F]" />
+                  </TableScan>
+                </RelOp>
+                <RelOp NodeId="3" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="3.38967e+007" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList />
+                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                    <DefinedValues />
+                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Index="[Failure_IDX_Guid]" IndexKind="NonClustered" />
+                    <SeekPredicates>
+                      <SeekPredicateNew>
+                        <SeekKeys>
+                          <Prefix ScanType="EQ">
+                            <RangeColumns>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Column="Guid" />
+                            </RangeColumns>
+                            <RangeExpressions>
+                              <ScalarOperator ScalarString="@Failures.[FailureGuid] as [F].[FailureGuid]">
+                                <Identifier>
+                                  <ColumnReference Table="@Failures" Alias="[F]" Column="FailureGuid" />
+                                </Identifier>
+                              </ScalarOperator>
+                            </RangeExpressions>
+                          </Prefix>
+                        </SeekKeys>
+                      </SeekPredicateNew>
+                    </SeekPredicates>
+                  </IndexScan>
+                </RelOp>
+              </NestedLoops>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText="&#xA;RETURN 0" StatementId="14" StatementCompId="17" StatementType="RETURN" RetrievedFromCache="true" />
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

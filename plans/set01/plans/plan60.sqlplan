@@ -1,0 +1,811 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="CREATE PROCEDURE [dbo].[Uploader_GetOrCreateTestpassDefinitionId]&#xD;&#xA;    @Name NVARCHAR (100), &#xD;&#xA;    @Description NVARCHAR (250), &#xD;&#xA;    @TeamName NVARCHAR (150), &#xD;&#xA;    @TeamDescription NVARCHAR (250), &#xD;&#xA;    @Contact NVARCHAR (50), &#xD;&#xA;    @TestpassTypeName NVARCHAR (100), &#xD;&#xA;    @TestpassDefinitionId INT OUTPUT&#xD;&#xA;AS&#xD;&#xA;BEGIN&#xD;&#xA;&#xD;&#xA;    DECLARE @stopwatchBeginTime datetime2 &#xD;&#xA;    SELECT @stopwatchBeginTime = [dbo].[fnBeginStopwatch]()&#xD;&#xA;&#xD;&#xA;   " StatementId="1" StatementCompId="47" StatementType="ASSIGN WITH QUERY" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" DECLARE @ErrorMsg varchar(1024)&#xD;&#xA;    DECLARE @TeamId INT&#xD;&#xA;    DECLARE @TestpassTypeId TINYINT&#xD;&#xA;    SET @TestpassDefinitionId = NULL&#xD;&#xA;    &#xD;&#xA;" StatementId="2" StatementCompId="48" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;SET @TeamId = NULL&#xD;&#xA;   " StatementId="3" StatementCompId="49" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" EXEC dbo.Uploader_GetOrCreateTeamId @TeamName, &#xD;&#xA;        @Contact, @TeamDescription, @TeamId OUT&#xD;&#xA;&#xD;&#xA;   " StatementId="4" StatementCompId="50" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+        <StmtCond StatementText=" IF (@TeamId IS NULL)&#xD;&#xA;   " StatementId="5" StatementCompId="51" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;        SET @ErrorMsg = 'Unable to find Team Id for TeamName ' + @TeamName&#xD;&#xA;       " StatementId="6" StatementCompId="52" StatementType="ASSIGN" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" RAISERROR(@ErrorMsg, 11 ,1)&#xD;&#xA;       " StatementId="7" StatementCompId="53" StatementType="RAISERROR" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" RETURN&#xD;&#xA;   " StatementId="8" StatementCompId="54" StatementType="RETURN NONE" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtSimple StatementText=" END&#xD;&#xA;&#xD;&#xA;&#x9;SET @TestpassTypeId = NULL&#xD;&#xA;   " StatementId="9" StatementCompId="56" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" EXEC Uploader_GetTestpassTypeId @TestpassTypeName, @TestpassTypeId OUT&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#x9;-- pessimistic approach to avoid deadlocks and race conditions&#xD;&#xA;   " StatementId="10" StatementCompId="57" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" INSERT  INTO dbo.TestpassDefinition&#xD;&#xA;            ( Name ,&#xD;&#xA;              TestpassTypeId ,&#xD;&#xA;              TeamId ,&#xD;&#xA;              Description&#xD;&#xA;            )&#xD;&#xA;            SELECT  @Name ,&#xD;&#xA;                    @TestpassTypeId ,&#xD;&#xA;                    @TeamId ,&#xD;&#xA;                    @Description&#xD;&#xA;            WHERE   NOT EXISTS ( SELECT TOP 1&#xD;&#xA;                                        1&#xD;&#xA;                                 FROM   dbo.TestpassDefinition&#xD;&#xA;                                 WHERE  Name = @Name );&#xD;&#xA;&#xD;&#xA;   " StatementId="11" StatementCompId="58" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.0498685" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x725324A93189B32B" QueryPlanHash="0xE47750FBDE0CB12D" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="48" CompileTime="6" CompileCPU="6" CompileMemory="808">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="1" PhysicalOp="Assert" LogicalOp="Assert" EstimateRows="1" EstimateIO="0" EstimateCPU="9.8e-007" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0498685" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <Assert StartupExpression="0">
+                <RelOp NodeId="2" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0498675" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Expr1035" />
+                    <ColumnReference Column="Pass1036" />
+                    <ColumnReference Column="Expr1037" />
+                  </OutputList>
+                  <NestedLoops Optimized="0">
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1037" />
+                      </DefinedValue>
+                    </DefinedValues>
+                    <OuterReferences>
+                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Column="TestpassTypeId" />
+                    </OuterReferences>
+                    <ProbeColumn>
+                      <ColumnReference Column="Expr1037" />
+                    </ProbeColumn>
+                    <RelOp NodeId="3" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0465802" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Column="TestpassTypeId" />
+                        <ColumnReference Column="Expr1035" />
+                        <ColumnReference Column="Pass1036" />
+                      </OutputList>
+                      <NestedLoops Optimized="0">
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1035" />
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Column="Pass1036" />
+                          </DefinedValue>
+                        </DefinedValues>
+                        <PassThru>
+                          <ScalarOperator ScalarString="[OurLabReporting].[dbo].[TestpassDefinition].[TeamId] IS NULL">
+                            <Logical Operation="IS NULL">
+                              <ScalarOperator>
+                                <Identifier>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Column="TeamId" />
+                                </Identifier>
+                              </ScalarOperator>
+                            </Logical>
+                          </ScalarOperator>
+                        </PassThru>
+                        <OuterReferences>
+                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Column="TeamId" />
+                        </OuterReferences>
+                        <ProbeColumn>
+                          <ColumnReference Column="Expr1035" />
+                        </ProbeColumn>
+                        <RelOp NodeId="4" PhysicalOp="Clustered Index Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.04" EstimateCPU="4e-006" AvgRowSize="12" EstimatedTotalSubtreeCost="0.0432927" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Column="TestpassTypeId" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Column="TeamId" />
+                          </OutputList>
+                          <Update DMLRequestSort="0">
+                            <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Index="[PK_TestpassDefinition]" IndexKind="Clustered" />
+                            <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Index="[IX_TestpassDefinition_Name_Include_Id]" IndexKind="NonClustered" />
+                            <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Index="[TestpassDefinition_IX_LastUpdate]" IndexKind="NonClustered" />
+                            <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Index="[TestpassDefinition_IX_DbTimestamp_Include_Id]" IndexKind="NonClustered" />
+                            <SetPredicate>
+                              <ScalarOperator ScalarString="[OurLabReporting].[dbo].[TestpassDefinition].[Name] = RaiseIfNullInsert([Expr1008]),[OurLabReporting].[dbo].[TestpassDefinition].[TestpassTypeId] = RaiseIfNullInsert([@TestpassTypeId]),[OurLabReporting].[dbo].[TestpassDefinition].[TeamId] = [@TeamId],[OurLabReporting].[dbo].[TestpassDefinition].[Description] = [@Description],[OurLabReporting].[dbo].[TestpassDefinition].[Id] = [Expr1007],[OurLabReporting].[dbo].[TestpassDefinition].[RecordLastUpdated] = [Expr1009],[OurLabReporting].[dbo].[TestpassDefinition].[IsExternal] = [Expr1010],[OurLabReporting].[dbo].[TestpassDefinition].[DbTimestamp] = [Expr1011]">
+                                <ScalarExpressionList>
+                                  <ScalarOperator>
+                                    <MultipleAssign>
+                                      <Assign>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Column="Name" />
+                                        <ScalarOperator>
+                                          <Intrinsic FunctionName="RaiseIfNullInsert">
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Column="Expr1008" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </Intrinsic>
+                                        </ScalarOperator>
+                                      </Assign>
+                                      <Assign>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Column="TestpassTypeId" />
+                                        <ScalarOperator>
+                                          <Intrinsic FunctionName="RaiseIfNullInsert">
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Column="@TestpassTypeId" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </Intrinsic>
+                                        </ScalarOperator>
+                                      </Assign>
+                                      <Assign>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Column="TeamId" />
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="@TeamId" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Assign>
+                                      <Assign>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Column="Description" />
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="@Description" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Assign>
+                                      <Assign>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Column="Id" />
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="Expr1007" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Assign>
+                                      <Assign>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Column="RecordLastUpdated" />
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="Expr1009" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Assign>
+                                      <Assign>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Column="IsExternal" />
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="Expr1010" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Assign>
+                                      <Assign>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Column="DbTimestamp" />
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="Expr1011" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Assign>
+                                    </MultipleAssign>
+                                  </ScalarOperator>
+                                </ScalarExpressionList>
+                              </ScalarOperator>
+                            </SetPredicate>
+                            <RelOp NodeId="5" PhysicalOp="Top" LogicalOp="Top" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="182" EstimatedTotalSubtreeCost="0.00328874" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Column="Expr1007" />
+                                <ColumnReference Column="Expr1008" />
+                                <ColumnReference Column="Expr1009" />
+                                <ColumnReference Column="Expr1010" />
+                                <ColumnReference Column="Expr1011" />
+                              </OutputList>
+                              <Top RowCount="0" IsPercent="0" WithTies="0">
+                                <TopExpression>
+                                  <ScalarOperator ScalarString="(1)">
+                                    <Const ConstValue="(1)" />
+                                  </ScalarOperator>
+                                </TopExpression>
+                                <RelOp NodeId="6" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="182" EstimatedTotalSubtreeCost="0.00328864" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Column="Expr1007" />
+                                    <ColumnReference Column="Expr1008" />
+                                    <ColumnReference Column="Expr1009" />
+                                    <ColumnReference Column="Expr1010" />
+                                    <ColumnReference Column="Expr1011" />
+                                  </OutputList>
+                                  <ComputeScalar>
+                                    <DefinedValues>
+                                      <DefinedValue>
+                                        <ColumnReference Column="Expr1008" />
+                                        <ScalarOperator ScalarString="CONVERT_IMPLICIT(nvarchar(150),[@Name],0)">
+                                          <Convert DataType="nvarchar" Length="300" Style="0" Implicit="1">
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Column="@Name" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </Convert>
+                                        </ScalarOperator>
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Column="Expr1009" />
+                                        <ScalarOperator ScalarString="getdate()">
+                                          <Identifier>
+                                            <ColumnReference Column="ConstExpr1033">
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="getdate" />
+                                              </ScalarOperator>
+                                            </ColumnReference>
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Column="Expr1010" />
+                                        <ScalarOperator ScalarString="(0)">
+                                          <Const ConstValue="(0)" />
+                                        </ScalarOperator>
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Column="Expr1011" />
+                                        <ScalarOperator ScalarString="CONVERT_IMPLICIT(datetime2(7),getutcdate(),0)">
+                                          <Identifier>
+                                            <ColumnReference Column="ConstExpr1034">
+                                              <ScalarOperator>
+                                                <Convert DataType="datetime2" Style="0" Implicit="1">
+                                                  <ScalarOperator>
+                                                    <Intrinsic FunctionName="getutcdate" />
+                                                  </ScalarOperator>
+                                                </Convert>
+                                              </ScalarOperator>
+                                            </ColumnReference>
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </DefinedValue>
+                                    </DefinedValues>
+                                    <RelOp NodeId="7" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328854" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList>
+                                        <ColumnReference Column="Expr1007" />
+                                      </OutputList>
+                                      <ComputeScalar ComputeSequence="1">
+                                        <DefinedValues>
+                                          <DefinedValue>
+                                            <ColumnReference Column="Expr1007" />
+                                            <ScalarOperator ScalarString="getidentity((1346103836),(6),NULL)">
+                                              <Intrinsic FunctionName="getidentity">
+                                                <ScalarOperator>
+                                                  <Const ConstValue="(1346103836)" />
+                                                </ScalarOperator>
+                                                <ScalarOperator>
+                                                  <Const ConstValue="(6)" />
+                                                </ScalarOperator>
+                                                <ScalarOperator>
+                                                  <Const ConstValue="NULL" />
+                                                </ScalarOperator>
+                                              </Intrinsic>
+                                            </ScalarOperator>
+                                          </DefinedValue>
+                                        </DefinedValues>
+                                        <RelOp NodeId="8" PhysicalOp="Nested Loops" LogicalOp="Left Anti Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.00328844" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                          <OutputList />
+                                          <NestedLoops Optimized="0">
+                                            <RelOp NodeId="9" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                              <OutputList />
+                                              <ConstantScan />
+                                            </RelOp>
+                                            <RelOp NodeId="10" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1875" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                              <OutputList />
+                                              <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                                <DefinedValues />
+                                                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Index="[IX_TestpassDefinition_Name_Include_Id]" IndexKind="NonClustered" />
+                                                <SeekPredicates>
+                                                  <SeekPredicateNew>
+                                                    <SeekKeys>
+                                                      <Prefix ScanType="EQ">
+                                                        <RangeColumns>
+                                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Column="Name" />
+                                                        </RangeColumns>
+                                                        <RangeExpressions>
+                                                          <ScalarOperator ScalarString="[@Name]">
+                                                            <Identifier>
+                                                              <ColumnReference Column="@Name" />
+                                                            </Identifier>
+                                                          </ScalarOperator>
+                                                        </RangeExpressions>
+                                                      </Prefix>
+                                                    </SeekKeys>
+                                                  </SeekPredicateNew>
+                                                </SeekPredicates>
+                                              </IndexScan>
+                                            </RelOp>
+                                          </NestedLoops>
+                                        </RelOp>
+                                      </ComputeScalar>
+                                    </RelOp>
+                                  </ComputeScalar>
+                                </RelOp>
+                              </Top>
+                            </RelOp>
+                          </Update>
+                        </RelOp>
+                        <RelOp NodeId="24" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="14" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList />
+                          <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                            <DefinedValues />
+                            <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Team]" Index="[PK_Team]" IndexKind="Clustered" />
+                            <SeekPredicates>
+                              <SeekPredicateNew>
+                                <SeekKeys>
+                                  <Prefix ScanType="EQ">
+                                    <RangeColumns>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Team]" Column="Id" />
+                                    </RangeColumns>
+                                    <RangeExpressions>
+                                      <ScalarOperator ScalarString="[OurLabReporting].[dbo].[TestpassDefinition].[TeamId]">
+                                        <Identifier>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Column="TeamId" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </RangeExpressions>
+                                  </Prefix>
+                                </SeekKeys>
+                              </SeekPredicateNew>
+                            </SeekPredicates>
+                          </IndexScan>
+                        </RelOp>
+                      </NestedLoops>
+                    </RelOp>
+                    <RelOp NodeId="25" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="39" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList />
+                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                        <DefinedValues />
+                        <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassType]" Index="[PK_TestpassType]" IndexKind="Clustered" />
+                        <SeekPredicates>
+                          <SeekPredicateNew>
+                            <SeekKeys>
+                              <Prefix ScanType="EQ">
+                                <RangeColumns>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassType]" Column="Id" />
+                                </RangeColumns>
+                                <RangeExpressions>
+                                  <ScalarOperator ScalarString="[OurLabReporting].[dbo].[TestpassDefinition].[TestpassTypeId]">
+                                    <Identifier>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Column="TestpassTypeId" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </RangeExpressions>
+                              </Prefix>
+                            </SeekKeys>
+                          </SeekPredicateNew>
+                        </SeekPredicates>
+                      </IndexScan>
+                    </RelOp>
+                  </NestedLoops>
+                </RelOp>
+                <Predicate>
+                  <ScalarOperator ScalarString="CASE WHEN NOT [Pass1036] AND [Expr1035] IS NULL THEN (0) ELSE CASE WHEN [Expr1037] IS NULL THEN (1) ELSE NULL END END">
+                    <IF>
+                      <Condition>
+                        <ScalarOperator>
+                          <Logical Operation="AND">
+                            <ScalarOperator>
+                              <Logical Operation="NOT">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="Pass1036" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Logical>
+                            </ScalarOperator>
+                            <ScalarOperator>
+                              <Logical Operation="IS NULL">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="Expr1035" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Logical>
+                            </ScalarOperator>
+                          </Logical>
+                        </ScalarOperator>
+                      </Condition>
+                      <Then>
+                        <ScalarOperator>
+                          <Const ConstValue="(0)" />
+                        </ScalarOperator>
+                      </Then>
+                      <Else>
+                        <ScalarOperator>
+                          <IF>
+                            <Condition>
+                              <ScalarOperator>
+                                <Logical Operation="IS NULL">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Expr1037" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Logical>
+                              </ScalarOperator>
+                            </Condition>
+                            <Then>
+                              <ScalarOperator>
+                                <Const ConstValue="(1)" />
+                              </ScalarOperator>
+                            </Then>
+                            <Else>
+                              <ScalarOperator>
+                                <Const ConstValue="NULL" />
+                              </ScalarOperator>
+                            </Else>
+                          </IF>
+                        </ScalarOperator>
+                      </Else>
+                    </IF>
+                  </ScalarOperator>
+                </Predicate>
+              </Assert>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@Description" ParameterCompiledValue="N'TReX Template Id: 115425'" />
+              <ColumnReference Column="@Name" ParameterCompiledValue="N'PerfSentinel'" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtCond StatementText=" IF @@ROWCOUNT &gt; 0&#xD;&#xA;&#x9;&#x9;&#x9;-- insert was successful &#xD;&#xA;       " StatementId="12" StatementCompId="59" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" SET @TestpassDefinitionId = SCOPE_IDENTITY();&#xD;&#xA;   " StatementId="13" StatementCompId="60" StatementType="ASSIGN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+          <Else>
+            <Statements>
+              <StmtSimple StatementText=" ELSE&#xD;&#xA;        BEGIN&#xD;&#xA;&#x9;&#x9;&#x9;-- looks like someone else managed to insert this row.&#xD;&#xA;&#x9;&#x9;&#x9;-- let's update values instead&#xD;&#xA;            &#xD;&#xA;&#x9;&#x9;&#x9;-- using SELECT instead of SET to avoid crashing if we have multiple rows from previous bug&#xD;&#xA;            SELECT TOP 1&#xD;&#xA;                    @TestpassDefinitionId = Id&#xD;&#xA;            FROM    TestpassDefinition&#xD;&#xA;            WHERE   Name = @Name&#xD;&#xA;&#x9;&#x9;&#x9;ORDER BY Id DESC;&#xD;&#xA;            &#xD;&#xA;&#x9;&#x9;&#x9;-- using @Name instead of @TPDId again due to possible multiple rows.&#xD;&#xA;           " StatementId="14" StatementCompId="63" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032832" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x431E0A275BABCDD6" QueryPlanHash="0xECBE5D5A1B758813">
+                <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="0" CompileCPU="0" CompileMemory="232">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="0" PhysicalOp="Top" LogicalOp="Top" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032832" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList>
+                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Column="Id" />
+                    </OutputList>
+                    <Top RowCount="0" IsPercent="0" WithTies="0">
+                      <TopExpression>
+                        <ScalarOperator ScalarString="(1)">
+                          <Const ConstValue="(1)" />
+                        </ScalarOperator>
+                      </TopExpression>
+                      <RelOp NodeId="1" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1875" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList>
+                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Column="Id" />
+                        </OutputList>
+                        <IndexScan Ordered="1" ScanDirection="BACKWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                          <DefinedValues>
+                            <DefinedValue>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Column="Id" />
+                            </DefinedValue>
+                          </DefinedValues>
+                          <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Index="[IX_TestpassDefinition_Name_Include_Id]" IndexKind="NonClustered" />
+                          <SeekPredicates>
+                            <SeekPredicateNew>
+                              <SeekKeys>
+                                <Prefix ScanType="EQ">
+                                  <RangeColumns>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Column="Name" />
+                                  </RangeColumns>
+                                  <RangeExpressions>
+                                    <ScalarOperator ScalarString="[@Name]">
+                                      <Identifier>
+                                        <ColumnReference Column="@Name" />
+                                      </Identifier>
+                                    </ScalarOperator>
+                                  </RangeExpressions>
+                                </Prefix>
+                              </SeekKeys>
+                            </SeekPredicateNew>
+                          </SeekPredicates>
+                        </IndexScan>
+                      </RelOp>
+                    </Top>
+                  </RelOp>
+                  <ParameterList>
+                    <ColumnReference Column="@TestpassDefinitionId" ParameterCompiledValue="NULL" />
+                    <ColumnReference Column="@Name" ParameterCompiledValue="N'PerfSentinel'" />
+                  </ParameterList>
+                </QueryPlan>
+              </StmtSimple>
+              <StmtSimple StatementText=" UPDATE  TestpassDefinition&#xD;&#xA;            SET     TestpassTypeId = @TestpassTypeId ,&#xD;&#xA;                    TeamId = @TeamId ,&#xD;&#xA;                    Description = @Description&#xD;&#xA;            FROM    TestpassDefinition&#xD;&#xA;            WHERE   Name = @Name;&#xD;&#xA;       " StatementId="15" StatementCompId="64" StatementType="UPDATE" RetrievedFromCache="true" StatementSubTreeCost="0.0198598" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0xD3035EFA991EC5" QueryPlanHash="0xEA4D2C110AA5B3BA" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+                <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="40" CompileTime="5" CompileCPU="5" CompileMemory="816">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="1" PhysicalOp="Assert" LogicalOp="Assert" EstimateRows="1" EstimateIO="0" EstimateCPU="9.8e-007" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0198598" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList />
+                    <Assert StartupExpression="0">
+                      <RelOp NodeId="2" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0198589" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList>
+                          <ColumnReference Column="Expr1039" />
+                          <ColumnReference Column="Pass1040" />
+                          <ColumnReference Column="Expr1041" />
+                        </OutputList>
+                        <NestedLoops Optimized="0">
+                          <DefinedValues>
+                            <DefinedValue>
+                              <ColumnReference Column="Expr1041" />
+                            </DefinedValue>
+                          </DefinedValues>
+                          <OuterReferences>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Column="TestpassTypeId" />
+                          </OuterReferences>
+                          <ProbeColumn>
+                            <ColumnReference Column="Expr1041" />
+                          </ProbeColumn>
+                          <RelOp NodeId="3" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0165716" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Column="TestpassTypeId" />
+                              <ColumnReference Column="Expr1039" />
+                              <ColumnReference Column="Pass1040" />
+                            </OutputList>
+                            <NestedLoops Optimized="0">
+                              <DefinedValues>
+                                <DefinedValue>
+                                  <ColumnReference Column="Expr1039" />
+                                </DefinedValue>
+                                <DefinedValue>
+                                  <ColumnReference Column="Pass1040" />
+                                </DefinedValue>
+                              </DefinedValues>
+                              <PassThru>
+                                <ScalarOperator ScalarString="[OurLabReporting].[dbo].[TestpassDefinition].[TeamId] IS NULL">
+                                  <Logical Operation="IS NULL">
+                                    <ScalarOperator>
+                                      <Identifier>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Column="TeamId" />
+                                      </Identifier>
+                                    </ScalarOperator>
+                                  </Logical>
+                                </ScalarOperator>
+                              </PassThru>
+                              <OuterReferences>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Column="TeamId" />
+                              </OuterReferences>
+                              <ProbeColumn>
+                                <ColumnReference Column="Expr1039" />
+                              </ProbeColumn>
+                              <RelOp NodeId="4" PhysicalOp="Clustered Index Update" LogicalOp="Update" EstimateRows="1" EstimateIO="0.01" EstimateCPU="1e-006" AvgRowSize="12" EstimatedTotalSubtreeCost="0.0132841" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Column="TestpassTypeId" />
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Column="TeamId" />
+                                </OutputList>
+                                <Update DMLRequestSort="0">
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Index="[PK_TestpassDefinition]" IndexKind="Clustered" />
+                                  <SetPredicate>
+                                    <ScalarOperator ScalarString="[OurLabReporting].[dbo].[TestpassDefinition].[TestpassTypeId] = RaiseIfNullUpdate([@TestpassTypeId]),[OurLabReporting].[dbo].[TestpassDefinition].[TeamId] = [@TeamId],[OurLabReporting].[dbo].[TestpassDefinition].[Description] = [@Description]">
+                                      <ScalarExpressionList>
+                                        <ScalarOperator>
+                                          <MultipleAssign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Column="TestpassTypeId" />
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="RaiseIfNullUpdate">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@TestpassTypeId" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Column="TeamId" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@TeamId" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                            <Assign>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Column="Description" />
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@Description" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Assign>
+                                          </MultipleAssign>
+                                        </ScalarOperator>
+                                      </ScalarExpressionList>
+                                    </ScalarOperator>
+                                  </SetPredicate>
+                                  <RelOp NodeId="5" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1875" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                    <OutputList>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Column="Id" />
+                                    </OutputList>
+                                    <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                      <DefinedValues>
+                                        <DefinedValue>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Column="Id" />
+                                        </DefinedValue>
+                                      </DefinedValues>
+                                      <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Index="[IX_TestpassDefinition_Name_Include_Id]" IndexKind="NonClustered" />
+                                      <SeekPredicates>
+                                        <SeekPredicateNew>
+                                          <SeekKeys>
+                                            <Prefix ScanType="EQ">
+                                              <RangeColumns>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Column="Name" />
+                                              </RangeColumns>
+                                              <RangeExpressions>
+                                                <ScalarOperator ScalarString="[@Name]">
+                                                  <Identifier>
+                                                    <ColumnReference Column="@Name" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                              </RangeExpressions>
+                                            </Prefix>
+                                          </SeekKeys>
+                                        </SeekPredicateNew>
+                                      </SeekPredicates>
+                                    </IndexScan>
+                                  </RelOp>
+                                </Update>
+                              </RelOp>
+                              <RelOp NodeId="6" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="14" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList />
+                                <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                  <DefinedValues />
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Team]" Index="[PK_Team]" IndexKind="Clustered" />
+                                  <SeekPredicates>
+                                    <SeekPredicateNew>
+                                      <SeekKeys>
+                                        <Prefix ScanType="EQ">
+                                          <RangeColumns>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Team]" Column="Id" />
+                                          </RangeColumns>
+                                          <RangeExpressions>
+                                            <ScalarOperator ScalarString="[OurLabReporting].[dbo].[TestpassDefinition].[TeamId]">
+                                              <Identifier>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Column="TeamId" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </RangeExpressions>
+                                        </Prefix>
+                                      </SeekKeys>
+                                    </SeekPredicateNew>
+                                  </SeekPredicates>
+                                </IndexScan>
+                              </RelOp>
+                            </NestedLoops>
+                          </RelOp>
+                          <RelOp NodeId="7" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="39" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList />
+                            <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                              <DefinedValues />
+                              <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassType]" Index="[PK_TestpassType]" IndexKind="Clustered" />
+                              <SeekPredicates>
+                                <SeekPredicateNew>
+                                  <SeekKeys>
+                                    <Prefix ScanType="EQ">
+                                      <RangeColumns>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassType]" Column="Id" />
+                                      </RangeColumns>
+                                      <RangeExpressions>
+                                        <ScalarOperator ScalarString="[OurLabReporting].[dbo].[TestpassDefinition].[TestpassTypeId]">
+                                          <Identifier>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestpassDefinition]" Column="TestpassTypeId" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </RangeExpressions>
+                                    </Prefix>
+                                  </SeekKeys>
+                                </SeekPredicateNew>
+                              </SeekPredicates>
+                            </IndexScan>
+                          </RelOp>
+                        </NestedLoops>
+                      </RelOp>
+                      <Predicate>
+                        <ScalarOperator ScalarString="CASE WHEN NOT [Pass1040] AND [Expr1039] IS NULL THEN (0) ELSE CASE WHEN [Expr1041] IS NULL THEN (1) ELSE NULL END END">
+                          <IF>
+                            <Condition>
+                              <ScalarOperator>
+                                <Logical Operation="AND">
+                                  <ScalarOperator>
+                                    <Logical Operation="NOT">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="Pass1040" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Logical>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Logical Operation="IS NULL">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="Expr1039" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Logical>
+                                  </ScalarOperator>
+                                </Logical>
+                              </ScalarOperator>
+                            </Condition>
+                            <Then>
+                              <ScalarOperator>
+                                <Const ConstValue="(0)" />
+                              </ScalarOperator>
+                            </Then>
+                            <Else>
+                              <ScalarOperator>
+                                <IF>
+                                  <Condition>
+                                    <ScalarOperator>
+                                      <Logical Operation="IS NULL">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="Expr1041" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Logical>
+                                    </ScalarOperator>
+                                  </Condition>
+                                  <Then>
+                                    <ScalarOperator>
+                                      <Const ConstValue="(1)" />
+                                    </ScalarOperator>
+                                  </Then>
+                                  <Else>
+                                    <ScalarOperator>
+                                      <Const ConstValue="NULL" />
+                                    </ScalarOperator>
+                                  </Else>
+                                </IF>
+                              </ScalarOperator>
+                            </Else>
+                          </IF>
+                        </ScalarOperator>
+                      </Predicate>
+                    </Assert>
+                  </RelOp>
+                  <ParameterList>
+                    <ColumnReference Column="@Description" ParameterCompiledValue="N'TReX Template Id: 115425'" />
+                    <ColumnReference Column="@Name" ParameterCompiledValue="N'PerfSentinel'" />
+                  </ParameterList>
+                </QueryPlan>
+              </StmtSimple>
+            </Statements>
+          </Else>
+        </StmtCond>
+        <StmtSimple StatementText=" END&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;    DECLARE @objectName varchar(128) = (SELECT OBJECT_NAME(@@PROCID))&#xD;&#xA;   " StatementId="16" StatementCompId="66" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="1.257e-006" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x830C952D7490168E" QueryPlanHash="0x3B1EAEC0618BFE3F" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="0" CompileCPU="0" CompileMemory="224">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="75" EstimatedTotalSubtreeCost="1.257e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Column="Expr1001" />
+              </OutputList>
+              <ComputeScalar>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1001" />
+                    <ScalarOperator ScalarString="CONVERT_IMPLICIT(varchar(128),[Expr1000],0)">
+                      <Convert DataType="varchar" Length="128" Style="0" Implicit="1">
+                        <ScalarOperator>
+                          <Identifier>
+                            <ColumnReference Column="Expr1000" />
+                          </Identifier>
+                        </ScalarOperator>
+                      </Convert>
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp NodeId="1" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="139" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Expr1000" />
+                  </OutputList>
+                  <ConstantScan>
+                    <Values>
+                      <Row>
+                        <ScalarOperator ScalarString="object_name(@@procid)">
+                          <Intrinsic FunctionName="object_name">
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="@@procid" />
+                            </ScalarOperator>
+                            <ScalarOperator>
+                              <Const ConstValue="" />
+                            </ScalarOperator>
+                          </Intrinsic>
+                        </ScalarOperator>
+                      </Row>
+                    </Values>
+                  </ConstantScan>
+                </RelOp>
+              </ComputeScalar>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText=" EXEC [dbo].[spEndStopwatch] @objectName, @stopwatchBeginTime&#xD;" StatementId="17" StatementCompId="67" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

@@ -1,0 +1,373 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="CREATE PROCEDURE [dbo].[Web_GetUEUListForMachineSet]&#xD;&#xA;@MachineSetId INT&#xD;&#xA;AS&#xD;&#xA;BEGIN&#xD;&#xA;&#x9;SET NOCOUNT ON;&#xD;&#xA;&#xD;&#xA;    -- Get the list of the UEUs for a given machineSet&#xD;&#xA;" StatementId="1" StatementCompId="2" StatementType="SET ON/OFF" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;SELECT a.Id AS UEUId, a.Name AS UEUName, a.StartDate, a.EndDate, a.RunLogDirectory as LogDirectory, &#xD;&#xA;           a.PassCount AS PassTotal, a.FailCount AS FailTotal, a.WarnCount AS WarnTotal, &#xD;&#xA;&#x9;&#x9;   a.SkipCount AS SkippedTotal, a.BlockCount AS BlockedTotal, a.CustomUnc, &#xD;&#xA;           b.Status, c.Name As RoleName, a.Owner, c.MachineName,&#xD;&#xA;           a.PassCount+ a.FailCount + a.WarnCount + a.SkipCount + a.BlockCount AS Total,&#xD;&#xA;&#x9;&#x9;  d.RunLogDirectory AS MachineSetFolder, c.Id as RoleId &#xD;&#xA;    FROM  dbo.UEU AS a WITH (NOLOCK) INNER JOIN&#xD;&#xA;          dbo.Status AS b WITH (NOLOCK) ON b.Id = a.StatusId LEFT OUTER JOIN&#xD;&#xA;          dbo.Role AS c WITH (NOLOCK) ON c.Id = a.PrimaryRoleId INNER JOIN&#xD;&#xA;&#x9;&#x9;  dbo.MachineSet d WITH (NOLOCK) ON a.MachineSetId = d.Id&#xD;&#xA;    WHERE a.MachineSetId = @MachineSetId  &#xD;&#xA;    ORDER BY a.StartDate ASC&#xD;&#xA;&#xD;" StatementId="2" StatementCompId="3" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.228196" StatementEstRows="59.832" StatementOptmLevel="FULL" QueryHash="0x4B62A9885B1862B0" QueryPlanHash="0xDAAAE4F4F4535072" StatementOptmEarlyAbortReason="TimeOut">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="64" CompileTime="9" CompileCPU="9" CompileMemory="552">
+            <MemoryGrantInfo SerialRequiredMemory="512" SerialDesiredMemory="672" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="59.832" EstimateIO="0" EstimateCPU="0.000250098" AvgRowSize="1545" EstimatedTotalSubtreeCost="0.228196" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="Name" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="Owner" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="StartDate" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="EndDate" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="RunLogDirectory" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="PassCount" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="FailCount" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="WarnCount" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="SkipCount" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="BlockCount" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="CustomUnc" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="Id" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Alias="[b]" Column="Status" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[c]" Column="Id" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[c]" Column="Name" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[c]" Column="MachineName" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="RunLogDirectory" />
+                <ColumnReference Column="Expr1008" />
+              </OutputList>
+              <NestedLoops Optimized="0">
+                <RelOp NodeId="1" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="271" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.23247e+007" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="RunLogDirectory" />
+                  </OutputList>
+                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="RunLogDirectory" />
+                      </DefinedValue>
+                    </DefinedValues>
+                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Index="[MachineSet_PK]" Alias="[d]" IndexKind="Clustered" />
+                    <SeekPredicates>
+                      <SeekPredicateNew>
+                        <SeekKeys>
+                          <Prefix ScanType="EQ">
+                            <RangeColumns>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="Id" />
+                            </RangeColumns>
+                            <RangeExpressions>
+                              <ScalarOperator ScalarString="[@MachineSetId]">
+                                <Identifier>
+                                  <ColumnReference Column="@MachineSetId" />
+                                </Identifier>
+                              </ScalarOperator>
+                            </RangeExpressions>
+                          </Prefix>
+                        </SeekKeys>
+                      </SeekPredicateNew>
+                    </SeekPredicates>
+                  </IndexScan>
+                </RelOp>
+                <RelOp NodeId="2" PhysicalOp="Nested Loops" LogicalOp="Left Outer Join" EstimateRows="59.832" EstimateIO="0" EstimateCPU="0.000250098" AvgRowSize="1283" EstimatedTotalSubtreeCost="0.224663" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="Name" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="Owner" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="StartDate" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="EndDate" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="RunLogDirectory" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="PassCount" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="FailCount" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="WarnCount" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="SkipCount" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="BlockCount" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="CustomUnc" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="Id" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Alias="[b]" Column="Status" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[c]" Column="Id" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[c]" Column="Name" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[c]" Column="MachineName" />
+                    <ColumnReference Column="Expr1008" />
+                  </OutputList>
+                  <NestedLoops Optimized="0" WithOrderedPrefetch="1">
+                    <OuterReferences>
+                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="PrimaryRoleId" />
+                      <ColumnReference Column="Expr1009" />
+                    </OuterReferences>
+                    <RelOp NodeId="4" PhysicalOp="Sort" LogicalOp="Sort" EstimateRows="59.832" EstimateIO="0.0112613" EstimateCPU="0.000652138" AvgRowSize="1178" EstimatedTotalSubtreeCost="0.031112" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="Name" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="Owner" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="StartDate" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="EndDate" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="RunLogDirectory" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="PassCount" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="FailCount" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="WarnCount" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="SkipCount" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="BlockCount" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="CustomUnc" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="PrimaryRoleId" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="Id" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Alias="[b]" Column="Status" />
+                        <ColumnReference Column="Expr1008" />
+                      </OutputList>
+                      <MemoryFractions Input="1" Output="1" />
+                      <Sort Distinct="0">
+                        <OrderBy>
+                          <OrderByColumn Ascending="1">
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="StartDate" />
+                          </OrderByColumn>
+                        </OrderBy>
+                        <RelOp NodeId="5" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="59.832" EstimateIO="0" EstimateCPU="0.000250381" AvgRowSize="1178" EstimatedTotalSubtreeCost="0.0191986" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="Name" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="Owner" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="StartDate" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="EndDate" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="RunLogDirectory" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="PassCount" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="FailCount" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="WarnCount" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="SkipCount" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="BlockCount" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="CustomUnc" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="PrimaryRoleId" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="Id" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Alias="[b]" Column="Status" />
+                            <ColumnReference Column="Expr1008" />
+                          </OutputList>
+                          <NestedLoops Optimized="0">
+                            <OuterReferences>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="StatusId" />
+                            </OuterReferences>
+                            <RelOp NodeId="6" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="59.8997" EstimateIO="0" EstimateCPU="5.98997e-006" AvgRowSize="1080" EstimatedTotalSubtreeCost="0.00635304" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="Name" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="Owner" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="StartDate" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="EndDate" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="RunLogDirectory" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="PassCount" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="FailCount" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="WarnCount" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="SkipCount" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="BlockCount" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="CustomUnc" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="PrimaryRoleId" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="StatusId" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="Id" />
+                                <ColumnReference Column="Expr1008" />
+                              </OutputList>
+                              <ComputeScalar>
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Column="Expr1008" />
+                                    <ScalarOperator ScalarString="[OurLabReporting].[dbo].[UEU].[PassCount] as [a].[PassCount]+[OurLabReporting].[dbo].[UEU].[FailCount] as [a].[FailCount]+[OurLabReporting].[dbo].[UEU].[WarnCount] as [a].[WarnCount]+[OurLabReporting].[dbo].[UEU].[SkipCount] as [a].[SkipCount]+[OurLabReporting].[dbo].[UEU].[BlockCount] as [a].[BlockCount]">
+                                      <Arithmetic Operation="ADD">
+                                        <ScalarOperator>
+                                          <Arithmetic Operation="ADD">
+                                            <ScalarOperator>
+                                              <Arithmetic Operation="ADD">
+                                                <ScalarOperator>
+                                                  <Arithmetic Operation="ADD">
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="PassCount" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="FailCount" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                  </Arithmetic>
+                                                </ScalarOperator>
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="WarnCount" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                              </Arithmetic>
+                                            </ScalarOperator>
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="SkipCount" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </Arithmetic>
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="BlockCount" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Arithmetic>
+                                    </ScalarOperator>
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <RelOp NodeId="7" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="59.8997" EstimateIO="0.00612416" EstimateCPU="0.00022289" AvgRowSize="1076" EstimatedTotalSubtreeCost="0.00634705" TableCardinality="1.71731e+007" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="Name" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="Owner" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="StartDate" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="EndDate" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="RunLogDirectory" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="PassCount" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="FailCount" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="WarnCount" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="SkipCount" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="BlockCount" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="CustomUnc" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="PrimaryRoleId" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="StatusId" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="Id" />
+                                  </OutputList>
+                                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                    <DefinedValues>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="Name" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="Owner" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="StartDate" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="EndDate" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="RunLogDirectory" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="PassCount" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="FailCount" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="WarnCount" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="SkipCount" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="BlockCount" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="CustomUnc" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="PrimaryRoleId" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="StatusId" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="Id" />
+                                      </DefinedValue>
+                                    </DefinedValues>
+                                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Index="[UEU_IX_MachineSetId_INC_ManyColumns]" Alias="[a]" IndexKind="NonClustered" />
+                                    <SeekPredicates>
+                                      <SeekPredicateNew>
+                                        <SeekKeys>
+                                          <Prefix ScanType="EQ">
+                                            <RangeColumns>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="MachineSetId" />
+                                            </RangeColumns>
+                                            <RangeExpressions>
+                                              <ScalarOperator ScalarString="[@MachineSetId]">
+                                                <Identifier>
+                                                  <ColumnReference Column="@MachineSetId" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </RangeExpressions>
+                                          </Prefix>
+                                        </SeekKeys>
+                                      </SeekPredicateNew>
+                                    </SeekPredicates>
+                                  </IndexScan>
+                                </RelOp>
+                              </ComputeScalar>
+                            </RelOp>
+                            <RelOp NodeId="11" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="111" EstimatedTotalSubtreeCost="0.0125951" TableCardinality="96" Parallel="0" EstimateRebinds="0.268023" EstimateRewinds="58.6317" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Alias="[b]" Column="Status" />
+                              </OutputList>
+                              <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Alias="[b]" Column="Status" />
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Index="[Status_PK]" Alias="[b]" IndexKind="Clustered" />
+                                <SeekPredicates>
+                                  <SeekPredicateNew>
+                                    <SeekKeys>
+                                      <Prefix ScanType="EQ">
+                                        <RangeColumns>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Alias="[b]" Column="Id" />
+                                        </RangeColumns>
+                                        <RangeExpressions>
+                                          <ScalarOperator ScalarString="[OurLabReporting].[dbo].[UEU].[StatusId] as [a].[StatusId]">
+                                            <Identifier>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="StatusId" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </RangeExpressions>
+                                      </Prefix>
+                                    </SeekKeys>
+                                  </SeekPredicateNew>
+                                </SeekPredicates>
+                              </IndexScan>
+                            </RelOp>
+                          </NestedLoops>
+                        </RelOp>
+                      </Sort>
+                    </RelOp>
+                    <RelOp NodeId="12" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="117" EstimatedTotalSubtreeCost="0.193301" TableCardinality="1.2143e+007" Parallel="0" EstimateRebinds="58.832" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[c]" Column="Id" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[c]" Column="Name" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[c]" Column="MachineName" />
+                      </OutputList>
+                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[c]" Column="Id" />
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[c]" Column="Name" />
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[c]" Column="MachineName" />
+                          </DefinedValue>
+                        </DefinedValues>
+                        <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Index="[Role_PK]" Alias="[c]" IndexKind="Clustered" />
+                        <SeekPredicates>
+                          <SeekPredicateNew>
+                            <SeekKeys>
+                              <Prefix ScanType="EQ">
+                                <RangeColumns>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[c]" Column="Id" />
+                                </RangeColumns>
+                                <RangeExpressions>
+                                  <ScalarOperator ScalarString="[OurLabReporting].[dbo].[UEU].[PrimaryRoleId] as [a].[PrimaryRoleId]">
+                                    <Identifier>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[UEU]" Alias="[a]" Column="PrimaryRoleId" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </RangeExpressions>
+                              </Prefix>
+                            </SeekKeys>
+                          </SeekPredicateNew>
+                        </SeekPredicates>
+                      </IndexScan>
+                    </RelOp>
+                  </NestedLoops>
+                </RelOp>
+              </NestedLoops>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@MachineSetId" ParameterCompiledValue="(12456405)" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

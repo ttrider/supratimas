@@ -1,0 +1,2 @@
+SELECT TP.Id FROM reporting.Testpasses TP with (nolock)  
+WHERE TP.StartDateTime <= TRY_PARSE('1/25/2015 8:21:00 AM' AS DATETIME USING 'en-us') and TP.StartDateTime > TRY_PARSE('1/25/2015 8:20:00 AM'  AS DATETIME USING 'en-us') and TP.EndDateTime is null

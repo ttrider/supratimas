@@ -1,0 +1,466 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="&#xD;&#xA;CREATE PROCEDURE [dbo].[spIncrementSubmissionDirtyCount]&#xD;&#xA;(&#xD;&#xA;&#x9;@setPartition DATE,&#xD;&#xA;&#x9;@setId INT,&#xD;&#xA;&#x9;@id INT&#xD;&#xA;)&#xD;&#xA;AS&#xD;&#xA;BEGIN&#xD;&#xA;&#x9;-- If the submission exists, increment its dirty count.&#xD;&#xA;&#x9;SET NOCOUNT ON;&#xD;&#xA;&#xD;&#xA;" StatementId="1" StatementCompId="2" StatementType="SET ON/OFF" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;UPDATE [execution].[Submission] &#xD;&#xA;&#x9;SET [DirtyCount] = [DirtyCount] + 1&#xD;&#xA;&#x9;WHERE ([PkSetPartition] = @setPartition AND [PkSetId] = @setId AND [PkId] = @id)&#x9;&#xD;" StatementId="2" StatementCompId="3" StatementType="UPDATE" RetrievedFromCache="true" StatementSubTreeCost="0.0232853" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x5E72D1B7D6DA715B" QueryPlanHash="0xB1CA3717E54C8E00">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="false" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="40" CompileTime="29" CompileCPU="29" CompileMemory="624">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="1" PhysicalOp="Clustered Index Update" LogicalOp="Update" EstimateRows="1" EstimateIO="0.02" EstimateCPU="2e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0232853" Parallel="0" Partitioned="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <Update DMLRequestSort="0">
+                <Object Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Index="[Submission_PK]" IndexKind="Clustered" />
+                <Object Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Index="[Submission_IDX_Crawl]" IndexKind="NonClustered" />
+                <SetPredicate>
+                  <ScalarOperator ScalarString="[TexusResults].[execution].[Submission].[DirtyCount] = RaiseIfNullUpdate([Expr1004]),[TexusResults].[execution].[Submission].[IsDirty] = [Expr1010]">
+                    <ScalarExpressionList>
+                      <ScalarOperator>
+                        <MultipleAssign>
+                          <Assign>
+                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="DirtyCount" />
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="RaiseIfNullUpdate">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="Expr1004" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="IsDirty" ComputedColumn="1" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1010" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                        </MultipleAssign>
+                      </ScalarOperator>
+                    </ScalarExpressionList>
+                  </ScalarOperator>
+                </SetPredicate>
+                <RelOp NodeId="2" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="34" EstimatedTotalSubtreeCost="0.0032833" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="PtnId1000" ComputedColumn="1" />
+                    <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="PkSetPartition" />
+                    <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="PkSetId" />
+                    <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="PkId" />
+                    <ColumnReference Column="Expr1004" />
+                    <ColumnReference Column="Expr1010" />
+                    <ColumnReference Column="Expr1023" />
+                  </OutputList>
+                  <ComputeScalar>
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1023" />
+                        <ScalarOperator ScalarString="[Expr1023]">
+                          <Identifier>
+                            <ColumnReference Column="Expr1023" />
+                          </Identifier>
+                        </ScalarOperator>
+                      </DefinedValue>
+                    </DefinedValues>
+                    <RelOp NodeId="3" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="34" EstimatedTotalSubtreeCost="0.0032833" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Column="PtnId1000" ComputedColumn="1" />
+                        <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="PkSetPartition" />
+                        <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="PkSetId" />
+                        <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="PkId" />
+                        <ColumnReference Column="Expr1004" />
+                        <ColumnReference Column="Expr1010" />
+                        <ColumnReference Column="Expr1023" />
+                      </OutputList>
+                      <ComputeScalar>
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1004" />
+                            <ScalarOperator ScalarString="[TexusResults].[execution].[Submission].[DirtyCount]+(1)">
+                              <Arithmetic Operation="ADD">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="DirtyCount" />
+                                  </Identifier>
+                                </ScalarOperator>
+                                <ScalarOperator>
+                                  <Const ConstValue="(1)" />
+                                </ScalarOperator>
+                              </Arithmetic>
+                            </ScalarOperator>
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1010" />
+                            <ScalarOperator ScalarString="CASE WHEN ([TexusResults].[execution].[Submission].[DirtyCount]+(1))&gt;[TexusResults].[execution].[Submission].[CrawlCount] THEN (1) ELSE (0) END">
+                              <IF>
+                                <Condition>
+                                  <ScalarOperator>
+                                    <Compare CompareOp="GT">
+                                      <ScalarOperator>
+                                        <Arithmetic Operation="ADD">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="DirtyCount" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="(1)" />
+                                          </ScalarOperator>
+                                        </Arithmetic>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="CrawlCount" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                </Condition>
+                                <Then>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(1)" />
+                                  </ScalarOperator>
+                                </Then>
+                                <Else>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(0)" />
+                                  </ScalarOperator>
+                                </Else>
+                              </IF>
+                            </ScalarOperator>
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1023" />
+                            <ScalarOperator ScalarString="CASE WHEN CASE WHEN [TexusResults].[execution].[Submission].[DirtyCount] = ([TexusResults].[execution].[Submission].[DirtyCount]+(1)) THEN (1) ELSE (0) END AND CASE WHEN CASE WHEN [TexusResults].[execution].[Submission].[DirtyCount] = ([TexusResults].[execution].[Submission].[DirtyCount]+(1)) THEN (1) ELSE (0) END THEN (1) ELSE (0) END THEN (0) ELSE (1) END">
+                              <IF>
+                                <Condition>
+                                  <ScalarOperator>
+                                    <Logical Operation="AND">
+                                      <ScalarOperator>
+                                        <IF>
+                                          <Condition>
+                                            <ScalarOperator>
+                                              <Compare CompareOp="BINARY IS">
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="DirtyCount" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                                <ScalarOperator>
+                                                  <Arithmetic Operation="ADD">
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="DirtyCount" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="(1)" />
+                                                    </ScalarOperator>
+                                                  </Arithmetic>
+                                                </ScalarOperator>
+                                              </Compare>
+                                            </ScalarOperator>
+                                          </Condition>
+                                          <Then>
+                                            <ScalarOperator>
+                                              <Const ConstValue="(1)" />
+                                            </ScalarOperator>
+                                          </Then>
+                                          <Else>
+                                            <ScalarOperator>
+                                              <Const ConstValue="(0)" />
+                                            </ScalarOperator>
+                                          </Else>
+                                        </IF>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <IF>
+                                          <Condition>
+                                            <ScalarOperator>
+                                              <IF>
+                                                <Condition>
+                                                  <ScalarOperator>
+                                                    <Compare CompareOp="BINARY IS">
+                                                      <ScalarOperator>
+                                                        <Identifier>
+                                                          <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="DirtyCount" />
+                                                        </Identifier>
+                                                      </ScalarOperator>
+                                                      <ScalarOperator>
+                                                        <Arithmetic Operation="ADD">
+                                                          <ScalarOperator>
+                                                            <Identifier>
+                                                              <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="DirtyCount" />
+                                                            </Identifier>
+                                                          </ScalarOperator>
+                                                          <ScalarOperator>
+                                                            <Const ConstValue="(1)" />
+                                                          </ScalarOperator>
+                                                        </Arithmetic>
+                                                      </ScalarOperator>
+                                                    </Compare>
+                                                  </ScalarOperator>
+                                                </Condition>
+                                                <Then>
+                                                  <ScalarOperator>
+                                                    <Const ConstValue="(1)" />
+                                                  </ScalarOperator>
+                                                </Then>
+                                                <Else>
+                                                  <ScalarOperator>
+                                                    <Const ConstValue="(0)" />
+                                                  </ScalarOperator>
+                                                </Else>
+                                              </IF>
+                                            </ScalarOperator>
+                                          </Condition>
+                                          <Then>
+                                            <ScalarOperator>
+                                              <Const ConstValue="(1)" />
+                                            </ScalarOperator>
+                                          </Then>
+                                          <Else>
+                                            <ScalarOperator>
+                                              <Const ConstValue="(0)" />
+                                            </ScalarOperator>
+                                          </Else>
+                                        </IF>
+                                      </ScalarOperator>
+                                    </Logical>
+                                  </ScalarOperator>
+                                </Condition>
+                                <Then>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(0)" />
+                                  </ScalarOperator>
+                                </Then>
+                                <Else>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(1)" />
+                                  </ScalarOperator>
+                                </Else>
+                              </IF>
+                            </ScalarOperator>
+                          </DefinedValue>
+                        </DefinedValues>
+                        <RelOp NodeId="4" PhysicalOp="Top" LogicalOp="Top" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="30" EstimatedTotalSubtreeCost="0.0032832" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Column="PtnId1000" ComputedColumn="1" />
+                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="PkSetPartition" />
+                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="PkSetId" />
+                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="PkId" />
+                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="DirtyCount" />
+                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="CrawlCount" />
+                          </OutputList>
+                          <Top RowCount="0" IsPercent="0" WithTies="0">
+                            <TopExpression>
+                              <ScalarOperator ScalarString="(1)">
+                                <Const ConstValue="(1)" />
+                              </ScalarOperator>
+                            </TopExpression>
+                            <RelOp NodeId="5" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="30" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="742211" Parallel="0" Partitioned="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Column="PtnId1000" ComputedColumn="1" />
+                                <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="PkSetPartition" />
+                                <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="PkSetId" />
+                                <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="PkId" />
+                                <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="DirtyCount" />
+                                <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="CrawlCount" />
+                              </OutputList>
+                              <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Column="PtnId1000" ComputedColumn="1" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="PkSetPartition" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="PkSetId" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="PkId" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="DirtyCount" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="CrawlCount" />
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <Object Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Index="[Submission_PK]" IndexKind="Clustered" />
+                                <SeekPredicates>
+                                  <SeekPredicateNew>
+                                    <SeekKeys>
+                                      <Prefix ScanType="EQ">
+                                        <RangeColumns>
+                                          <ColumnReference Column="PtnId1000" />
+                                          <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="PkSetPartition" />
+                                          <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="PkSetId" />
+                                          <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="PkId" />
+                                        </RangeColumns>
+                                        <RangeExpressions>
+                                          <ScalarOperator ScalarString="RangePartitionNew([@setPartition],(1),'2011-02-01','2011-03-01','2011-04-01','2011-05-01','2011-06-01','2011-07-01','2011-08-01','2011-09-01','2011-10-01','2011-11-01','2011-12-01','2012-01-01','2012-02-01','2012-03-01','2012-04-01','2012-05-01','2012-06-01','2012-07-01','2012-08-01','2012-09-01','2012-10-01','2012-11-01','2012-12-01','2013-01-01','2013-02-01','2013-03-01','2013-04-01','2013-05-01','2013-06-01','2013-07-01','2013-08-01','2013-09-01','2013-10-01','2013-11-01','2013-12-01','2014-01-01')">
+                                            <Intrinsic FunctionName="RangePartitionNew">
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@setPartition" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="(1)" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2011-02-01'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2011-03-01'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2011-04-01'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2011-05-01'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2011-06-01'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2011-07-01'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2011-08-01'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2011-09-01'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2011-10-01'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2011-11-01'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2011-12-01'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2012-01-01'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2012-02-01'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2012-03-01'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2012-04-01'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2012-05-01'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2012-06-01'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2012-07-01'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2012-08-01'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2012-09-01'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2012-10-01'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2012-11-01'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2012-12-01'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2013-01-01'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2013-02-01'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2013-03-01'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2013-04-01'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2013-05-01'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2013-06-01'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2013-07-01'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2013-08-01'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2013-09-01'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2013-10-01'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2013-11-01'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2013-12-01'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="'2014-01-01'" />
+                                              </ScalarOperator>
+                                            </Intrinsic>
+                                          </ScalarOperator>
+                                          <ScalarOperator ScalarString="[@setPartition]">
+                                            <Identifier>
+                                              <ColumnReference Column="@setPartition" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                          <ScalarOperator ScalarString="[@setId]">
+                                            <Identifier>
+                                              <ColumnReference Column="@setId" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                          <ScalarOperator ScalarString="[@id]">
+                                            <Identifier>
+                                              <ColumnReference Column="@id" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </RangeExpressions>
+                                      </Prefix>
+                                    </SeekKeys>
+                                  </SeekPredicateNew>
+                                </SeekPredicates>
+                              </IndexScan>
+                            </RelOp>
+                          </Top>
+                        </RelOp>
+                      </ComputeScalar>
+                    </RelOp>
+                  </ComputeScalar>
+                </RelOp>
+              </Update>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@id" ParameterCompiledValue="(747906)" />
+              <ColumnReference Column="@setId" ParameterCompiledValue="(747906)" />
+              <ColumnReference Column="@setPartition" ParameterCompiledValue="'2015-01-30'" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

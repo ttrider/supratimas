@@ -1,0 +1,434 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="CREATE PROCEDURE [dbo].[Web_GetIntIdForGuid]&#xD;&#xA;@GuidId UNIQUEIDENTIFIER, @ElementType NVARCHAR (20)&#xD;&#xA;AS&#xD;&#xA;BEGIN&#xD;&#xA;&#x9;-- SET NOCOUNT ON added to prevent extra result sets from&#xD;&#xA;&#x9;-- interfering with SELECT statements.&#xD;&#xA;&#x9;SET NOCOUNT ON;&#xD;&#xA;&#xD;&#xA;" StatementId="1" StatementCompId="2" StatementType="SET ON/OFF" RetrievedFromCache="true" />
+        <StmtCond StatementText="&#x9;IF (@ElementType = 'Schedule')&#xD;&#xA;" StatementId="2" StatementCompId="3" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9; SELECT sch.Id&#xD;&#xA;&#x9;&#x9; FROM dbo.Schedule AS sch WITH (NOLOCK)&#xD;&#xA;&#x9;&#x9; WHERE sch.[Guid] = @GuidId&#x9;&#xD;&#xA;" StatementId="3" StatementCompId="4" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032831" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0xBD415D5CF5F66EEE" QueryPlanHash="0xC97A94E548FCD4CF">
+                <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="1" CompileCPU="1" CompileMemory="232">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="0" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.44031e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList>
+                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Alias="[sch]" Column="Id" />
+                    </OutputList>
+                    <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                      <DefinedValues>
+                        <DefinedValue>
+                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Alias="[sch]" Column="Id" />
+                        </DefinedValue>
+                      </DefinedValues>
+                      <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Index="[Schedule_IDX_Guid]" Alias="[sch]" IndexKind="NonClustered" />
+                      <SeekPredicates>
+                        <SeekPredicateNew>
+                          <SeekKeys>
+                            <Prefix ScanType="EQ">
+                              <RangeColumns>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Schedule]" Alias="[sch]" Column="Guid" />
+                              </RangeColumns>
+                              <RangeExpressions>
+                                <ScalarOperator ScalarString="[@GuidId]">
+                                  <Identifier>
+                                    <ColumnReference Column="@GuidId" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </RangeExpressions>
+                            </Prefix>
+                          </SeekKeys>
+                        </SeekPredicateNew>
+                      </SeekPredicates>
+                    </IndexScan>
+                  </RelOp>
+                  <ParameterList>
+                    <ColumnReference Column="@GuidId" ParameterCompiledValue="{guid'5AFE901F-1D5A-4B12-A5C7-AE0287A68269'}" />
+                  </ParameterList>
+                </QueryPlan>
+              </StmtSimple>
+            </Statements>
+          </Then>
+          <Else>
+            <Statements>
+              <StmtCond StatementText="&#x9;END &#xD;&#xA;&#x9;ELSE IF (@ElementType = 'Mix')&#xD;&#xA;" StatementId="4" StatementCompId="7" StatementType="COND" RetrievedFromCache="true">
+                <Condition />
+                <Then>
+                  <Statements>
+                    <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;SELECT mix.Id&#xD;&#xA;&#x9;&#x9;FROM dbo.Mix AS mix WITH (NOLOCK)&#xD;&#xA;&#x9;&#x9;WHERE mix.[Guid] = @GuidId&#xD;&#xA;" StatementId="5" StatementCompId="8" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032831" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x80FFFB7D91C1F141" QueryPlanHash="0xDB2A642383D5C2E0">
+                      <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                      <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="0" CompileCPU="0" CompileMemory="232">
+                        <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                        <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                        <RelOp NodeId="0" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.48176e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Alias="[mix]" Column="Id" />
+                          </OutputList>
+                          <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Alias="[mix]" Column="Id" />
+                              </DefinedValue>
+                            </DefinedValues>
+                            <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Index="[Mix_IDX_Guid]" Alias="[mix]" IndexKind="NonClustered" />
+                            <SeekPredicates>
+                              <SeekPredicateNew>
+                                <SeekKeys>
+                                  <Prefix ScanType="EQ">
+                                    <RangeColumns>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Alias="[mix]" Column="Guid" />
+                                    </RangeColumns>
+                                    <RangeExpressions>
+                                      <ScalarOperator ScalarString="[@GuidId]">
+                                        <Identifier>
+                                          <ColumnReference Column="@GuidId" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </RangeExpressions>
+                                  </Prefix>
+                                </SeekKeys>
+                              </SeekPredicateNew>
+                            </SeekPredicates>
+                          </IndexScan>
+                        </RelOp>
+                        <ParameterList>
+                          <ColumnReference Column="@GuidId" ParameterCompiledValue="{guid'5AFE901F-1D5A-4B12-A5C7-AE0287A68269'}" />
+                        </ParameterList>
+                      </QueryPlan>
+                    </StmtSimple>
+                  </Statements>
+                </Then>
+                <Else>
+                  <Statements>
+                    <StmtCond StatementText="&#x9;END&#xD;&#xA;&#x9;ELSE IF (@ElementType = 'ResolvedTED' OR&#xD;&#xA;&#x9;&#x9;&#x9; @ElementType = 'Environment')&#xD;&#xA;" StatementId="6" StatementCompId="11" StatementType="COND" RetrievedFromCache="true">
+                      <Condition />
+                      <Then>
+                        <Statements>
+                          <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;SELECT rTED.Id&#xD;&#xA;&#x9;&#x9;FROM dbo.ResolvedTED AS rTED WITH (NOLOCK)&#xD;&#xA;&#x9;&#x9;WHERE rTED.[Guid] = @GuidId&#xD;&#xA;" StatementId="7" StatementCompId="12" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032831" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0xD2FD96AFEA35FED4" QueryPlanHash="0xF21AD13EF3181200">
+                            <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                            <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="0" CompileCPU="0" CompileMemory="232">
+                              <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                              <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                              <RelOp NodeId="0" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.37084e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Alias="[rTED]" Column="Id" />
+                                </OutputList>
+                                <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                  <DefinedValues>
+                                    <DefinedValue>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Alias="[rTED]" Column="Id" />
+                                    </DefinedValue>
+                                  </DefinedValues>
+                                  <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Index="[ResolvedTED_IDX_Guid]" Alias="[rTED]" IndexKind="NonClustered" />
+                                  <SeekPredicates>
+                                    <SeekPredicateNew>
+                                      <SeekKeys>
+                                        <Prefix ScanType="EQ">
+                                          <RangeColumns>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Alias="[rTED]" Column="Guid" />
+                                          </RangeColumns>
+                                          <RangeExpressions>
+                                            <ScalarOperator ScalarString="[@GuidId]">
+                                              <Identifier>
+                                                <ColumnReference Column="@GuidId" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </RangeExpressions>
+                                        </Prefix>
+                                      </SeekKeys>
+                                    </SeekPredicateNew>
+                                  </SeekPredicates>
+                                </IndexScan>
+                              </RelOp>
+                              <ParameterList>
+                                <ColumnReference Column="@GuidId" ParameterCompiledValue="{guid'5AFE901F-1D5A-4B12-A5C7-AE0287A68269'}" />
+                              </ParameterList>
+                            </QueryPlan>
+                          </StmtSimple>
+                        </Statements>
+                      </Then>
+                      <Else>
+                        <Statements>
+                          <StmtCond StatementText="&#x9;END&#xD;&#xA;&#x9;ELSE IF (@ElementType = 'MachineSet')&#xD;&#xA;" StatementId="8" StatementCompId="15" StatementType="COND" RetrievedFromCache="true">
+                            <Condition />
+                            <Then>
+                              <Statements>
+                                <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;SELECT ms.Id&#xD;&#xA;&#x9;&#x9;FROM dbo.MachineSet AS ms WITH (NOLOCK)&#xD;&#xA;&#x9;&#x9;WHERE ms.[Guid] = @GuidId&#xD;&#xA;" StatementId="9" StatementCompId="16" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032831" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x6A0AF2BB2DC0BF24" QueryPlanHash="0x743EDBD64E354F86">
+                                  <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                                  <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="0" CompileCPU="0" CompileMemory="232">
+                                    <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                                    <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                                    <RelOp NodeId="0" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.23247e+007" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[ms]" Column="Id" />
+                                      </OutputList>
+                                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                        <DefinedValues>
+                                          <DefinedValue>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[ms]" Column="Id" />
+                                          </DefinedValue>
+                                        </DefinedValues>
+                                        <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Index="[MachineSet_IDX_Guid]" Alias="[ms]" IndexKind="NonClustered" />
+                                        <SeekPredicates>
+                                          <SeekPredicateNew>
+                                            <SeekKeys>
+                                              <Prefix ScanType="EQ">
+                                                <RangeColumns>
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[ms]" Column="Guid" />
+                                                </RangeColumns>
+                                                <RangeExpressions>
+                                                  <ScalarOperator ScalarString="[@GuidId]">
+                                                    <Identifier>
+                                                      <ColumnReference Column="@GuidId" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </RangeExpressions>
+                                              </Prefix>
+                                            </SeekKeys>
+                                          </SeekPredicateNew>
+                                        </SeekPredicates>
+                                      </IndexScan>
+                                    </RelOp>
+                                    <ParameterList>
+                                      <ColumnReference Column="@GuidId" ParameterCompiledValue="{guid'5AFE901F-1D5A-4B12-A5C7-AE0287A68269'}" />
+                                    </ParameterList>
+                                  </QueryPlan>
+                                </StmtSimple>
+                              </Statements>
+                            </Then>
+                            <Else>
+                              <Statements>
+                                <StmtCond StatementText="&#x9;END&#xD;&#xA;&#x9;ELSE IF (@ElementType = 'Role')&#xD;&#xA;" StatementId="10" StatementCompId="19" StatementType="COND" RetrievedFromCache="true">
+                                  <Condition />
+                                  <Then>
+                                    <Statements>
+                                      <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;SELECT role.Id&#xD;&#xA;&#x9;&#x9;FROM dbo.Role AS role WITH (NOLOCK)&#xD;&#xA;&#x9;&#x9;WHERE role.[Guid] = @GuidId&#xD;&#xA;" StatementId="11" StatementCompId="20" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032831" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0xC3A2D15CC1477590" QueryPlanHash="0xDB566EFAB1B4EA94">
+                                        <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                                        <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="0" CompileCPU="0" CompileMemory="216">
+                                          <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                                          <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                                          <RelOp NodeId="0" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.2143e+007" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                            <OutputList>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[role]" Column="Id" />
+                                            </OutputList>
+                                            <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                              <DefinedValues>
+                                                <DefinedValue>
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[role]" Column="Id" />
+                                                </DefinedValue>
+                                              </DefinedValues>
+                                              <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Index="[Role_IDX_Guid]" Alias="[role]" IndexKind="NonClustered" />
+                                              <SeekPredicates>
+                                                <SeekPredicateNew>
+                                                  <SeekKeys>
+                                                    <Prefix ScanType="EQ">
+                                                      <RangeColumns>
+                                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[role]" Column="Guid" />
+                                                      </RangeColumns>
+                                                      <RangeExpressions>
+                                                        <ScalarOperator ScalarString="[@GuidId]">
+                                                          <Identifier>
+                                                            <ColumnReference Column="@GuidId" />
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                      </RangeExpressions>
+                                                    </Prefix>
+                                                  </SeekKeys>
+                                                </SeekPredicateNew>
+                                              </SeekPredicates>
+                                            </IndexScan>
+                                          </RelOp>
+                                          <ParameterList>
+                                            <ColumnReference Column="@GuidId" ParameterCompiledValue="{guid'5AFE901F-1D5A-4B12-A5C7-AE0287A68269'}" />
+                                          </ParameterList>
+                                        </QueryPlan>
+                                      </StmtSimple>
+                                    </Statements>
+                                  </Then>
+                                  <Else>
+                                    <Statements>
+                                      <StmtCond StatementText="&#x9;END&#xD;&#xA;&#x9;ELSE IF (@ElementType = 'Failure')&#xD;&#xA;" StatementId="12" StatementCompId="23" StatementType="COND" RetrievedFromCache="true">
+                                        <Condition />
+                                        <Then>
+                                          <Statements>
+                                            <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;SELECT f.Id&#xD;&#xA;&#x9;&#x9;FROM dbo.Failure AS f WITH (NOLOCK)&#xD;&#xA;&#x9;&#x9;WHERE f.[Guid] = @GuidId&#xD;&#xA;" StatementId="13" StatementCompId="24" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032831" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x26756DC03DF6226C" QueryPlanHash="0xBD645DE1DE3BD809">
+                                              <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                                              <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="0" CompileCPU="0" CompileMemory="232">
+                                                <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                                                <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                                                <RelOp NodeId="0" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="3.38966e+007" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                  <OutputList>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Alias="[f]" Column="Id" />
+                                                  </OutputList>
+                                                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                                    <DefinedValues>
+                                                      <DefinedValue>
+                                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Alias="[f]" Column="Id" />
+                                                      </DefinedValue>
+                                                    </DefinedValues>
+                                                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Index="[Failure_IDX_Guid]" Alias="[f]" IndexKind="NonClustered" />
+                                                    <SeekPredicates>
+                                                      <SeekPredicateNew>
+                                                        <SeekKeys>
+                                                          <Prefix ScanType="EQ">
+                                                            <RangeColumns>
+                                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Failure]" Alias="[f]" Column="Guid" />
+                                                            </RangeColumns>
+                                                            <RangeExpressions>
+                                                              <ScalarOperator ScalarString="[@GuidId]">
+                                                                <Identifier>
+                                                                  <ColumnReference Column="@GuidId" />
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                            </RangeExpressions>
+                                                          </Prefix>
+                                                        </SeekKeys>
+                                                      </SeekPredicateNew>
+                                                    </SeekPredicates>
+                                                  </IndexScan>
+                                                </RelOp>
+                                                <ParameterList>
+                                                  <ColumnReference Column="@GuidId" ParameterCompiledValue="{guid'5AFE901F-1D5A-4B12-A5C7-AE0287A68269'}" />
+                                                </ParameterList>
+                                              </QueryPlan>
+                                            </StmtSimple>
+                                          </Statements>
+                                        </Then>
+                                        <Else>
+                                          <Statements>
+                                            <StmtCond StatementText="&#x9;END&#x9;&#xD;&#xA;&#x9;ELSE IF (@ElementType = 'TEU')&#xD;&#xA;" StatementId="14" StatementCompId="27" StatementType="COND" RetrievedFromCache="true">
+                                              <Condition />
+                                              <Then>
+                                                <Statements>
+                                                  <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;SELECT teu.Id&#xD;&#xA;&#x9;&#x9;FROM dbo.TEU AS teu WITH (NOLOCK)&#xD;&#xA;&#x9;&#x9;WHERE teu.[Guid] = @GuidId&#xD;&#xA;" StatementId="15" StatementCompId="28" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032831" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x70AFB1E8B7C5A20F" QueryPlanHash="0x58D5DE969374944E">
+                                                    <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                                                    <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="1" CompileCPU="1" CompileMemory="272">
+                                                      <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                                                      <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                                                      <RelOp NodeId="0" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="4.12024e+007" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                        <OutputList>
+                                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Alias="[teu]" Column="Id" />
+                                                        </OutputList>
+                                                        <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                                          <DefinedValues>
+                                                            <DefinedValue>
+                                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Alias="[teu]" Column="Id" />
+                                                            </DefinedValue>
+                                                          </DefinedValues>
+                                                          <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Index="[Teu_IDX_Guid]" Alias="[teu]" IndexKind="NonClustered" />
+                                                          <SeekPredicates>
+                                                            <SeekPredicateNew>
+                                                              <SeekKeys>
+                                                                <Prefix ScanType="EQ">
+                                                                  <RangeColumns>
+                                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Alias="[teu]" Column="Guid" />
+                                                                  </RangeColumns>
+                                                                  <RangeExpressions>
+                                                                    <ScalarOperator ScalarString="[@GuidId]">
+                                                                      <Identifier>
+                                                                        <ColumnReference Column="@GuidId" />
+                                                                      </Identifier>
+                                                                    </ScalarOperator>
+                                                                  </RangeExpressions>
+                                                                </Prefix>
+                                                              </SeekKeys>
+                                                            </SeekPredicateNew>
+                                                          </SeekPredicates>
+                                                        </IndexScan>
+                                                      </RelOp>
+                                                      <ParameterList>
+                                                        <ColumnReference Column="@GuidId" ParameterCompiledValue="{guid'5AFE901F-1D5A-4B12-A5C7-AE0287A68269'}" />
+                                                      </ParameterList>
+                                                    </QueryPlan>
+                                                  </StmtSimple>
+                                                </Statements>
+                                              </Then>
+                                              <Else>
+                                                <Statements>
+                                                  <StmtCond StatementText="&#x9;END&#x9;&#xD;&#xA;&#x9;ELSE IF (@ElementType = 'TestcaseResult')&#xD;&#xA;" StatementId="16" StatementCompId="31" StatementType="COND" RetrievedFromCache="true">
+                                                    <Condition />
+                                                    <Then>
+                                                      <Statements>
+                                                        <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;-- Converting a GUID to INT without additional context (i.e. ScheduleId) is no longer supported for TestCaseResult. Zero is returned for &#xD;&#xA;&#x9;&#x9;-- backward compatibility to avoid changing corresponding reports.&#xD;&#xA;&#x9;&#x9;SELECT 0 AS Id&#xD;&#xA;" StatementId="17" StatementCompId="32" StatementType="SELECT WITHOUT QUERY" RetrievedFromCache="true" />
+                                                      </Statements>
+                                                    </Then>
+                                                    <Else>
+                                                      <Statements>
+                                                        <StmtCond StatementText="&#x9;END&#x9;&#xD;&#xA;&#x9;ELSE IF (@ElementType = 'FeaturePathId')&#xD;&#xA;" StatementId="18" StatementCompId="35" StatementType="COND" RetrievedFromCache="true">
+                                                          <Condition />
+                                                          <Then>
+                                                            <Statements>
+                                                              <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;SELECT fp.Id&#xD;&#xA;&#x9;&#x9;FROM dbo.FeaturePath AS fp WITH (NOLOCK)&#xD;&#xA;&#x9;&#x9;WHERE fp.[Guid] = @GuidId&#xD;&#xA;" StatementId="19" StatementCompId="36" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032831" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0xC62DA6B98CBB581" QueryPlanHash="0xBC149C65D092A79F">
+                                                                <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                                                                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="0" CompileCPU="0" CompileMemory="216">
+                                                                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                                                                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                                                                  <RelOp NodeId="0" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="7814" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                                    <OutputList>
+                                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FeaturePath]" Alias="[fp]" Column="Id" />
+                                                                    </OutputList>
+                                                                    <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                                                      <DefinedValues>
+                                                                        <DefinedValue>
+                                                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FeaturePath]" Alias="[fp]" Column="Id" />
+                                                                        </DefinedValue>
+                                                                      </DefinedValues>
+                                                                      <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[FeaturePath]" Index="[FeaturePath_IDX_Guid]" Alias="[fp]" IndexKind="NonClustered" />
+                                                                      <SeekPredicates>
+                                                                        <SeekPredicateNew>
+                                                                          <SeekKeys>
+                                                                            <Prefix ScanType="EQ">
+                                                                              <RangeColumns>
+                                                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[FeaturePath]" Alias="[fp]" Column="Guid" />
+                                                                              </RangeColumns>
+                                                                              <RangeExpressions>
+                                                                                <ScalarOperator ScalarString="[@GuidId]">
+                                                                                  <Identifier>
+                                                                                    <ColumnReference Column="@GuidId" />
+                                                                                  </Identifier>
+                                                                                </ScalarOperator>
+                                                                              </RangeExpressions>
+                                                                            </Prefix>
+                                                                          </SeekKeys>
+                                                                        </SeekPredicateNew>
+                                                                      </SeekPredicates>
+                                                                    </IndexScan>
+                                                                  </RelOp>
+                                                                  <ParameterList>
+                                                                    <ColumnReference Column="@GuidId" ParameterCompiledValue="{guid'5AFE901F-1D5A-4B12-A5C7-AE0287A68269'}" />
+                                                                  </ParameterList>
+                                                                </QueryPlan>
+                                                              </StmtSimple>
+                                                            </Statements>
+                                                          </Then>
+                                                        </StmtCond>
+                                                      </Statements>
+                                                    </Else>
+                                                  </StmtCond>
+                                                </Statements>
+                                              </Else>
+                                            </StmtCond>
+                                          </Statements>
+                                        </Else>
+                                      </StmtCond>
+                                    </Statements>
+                                  </Else>
+                                </StmtCond>
+                              </Statements>
+                            </Else>
+                          </StmtCond>
+                        </Statements>
+                      </Else>
+                    </StmtCond>
+                  </Statements>
+                </Else>
+              </StmtCond>
+            </Statements>
+          </Else>
+        </StmtCond>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

@@ -1,0 +1,673 @@
+<?xml version="1.0" encoding="utf-16"?>
+<ShowPlanXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="1.2" Build="12.0.2269.0" xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementCompId="1" StatementEstRows="1" StatementId="1" StatementOptmLevel="TRIVIAL" CardinalityEstimationModelVersion="120" StatementSubTreeCost="0.0034525" StatementText="SELECT count( distinct diagnosis_id) from  PHS.diagnosis" StatementType="SELECT" QueryHash="0x99AF6AB52BEFE5C5" QueryPlanHash="0xCA679CF1480AA16D" RetrievedFromCache="true">
+          <StatementSetOptions ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" NUMERIC_ROUNDABORT="false" QUOTED_IDENTIFIER="true" />
+          <QueryPlan DegreeOfParallelism="1" CachedPlanSize="16" CompileTime="0" CompileCPU="0" CompileMemory="160">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="104847" EstimatedPagesCached="157270" EstimatedAvailableDegreeOfParallelism="12" />
+            <RelOp AvgRowSize="11" EstimateCPU="6.05E-05" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="1" LogicalOp="Compute Scalar" NodeId="0" Parallel="false" PhysicalOp="Compute Scalar" EstimatedTotalSubtreeCost="0.0034525">
+              <OutputList>
+                <ColumnReference Column="Expr1002" />
+              </OutputList>
+              <ComputeScalar>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1002" />
+                    <ScalarOperator ScalarString="CONVERT_IMPLICIT(int,[Expr1003],0)">
+                      <Convert DataType="int" Style="0" Implicit="true">
+                        <ScalarOperator>
+                          <Identifier>
+                            <ColumnReference Column="Expr1003" />
+                          </Identifier>
+                        </ScalarOperator>
+                      </Convert>
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp AvgRowSize="11" EstimateCPU="6.05E-05" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="1" LogicalOp="Aggregate" NodeId="1" Parallel="false" PhysicalOp="Stream Aggregate" EstimatedTotalSubtreeCost="0.0034525">
+                  <OutputList>
+                    <ColumnReference Column="Expr1003" />
+                  </OutputList>
+                  <RunTimeInformation>
+                    <RunTimeCountersPerThread Thread="0" ActualRows="1" ActualEndOfScans="1" ActualExecutions="1" />
+                  </RunTimeInformation>
+                  <StreamAggregate>
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1003" />
+                        <ScalarOperator ScalarString="Count(*)">
+                          <Aggregate AggType="countstar" Distinct="false" />
+                        </ScalarOperator>
+                      </DefinedValue>
+                    </DefinedValues>
+                    <RelOp AvgRowSize="9" EstimateCPU="0.000267" EstimateIO="0.003125" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="100" LogicalOp="Index Scan" NodeId="2" Parallel="false" PhysicalOp="Index Scan" EstimatedTotalSubtreeCost="0.003392" TableCardinality="100">
+                      <OutputList />
+                      <RunTimeInformation>
+                        <RunTimeCountersPerThread Thread="0" ActualRows="100" ActualEndOfScans="1" ActualExecutions="1" />
+                      </RunTimeInformation>
+                      <IndexScan Ordered="false" ForcedIndex="false" ForceSeek="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                        <DefinedValues />
+                        <Object Database="[healthcare]" Schema="[PHS]" Table="[diagnosis]" Index="[diagnosis__diagnosis_group_id_IX]" IndexKind="NonClustered" Storage="RowStore" />
+                      </IndexScan>
+                    </RelOp>
+                  </StreamAggregate>
+                </RelOp>
+              </ComputeScalar>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementCompId="2" StatementEstRows="100" StatementId="2" StatementOptmLevel="FULL" StatementOptmEarlyAbortReason="GoodEnoughPlanFound" CardinalityEstimationModelVersion="120" StatementSubTreeCost="0.0151615" StatementText="select &#xD;&#xA;	-diagnosis_id + 100 / 2 * 3 % code_id as math ,&#xD;&#xA;	case when diagnosis_id = 10100 AND code_id IS NOT NULL THEN '1212' when diagnosis_id = 10100 then 'asd' ELSE '0987' END as l,&#xD;&#xA;	case diagnosis_id when 10100 THEN '1212' when 111 then 'hg' ELSE '0987' END as m,&#xD;&#xA;	case when 123 in (SELECT min([decision_type]) from [PHS].[decision_type]) THEN 0 ELSE 1 END as minmin&#xD;&#xA;	from PHS.diagnosis" StatementType="SELECT" QueryHash="0xB420D73EF6CC2E95" QueryPlanHash="0xCF11C2BFB3D551A4" RetrievedFromCache="true">
+          <StatementSetOptions ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" NUMERIC_ROUNDABORT="false" QUOTED_IDENTIFIER="true" />
+          <QueryPlan DegreeOfParallelism="1" CachedPlanSize="32" CompileTime="2" CompileCPU="2" CompileMemory="384">
+            <Warnings>
+              <PlanAffectingConvert ConvertIssue="Cardinality Estimate" Expression="CONVERT_IMPLICIT(int,[Expr1007],0)" />
+            </Warnings>
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="104847" EstimatedPagesCached="157270" EstimatedAvailableDegreeOfParallelism="12" />
+            <RelOp AvgRowSize="25" EstimateCPU="1E-05" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="100" LogicalOp="Compute Scalar" NodeId="0" Parallel="false" PhysicalOp="Compute Scalar" EstimatedTotalSubtreeCost="0.0151615">
+              <OutputList>
+                <ColumnReference Column="Expr1002" />
+                <ColumnReference Column="Expr1003" />
+                <ColumnReference Column="Expr1004" />
+                <ColumnReference Column="Expr1009" />
+              </OutputList>
+              <ComputeScalar>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1009" />
+                    <ScalarOperator ScalarString="CASE WHEN [Expr1010] THEN (0) ELSE (1) END">
+                      <IF>
+                        <Condition>
+                          <ScalarOperator>
+                            <Identifier>
+                              <ColumnReference Column="Expr1010" />
+                            </Identifier>
+                          </ScalarOperator>
+                        </Condition>
+                        <Then>
+                          <ScalarOperator>
+                            <Const ConstValue="(0)" />
+                          </ScalarOperator>
+                        </Then>
+                        <Else>
+                          <ScalarOperator>
+                            <Const ConstValue="(1)" />
+                          </ScalarOperator>
+                        </Else>
+                      </IF>
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp AvgRowSize="22" EstimateCPU="0.000418" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="100" LogicalOp="Left Semi Join" NodeId="1" Parallel="false" PhysicalOp="Nested Loops" EstimatedTotalSubtreeCost="0.0151515">
+                  <OutputList>
+                    <ColumnReference Column="Expr1002" />
+                    <ColumnReference Column="Expr1003" />
+                    <ColumnReference Column="Expr1004" />
+                    <ColumnReference Column="Expr1010" />
+                  </OutputList>
+                  <RunTimeInformation>
+                    <RunTimeCountersPerThread Thread="0" ActualRows="100" ActualEndOfScans="1" ActualExecutions="1" />
+                  </RunTimeInformation>
+                  <NestedLoops Optimized="false">
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1010" />
+                      </DefinedValue>
+                    </DefinedValues>
+                    <ProbeColumn>
+                      <ColumnReference Column="Expr1010" />
+                    </ProbeColumn>
+                    <RelOp AvgRowSize="21" EstimateCPU="1E-05" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="100" LogicalOp="Compute Scalar" NodeId="2" Parallel="false" PhysicalOp="Compute Scalar" EstimatedTotalSubtreeCost="0.003402">
+                      <OutputList>
+                        <ColumnReference Column="Expr1002" />
+                        <ColumnReference Column="Expr1003" />
+                        <ColumnReference Column="Expr1004" />
+                      </OutputList>
+                      <ComputeScalar>
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1002" />
+                            <ScalarOperator ScalarString=" -[healthcare].[PHS].[diagnosis].[diagnosis_id]+(150)%[healthcare].[PHS].[diagnosis].[code_id]">
+                              <Arithmetic Operation="ADD">
+                                <ScalarOperator>
+                                  <Arithmetic Operation="MINUS">
+                                    <ScalarOperator>
+                                      <Identifier>
+                                        <ColumnReference Database="[healthcare]" Schema="[PHS]" Table="[diagnosis]" Column="diagnosis_id" />
+                                      </Identifier>
+                                    </ScalarOperator>
+                                  </Arithmetic>
+                                </ScalarOperator>
+                                <ScalarOperator>
+                                  <Arithmetic Operation="MOD">
+                                    <ScalarOperator>
+                                      <Const ConstValue="(150)" />
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Identifier>
+                                        <ColumnReference Database="[healthcare]" Schema="[PHS]" Table="[diagnosis]" Column="code_id" />
+                                      </Identifier>
+                                    </ScalarOperator>
+                                  </Arithmetic>
+                                </ScalarOperator>
+                              </Arithmetic>
+                            </ScalarOperator>
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1003" />
+                            <ScalarOperator ScalarString="CASE WHEN [healthcare].[PHS].[diagnosis].[diagnosis_id]=(10100) AND [healthcare].[PHS].[diagnosis].[code_id] IS NOT NULL THEN '1212' ELSE CASE WHEN [healthcare].[PHS].[diagnosis].[diagnosis_id]=(10100) THEN 'asd' ELSE '0987' END END">
+                              <IF>
+                                <Condition>
+                                  <ScalarOperator>
+                                    <Logical Operation="AND">
+                                      <ScalarOperator>
+                                        <Compare CompareOp="EQ">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Database="[healthcare]" Schema="[PHS]" Table="[diagnosis]" Column="diagnosis_id" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="(10100)" />
+                                          </ScalarOperator>
+                                        </Compare>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Compare CompareOp="IS NOT">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Database="[healthcare]" Schema="[PHS]" Table="[diagnosis]" Column="code_id" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="NULL" />
+                                          </ScalarOperator>
+                                        </Compare>
+                                      </ScalarOperator>
+                                    </Logical>
+                                  </ScalarOperator>
+                                </Condition>
+                                <Then>
+                                  <ScalarOperator>
+                                    <Const ConstValue="'1212'" />
+                                  </ScalarOperator>
+                                </Then>
+                                <Else>
+                                  <ScalarOperator>
+                                    <IF>
+                                      <Condition>
+                                        <ScalarOperator>
+                                          <Compare CompareOp="EQ">
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Database="[healthcare]" Schema="[PHS]" Table="[diagnosis]" Column="diagnosis_id" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                            <ScalarOperator>
+                                              <Const ConstValue="(10100)" />
+                                            </ScalarOperator>
+                                          </Compare>
+                                        </ScalarOperator>
+                                      </Condition>
+                                      <Then>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'asd'" />
+                                        </ScalarOperator>
+                                      </Then>
+                                      <Else>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'0987'" />
+                                        </ScalarOperator>
+                                      </Else>
+                                    </IF>
+                                  </ScalarOperator>
+                                </Else>
+                              </IF>
+                            </ScalarOperator>
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1004" />
+                            <ScalarOperator ScalarString="CASE WHEN [healthcare].[PHS].[diagnosis].[diagnosis_id]=(10100) THEN '1212' ELSE CASE WHEN [healthcare].[PHS].[diagnosis].[diagnosis_id]=(111) THEN 'hg' ELSE '0987' END END">
+                              <IF>
+                                <Condition>
+                                  <ScalarOperator>
+                                    <Compare CompareOp="EQ">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[healthcare]" Schema="[PHS]" Table="[diagnosis]" Column="diagnosis_id" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(10100)" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                </Condition>
+                                <Then>
+                                  <ScalarOperator>
+                                    <Const ConstValue="'1212'" />
+                                  </ScalarOperator>
+                                </Then>
+                                <Else>
+                                  <ScalarOperator>
+                                    <IF>
+                                      <Condition>
+                                        <ScalarOperator>
+                                          <Compare CompareOp="EQ">
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Database="[healthcare]" Schema="[PHS]" Table="[diagnosis]" Column="diagnosis_id" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                            <ScalarOperator>
+                                              <Const ConstValue="(111)" />
+                                            </ScalarOperator>
+                                          </Compare>
+                                        </ScalarOperator>
+                                      </Condition>
+                                      <Then>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'hg'" />
+                                        </ScalarOperator>
+                                      </Then>
+                                      <Else>
+                                        <ScalarOperator>
+                                          <Const ConstValue="'0987'" />
+                                        </ScalarOperator>
+                                      </Else>
+                                    </IF>
+                                  </ScalarOperator>
+                                </Else>
+                              </IF>
+                            </ScalarOperator>
+                          </DefinedValue>
+                        </DefinedValues>
+                        <RelOp AvgRowSize="15" EstimateCPU="0.000267" EstimateIO="0.003125" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="100" LogicalOp="Index Scan" NodeId="3" Parallel="false" PhysicalOp="Index Scan" EstimatedTotalSubtreeCost="0.003392" TableCardinality="100">
+                          <OutputList>
+                            <ColumnReference Database="[healthcare]" Schema="[PHS]" Table="[diagnosis]" Column="diagnosis_id" />
+                            <ColumnReference Database="[healthcare]" Schema="[PHS]" Table="[diagnosis]" Column="code_id" />
+                          </OutputList>
+                          <RunTimeInformation>
+                            <RunTimeCountersPerThread Thread="0" ActualRows="100" ActualEndOfScans="1" ActualExecutions="1" />
+                          </RunTimeInformation>
+                          <IndexScan Ordered="false" ForcedIndex="false" ForceSeek="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Database="[healthcare]" Schema="[PHS]" Table="[diagnosis]" Column="diagnosis_id" />
+                              </DefinedValue>
+                              <DefinedValue>
+                                <ColumnReference Database="[healthcare]" Schema="[PHS]" Table="[diagnosis]" Column="code_id" />
+                              </DefinedValue>
+                            </DefinedValues>
+                            <Object Database="[healthcare]" Schema="[PHS]" Table="[diagnosis]" Index="[diagnosis__code_id_IX]" IndexKind="NonClustered" Storage="RowStore" />
+                          </IndexScan>
+                        </RelOp>
+                      </ComputeScalar>
+                    </RelOp>
+                    <RelOp AvgRowSize="9" EstimateCPU="5.8E-07" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="99" EstimatedExecutionMode="Row" EstimateRows="1" LogicalOp="Filter" NodeId="11" Parallel="false" PhysicalOp="Filter" EstimatedTotalSubtreeCost="0.0113315">
+                      <OutputList />
+                      <RunTimeInformation>
+                        <RunTimeCountersPerThread Thread="0" ActualRows="0" ActualEndOfScans="100" ActualExecutions="100" />
+                      </RunTimeInformation>
+                      <Filter StartupExpression="false">
+                        <RelOp AvgRowSize="71" EstimateCPU="1.1E-06" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="99" EstimatedExecutionMode="Row" EstimateRows="1" LogicalOp="Aggregate" NodeId="12" Parallel="false" PhysicalOp="Stream Aggregate" EstimatedTotalSubtreeCost="0.0112735">
+                          <OutputList>
+                            <ColumnReference Column="Expr1007" />
+                          </OutputList>
+                          <RunTimeInformation>
+                            <RunTimeCountersPerThread Thread="0" ActualRows="100" ActualEndOfScans="100" ActualExecutions="100" />
+                          </RunTimeInformation>
+                          <StreamAggregate>
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Column="Expr1007" />
+                                <ScalarOperator ScalarString="MIN([healthcare].[PHS].[decision_type].[decision_type])">
+                                  <Aggregate AggType="MIN" Distinct="false">
+                                    <ScalarOperator>
+                                      <Identifier>
+                                        <ColumnReference Database="[healthcare]" Schema="[PHS]" Table="[decision_type]" Column="decision_type" />
+                                      </Identifier>
+                                    </ScalarOperator>
+                                  </Aggregate>
+                                </ScalarOperator>
+                              </DefinedValue>
+                            </DefinedValues>
+                            <RelOp AvgRowSize="71" EstimateCPU="7.96E-05" EstimateIO="0.0032035" EstimateRebinds="0" EstimateRewinds="99" EstimatedExecutionMode="Row" EstimateRows="1" LogicalOp="Clustered Index Scan" NodeId="13" Parallel="false" PhysicalOp="Clustered Index Scan" EstimatedTotalSubtreeCost="0.0111635" TableCardinality="0">
+                              <OutputList>
+                                <ColumnReference Database="[healthcare]" Schema="[PHS]" Table="[decision_type]" Column="decision_type" />
+                              </OutputList>
+                              <RunTimeInformation>
+                                <RunTimeCountersPerThread Thread="0" ActualRows="0" ActualEndOfScans="100" ActualExecutions="100" />
+                              </RunTimeInformation>
+                              <IndexScan Ordered="false" ForcedIndex="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[healthcare]" Schema="[PHS]" Table="[decision_type]" Column="decision_type" />
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <Object Database="[healthcare]" Schema="[PHS]" Table="[decision_type]" Index="[PK_decision_type]" IndexKind="Clustered" Storage="RowStore" />
+                              </IndexScan>
+                            </RelOp>
+                          </StreamAggregate>
+                        </RelOp>
+                        <Predicate>
+                          <ScalarOperator ScalarString="(123)=CONVERT_IMPLICIT(int,[Expr1007],0)">
+                            <Compare CompareOp="EQ">
+                              <ScalarOperator>
+                                <Const ConstValue="(123)" />
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Convert DataType="int" Style="0" Implicit="true">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Expr1007" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Convert>
+                              </ScalarOperator>
+                            </Compare>
+                          </ScalarOperator>
+                        </Predicate>
+                      </Filter>
+                    </RelOp>
+                  </NestedLoops>
+                </RelOp>
+              </ComputeScalar>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementCompId="3" StatementEstRows="100" StatementId="3" StatementOptmLevel="TRIVIAL" CardinalityEstimationModelVersion="120" StatementSubTreeCost="0.003402" StatementText="select IIF (diagnosis_id IN (0,1,2,3,54,7,8,543),123,321 ) cf&#xD;&#xA;	from PHS.diagnosis" StatementType="SELECT" QueryHash="0x133B8C8820EB966E" QueryPlanHash="0x3F0CA140908B0EE1" RetrievedFromCache="true">
+          <StatementSetOptions ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" NUMERIC_ROUNDABORT="false" QUOTED_IDENTIFIER="true" />
+          <QueryPlan DegreeOfParallelism="1" CachedPlanSize="16" CompileTime="0" CompileCPU="0" CompileMemory="200">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="104847" EstimatedPagesCached="157270" EstimatedAvailableDegreeOfParallelism="12" />
+            <RelOp AvgRowSize="11" EstimateCPU="1E-05" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="100" LogicalOp="Compute Scalar" NodeId="0" Parallel="false" PhysicalOp="Compute Scalar" EstimatedTotalSubtreeCost="0.003402">
+              <OutputList>
+                <ColumnReference Column="Expr1002" />
+              </OutputList>
+              <ComputeScalar>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1002" />
+                    <ScalarOperator ScalarString="CASE WHEN [healthcare].[PHS].[diagnosis].[diagnosis_id]=(543) OR [healthcare].[PHS].[diagnosis].[diagnosis_id]=(8) OR [healthcare].[PHS].[diagnosis].[diagnosis_id]=(7) OR [healthcare].[PHS].[diagnosis].[diagnosis_id]=(54) OR [healthcare].[PHS].[diagnosis].[diagnosis_id]=(3) OR [healthcare].[PHS].[diagnosis].[diagnosis_id]=(2) OR [healthcare].[PHS].[diagnosis].[diagnosis_id]=(1) OR [healthcare].[PHS].[diagnosis].[diagnosis_id]=(0) THEN (123) ELSE (321) END">
+                      <IF>
+                        <Condition>
+                          <ScalarOperator>
+                            <Logical Operation="OR">
+                              <ScalarOperator>
+                                <Compare CompareOp="EQ">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[healthcare]" Schema="[PHS]" Table="[diagnosis]" Column="diagnosis_id" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(543)" />
+                                  </ScalarOperator>
+                                </Compare>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Compare CompareOp="EQ">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[healthcare]" Schema="[PHS]" Table="[diagnosis]" Column="diagnosis_id" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(8)" />
+                                  </ScalarOperator>
+                                </Compare>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Compare CompareOp="EQ">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[healthcare]" Schema="[PHS]" Table="[diagnosis]" Column="diagnosis_id" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(7)" />
+                                  </ScalarOperator>
+                                </Compare>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Compare CompareOp="EQ">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[healthcare]" Schema="[PHS]" Table="[diagnosis]" Column="diagnosis_id" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(54)" />
+                                  </ScalarOperator>
+                                </Compare>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Compare CompareOp="EQ">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[healthcare]" Schema="[PHS]" Table="[diagnosis]" Column="diagnosis_id" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(3)" />
+                                  </ScalarOperator>
+                                </Compare>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Compare CompareOp="EQ">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[healthcare]" Schema="[PHS]" Table="[diagnosis]" Column="diagnosis_id" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(2)" />
+                                  </ScalarOperator>
+                                </Compare>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Compare CompareOp="EQ">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[healthcare]" Schema="[PHS]" Table="[diagnosis]" Column="diagnosis_id" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(1)" />
+                                  </ScalarOperator>
+                                </Compare>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Compare CompareOp="EQ">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[healthcare]" Schema="[PHS]" Table="[diagnosis]" Column="diagnosis_id" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(0)" />
+                                  </ScalarOperator>
+                                </Compare>
+                              </ScalarOperator>
+                            </Logical>
+                          </ScalarOperator>
+                        </Condition>
+                        <Then>
+                          <ScalarOperator>
+                            <Const ConstValue="(123)" />
+                          </ScalarOperator>
+                        </Then>
+                        <Else>
+                          <ScalarOperator>
+                            <Const ConstValue="(321)" />
+                          </ScalarOperator>
+                        </Else>
+                      </IF>
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp AvgRowSize="11" EstimateCPU="0.000267" EstimateIO="0.003125" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="100" LogicalOp="Index Scan" NodeId="1" Parallel="false" PhysicalOp="Index Scan" EstimatedTotalSubtreeCost="0.003392" TableCardinality="100">
+                  <OutputList>
+                    <ColumnReference Database="[healthcare]" Schema="[PHS]" Table="[diagnosis]" Column="diagnosis_id" />
+                  </OutputList>
+                  <RunTimeInformation>
+                    <RunTimeCountersPerThread Thread="0" ActualRows="100" ActualEndOfScans="1" ActualExecutions="1" />
+                  </RunTimeInformation>
+                  <IndexScan Ordered="false" ForcedIndex="false" ForceSeek="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Database="[healthcare]" Schema="[PHS]" Table="[diagnosis]" Column="diagnosis_id" />
+                      </DefinedValue>
+                    </DefinedValues>
+                    <Object Database="[healthcare]" Schema="[PHS]" Table="[diagnosis]" Index="[diagnosis__diagnosis_group_id_IX]" IndexKind="NonClustered" Storage="RowStore" />
+                  </IndexScan>
+                </RelOp>
+              </ComputeScalar>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementCompId="4" StatementEstRows="1" StatementId="4" StatementOptmLevel="FULL" StatementOptmEarlyAbortReason="GoodEnoughPlanFound" CardinalityEstimationModelVersion="120" StatementSubTreeCost="0.0032843" StatementText="select max(diagnosis_id) from PHS.diagnosis" StatementType="SELECT" QueryHash="0xF60DB581277A3327" QueryPlanHash="0xBFF0EE5AD9BDA4DA" RetrievedFromCache="true">
+          <StatementSetOptions ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" NUMERIC_ROUNDABORT="false" QUOTED_IDENTIFIER="true" />
+          <QueryPlan DegreeOfParallelism="1" CachedPlanSize="16" CompileTime="0" CompileCPU="0" CompileMemory="216">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="104847" EstimatedPagesCached="157270" EstimatedAvailableDegreeOfParallelism="12" />
+            <RelOp AvgRowSize="11" EstimateCPU="1.1E-06" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="1" LogicalOp="Aggregate" NodeId="0" Parallel="false" PhysicalOp="Stream Aggregate" EstimatedTotalSubtreeCost="0.0032843">
+              <OutputList>
+                <ColumnReference Column="Expr1002" />
+              </OutputList>
+              <RunTimeInformation>
+                <RunTimeCountersPerThread Thread="0" ActualRows="1" ActualEndOfScans="1" ActualExecutions="1" />
+              </RunTimeInformation>
+              <StreamAggregate>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1002" />
+                    <ScalarOperator ScalarString="MAX([healthcare].[PHS].[diagnosis].[diagnosis_id])">
+                      <Aggregate AggType="MAX" Distinct="false">
+                        <ScalarOperator>
+                          <Identifier>
+                            <ColumnReference Database="[healthcare]" Schema="[PHS]" Table="[diagnosis]" Column="diagnosis_id" />
+                          </Identifier>
+                        </ScalarOperator>
+                      </Aggregate>
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp AvgRowSize="11" EstimateCPU="1E-07" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="1" LogicalOp="Top" NodeId="1" Parallel="false" PhysicalOp="Top" EstimatedTotalSubtreeCost="0.0032832">
+                  <OutputList>
+                    <ColumnReference Database="[healthcare]" Schema="[PHS]" Table="[diagnosis]" Column="diagnosis_id" />
+                  </OutputList>
+                  <RunTimeInformation>
+                    <RunTimeCountersPerThread Thread="0" ActualRows="1" ActualEndOfScans="1" ActualExecutions="1" />
+                  </RunTimeInformation>
+                  <Top RowCount="false" IsPercent="false" WithTies="false">
+                    <TopExpression>
+                      <ScalarOperator ScalarString="(1)">
+                        <Const ConstValue="(1)" />
+                      </ScalarOperator>
+                    </TopExpression>
+                    <RelOp AvgRowSize="11" EstimateCPU="0.000267" EstimateIO="0.00386574" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="1" LogicalOp="Clustered Index Scan" NodeId="2" Parallel="false" PhysicalOp="Clustered Index Scan" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="100">
+                      <OutputList>
+                        <ColumnReference Database="[healthcare]" Schema="[PHS]" Table="[diagnosis]" Column="diagnosis_id" />
+                      </OutputList>
+                      <RunTimeInformation>
+                        <RunTimeCountersPerThread Thread="0" ActualRows="1" ActualEndOfScans="0" ActualExecutions="1" />
+                      </RunTimeInformation>
+                      <IndexScan Ordered="true" ScanDirection="BACKWARD" ForcedIndex="false" ForceSeek="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Database="[healthcare]" Schema="[PHS]" Table="[diagnosis]" Column="diagnosis_id" />
+                          </DefinedValue>
+                        </DefinedValues>
+                        <Object Database="[healthcare]" Schema="[PHS]" Table="[diagnosis]" Index="[PK_diagnosis]" IndexKind="Clustered" Storage="RowStore" />
+                      </IndexScan>
+                    </RelOp>
+                  </Top>
+                </RelOp>
+              </StreamAggregate>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementCompId="5" StatementEstRows="1" StatementId="5" StatementOptmLevel="TRIVIAL" CardinalityEstimationModelVersion="120" StatementSubTreeCost="0.0034525" StatementText="select @f = count(*) from  PHS.diagnosis" StatementType="SELECT" QueryHash="0xB25653C28E9A057F" QueryPlanHash="0xCA679CF1480AA16D" RetrievedFromCache="true">
+          <StatementSetOptions ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" NUMERIC_ROUNDABORT="false" QUOTED_IDENTIFIER="true" />
+          <QueryPlan DegreeOfParallelism="1" CachedPlanSize="8" CompileTime="0" CompileCPU="0" CompileMemory="160">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="104847" EstimatedPagesCached="157270" EstimatedAvailableDegreeOfParallelism="12" />
+            <RelOp AvgRowSize="11" EstimateCPU="6.05E-05" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="1" LogicalOp="Compute Scalar" NodeId="0" Parallel="false" PhysicalOp="Compute Scalar" EstimatedTotalSubtreeCost="0.0034525">
+              <OutputList>
+                <ColumnReference Column="Expr1002" />
+              </OutputList>
+              <ComputeScalar>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1002" />
+                    <ScalarOperator ScalarString="CONVERT_IMPLICIT(int,[Expr1003],0)">
+                      <Convert DataType="int" Style="0" Implicit="true">
+                        <ScalarOperator>
+                          <Identifier>
+                            <ColumnReference Column="Expr1003" />
+                          </Identifier>
+                        </ScalarOperator>
+                      </Convert>
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp AvgRowSize="11" EstimateCPU="6.05E-05" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="1" LogicalOp="Aggregate" NodeId="1" Parallel="false" PhysicalOp="Stream Aggregate" EstimatedTotalSubtreeCost="0.0034525">
+                  <OutputList>
+                    <ColumnReference Column="Expr1003" />
+                  </OutputList>
+                  <RunTimeInformation>
+                    <RunTimeCountersPerThread Thread="0" ActualRows="1" ActualEndOfScans="1" ActualExecutions="1" />
+                  </RunTimeInformation>
+                  <StreamAggregate>
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1003" />
+                        <ScalarOperator ScalarString="Count(*)">
+                          <Aggregate AggType="countstar" Distinct="false" />
+                        </ScalarOperator>
+                      </DefinedValue>
+                    </DefinedValues>
+                    <RelOp AvgRowSize="9" EstimateCPU="0.000267" EstimateIO="0.003125" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="100" LogicalOp="Index Scan" NodeId="2" Parallel="false" PhysicalOp="Index Scan" EstimatedTotalSubtreeCost="0.003392" TableCardinality="100">
+                      <OutputList />
+                      <RunTimeInformation>
+                        <RunTimeCountersPerThread Thread="0" ActualRows="100" ActualEndOfScans="1" ActualExecutions="1" />
+                      </RunTimeInformation>
+                      <IndexScan Ordered="false" ForcedIndex="false" ForceSeek="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                        <DefinedValues />
+                        <Object Database="[healthcare]" Schema="[PHS]" Table="[diagnosis]" Index="[diagnosis__diagnosis_group_id_IX]" IndexKind="NonClustered" Storage="RowStore" />
+                      </IndexScan>
+                    </RelOp>
+                  </StreamAggregate>
+                </RelOp>
+              </ComputeScalar>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@f" ParameterRuntimeValue="(100)" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

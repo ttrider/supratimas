@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-16"?>
+<ShowPlanXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="1.2" Build="11.0.2100.60" xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementCompId="0" StatementId="1" StatementText="create function foo&#xD;&#xA;(@i int)&#xD;&#xA;returns int&#xD;&#xA;as&#xD;&#xA;begin&#xD;&#xA;return @i*10000;&#xD;&#xA;end&#xD;&#xA;" StatementType="CREATE/ALTER FUNCTION" RetrievedFromCache="false" />
+      </Statements>
+      <Statements>
+        <StmtSimple StatementCompId="0" StatementId="2" StatementType="CREATE/ALTER FUNCTION" RetrievedFromCache="false" />
+      </Statements>
+    </Batch>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementCompId="0" StatementId="1" StatementText="&#xD;&#xA;create function foo2()&#xD;&#xA;returns TABLE&#xD;&#xA;as&#xD;&#xA;return select * from sys.objects;&#xD;&#xA;" StatementType="CREATE/ALTER FUNCTION" RetrievedFromCache="false" />
+      </Statements>
+      <Statements>
+        <StmtSimple StatementCompId="0" StatementId="2" StatementType="CREATE/ALTER FUNCTION" RetrievedFromCache="false" />
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

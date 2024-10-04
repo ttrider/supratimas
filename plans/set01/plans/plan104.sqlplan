@@ -1,0 +1,293 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="CREATE PROCEDURE [dbo].[Watson_UploadCab]&#xD;&#xA;    @Id BIGINT,&#xD;&#xA;    @TeuGuid UNIQUEIDENTIFIER,&#xD;&#xA;    @FailureGuid UNIQUEIDENTIFIER,&#xD;&#xA;    @Path NVARCHAR(256)&#xD;&#xA;AS&#xD;&#xA;BEGIN&#xD;&#xA;    SET NOCOUNT ON;&#xD;&#xA;   " StatementId="1" StatementCompId="2" StatementType="SET ON/OFF" RetrievedFromCache="true" />
+        <StmtCond StatementText=" DECLARE @TEUId BIGINT&#xD;&#xA;&#xD;&#xA;    IF NOT EXISTS(SELECT 1 FROM dbo.Cab WITH (NOLOCK) WHERE Id = @Id)&#xD;&#xA;   " StatementId="2" StatementCompId="3" StatementType="COND WITH QUERY" RetrievedFromCache="true" StatementSubTreeCost="0.00328854" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0xFD05F7275CF9430E" QueryPlanHash="0x15E382D0E1402AB0" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <Condition>
+            <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="1" CompileCPU="1" CompileMemory="224">
+              <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+              <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+              <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328854" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                <OutputList>
+                  <ColumnReference Column="Expr1004" />
+                </OutputList>
+                <ComputeScalar>
+                  <DefinedValues>
+                    <DefinedValue>
+                      <ColumnReference Column="Expr1004" />
+                      <ScalarOperator ScalarString="CASE WHEN [Expr1005] IS NULL THEN (1) ELSE (0) END">
+                        <IF>
+                          <Condition>
+                            <ScalarOperator>
+                              <Compare CompareOp="IS">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="Expr1005" />
+                                  </Identifier>
+                                </ScalarOperator>
+                                <ScalarOperator>
+                                  <Const ConstValue="NULL" />
+                                </ScalarOperator>
+                              </Compare>
+                            </ScalarOperator>
+                          </Condition>
+                          <Then>
+                            <ScalarOperator>
+                              <Const ConstValue="(1)" />
+                            </ScalarOperator>
+                          </Then>
+                          <Else>
+                            <ScalarOperator>
+                              <Const ConstValue="(0)" />
+                            </ScalarOperator>
+                          </Else>
+                        </IF>
+                      </ScalarOperator>
+                    </DefinedValue>
+                  </DefinedValues>
+                  <RelOp NodeId="1" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.00328844" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList>
+                      <ColumnReference Column="Expr1005" />
+                    </OutputList>
+                    <NestedLoops Optimized="0">
+                      <DefinedValues>
+                        <DefinedValue>
+                          <ColumnReference Column="Expr1005" />
+                        </DefinedValue>
+                      </DefinedValues>
+                      <ProbeColumn>
+                        <ColumnReference Column="Expr1005" />
+                      </ProbeColumn>
+                      <RelOp NodeId="2" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList />
+                        <ConstantScan />
+                      </RelOp>
+                      <RelOp NodeId="3" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="4.30742e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList />
+                        <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                          <DefinedValues />
+                          <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Cab]" Index="[PK_Cab]" IndexKind="Clustered" />
+                          <SeekPredicates>
+                            <SeekPredicateNew>
+                              <SeekKeys>
+                                <Prefix ScanType="EQ">
+                                  <RangeColumns>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Cab]" Column="Id" />
+                                  </RangeColumns>
+                                  <RangeExpressions>
+                                    <ScalarOperator ScalarString="[@Id]">
+                                      <Identifier>
+                                        <ColumnReference Column="@Id" />
+                                      </Identifier>
+                                    </ScalarOperator>
+                                  </RangeExpressions>
+                                </Prefix>
+                              </SeekKeys>
+                            </SeekPredicateNew>
+                          </SeekPredicates>
+                        </IndexScan>
+                      </RelOp>
+                    </NestedLoops>
+                  </RelOp>
+                </ComputeScalar>
+              </RelOp>
+              <ParameterList>
+                <ColumnReference Column="@Id" ParameterCompiledValue="(-1955401516)" />
+              </ParameterList>
+            </QueryPlan>
+          </Condition>
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;        SELECT @TeuId = Id FROM dbo.TEU WITH (NOLOCK) WHERE [Guid] = @TeuGuid&#xD;&#xA;&#xD;&#xA;       " StatementId="3" StatementCompId="4" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032831" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x5E0ED5207A801AED" QueryPlanHash="0x9A34DA096C407DFB">
+                <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="1" CompileCPU="1" CompileMemory="216">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="0" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="4.12024e+007" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList>
+                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="Id" />
+                    </OutputList>
+                    <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                      <DefinedValues>
+                        <DefinedValue>
+                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="Id" />
+                        </DefinedValue>
+                      </DefinedValues>
+                      <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Index="[Teu_IDX_Guid]" IndexKind="NonClustered" />
+                      <SeekPredicates>
+                        <SeekPredicateNew>
+                          <SeekKeys>
+                            <Prefix ScanType="EQ">
+                              <RangeColumns>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TEU]" Column="Guid" />
+                              </RangeColumns>
+                              <RangeExpressions>
+                                <ScalarOperator ScalarString="[@TeuGuid]">
+                                  <Identifier>
+                                    <ColumnReference Column="@TeuGuid" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </RangeExpressions>
+                            </Prefix>
+                          </SeekKeys>
+                        </SeekPredicateNew>
+                      </SeekPredicates>
+                    </IndexScan>
+                  </RelOp>
+                  <ParameterList>
+                    <ColumnReference Column="@TeuGuid" ParameterCompiledValue="{guid'47D06EB5-1FDD-498A-8FE3-7C4C100088D7'}" />
+                  </ParameterList>
+                </QueryPlan>
+              </StmtSimple>
+              <StmtCond StatementText=" IF @TEUId IS NULL&#xD;&#xA;       " StatementId="4" StatementCompId="5" StatementType="COND" RetrievedFromCache="true">
+                <Condition />
+                <Then>
+                  <Statements>
+                    <StmtSimple StatementText=" BEGIN&#xD;&#xA;            RAISERROR ('The TEU cannot be assigned because specified TEU does not exist.', 11, 1);&#xD;&#xA;           " StatementId="5" StatementCompId="6" StatementType="RAISERROR" RetrievedFromCache="true" />
+                    <StmtSimple StatementText=" GOTO ProcExit&#xD;&#xA;       " StatementId="6" StatementCompId="7" StatementType="GOTO" RetrievedFromCache="true" />
+                  </Statements>
+                </Then>
+              </StmtCond>
+              <StmtSimple StatementText=" END&#xD;&#xA;        &#xD;&#xA;        INSERT INTO Cab(Id, TeuId, DateAdded, FailureGuid, [Path])&#xD;&#xA;        VALUES (@Id, @TeuId, GETDATE(), @FailureGuid, @Path) &#xD;&#xA;   " StatementId="7" StatementCompId="9" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.0200032" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0xA180B76B14A2C3C2" QueryPlanHash="0x55D061C3BD8D4624">
+                <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="24" CompileTime="0" CompileCPU="0" CompileMemory="152">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="0" PhysicalOp="Clustered Index Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.02" EstimateCPU="2e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0200032" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList />
+                    <ScalarInsert DMLRequestSort="0">
+                      <DefinedValues>
+                        <DefinedValue>
+                          <ColumnReference Column="Expr1003" />
+                          <ScalarOperator ScalarString="CONVERT_IMPLICIT(smalldatetime,getdate(),0)">
+                            <Identifier>
+                              <ColumnReference Column="ConstExpr1004">
+                                <ScalarOperator>
+                                  <Convert DataType="smalldatetime" Style="0" Implicit="1">
+                                    <ScalarOperator>
+                                      <Intrinsic FunctionName="getdate" />
+                                    </ScalarOperator>
+                                  </Convert>
+                                </ScalarOperator>
+                              </ColumnReference>
+                            </Identifier>
+                          </ScalarOperator>
+                        </DefinedValue>
+                      </DefinedValues>
+                      <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Cab]" Index="[PK_Cab]" IndexKind="Clustered" />
+                      <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Cab]" Index="[IX_Cab_FailureGuid]" IndexKind="NonClustered" />
+                      <SetPredicate>
+                        <ScalarOperator ScalarString="[OurLabReporting].[dbo].[Cab].[Id] = RaiseIfNullInsert([@Id]),[OurLabReporting].[dbo].[Cab].[TeuId] = RaiseIfNullInsert([@TEUId]),[OurLabReporting].[dbo].[Cab].[DateAdded] = RaiseIfNullInsert([Expr1003]),[OurLabReporting].[dbo].[Cab].[FailureGuid] = RaiseIfNullInsert([@FailureGuid]),[OurLabReporting].[dbo].[Cab].[Path] = [@Path],[OurLabReporting].[dbo].[Cab].[BugId] = NULL,[OurLabReporting].[dbo].[Cab].[BugDb] = NULL,[OurLabReporting].[dbo].[Cab].[ResolveDate] = NULL,[OurLabReporting].[dbo].[Cab].[FailureId] = NULL,[OurLabReporting].[dbo].[Cab].[WatsonFailureId] = NULL">
+                          <ScalarExpressionList>
+                            <ScalarOperator>
+                              <MultipleAssign>
+                                <Assign>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Cab]" Column="Id" />
+                                  <ScalarOperator>
+                                    <Intrinsic FunctionName="RaiseIfNullInsert">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="@Id" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Intrinsic>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Cab]" Column="TeuId" />
+                                  <ScalarOperator>
+                                    <Intrinsic FunctionName="RaiseIfNullInsert">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="@TEUId" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Intrinsic>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Cab]" Column="DateAdded" />
+                                  <ScalarOperator>
+                                    <Intrinsic FunctionName="RaiseIfNullInsert">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="Expr1003" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Intrinsic>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Cab]" Column="FailureGuid" />
+                                  <ScalarOperator>
+                                    <Intrinsic FunctionName="RaiseIfNullInsert">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="@FailureGuid" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Intrinsic>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Cab]" Column="Path" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="@Path" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Cab]" Column="BugId" />
+                                  <ScalarOperator>
+                                    <Const ConstValue="NULL" />
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Cab]" Column="BugDb" />
+                                  <ScalarOperator>
+                                    <Const ConstValue="NULL" />
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Cab]" Column="ResolveDate" />
+                                  <ScalarOperator>
+                                    <Const ConstValue="NULL" />
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Cab]" Column="FailureId" />
+                                  <ScalarOperator>
+                                    <Const ConstValue="NULL" />
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Cab]" Column="WatsonFailureId" />
+                                  <ScalarOperator>
+                                    <Const ConstValue="NULL" />
+                                  </ScalarOperator>
+                                </Assign>
+                              </MultipleAssign>
+                            </ScalarOperator>
+                          </ScalarExpressionList>
+                        </ScalarOperator>
+                      </SetPredicate>
+                    </ScalarInsert>
+                  </RelOp>
+                  <ParameterList>
+                    <ColumnReference Column="@Path" ParameterCompiledValue="N'\\redmond\osg\Threshold\WatsonCabs\Prod\2015\01\29\BDE8AAAD-2C62-4C37-93E7-3CE767DFD733.cab'" />
+                    <ColumnReference Column="@FailureGuid" ParameterCompiledValue="{guid'2ECC309A-BBC1-4760-BA0D-6F9E5D5B04D1'}" />
+                    <ColumnReference Column="@Id" ParameterCompiledValue="(-1955401516)" />
+                  </ParameterList>
+                </QueryPlan>
+              </StmtSimple>
+            </Statements>
+          </Then>
+        </StmtCond>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

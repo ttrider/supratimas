@@ -1,0 +1,1060 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtUseDb StatementText="/* &#xD;&#xA;  &#xD;&#xA;-- SoSSE 20.0.1.332&#xD;&#xA;-- File - Procedure\sqlserver_spotlight\2005\QS_JobAlerts.sql&#xD;&#xA;-- *&#xD;&#xA;-- * Copyright 2014 Dell Inc. ALL RIGHTS RESERVED&#xD;&#xA;-- * &#xD;&#xA;*/ &#xD;&#xA;use tempdb&#xD;&#xA;&#xD;" StatementId="1" StatementCompId="1" StatementType="USE DATABASE" RetrievedFromCache="true" Database="[tempdb]" />
+        <StmtSimple StatementText="&#xA;declare @PrevCallTime&#x9;nvarchar(50),&#xD;&#xA;&#x9;&#x9;@Debug bit &#xD;&#xA;&#x9;&#xD;&#xA;set @PrevCallTime = N'1422585373000'&#xD;" StatementId="2" StatementCompId="2" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#xA;set @Debug = 0&#xD;&#xA;&#x9;&#xD;&#xA;&#x9;&#xD;" StatementId="3" StatementCompId="3" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtCond StatementText="&#xA;if isnull(object_id(N'tempdb..#QS_sqlagent_enum_jobsT'),0)&lt;&gt; 0 &#xD;" StatementId="4" StatementCompId="4" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText="&#xA;begin&#xD;&#xA;drop table #QS_sqlagent_enum_jobsT&#xD;" StatementId="5" StatementCompId="5" StatementType="DROP OBJECT" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtSimple StatementText="&#xA;end&#xD;&#xA;&#x9;&#xD;&#xA;create table #QS_sqlagent_enum_jobsT(&#xD;&#xA;&#x9;JobID&#x9;&#x9;&#x9;uniqueidentifier null,&#xD;&#xA;&#x9;LastRunDate&#x9;&#x9;integer&#x9;&#x9;null,&#xD;&#xA;&#x9;LastRunTime&#x9;&#x9;integer&#x9;&#x9;null,&#xD;&#xA;&#x9;LastRunDateTime&#x9;datetime&#x9;null,&#x9;-- derived&#xD;&#xA;&#x9;NextRunDate&#x9;&#x9;integer&#x9;&#x9;null,&#xD;&#xA;&#x9;NextRunTime&#x9;&#x9;integer&#x9;&#x9;null,&#xD;&#xA;&#x9;NextRunDateTime&#x9;datetime&#x9;null,&#x9;-- derived&#xD;&#xA;&#x9;NextRunSchedID&#x9;integer&#x9;&#x9;null,&#xD;&#xA;&#x9;RequestedToRun&#x9;integer&#x9;&#x9;null,&#xD;&#xA;&#x9;RequestSource&#x9;integer&#x9;&#x9;null,&#xD;&#xA;&#x9;RequestSourceID&#x9;sysname&#x9;&#x9;null,&#xD;&#xA;&#x9;Running&#x9;&#x9;&#x9;integer&#x9;&#x9;null,&#xD;&#xA;&#x9;CurrentStep&#x9;&#x9;integer&#x9;&#x9;null,&#xD;&#xA;&#x9;CurrentRetryAttempt&#x9;integer&#x9;&#x9;null,&#xD;&#xA;&#x9;State&#x9;&#x9;&#x9;integer&#x9;&#x9;null,&#xD;&#xA;)&#xD;&#xA;&#x9;&#xD;" StatementId="6" StatementCompId="7" StatementType="CREATE TABLE" RetrievedFromCache="true" />
+        <StmtCond StatementText="&#xA;if isnull(object_id(N'tempdb..#QS_servicecontrol'),0)&lt;&gt; 0 &#xD;" StatementId="7" StatementCompId="8" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText="&#xA;begin&#xD;&#xA;drop table #QS_servicecontrol&#xD;" StatementId="8" StatementCompId="9" StatementType="DROP OBJECT" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtSimple StatementText="&#xA;end&#xD;&#xA;create table #QS_servicecontrol(state nvarchar(64))&#xD;&#xA;&#xD;" StatementId="9" StatementCompId="11" StatementType="CREATE TABLE" RetrievedFromCache="true" />
+        <StmtCond StatementText="&#xA;declare&#x9;@dFrom&#x9;datetime&#xD;&#xA;&#xD;&#xA;if @PrevCallTime is null or @PrevCallTime = ''&#xD;&#xA;" StatementId="10" StatementCompId="12" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText="&#x9;select @dFrom = N'19000101'&#x9;-- All.&#xD;" StatementId="11" StatementCompId="13" StatementType="ASSIGN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+          <Else>
+            <Statements>
+              <StmtCond StatementText="&#xA;else if isdate(@PrevCallTime) = 1 &#xD;&#xA;" StatementId="12" StatementCompId="16" StatementType="COND" RetrievedFromCache="true">
+                <Condition />
+                <Then>
+                  <Statements>
+                    <StmtSimple StatementText="&#x9;select @dFrom = convert(datetime,@PrevCallTime)&#xD;" StatementId="13" StatementCompId="17" StatementType="ASSIGN" RetrievedFromCache="true" />
+                  </Statements>
+                </Then>
+                <Else>
+                  <Statements>
+                    <StmtCond StatementText="&#xA;else&#xD;&#xA;begin&#xD;&#xA;&#x9;if @Debug &lt;&gt; 0&#xD;&#xA;&#x9;" StatementId="14" StatementCompId="20" StatementType="COND" RetrievedFromCache="true">
+                      <Condition />
+                      <Then>
+                        <Statements>
+                          <StmtSimple StatementText="&#x9;print convert(varchar(30),getdate(),109) + N' Invalid Date/time passed (' + @PrevCallTime + N') using current date/time - 60 seconds.'&#xD;&#xA;" StatementId="15" StatementCompId="21" StatementType="PRINT" RetrievedFromCache="true" />
+                        </Statements>
+                      </Then>
+                    </StmtCond>
+                    <StmtSimple StatementText="&#x9;select @dFrom = dateadd(second, -60, getdate())&#xD;" StatementId="16" StatementCompId="23" StatementType="ASSIGN" RetrievedFromCache="true" />
+                  </Statements>
+                </Else>
+              </StmtCond>
+            </Statements>
+          </Else>
+        </StmtCond>
+        <StmtSimple StatementText="&#xA;end&#xD;&#xA;&#xD;&#xA;set @dFrom = dateadd(ms, 0 - datepart(ms,@dFrom), @dFrom)&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;--&#xD;&#xA;-- See if the SQLAgent service is running,&#xD;&#xA;-- and if it is running -&#xD;&#xA;-- &#x9;run xp_sqlagent_enum_jobs into the temp table&#xD;&#xA;--&#xD;" StatementId="17" StatementCompId="26" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#xA;declare @AgentServiceName&#x9;sysname&#xD;&#xA;declare @AgentStatus&#x9;&#x9;int&#xD;&#xA;select&#x9;@AgentServiceName = case when convert(sysname,serverproperty(N'servername')) like N'%\%' then N'SQLAgent$' + @@servicename else N'SQLServerAgent' end&#xD;&#xA;&#xD;&#xA;-- AgentStatus&#xD;" StatementId="18" StatementCompId="27" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#xA;declare @Key&#x9;varchar(100)&#xD;&#xA;declare @Val&#x9;varchar(100)&#xD;&#xA;set @Val = null&#xD;" StatementId="19" StatementCompId="28" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#xA;set @Key = N'SYSTEM\CurrentControlSet\Services\' + @AgentServiceName + N'\'&#xD;" StatementId="20" StatementCompId="29" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#xA;execute sys.xp_regread N'HKEY_LOCAL_MACHINE', @Key, N'DisplayName', @Val output, N'no_output'&#xD;&#xA;&#xD;" StatementId="21" StatementCompId="30" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+        <StmtCond StatementText="&#xA;if @Val is not null&#xD;" StatementId="22" StatementCompId="31" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtCond StatementText="&#xA;begin&#xD;&#xA;&#x9;IF IS_SRVROLEMEMBER (N'sysadmin') = 1&#xD;&#xA;" StatementId="23" StatementCompId="32" StatementType="COND" RetrievedFromCache="true">
+                <Condition />
+                <Then>
+                  <Statements>
+                    <StmtSimple StatementText="&#x9;begin&#xD;&#xA;&#x9;&#x9;insert into #QS_servicecontrol (state)&#xD;&#xA;&#x9;&#x9;execute sys.xp_servicecontrol N'querystate', @AgentServiceName&#xD;&#xA;" StatementId="24" StatementCompId="33" StatementType="INSERT EXEC" RetrievedFromCache="true" StatementSubTreeCost="0.0132841" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0xB16712B162327FCB" QueryPlanHash="0x7CA832951EEE97DA">
+                      <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                      <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="0" CompileCPU="0" CompileMemory="88">
+                        <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                        <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                        <RelOp NodeId="0" PhysicalOp="Table Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.01" EstimateCPU="1e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0132841" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList />
+                          <Update DMLRequestSort="0">
+                            <Object Database="[tempdb]" Schema="[dbo]" Table="[#QS_servicecontrol]" IndexKind="Heap" />
+                            <SetPredicate>
+                              <ScalarOperator ScalarString="[tempdb].[dbo].[#QS_servicecontrol].[state] = [Parameter Table].[state] as [ParameterTable].[state]">
+                                <ScalarExpressionList>
+                                  <ScalarOperator>
+                                    <MultipleAssign>
+                                      <Assign>
+                                        <ColumnReference Database="[tempdb]" Schema="[dbo]" Table="[#QS_servicecontrol]" Column="state" />
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Table="[Parameter Table]" Alias="[ParameterTable]" Column="state" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Assign>
+                                    </MultipleAssign>
+                                  </ScalarOperator>
+                                </ScalarExpressionList>
+                              </ScalarOperator>
+                            </SetPredicate>
+                            <RelOp NodeId="1" PhysicalOp="Parameter Table Scan" LogicalOp="Parameter Table Scan" EstimateRows="1" EstimateIO="0.0032035" EstimateCPU="7.96e-005" AvgRowSize="75" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Table="[Parameter Table]" Alias="[ParameterTable]" Column="state" />
+                              </OutputList>
+                              <ParameterTableScan />
+                            </RelOp>
+                          </Update>
+                        </RelOp>
+                      </QueryPlan>
+                    </StmtSimple>
+                  </Statements>
+                </Then>
+              </StmtCond>
+              <StmtSimple StatementId="24" StatementCompId="33" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+              <StmtSimple StatementText="&#x9;end&#xD;&#xA;&#xD;&#xA;&#x9;select&#x9;@AgentStatus = case when state=N'Running.' then 0 else 1 end&#x9;-- 0=Running,1=Stopped,-1=NotInstalled.&#xD;&#xA;&#x9;from&#x9;#QS_servicecontrol&#xD;&#xA;&#xD;&#xA;" StatementId="25" StatementCompId="35" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032832" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x44489050D0886037" QueryPlanHash="0x8C1D781CD2EBFEA5">
+                <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="0" CompileCPU="0" CompileMemory="88">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032832" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList>
+                      <ColumnReference Column="Expr1004" />
+                    </OutputList>
+                    <ComputeScalar>
+                      <DefinedValues>
+                        <DefinedValue>
+                          <ColumnReference Column="Expr1004" />
+                          <ScalarOperator ScalarString="CASE WHEN [tempdb].[dbo].[#QS_servicecontrol].[state]=N'Running.' THEN (0) ELSE (1) END">
+                            <IF>
+                              <Condition>
+                                <ScalarOperator>
+                                  <Compare CompareOp="EQ">
+                                    <ScalarOperator>
+                                      <Identifier>
+                                        <ColumnReference Database="[tempdb]" Schema="[dbo]" Table="[#QS_servicecontrol]" Column="state" />
+                                      </Identifier>
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Const ConstValue="N'Running.'" />
+                                    </ScalarOperator>
+                                  </Compare>
+                                </ScalarOperator>
+                              </Condition>
+                              <Then>
+                                <ScalarOperator>
+                                  <Const ConstValue="(0)" />
+                                </ScalarOperator>
+                              </Then>
+                              <Else>
+                                <ScalarOperator>
+                                  <Const ConstValue="(1)" />
+                                </ScalarOperator>
+                              </Else>
+                            </IF>
+                          </ScalarOperator>
+                        </DefinedValue>
+                      </DefinedValues>
+                      <RelOp NodeId="1" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="1" EstimateIO="0.0032035" EstimateCPU="7.96e-005" AvgRowSize="75" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList>
+                          <ColumnReference Database="[tempdb]" Schema="[dbo]" Table="[#QS_servicecontrol]" Column="state" />
+                        </OutputList>
+                        <TableScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                          <DefinedValues>
+                            <DefinedValue>
+                              <ColumnReference Database="[tempdb]" Schema="[dbo]" Table="[#QS_servicecontrol]" Column="state" />
+                            </DefinedValue>
+                          </DefinedValues>
+                          <Object Database="[tempdb]" Schema="[dbo]" Table="[#QS_servicecontrol]" IndexKind="Heap" />
+                        </TableScan>
+                      </RelOp>
+                    </ComputeScalar>
+                  </RelOp>
+                </QueryPlan>
+              </StmtSimple>
+              <StmtSimple StatementText="&#x9;delete from #QS_servicecontrol&#xD;" StatementId="26" StatementCompId="36" StatementType="DELETE" RetrievedFromCache="true" StatementSubTreeCost="0.0132841" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x8643914D9F3D766B" QueryPlanHash="0xEB4AD63A7405DC8B">
+                <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="0" CompileCPU="0" CompileMemory="80">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="0" PhysicalOp="Table Delete" LogicalOp="Delete" EstimateRows="1" EstimateIO="0.01" EstimateCPU="1e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0132841" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList />
+                    <Update DMLRequestSort="0">
+                      <Object Database="[tempdb]" Schema="[dbo]" Table="[#QS_servicecontrol]" IndexKind="Heap" />
+                      <RelOp NodeId="1" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="1" EstimateIO="0.0032035" EstimateCPU="7.96e-005" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList>
+                          <ColumnReference Column="Bmk1000" />
+                        </OutputList>
+                        <TableScan Ordered="1" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                          <DefinedValues>
+                            <DefinedValue>
+                              <ColumnReference Column="Bmk1000" />
+                            </DefinedValue>
+                          </DefinedValues>
+                          <Object Database="[tempdb]" Schema="[dbo]" Table="[#QS_servicecontrol]" IndexKind="Heap" />
+                        </TableScan>
+                      </RelOp>
+                    </Update>
+                  </RelOp>
+                </QueryPlan>
+              </StmtSimple>
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtCond StatementText="&#xA;end&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;if @AgentStatus = 0&#xD;" StatementId="27" StatementCompId="38" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText="&#xA;begin&#xD;&#xA;&#x9;insert into #QS_sqlagent_enum_jobsT (JobID, LastRunDate, LastRunTime, NextRunDate, NextRunTime, NextRunSchedID, RequestedToRun, RequestSource, RequestSourceID, Running, CurrentStep, CurrentRetryAttempt, State)&#xD;&#xA;&#x9;execute sys.xp_sqlagent_enum_jobs 1, ''&#xD;" StatementId="28" StatementCompId="39" StatementType="INSERT EXEC" RetrievedFromCache="true" StatementSubTreeCost="0.0132841" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0xA737E6634B03644C" QueryPlanHash="0xDFA0AB293E885ADC">
+                <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="32" CompileTime="0" CompileCPU="0" CompileMemory="136">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="0" PhysicalOp="Table Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.01" EstimateCPU="1e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0132841" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList />
+                    <Update DMLRequestSort="0">
+                      <Object Database="[tempdb]" Schema="[dbo]" Table="[#QS_sqlagent_enum_jobsT]" IndexKind="Heap" />
+                      <SetPredicate>
+                        <ScalarOperator ScalarString="[tempdb].[dbo].[#QS_sqlagent_enum_jobsT].[JobID] = [Parameter Table].[JobID] as [ParameterTable].[JobID],[tempdb].[dbo].[#QS_sqlagent_enum_jobsT].[LastRunDate] = [Parameter Table].[LastRunDate] as [ParameterTable].[LastRunDate],[tempdb].[dbo].[#QS_sqlagent_enum_jobsT].[LastRunTime] = [Parameter Table].[LastRunTime] as [ParameterTable].[LastRunTime],[tempdb].[dbo].[#QS_sqlagent_enum_jobsT].[NextRunDate] = [Parameter Table].[NextRunDate] as [ParameterTable].[NextRunDate],[tempdb].[dbo].[#QS_sqlagent_enum_jobsT].[NextRunTime] = [Parameter Table].[NextRunTime] as [ParameterTable].[NextRunTime],[tempdb].[dbo].[#QS_sqlagent_enum_jobsT].[NextRunSchedID] = [Parameter Table].[NextRunSchedID] as [ParameterTable].[NextRunSchedID],[tempdb].[dbo].[#QS_sqlagent_enum_jobsT].[RequestedToRun] = [Parameter Table].[RequestedToRun] as [ParameterTable].[RequestedToRun],[tempdb].[dbo].[#QS_sqlagent_enum_jobsT].[RequestSource] = [Parameter Table].[RequestSource] as [ParameterTable].[RequestSource],[tempdb].[dbo].[#QS_sqlagent_enum_jobsT].[RequestSourceID] = [Parameter Table].[RequestSourceID] as [ParameterTable].[RequestSourceID],[tempdb].[dbo].[#QS_sqlagent_enum_jobsT].[Running] = [Parameter Table].[Running] as [ParameterTable].[Running],[tempdb].[dbo].[#QS_sqlagent_enum_jobsT].[CurrentStep] = [Parameter Table].[CurrentStep] as [ParameterTable].[CurrentStep],[tempdb].[dbo].[#QS_sqlagent_enum_jobsT].[CurrentRetryAttempt] = [Parameter Table].[CurrentRetryAttempt] as [ParameterTable].[CurrentRetryAttempt],[tempdb].[dbo].[#QS_sqlagent_enum_jobsT].[State] = [Parameter Table].[State] as [ParameterTable].[State],[tempdb].[dbo].[#QS_sqlagent_enum_jobsT].[LastRunDateTime] = NULL,[tempdb].[dbo].[#QS_sqlagent_enum_jobsT].[NextRunDateTime] = NULL">
+                          <ScalarExpressionList>
+                            <ScalarOperator>
+                              <MultipleAssign>
+                                <Assign>
+                                  <ColumnReference Database="[tempdb]" Schema="[dbo]" Table="[#QS_sqlagent_enum_jobsT]" Column="JobID" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Table="[Parameter Table]" Alias="[ParameterTable]" Column="JobID" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[tempdb]" Schema="[dbo]" Table="[#QS_sqlagent_enum_jobsT]" Column="LastRunDate" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Table="[Parameter Table]" Alias="[ParameterTable]" Column="LastRunDate" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[tempdb]" Schema="[dbo]" Table="[#QS_sqlagent_enum_jobsT]" Column="LastRunTime" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Table="[Parameter Table]" Alias="[ParameterTable]" Column="LastRunTime" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[tempdb]" Schema="[dbo]" Table="[#QS_sqlagent_enum_jobsT]" Column="NextRunDate" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Table="[Parameter Table]" Alias="[ParameterTable]" Column="NextRunDate" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[tempdb]" Schema="[dbo]" Table="[#QS_sqlagent_enum_jobsT]" Column="NextRunTime" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Table="[Parameter Table]" Alias="[ParameterTable]" Column="NextRunTime" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[tempdb]" Schema="[dbo]" Table="[#QS_sqlagent_enum_jobsT]" Column="NextRunSchedID" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Table="[Parameter Table]" Alias="[ParameterTable]" Column="NextRunSchedID" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[tempdb]" Schema="[dbo]" Table="[#QS_sqlagent_enum_jobsT]" Column="RequestedToRun" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Table="[Parameter Table]" Alias="[ParameterTable]" Column="RequestedToRun" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[tempdb]" Schema="[dbo]" Table="[#QS_sqlagent_enum_jobsT]" Column="RequestSource" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Table="[Parameter Table]" Alias="[ParameterTable]" Column="RequestSource" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[tempdb]" Schema="[dbo]" Table="[#QS_sqlagent_enum_jobsT]" Column="RequestSourceID" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Table="[Parameter Table]" Alias="[ParameterTable]" Column="RequestSourceID" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[tempdb]" Schema="[dbo]" Table="[#QS_sqlagent_enum_jobsT]" Column="Running" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Table="[Parameter Table]" Alias="[ParameterTable]" Column="Running" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[tempdb]" Schema="[dbo]" Table="[#QS_sqlagent_enum_jobsT]" Column="CurrentStep" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Table="[Parameter Table]" Alias="[ParameterTable]" Column="CurrentStep" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[tempdb]" Schema="[dbo]" Table="[#QS_sqlagent_enum_jobsT]" Column="CurrentRetryAttempt" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Table="[Parameter Table]" Alias="[ParameterTable]" Column="CurrentRetryAttempt" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[tempdb]" Schema="[dbo]" Table="[#QS_sqlagent_enum_jobsT]" Column="State" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Table="[Parameter Table]" Alias="[ParameterTable]" Column="State" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[tempdb]" Schema="[dbo]" Table="[#QS_sqlagent_enum_jobsT]" Column="LastRunDateTime" />
+                                  <ScalarOperator>
+                                    <Const ConstValue="NULL" />
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[tempdb]" Schema="[dbo]" Table="[#QS_sqlagent_enum_jobsT]" Column="NextRunDateTime" />
+                                  <ScalarOperator>
+                                    <Const ConstValue="NULL" />
+                                  </ScalarOperator>
+                                </Assign>
+                              </MultipleAssign>
+                            </ScalarOperator>
+                          </ScalarExpressionList>
+                        </ScalarOperator>
+                      </SetPredicate>
+                      <RelOp NodeId="1" PhysicalOp="Parameter Table Scan" LogicalOp="Parameter Table Scan" EstimateRows="1" EstimateIO="0.0032035" EstimateCPU="7.96e-005" AvgRowSize="200" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList>
+                          <ColumnReference Table="[Parameter Table]" Alias="[ParameterTable]" Column="JobID" />
+                          <ColumnReference Table="[Parameter Table]" Alias="[ParameterTable]" Column="LastRunDate" />
+                          <ColumnReference Table="[Parameter Table]" Alias="[ParameterTable]" Column="LastRunTime" />
+                          <ColumnReference Table="[Parameter Table]" Alias="[ParameterTable]" Column="NextRunDate" />
+                          <ColumnReference Table="[Parameter Table]" Alias="[ParameterTable]" Column="NextRunTime" />
+                          <ColumnReference Table="[Parameter Table]" Alias="[ParameterTable]" Column="NextRunSchedID" />
+                          <ColumnReference Table="[Parameter Table]" Alias="[ParameterTable]" Column="RequestedToRun" />
+                          <ColumnReference Table="[Parameter Table]" Alias="[ParameterTable]" Column="RequestSource" />
+                          <ColumnReference Table="[Parameter Table]" Alias="[ParameterTable]" Column="RequestSourceID" />
+                          <ColumnReference Table="[Parameter Table]" Alias="[ParameterTable]" Column="Running" />
+                          <ColumnReference Table="[Parameter Table]" Alias="[ParameterTable]" Column="CurrentStep" />
+                          <ColumnReference Table="[Parameter Table]" Alias="[ParameterTable]" Column="CurrentRetryAttempt" />
+                          <ColumnReference Table="[Parameter Table]" Alias="[ParameterTable]" Column="State" />
+                        </OutputList>
+                        <ParameterTableScan />
+                      </RelOp>
+                    </Update>
+                  </RelOp>
+                </QueryPlan>
+              </StmtSimple>
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtSimple StatementId="28" StatementCompId="39" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#xA;end&#xD;&#xA;&#x9;&#xD;&#xA;--&#xD;&#xA;--  Get date/time of last job failure&#xD;&#xA;--&#xD;&#xA;declare @JFailTime datetime&#xD;&#xA;select @JFailTime =&#xD;&#xA;&#x9;max(dateadd(hour,(js.last_run_duration / 10000) % 10000,&#xD;&#xA;&#x9;&#x9;dateadd(minute, (js.last_run_duration / 100) % 100,&#xD;&#xA;&#x9;&#x9;dateadd(second, (js.last_run_duration) % 100,&#xD;&#xA;&#x9;&#x9;convert(datetime,&#xD;&#xA;&#x9;&#x9;&#x9;stuff(stuff(right(N'00000000' + convert(varchar(10), js.last_run_date), 8), 7, 0, '-'), 5, 0, '-')&#xD;&#xA;&#x9;&#x9;&#x9;+ ' ' +&#xD;&#xA;&#x9;&#x9;&#x9;stuff(stuff(right(N'00000000' + convert(varchar(10), js.last_run_time), 6), 5, 0, ':'), 3, 0, ':')&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;,120)))))&#xD;&#xA;from&#x9;msdb.dbo.sysjobs j with (readpast)&#xD;&#xA;left outer join #QS_sqlagent_enum_jobsT x on j.job_id = x.JobID&#xD;&#xA;&#x9;,&#x9;msdb.dbo.sysjobservers js with (readpast)&#xD;&#xA;where&#x9;js.last_run_date &gt; 0 and js.last_run_outcome in (0, 3)&#xD;&#xA;and&#x9;&#x9;j.job_id = js.job_id&#xD;&#xA;and&#x9;&#x9;isnull(x.State, 4) = 4&#x9;--  job is not currently running, or agent is not running&#xD;&#xA;and&#x9;&#x9;j.date_modified &gt;= @dFrom&#xD;&#xA;&#xD;" StatementId="29" StatementCompId="41" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0118179" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x9E2D948952FCB8FC" QueryPlanHash="0x97D291DCE6CA0822" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="48" CompileTime="7" CompileCPU="7" CompileMemory="536">
+            <Warnings>
+              <PlanAffectingConvert ConvertIssue="Cardinality Estimate" Expression="CONVERT(varchar(10),[js].[last_run_date],0)" />
+            </Warnings>
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Stream Aggregate" LogicalOp="Aggregate" EstimateRows="1" EstimateIO="0" EstimateCPU="1.1e-006" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0118179" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Column="Expr1008" />
+              </OutputList>
+              <StreamAggregate>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1008" />
+                    <ScalarOperator ScalarString="MAX([Expr1009])">
+                      <Aggregate Distinct="0" AggType="MAX">
+                        <ScalarOperator>
+                          <Identifier>
+                            <ColumnReference Column="Expr1009" />
+                          </Identifier>
+                        </ScalarOperator>
+                      </Aggregate>
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp NodeId="1" PhysicalOp="Filter" LogicalOp="Filter" EstimateRows="1" EstimateIO="0" EstimateCPU="4.8e-007" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0118168" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Expr1009" />
+                  </OutputList>
+                  <Filter StartupExpression="0">
+                    <RelOp NodeId="2" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="19" EstimatedTotalSubtreeCost="0.0118163" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Column="Expr1009" />
+                        <ColumnReference Column="Expr1010" />
+                      </OutputList>
+                      <ComputeScalar>
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1010" />
+                            <ScalarOperator ScalarString="isnull([tempdb].[dbo].[#QS_sqlagent_enum_jobsT].[State] as [x].[State],(4))">
+                              <Intrinsic FunctionName="isnull">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Database="[tempdb]" Table="[#QS_sqlagent_enum_jobsT]" Alias="[x]" Column="State" />
+                                  </Identifier>
+                                </ScalarOperator>
+                                <ScalarOperator>
+                                  <Const ConstValue="(4)" />
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </DefinedValue>
+                        </DefinedValues>
+                        <RelOp NodeId="3" PhysicalOp="Nested Loops" LogicalOp="Left Outer Join" EstimateRows="1" EstimateIO="0" EstimateCPU="0.00011286" AvgRowSize="19" EstimatedTotalSubtreeCost="0.0118162" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Database="[tempdb]" Table="[#QS_sqlagent_enum_jobsT]" Alias="[x]" Column="State" />
+                            <ColumnReference Column="Expr1009" />
+                          </OutputList>
+                          <NestedLoops Optimized="0">
+                            <Predicate>
+                              <ScalarOperator ScalarString="[msdb].[dbo].[sysjobs].[job_id] as [j].[job_id]=[tempdb].[dbo].[#QS_sqlagent_enum_jobsT].[JobID] as [x].[JobID]">
+                                <Compare CompareOp="EQ">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Alias="[j]" Column="job_id" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[tempdb]" Table="[#QS_sqlagent_enum_jobsT]" Alias="[x]" Column="JobID" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Compare>
+                              </ScalarOperator>
+                            </Predicate>
+                            <RelOp NodeId="4" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="31" EstimatedTotalSubtreeCost="0.00838356" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Alias="[j]" Column="job_id" />
+                                <ColumnReference Column="Expr1009" />
+                              </OutputList>
+                              <NestedLoops Optimized="0">
+                                <OuterReferences>
+                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobservers]" Alias="[js]" Column="job_id" />
+                                </OuterReferences>
+                                <RelOp NodeId="5" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1.34e-005" AvgRowSize="36" EstimatedTotalSubtreeCost="0.00492428" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobservers]" Alias="[js]" Column="job_id" />
+                                    <ColumnReference Column="Expr1009" />
+                                  </OutputList>
+                                  <ComputeScalar>
+                                    <DefinedValues>
+                                      <DefinedValue>
+                                        <ColumnReference Column="Expr1009" />
+                                        <ScalarOperator ScalarString="dateadd(hour,[msdb].[dbo].[sysjobservers].[last_run_duration] as [js].[last_run_duration]/(10000)%(10000),dateadd(minute,[msdb].[dbo].[sysjobservers].[last_run_duration] as [js].[last_run_duration]/(100)%(100),dateadd(second,[msdb].[dbo].[sysjobservers].[last_run_duration] as [js].[last_run_duration]%(100),CONVERT(datetime,stuff(stuff(right(N'00000000'+CONVERT_IMPLICIT(nvarchar(10),CONVERT(varchar(10),[msdb].[dbo].[sysjobservers].[last_run_date] as [js].[last_run_date],0),0),(8)),(7),(0),N'-'),(5),(0),N'-')+N' '+stuff(stuff(right(N'00000000'+CONVERT_IMPLICIT(nvarchar(10),CONVERT(varchar(10),[msdb].[dbo].[sysjobservers].[last_run_time] as [js].[last_run_time],0),0),(6)),(5),(0),N':'),(3),(0),N':'),120))))">
+                                          <Intrinsic FunctionName="dateadd">
+                                            <ScalarOperator>
+                                              <Const ConstValue="(6)" />
+                                            </ScalarOperator>
+                                            <ScalarOperator>
+                                              <Arithmetic Operation="MOD">
+                                                <ScalarOperator>
+                                                  <Arithmetic Operation="DIV">
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobservers]" Alias="[js]" Column="last_run_duration" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="(10000)" />
+                                                    </ScalarOperator>
+                                                  </Arithmetic>
+                                                </ScalarOperator>
+                                                <ScalarOperator>
+                                                  <Const ConstValue="(10000)" />
+                                                </ScalarOperator>
+                                              </Arithmetic>
+                                            </ScalarOperator>
+                                            <ScalarOperator>
+                                              <Intrinsic FunctionName="dateadd">
+                                                <ScalarOperator>
+                                                  <Const ConstValue="(7)" />
+                                                </ScalarOperator>
+                                                <ScalarOperator>
+                                                  <Arithmetic Operation="MOD">
+                                                    <ScalarOperator>
+                                                      <Arithmetic Operation="DIV">
+                                                        <ScalarOperator>
+                                                          <Identifier>
+                                                            <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobservers]" Alias="[js]" Column="last_run_duration" />
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator>
+                                                          <Const ConstValue="(100)" />
+                                                        </ScalarOperator>
+                                                      </Arithmetic>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="(100)" />
+                                                    </ScalarOperator>
+                                                  </Arithmetic>
+                                                </ScalarOperator>
+                                                <ScalarOperator>
+                                                  <Intrinsic FunctionName="dateadd">
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="(8)" />
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Arithmetic Operation="MOD">
+                                                        <ScalarOperator>
+                                                          <Identifier>
+                                                            <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobservers]" Alias="[js]" Column="last_run_duration" />
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator>
+                                                          <Const ConstValue="(100)" />
+                                                        </ScalarOperator>
+                                                      </Arithmetic>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Convert DataType="datetime" Style="120" Implicit="0">
+                                                        <ScalarOperator>
+                                                          <Arithmetic Operation="ADD">
+                                                            <ScalarOperator>
+                                                              <Arithmetic Operation="ADD">
+                                                                <ScalarOperator>
+                                                                  <Intrinsic FunctionName="stuff">
+                                                                    <ScalarOperator>
+                                                                      <Intrinsic FunctionName="stuff">
+                                                                        <ScalarOperator>
+                                                                          <Intrinsic FunctionName="right">
+                                                                            <ScalarOperator>
+                                                                              <Arithmetic Operation="ADD">
+                                                                                <ScalarOperator>
+                                                                                  <Const ConstValue="N'00000000'" />
+                                                                                </ScalarOperator>
+                                                                                <ScalarOperator>
+                                                                                  <Convert DataType="nvarchar" Length="20" Style="0" Implicit="1">
+                                                                                    <ScalarOperator>
+                                                                                      <Convert DataType="varchar" Length="10" Style="0" Implicit="0">
+                                                                                        <ScalarOperator>
+                                                                                          <Identifier>
+                                                                                            <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobservers]" Alias="[js]" Column="last_run_date" />
+                                                                                          </Identifier>
+                                                                                        </ScalarOperator>
+                                                                                      </Convert>
+                                                                                    </ScalarOperator>
+                                                                                  </Convert>
+                                                                                </ScalarOperator>
+                                                                              </Arithmetic>
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="(8)" />
+                                                                            </ScalarOperator>
+                                                                          </Intrinsic>
+                                                                        </ScalarOperator>
+                                                                        <ScalarOperator>
+                                                                          <Const ConstValue="(7)" />
+                                                                        </ScalarOperator>
+                                                                        <ScalarOperator>
+                                                                          <Const ConstValue="(0)" />
+                                                                        </ScalarOperator>
+                                                                        <ScalarOperator>
+                                                                          <Const ConstValue="N'-'" />
+                                                                        </ScalarOperator>
+                                                                      </Intrinsic>
+                                                                    </ScalarOperator>
+                                                                    <ScalarOperator>
+                                                                      <Const ConstValue="(5)" />
+                                                                    </ScalarOperator>
+                                                                    <ScalarOperator>
+                                                                      <Const ConstValue="(0)" />
+                                                                    </ScalarOperator>
+                                                                    <ScalarOperator>
+                                                                      <Const ConstValue="N'-'" />
+                                                                    </ScalarOperator>
+                                                                  </Intrinsic>
+                                                                </ScalarOperator>
+                                                                <ScalarOperator>
+                                                                  <Const ConstValue="N' '" />
+                                                                </ScalarOperator>
+                                                              </Arithmetic>
+                                                            </ScalarOperator>
+                                                            <ScalarOperator>
+                                                              <Intrinsic FunctionName="stuff">
+                                                                <ScalarOperator>
+                                                                  <Intrinsic FunctionName="stuff">
+                                                                    <ScalarOperator>
+                                                                      <Intrinsic FunctionName="right">
+                                                                        <ScalarOperator>
+                                                                          <Arithmetic Operation="ADD">
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="N'00000000'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Convert DataType="nvarchar" Length="20" Style="0" Implicit="1">
+                                                                                <ScalarOperator>
+                                                                                  <Convert DataType="varchar" Length="10" Style="0" Implicit="0">
+                                                                                    <ScalarOperator>
+                                                                                      <Identifier>
+                                                                                        <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobservers]" Alias="[js]" Column="last_run_time" />
+                                                                                      </Identifier>
+                                                                                    </ScalarOperator>
+                                                                                  </Convert>
+                                                                                </ScalarOperator>
+                                                                              </Convert>
+                                                                            </ScalarOperator>
+                                                                          </Arithmetic>
+                                                                        </ScalarOperator>
+                                                                        <ScalarOperator>
+                                                                          <Const ConstValue="(6)" />
+                                                                        </ScalarOperator>
+                                                                      </Intrinsic>
+                                                                    </ScalarOperator>
+                                                                    <ScalarOperator>
+                                                                      <Const ConstValue="(5)" />
+                                                                    </ScalarOperator>
+                                                                    <ScalarOperator>
+                                                                      <Const ConstValue="(0)" />
+                                                                    </ScalarOperator>
+                                                                    <ScalarOperator>
+                                                                      <Const ConstValue="N':'" />
+                                                                    </ScalarOperator>
+                                                                  </Intrinsic>
+                                                                </ScalarOperator>
+                                                                <ScalarOperator>
+                                                                  <Const ConstValue="(3)" />
+                                                                </ScalarOperator>
+                                                                <ScalarOperator>
+                                                                  <Const ConstValue="(0)" />
+                                                                </ScalarOperator>
+                                                                <ScalarOperator>
+                                                                  <Const ConstValue="N':'" />
+                                                                </ScalarOperator>
+                                                              </Intrinsic>
+                                                            </ScalarOperator>
+                                                          </Arithmetic>
+                                                        </ScalarOperator>
+                                                      </Convert>
+                                                    </ScalarOperator>
+                                                  </Intrinsic>
+                                                </ScalarOperator>
+                                              </Intrinsic>
+                                            </ScalarOperator>
+                                          </Intrinsic>
+                                        </ScalarOperator>
+                                      </DefinedValue>
+                                    </DefinedValues>
+                                    <RelOp NodeId="6" PhysicalOp="Clustered Index Scan" LogicalOp="Clustered Index Scan" EstimateRows="1" EstimateIO="0.00460648" EstimateCPU="0.0003044" AvgRowSize="36" EstimatedTotalSubtreeCost="0.00491088" TableCardinality="134" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList>
+                                        <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobservers]" Alias="[js]" Column="job_id" />
+                                        <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobservers]" Alias="[js]" Column="last_run_date" />
+                                        <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobservers]" Alias="[js]" Column="last_run_time" />
+                                        <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobservers]" Alias="[js]" Column="last_run_duration" />
+                                      </OutputList>
+                                      <IndexScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                                        <DefinedValues>
+                                          <DefinedValue>
+                                            <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobservers]" Alias="[js]" Column="job_id" />
+                                          </DefinedValue>
+                                          <DefinedValue>
+                                            <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobservers]" Alias="[js]" Column="last_run_date" />
+                                          </DefinedValue>
+                                          <DefinedValue>
+                                            <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobservers]" Alias="[js]" Column="last_run_time" />
+                                          </DefinedValue>
+                                          <DefinedValue>
+                                            <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobservers]" Alias="[js]" Column="last_run_duration" />
+                                          </DefinedValue>
+                                        </DefinedValues>
+                                        <Object Database="[msdb]" Schema="[dbo]" Table="[sysjobservers]" Index="[clust]" Alias="[js]" IndexKind="Clustered" />
+                                        <Predicate>
+                                          <ScalarOperator ScalarString="[msdb].[dbo].[sysjobservers].[last_run_date] as [js].[last_run_date]&gt;(0) AND ([msdb].[dbo].[sysjobservers].[last_run_outcome] as [js].[last_run_outcome]=(0) OR [msdb].[dbo].[sysjobservers].[last_run_outcome] as [js].[last_run_outcome]=(3))">
+                                            <Logical Operation="AND">
+                                              <ScalarOperator>
+                                                <Compare CompareOp="GT">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobservers]" Alias="[js]" Column="last_run_date" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                  <ScalarOperator>
+                                                    <Const ConstValue="(0)" />
+                                                  </ScalarOperator>
+                                                </Compare>
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Logical Operation="OR">
+                                                  <ScalarOperator>
+                                                    <Compare CompareOp="EQ">
+                                                      <ScalarOperator>
+                                                        <Identifier>
+                                                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobservers]" Alias="[js]" Column="last_run_outcome" />
+                                                        </Identifier>
+                                                      </ScalarOperator>
+                                                      <ScalarOperator>
+                                                        <Const ConstValue="(0)" />
+                                                      </ScalarOperator>
+                                                    </Compare>
+                                                  </ScalarOperator>
+                                                  <ScalarOperator>
+                                                    <Compare CompareOp="EQ">
+                                                      <ScalarOperator>
+                                                        <Identifier>
+                                                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobservers]" Alias="[js]" Column="last_run_outcome" />
+                                                        </Identifier>
+                                                      </ScalarOperator>
+                                                      <ScalarOperator>
+                                                        <Const ConstValue="(3)" />
+                                                      </ScalarOperator>
+                                                    </Compare>
+                                                  </ScalarOperator>
+                                                </Logical>
+                                              </ScalarOperator>
+                                            </Logical>
+                                          </ScalarOperator>
+                                        </Predicate>
+                                      </IndexScan>
+                                    </RelOp>
+                                  </ComputeScalar>
+                                </RelOp>
+                                <RelOp NodeId="10" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="31" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="27" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Alias="[j]" Column="job_id" />
+                                  </OutputList>
+                                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                    <DefinedValues>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Alias="[j]" Column="job_id" />
+                                      </DefinedValue>
+                                    </DefinedValues>
+                                    <Object Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Index="[clust]" Alias="[j]" IndexKind="Clustered" />
+                                    <SeekPredicates>
+                                      <SeekPredicateNew>
+                                        <SeekKeys>
+                                          <Prefix ScanType="EQ">
+                                            <RangeColumns>
+                                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Alias="[j]" Column="job_id" />
+                                            </RangeColumns>
+                                            <RangeExpressions>
+                                              <ScalarOperator ScalarString="[msdb].[dbo].[sysjobservers].[job_id] as [js].[job_id]">
+                                                <Identifier>
+                                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobservers]" Alias="[js]" Column="job_id" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </RangeExpressions>
+                                          </Prefix>
+                                        </SeekKeys>
+                                      </SeekPredicateNew>
+                                    </SeekPredicates>
+                                    <Predicate>
+                                      <ScalarOperator ScalarString="[msdb].[dbo].[sysjobs].[date_modified] as [j].[date_modified]&gt;=[@dFrom]">
+                                        <Compare CompareOp="GE">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysjobs]" Alias="[j]" Column="date_modified" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Column="@dFrom" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </Compare>
+                                      </ScalarOperator>
+                                    </Predicate>
+                                  </IndexScan>
+                                </RelOp>
+                              </NestedLoops>
+                            </RelOp>
+                            <RelOp NodeId="11" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="27" EstimateIO="0.003125" EstimateCPU="0.0001867" AvgRowSize="27" EstimatedTotalSubtreeCost="0.0033117" TableCardinality="27" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Database="[tempdb]" Table="[#QS_sqlagent_enum_jobsT]" Alias="[x]" Column="JobID" />
+                                <ColumnReference Database="[tempdb]" Table="[#QS_sqlagent_enum_jobsT]" Alias="[x]" Column="State" />
+                              </OutputList>
+                              <TableScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[tempdb]" Table="[#QS_sqlagent_enum_jobsT]" Alias="[x]" Column="JobID" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[tempdb]" Table="[#QS_sqlagent_enum_jobsT]" Alias="[x]" Column="State" />
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <Object Database="[tempdb]" Schema="[dbo]" Table="[#QS_sqlagent_enum_jobsT]" Alias="[x]" IndexKind="Heap" />
+                              </TableScan>
+                            </RelOp>
+                          </NestedLoops>
+                        </RelOp>
+                      </ComputeScalar>
+                    </RelOp>
+                    <Predicate>
+                      <ScalarOperator ScalarString="[Expr1010]=(4)">
+                        <Compare CompareOp="EQ">
+                          <ScalarOperator>
+                            <Identifier>
+                              <ColumnReference Column="Expr1010" />
+                            </Identifier>
+                          </ScalarOperator>
+                          <ScalarOperator>
+                            <Const ConstValue="(4)" />
+                          </ScalarOperator>
+                        </Compare>
+                      </ScalarOperator>
+                    </Predicate>
+                  </Filter>
+                </RelOp>
+              </StreamAggregate>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText="&#xA;declare @JFailMins integer&#xD;&#xA;set @JFailMins = -1&#xD;" StatementId="30" StatementCompId="42" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtCond StatementText="&#xA;if @JFailTime is not null&#xD;" StatementId="31" StatementCompId="43" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText="&#xA;begin&#xD;&#xA;&#x9;set @JFailMins = datediff(minute, @JFailTime, getdate())&#xD;&#xA;" StatementId="32" StatementCompId="44" StatementType="ASSIGN" RetrievedFromCache="true" />
+              <StmtCond StatementText="&#x9;if&#x9;@JFailMins = 0&#xD;&#xA;&#x9;" StatementId="33" StatementCompId="45" StatementType="COND" RetrievedFromCache="true">
+                <Condition />
+                <Then>
+                  <Statements>
+                    <StmtSimple StatementText="&#x9;set @JFailMins = 1&#xD;" StatementId="34" StatementCompId="46" StatementType="ASSIGN" RetrievedFromCache="true" />
+                  </Statements>
+                </Then>
+              </StmtCond>
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtSimple StatementText="&#xA;end&#xD;&#xA;&#xD;&#xA;--&#xD;&#xA;--  Get date/time of last job alert&#xD;&#xA;--&#xD;&#xA;declare @AlertTime datetime&#xD;&#xA;select &#x9;@AlertTime =&#xD;&#xA;&#x9;(max(convert(datetime,&#xD;&#xA;&#x9;&#x9;stuff(stuff(right(N'00000000' + convert(varchar(10), last_occurrence_date), 8), 7, 0, '-'), 5, 0, '-')&#xD;&#xA;&#x9;&#x9;+ ' ' +&#xD;&#xA;&#x9;&#x9;stuff(stuff(right(N'00000000' + convert(varchar(10), last_occurrence_time), 6), 5, 0, ':'), 3, 0, ':')&#xD;&#xA;&#x9;,120))) &#xD;&#xA;from&#x9;msdb.dbo.sysalerts with (readpast)&#xD;&#xA;where&#x9;last_occurrence_date &gt; 0 &#xD;&#xA;&#xD;" StatementId="35" StatementCompId="49" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.00328478" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0xDA4DEF6EA4084718" QueryPlanHash="0x4D44A6C6B633A488" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="24" CompileTime="3" CompileCPU="3" CompileMemory="552">
+            <Warnings>
+              <PlanAffectingConvert ConvertIssue="Cardinality Estimate" Expression="CONVERT(varchar(10),[msdb].[dbo].[sysalerts].[last_occurrence_date],0)" />
+            </Warnings>
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Stream Aggregate" LogicalOp="Aggregate" EstimateRows="1" EstimateIO="0" EstimateCPU="1.1e-006" AvgRowSize="15" EstimatedTotalSubtreeCost="0.00328478" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Column="Expr1003" />
+              </OutputList>
+              <StreamAggregate>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1003" />
+                    <ScalarOperator ScalarString="MAX([Expr1004])">
+                      <Aggregate Distinct="0" AggType="MAX">
+                        <ScalarOperator>
+                          <Identifier>
+                            <ColumnReference Column="Expr1004" />
+                          </Identifier>
+                        </ScalarOperator>
+                      </Aggregate>
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp NodeId="1" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="19" EstimatedTotalSubtreeCost="0.0032832" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Expr1004" />
+                  </OutputList>
+                  <ComputeScalar>
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1004" />
+                        <ScalarOperator ScalarString="CONVERT(datetime,stuff(stuff(right(N'00000000'+CONVERT_IMPLICIT(nvarchar(10),CONVERT(varchar(10),[msdb].[dbo].[sysalerts].[last_occurrence_date],0),0),(8)),(7),(0),N'-'),(5),(0),N'-')+N' '+stuff(stuff(right(N'00000000'+CONVERT_IMPLICIT(nvarchar(10),CONVERT(varchar(10),[msdb].[dbo].[sysalerts].[last_occurrence_time],0),0),(6)),(5),(0),N':'),(3),(0),N':'),120)">
+                          <Convert DataType="datetime" Style="120" Implicit="0">
+                            <ScalarOperator>
+                              <Arithmetic Operation="ADD">
+                                <ScalarOperator>
+                                  <Arithmetic Operation="ADD">
+                                    <ScalarOperator>
+                                      <Intrinsic FunctionName="stuff">
+                                        <ScalarOperator>
+                                          <Intrinsic FunctionName="stuff">
+                                            <ScalarOperator>
+                                              <Intrinsic FunctionName="right">
+                                                <ScalarOperator>
+                                                  <Arithmetic Operation="ADD">
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="N'00000000'" />
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Convert DataType="nvarchar" Length="20" Style="0" Implicit="1">
+                                                        <ScalarOperator>
+                                                          <Convert DataType="varchar" Length="10" Style="0" Implicit="0">
+                                                            <ScalarOperator>
+                                                              <Identifier>
+                                                                <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysalerts]" Column="last_occurrence_date" />
+                                                              </Identifier>
+                                                            </ScalarOperator>
+                                                          </Convert>
+                                                        </ScalarOperator>
+                                                      </Convert>
+                                                    </ScalarOperator>
+                                                  </Arithmetic>
+                                                </ScalarOperator>
+                                                <ScalarOperator>
+                                                  <Const ConstValue="(8)" />
+                                                </ScalarOperator>
+                                              </Intrinsic>
+                                            </ScalarOperator>
+                                            <ScalarOperator>
+                                              <Const ConstValue="(7)" />
+                                            </ScalarOperator>
+                                            <ScalarOperator>
+                                              <Const ConstValue="(0)" />
+                                            </ScalarOperator>
+                                            <ScalarOperator>
+                                              <Const ConstValue="N'-'" />
+                                            </ScalarOperator>
+                                          </Intrinsic>
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="(5)" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="(0)" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="N'-'" />
+                                        </ScalarOperator>
+                                      </Intrinsic>
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Const ConstValue="N' '" />
+                                    </ScalarOperator>
+                                  </Arithmetic>
+                                </ScalarOperator>
+                                <ScalarOperator>
+                                  <Intrinsic FunctionName="stuff">
+                                    <ScalarOperator>
+                                      <Intrinsic FunctionName="stuff">
+                                        <ScalarOperator>
+                                          <Intrinsic FunctionName="right">
+                                            <ScalarOperator>
+                                              <Arithmetic Operation="ADD">
+                                                <ScalarOperator>
+                                                  <Const ConstValue="N'00000000'" />
+                                                </ScalarOperator>
+                                                <ScalarOperator>
+                                                  <Convert DataType="nvarchar" Length="20" Style="0" Implicit="1">
+                                                    <ScalarOperator>
+                                                      <Convert DataType="varchar" Length="10" Style="0" Implicit="0">
+                                                        <ScalarOperator>
+                                                          <Identifier>
+                                                            <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysalerts]" Column="last_occurrence_time" />
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                      </Convert>
+                                                    </ScalarOperator>
+                                                  </Convert>
+                                                </ScalarOperator>
+                                              </Arithmetic>
+                                            </ScalarOperator>
+                                            <ScalarOperator>
+                                              <Const ConstValue="(6)" />
+                                            </ScalarOperator>
+                                          </Intrinsic>
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="(5)" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="(0)" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="N':'" />
+                                        </ScalarOperator>
+                                      </Intrinsic>
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Const ConstValue="(3)" />
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Const ConstValue="(0)" />
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Const ConstValue="N':'" />
+                                    </ScalarOperator>
+                                  </Intrinsic>
+                                </ScalarOperator>
+                              </Arithmetic>
+                            </ScalarOperator>
+                          </Convert>
+                        </ScalarOperator>
+                      </DefinedValue>
+                    </DefinedValues>
+                    <RelOp NodeId="2" PhysicalOp="Clustered Index Scan" LogicalOp="Clustered Index Scan" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysalerts]" Column="last_occurrence_date" />
+                        <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysalerts]" Column="last_occurrence_time" />
+                      </OutputList>
+                      <Warnings>
+                        <ColumnsWithNoStatistics>
+                          <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysalerts]" Column="last_occurrence_time" />
+                        </ColumnsWithNoStatistics>
+                      </Warnings>
+                      <IndexScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysalerts]" Column="last_occurrence_date" />
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysalerts]" Column="last_occurrence_time" />
+                          </DefinedValue>
+                        </DefinedValues>
+                        <Object Database="[msdb]" Schema="[dbo]" Table="[sysalerts]" Index="[ByName]" IndexKind="Clustered" />
+                        <Predicate>
+                          <ScalarOperator ScalarString="[msdb].[dbo].[sysalerts].[last_occurrence_date]&gt;(0)">
+                            <Compare CompareOp="GT">
+                              <ScalarOperator>
+                                <Identifier>
+                                  <ColumnReference Database="[msdb]" Schema="[dbo]" Table="[sysalerts]" Column="last_occurrence_date" />
+                                </Identifier>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Const ConstValue="(0)" />
+                              </ScalarOperator>
+                            </Compare>
+                          </ScalarOperator>
+                        </Predicate>
+                      </IndexScan>
+                    </RelOp>
+                  </ComputeScalar>
+                </RelOp>
+              </StreamAggregate>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText="&#xA;declare @AlertMins integer &#xD;&#xA;set @AlertMins = -1&#xD;" StatementId="36" StatementCompId="50" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtCond StatementText="&#xA;if @AlertTime is not null&#xD;" StatementId="37" StatementCompId="51" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText="&#xA;begin&#xD;&#xA;&#x9;set @AlertMins = datediff(minute, @AlertTime, getdate())&#xD;&#xA;" StatementId="38" StatementCompId="52" StatementType="ASSIGN" RetrievedFromCache="true" />
+              <StmtCond StatementText="&#x9;if @AlertMins = 0" StatementId="39" StatementCompId="53" StatementType="COND" RetrievedFromCache="true">
+                <Condition />
+                <Then>
+                  <Statements>
+                    <StmtSimple StatementText=" set @AlertMins = 1&#xD;" StatementId="40" StatementCompId="54" StatementType="ASSIGN" RetrievedFromCache="true" />
+                  </Statements>
+                </Then>
+              </StmtCond>
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtSimple StatementText="&#xA;end&#x9;&#x9;&#xD;&#xA;&#xD;&#xA;select&#x9;dateadd(ms, 0 - datepart(ms,getdate()), getdate()) CallTime&#xD;&#xA;&#x9;,&#x9;@JFailMins as N'MinsSinceLastJobFail'&#xD;&#xA;&#x9;,&#x9;@AlertMins as N'MinsSinceLastAlert'&#xD;&#xA;&#xD;" StatementId="41" StatementCompId="57" StatementType="SELECT WITHOUT QUERY" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#xA;drop table #QS_sqlagent_enum_jobsT&#xD;" StatementId="42" StatementCompId="58" StatementType="DROP OBJECT" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#xA;drop table #QS_servicecontrol" StatementId="43" StatementCompId="59" StatementType="DROP OBJECT" RetrievedFromCache="true" />
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-16"?>
+<ShowPlanXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="1.2" Build="11.0.2100.60" xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementCompId="1" StatementEstRows="26.8601" StatementId="1" StatementOptmLevel="TRIVIAL" StatementSubTreeCost="0.00331155" StatementText="select TextField from BigTable_IndexOnTextField where TextField like 'vova%' ;" StatementType="SELECT" QueryHash="0x6A44D673FE0D00E3" QueryPlanHash="0x9A9B66FD5319EC5C" RetrievedFromCache="true">
+          <StatementSetOptions ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" NUMERIC_ROUNDABORT="false" QUOTED_IDENTIFIER="true" />
+          <QueryPlan DegreeOfParallelism="1" CachedPlanSize="16" CompileTime="1" CompileCPU="1" CompileMemory="296">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="52428" EstimatedPagesCached="8686" EstimatedAvailableDegreeOfParallelism="2" />
+            <RelOp AvgRowSize="63" EstimateCPU="0.000186546" EstimateIO="0.003125" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="26.8601" LogicalOp="Index Seek" NodeId="0" Parallel="false" PhysicalOp="Index Seek" EstimatedTotalSubtreeCost="0.00331155" TableCardinality="1000000">
+              <OutputList>
+                <ColumnReference Database="[Demo]" Schema="[dbo]" Table="[BigTable_IndexOnTextField]" Column="TextField" />
+              </OutputList>
+              <RunTimeInformation>
+                <RunTimeCountersPerThread Thread="0" ActualRows="0" ActualEndOfScans="1" ActualExecutions="1" />
+              </RunTimeInformation>
+              <IndexScan Ordered="true" ScanDirection="FORWARD" ForcedIndex="false" ForceSeek="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Database="[Demo]" Schema="[dbo]" Table="[BigTable_IndexOnTextField]" Column="TextField" />
+                  </DefinedValue>
+                </DefinedValues>
+                <Object Database="[Demo]" Schema="[dbo]" Table="[BigTable_IndexOnTextField]" Index="[IX_BigTable_IndexOnTextField]" IndexKind="NonClustered" />
+                <SeekPredicates>
+                  <SeekPredicateNew>
+                    <SeekKeys>
+                      <StartRange ScanType="GE">
+                        <RangeColumns>
+                          <ColumnReference Database="[Demo]" Schema="[dbo]" Table="[BigTable_IndexOnTextField]" Column="TextField" />
+                        </RangeColumns>
+                        <RangeExpressions>
+                          <ScalarOperator ScalarString="N'vova'">
+                            <Const ConstValue="N'vova'" />
+                          </ScalarOperator>
+                        </RangeExpressions>
+                      </StartRange>
+                      <EndRange ScanType="LT">
+                        <RangeColumns>
+                          <ColumnReference Database="[Demo]" Schema="[dbo]" Table="[BigTable_IndexOnTextField]" Column="TextField" />
+                        </RangeColumns>
+                        <RangeExpressions>
+                          <ScalarOperator ScalarString="N'vovB'">
+                            <Const ConstValue="N'vovB'" />
+                          </ScalarOperator>
+                        </RangeExpressions>
+                      </EndRange>
+                    </SeekKeys>
+                  </SeekPredicateNew>
+                </SeekPredicates>
+                <Predicate>
+                  <ScalarOperator ScalarString="[Demo].[dbo].[BigTable_IndexOnTextField].[TextField] like N'vova%'">
+                    <Intrinsic FunctionName="like">
+                      <ScalarOperator>
+                        <Identifier>
+                          <ColumnReference Database="[Demo]" Schema="[dbo]" Table="[BigTable_IndexOnTextField]" Column="TextField" />
+                        </Identifier>
+                      </ScalarOperator>
+                      <ScalarOperator>
+                        <Const ConstValue="N'vova%'" />
+                      </ScalarOperator>
+                    </Intrinsic>
+                  </ScalarOperator>
+                </Predicate>
+              </IndexScan>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

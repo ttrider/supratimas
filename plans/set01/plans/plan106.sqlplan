@@ -1,0 +1,388 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="SET NOCOUNT ON &#xD;" StatementId="1" StatementCompId="1" StatementType="SET ON/OFF" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#xA;SELECT size / 128.0 as fileSize, &#xD;&#xA; FILEPROPERTY(name, 'SpaceUsed') / 128.0 as fileUsed, &#xD;&#xA; CASE WHEN max_size = -1 OR max_size = 268435456 THEN -1 ELSE max_size / 128 END as fileMaxSize, &#xD;&#xA; CASE WHEN growth = 0 THEN 0 ELSE 1 END as IsAutoGrow, &#xD;&#xA; is_percent_growth as isPercentGrowth, &#xD;&#xA; growth as fileGrowth, &#xD;&#xA; physical_name &#xD;&#xA; FROM sys.master_files WITH (NOLOCK) &#xD;&#xA; WHERE type = 0 AND is_read_only = 0 AND data_space_id = 10&#xD;&#xA;   AND database_id = 7" StatementId="2" StatementCompId="2" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.00507491" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x8A6A21F5CA83AC28" QueryPlanHash="0xF3B7D686EA2CD0C9" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="false" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="40" CompileTime="6" CompileCPU="6" CompileMemory="712">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="302" EstimatedTotalSubtreeCost="0.00507491" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="growth" />
+                <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="pname" />
+                <ColumnReference Column="Expr1010" />
+                <ColumnReference Column="Expr1021" />
+                <ColumnReference Column="Expr1022" />
+                <ColumnReference Column="Expr1023" />
+                <ColumnReference Column="Expr1024" />
+              </OutputList>
+              <ComputeScalar>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1010" />
+                    <ScalarOperator ScalarString="CONVERT(bit,[master].[sys].[sysbrickfiles].[status] as [f].[status]&amp;(32),0)">
+                      <Convert DataType="bit" Style="0" Implicit="0">
+                        <ScalarOperator>
+                          <Arithmetic Operation="BIT_AND">
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="status" />
+                              </Identifier>
+                            </ScalarOperator>
+                            <ScalarOperator>
+                              <Const ConstValue="(32)" />
+                            </ScalarOperator>
+                          </Arithmetic>
+                        </ScalarOperator>
+                      </Convert>
+                    </ScalarOperator>
+                  </DefinedValue>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1021" />
+                    <ScalarOperator ScalarString="CONVERT_IMPLICIT(numeric(10,0),[master].[sys].[sysbrickfiles].[size] as [f].[size],0)/(128.0)">
+                      <Arithmetic Operation="DIV">
+                        <ScalarOperator>
+                          <Convert DataType="numeric" Precision="10" Scale="0" Style="0" Implicit="1">
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="size" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Convert>
+                        </ScalarOperator>
+                        <ScalarOperator>
+                          <Const ConstValue="(128.0)" />
+                        </ScalarOperator>
+                      </Arithmetic>
+                    </ScalarOperator>
+                  </DefinedValue>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1022" />
+                    <ScalarOperator ScalarString="CONVERT_IMPLICIT(numeric(10,0),fileproperty([master].[sys].[sysbrickfiles].[lname] as [f].[lname],'SpaceUsed'),0)/(128.0)">
+                      <Arithmetic Operation="DIV">
+                        <ScalarOperator>
+                          <Convert DataType="numeric" Precision="10" Scale="0" Style="0" Implicit="1">
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="fileproperty">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="lname" />
+                                  </Identifier>
+                                </ScalarOperator>
+                                <ScalarOperator>
+                                  <Const ConstValue="'SpaceUsed'" />
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </Convert>
+                        </ScalarOperator>
+                        <ScalarOperator>
+                          <Const ConstValue="(128.0)" />
+                        </ScalarOperator>
+                      </Arithmetic>
+                    </ScalarOperator>
+                  </DefinedValue>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1023" />
+                    <ScalarOperator ScalarString="CASE WHEN [master].[sys].[sysbrickfiles].[maxsize] as [f].[maxsize]=(-1) OR [master].[sys].[sysbrickfiles].[maxsize] as [f].[maxsize]=(268435456) THEN (-1) ELSE [master].[sys].[sysbrickfiles].[maxsize] as [f].[maxsize]/(128) END">
+                      <IF>
+                        <Condition>
+                          <ScalarOperator>
+                            <Logical Operation="OR">
+                              <ScalarOperator>
+                                <Compare CompareOp="EQ">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="maxsize" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(-1)" />
+                                  </ScalarOperator>
+                                </Compare>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Compare CompareOp="EQ">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="maxsize" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(268435456)" />
+                                  </ScalarOperator>
+                                </Compare>
+                              </ScalarOperator>
+                            </Logical>
+                          </ScalarOperator>
+                        </Condition>
+                        <Then>
+                          <ScalarOperator>
+                            <Const ConstValue="(-1)" />
+                          </ScalarOperator>
+                        </Then>
+                        <Else>
+                          <ScalarOperator>
+                            <Arithmetic Operation="DIV">
+                              <ScalarOperator>
+                                <Identifier>
+                                  <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="maxsize" />
+                                </Identifier>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Const ConstValue="(128)" />
+                              </ScalarOperator>
+                            </Arithmetic>
+                          </ScalarOperator>
+                        </Else>
+                      </IF>
+                    </ScalarOperator>
+                  </DefinedValue>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1024" />
+                    <ScalarOperator ScalarString="CASE WHEN [master].[sys].[sysbrickfiles].[growth] as [f].[growth]=(0) THEN (0) ELSE (1) END">
+                      <IF>
+                        <Condition>
+                          <ScalarOperator>
+                            <Compare CompareOp="EQ">
+                              <ScalarOperator>
+                                <Identifier>
+                                  <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="growth" />
+                                </Identifier>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Const ConstValue="(0)" />
+                              </ScalarOperator>
+                            </Compare>
+                          </ScalarOperator>
+                        </Condition>
+                        <Then>
+                          <ScalarOperator>
+                            <Const ConstValue="(0)" />
+                          </ScalarOperator>
+                        </Then>
+                        <Else>
+                          <ScalarOperator>
+                            <Const ConstValue="(1)" />
+                          </ScalarOperator>
+                        </Else>
+                      </IF>
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp NodeId="1" PhysicalOp="Filter" LogicalOp="Filter" EstimateRows="1" EstimateIO="0" EstimateCPU="0.00011622" AvgRowSize="417" EstimatedTotalSubtreeCost="0.00507481" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="status" />
+                    <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="size" />
+                    <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="maxsize" />
+                    <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="growth" />
+                    <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="lname" />
+                    <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="pname" />
+                  </OutputList>
+                  <Filter StartupExpression="1">
+                    <RelOp NodeId="2" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.00475869" EstimateCPU="0.0001999" AvgRowSize="424" EstimatedTotalSubtreeCost="0.00495859" TableCardinality="73" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="status" />
+                        <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="size" />
+                        <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="maxsize" />
+                        <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="growth" />
+                        <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="lname" />
+                        <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="pname" />
+                      </OutputList>
+                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="status" />
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="size" />
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="maxsize" />
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="growth" />
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="lname" />
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="pname" />
+                          </DefinedValue>
+                        </DefinedValues>
+                        <Object Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Index="[clst]" Alias="[f]" IndexKind="Clustered" />
+                        <SeekPredicates>
+                          <SeekPredicateNew>
+                            <SeekKeys>
+                              <Prefix ScanType="EQ">
+                                <RangeColumns>
+                                  <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="dbid" />
+                                  <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="pruid" />
+                                </RangeColumns>
+                                <RangeExpressions>
+                                  <ScalarOperator ScalarString="(7)">
+                                    <Const ConstValue="(7)" />
+                                  </ScalarOperator>
+                                  <ScalarOperator ScalarString="(0)">
+                                    <Const ConstValue="(0)" />
+                                  </ScalarOperator>
+                                </RangeExpressions>
+                              </Prefix>
+                            </SeekKeys>
+                          </SeekPredicateNew>
+                        </SeekPredicates>
+                        <Predicate>
+                          <ScalarOperator ScalarString="[master].[sys].[sysbrickfiles].[filetype] as [f].[filetype]=(0) AND [master].[sys].[sysbrickfiles].[grpid] as [f].[grpid]=(10) AND CONVERT(bit,[master].[sys].[sysbrickfiles].[status] as [f].[status]&amp;(16),0)=(0) AND ([master].[sys].[sysbrickfiles].[filestate] as [f].[filestate]&lt;(1) OR [master].[sys].[sysbrickfiles].[filestate] as [f].[filestate]&gt;(1)) AND ([master].[sys].[sysbrickfiles].[filestate] as [f].[filestate]&lt;(2) OR [master].[sys].[sysbrickfiles].[filestate] as [f].[filestate]&gt;(2))">
+                            <Logical Operation="AND">
+                              <ScalarOperator>
+                                <Compare CompareOp="EQ">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="filetype" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(0)" />
+                                  </ScalarOperator>
+                                </Compare>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Compare CompareOp="EQ">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="grpid" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(10)" />
+                                  </ScalarOperator>
+                                </Compare>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Compare CompareOp="EQ">
+                                  <ScalarOperator>
+                                    <Convert DataType="bit" Style="0" Implicit="0">
+                                      <ScalarOperator>
+                                        <Arithmetic Operation="BIT_AND">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="status" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="(16)" />
+                                          </ScalarOperator>
+                                        </Arithmetic>
+                                      </ScalarOperator>
+                                    </Convert>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(0)" />
+                                  </ScalarOperator>
+                                </Compare>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Logical Operation="OR">
+                                  <ScalarOperator>
+                                    <Compare CompareOp="LT">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="filestate" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(1)" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Compare CompareOp="GT">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="filestate" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(1)" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                </Logical>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Logical Operation="OR">
+                                  <ScalarOperator>
+                                    <Compare CompareOp="LT">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="filestate" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(2)" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Compare CompareOp="GT">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[master]" Schema="[sys]" Table="[sysbrickfiles]" Alias="[f]" Column="filestate" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(2)" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                </Logical>
+                              </ScalarOperator>
+                            </Logical>
+                          </ScalarOperator>
+                        </Predicate>
+                      </IndexScan>
+                    </RelOp>
+                    <Predicate>
+                      <ScalarOperator ScalarString="has_access('MF',(1))=(1)">
+                        <Identifier>
+                          <ColumnReference Column="ConstExpr1025">
+                            <ScalarOperator>
+                              <Compare CompareOp="EQ">
+                                <ScalarOperator>
+                                  <Intrinsic FunctionName="has_access">
+                                    <ScalarOperator>
+                                      <Const ConstValue="'MF'" />
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Const ConstValue="(1)" />
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Const ConstValue="" />
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Const ConstValue="" />
+                                    </ScalarOperator>
+                                  </Intrinsic>
+                                </ScalarOperator>
+                                <ScalarOperator>
+                                  <Const ConstValue="(1)" />
+                                </ScalarOperator>
+                              </Compare>
+                            </ScalarOperator>
+                          </ColumnReference>
+                        </Identifier>
+                      </ScalarOperator>
+                    </Predicate>
+                  </Filter>
+                </RelOp>
+              </ComputeScalar>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

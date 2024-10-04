@@ -1,0 +1,222 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="&#xD;&#xA;CREATE PROCEDURE spGetDirectoryPathId &#xD;&#xA;(&#xD;&#xA;&#x9;@input VARCHAR(512),&#xD;&#xA;&#x9;@inputHash UNIQUEIDENTIFIER,&#xD;&#xA;&#x9;@id BIGINT OUT&#xD;&#xA;)&#xD;&#xA;AS&#xD;&#xA;BEGIN&#xD;&#xA;&#x9;-- If the string value exists, returns its identifier. Otherwise inserts a new row. This implementation is not placed in transaction for performance. If INSERT fails, the caller will retry.&#xD;&#xA;&#x9;SET NOCOUNT ON;&#xD;&#xA;&#xD;&#xA;" StatementId="1" StatementCompId="2" StatementType="SET ON/OFF" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;SET @id = NULL&#xD;&#xA;" StatementId="2" StatementCompId="3" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;SET @id = (SELECT [PkId] FROM [base].[DirectoryPath] WHERE [Hash] = @inputHash)&#xD;&#xA;&#xD;&#xA;" StatementId="3" StatementCompId="4" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.00328854" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x556FF43F81669C4C" QueryPlanHash="0x39E21E44CD32C435" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="false" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="2" CompileCPU="2" CompileMemory="192">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="15" EstimatedTotalSubtreeCost="0.00328854" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Column="Expr1004" />
+              </OutputList>
+              <ComputeScalar>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1004" />
+                    <ScalarOperator ScalarString="[TexusResults].[base].[DirectoryPath].[PkId]">
+                      <Identifier>
+                        <ColumnReference Database="[TexusResults]" Schema="[base]" Table="[DirectoryPath]" Column="PkId" />
+                      </Identifier>
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp NodeId="1" PhysicalOp="Nested Loops" LogicalOp="Left Outer Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="15" EstimatedTotalSubtreeCost="0.00328844" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Database="[TexusResults]" Schema="[base]" Table="[DirectoryPath]" Column="PkId" />
+                  </OutputList>
+                  <NestedLoops Optimized="0">
+                    <RelOp NodeId="2" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList />
+                      <ConstantScan />
+                    </RelOp>
+                    <RelOp NodeId="3" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="3.93757e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Database="[TexusResults]" Schema="[base]" Table="[DirectoryPath]" Column="PkId" />
+                      </OutputList>
+                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Database="[TexusResults]" Schema="[base]" Table="[DirectoryPath]" Column="PkId" />
+                          </DefinedValue>
+                        </DefinedValues>
+                        <Object Database="[TexusResults]" Schema="[base]" Table="[DirectoryPath]" Index="[DirectoryPath_IDX_Hash]" IndexKind="NonClustered" />
+                        <SeekPredicates>
+                          <SeekPredicateNew>
+                            <SeekKeys>
+                              <Prefix ScanType="EQ">
+                                <RangeColumns>
+                                  <ColumnReference Database="[TexusResults]" Schema="[base]" Table="[DirectoryPath]" Column="Hash" />
+                                </RangeColumns>
+                                <RangeExpressions>
+                                  <ScalarOperator ScalarString="[@inputHash]">
+                                    <Identifier>
+                                      <ColumnReference Column="@inputHash" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </RangeExpressions>
+                              </Prefix>
+                            </SeekKeys>
+                          </SeekPredicateNew>
+                        </SeekPredicates>
+                      </IndexScan>
+                    </RelOp>
+                  </NestedLoops>
+                </RelOp>
+              </ComputeScalar>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@id" ParameterCompiledValue="NULL" />
+              <ColumnReference Column="@inputHash" ParameterCompiledValue="{guid'8C1F9567-826A-48A6-75DD-4BB00A702B7F'}" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtCond StatementText="&#x9;IF @id IS NULL&#xD;&#xA;" StatementId="4" StatementCompId="5" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText="&#x9;BEGIN&#x9;&#xD;&#xA;&#x9;&#x9;INSERT INTO [base].[DirectoryPath] ([Hash],[Name]) VALUES (@inputHash,@input)&#x9;&#xD;&#xA;&#x9;" StatementId="5" StatementCompId="6" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.0200033" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x9815C91D73445A73" QueryPlanHash="0x633F4BFF94C7B8C5">
+                <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="false" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="0" CompileCPU="0" CompileMemory="128">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="0" PhysicalOp="Clustered Index Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.02" EstimateCPU="2e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0200033" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList />
+                    <Update DMLRequestSort="0">
+                      <Object Database="[TexusResults]" Schema="[base]" Table="[DirectoryPath]" Index="[DirectoryPath_PK]" IndexKind="Clustered" />
+                      <Object Database="[TexusResults]" Schema="[base]" Table="[DirectoryPath]" Index="[DirectoryPath_IDX_Hash]" IndexKind="NonClustered" />
+                      <SetPredicate>
+                        <ScalarOperator ScalarString="[TexusResults].[base].[DirectoryPath].[Hash] = RaiseIfNullInsert([@inputHash]),[TexusResults].[base].[DirectoryPath].[Name] = RaiseIfNullInsert([@input]),[TexusResults].[base].[DirectoryPath].[PkId] = [Expr1003]">
+                          <ScalarExpressionList>
+                            <ScalarOperator>
+                              <MultipleAssign>
+                                <Assign>
+                                  <ColumnReference Database="[TexusResults]" Schema="[base]" Table="[DirectoryPath]" Column="Hash" />
+                                  <ScalarOperator>
+                                    <Intrinsic FunctionName="RaiseIfNullInsert">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="@inputHash" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Intrinsic>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[TexusResults]" Schema="[base]" Table="[DirectoryPath]" Column="Name" />
+                                  <ScalarOperator>
+                                    <Intrinsic FunctionName="RaiseIfNullInsert">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="@input" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Intrinsic>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[TexusResults]" Schema="[base]" Table="[DirectoryPath]" Column="PkId" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Expr1003" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                              </MultipleAssign>
+                            </ScalarOperator>
+                          </ScalarExpressionList>
+                        </ScalarOperator>
+                      </SetPredicate>
+                      <RelOp NodeId="1" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="15" EstimatedTotalSubtreeCost="1.257e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList>
+                          <ColumnReference Column="Expr1003" />
+                        </OutputList>
+                        <ComputeScalar ComputeSequence="1">
+                          <DefinedValues>
+                            <DefinedValue>
+                              <ColumnReference Column="Expr1003" />
+                              <ScalarOperator ScalarString="getidentity((757577737),(7),NULL)">
+                                <Intrinsic FunctionName="getidentity">
+                                  <ScalarOperator>
+                                    <Const ConstValue="(757577737)" />
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(7)" />
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="NULL" />
+                                  </ScalarOperator>
+                                </Intrinsic>
+                              </ScalarOperator>
+                            </DefinedValue>
+                          </DefinedValues>
+                          <RelOp NodeId="2" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList />
+                            <ConstantScan />
+                          </RelOp>
+                        </ComputeScalar>
+                      </RelOp>
+                    </Update>
+                  </RelOp>
+                  <ParameterList>
+                    <ColumnReference Column="@input" ParameterCompiledValue="'C:\WTT\00118581EF41\TasksWorkingDir\Release\UIStress_Metadata\0129-184026380_00118581EF41\e1457ff6\0a466edc'" />
+                    <ColumnReference Column="@inputHash" ParameterCompiledValue="{guid'8C1F9567-826A-48A6-75DD-4BB00A702B7F'}" />
+                  </ParameterList>
+                </QueryPlan>
+              </StmtSimple>
+              <StmtSimple StatementText="&#x9;SET @id = (SELECT SCOPE_IDENTITY())&#x9;&#xD;&#xA;" StatementId="6" StatementCompId="7" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="1.257e-006" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0xEA039055A69EE2BE" QueryPlanHash="0x778608839E671B05" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+                <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="false" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="0" CompileCPU="0" CompileMemory="152">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="15" EstimatedTotalSubtreeCost="1.257e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList>
+                      <ColumnReference Column="Expr1001" />
+                    </OutputList>
+                    <ComputeScalar>
+                      <DefinedValues>
+                        <DefinedValue>
+                          <ColumnReference Column="Expr1001" />
+                          <ScalarOperator ScalarString="CONVERT_IMPLICIT(bigint,[Expr1000],0)">
+                            <Convert DataType="bigint" Style="0" Implicit="1">
+                              <ScalarOperator>
+                                <Identifier>
+                                  <ColumnReference Column="Expr1000" />
+                                </Identifier>
+                              </ScalarOperator>
+                            </Convert>
+                          </ScalarOperator>
+                        </DefinedValue>
+                      </DefinedValues>
+                      <RelOp NodeId="1" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="24" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList>
+                          <ColumnReference Column="Expr1000" />
+                        </OutputList>
+                        <ConstantScan>
+                          <Values>
+                            <Row>
+                              <ScalarOperator ScalarString="scope_identity()">
+                                <Intrinsic FunctionName="scope_identity" />
+                              </ScalarOperator>
+                            </Row>
+                          </Values>
+                        </ConstantScan>
+                      </RelOp>
+                    </ComputeScalar>
+                  </RelOp>
+                  <ParameterList>
+                    <ColumnReference Column="@id" ParameterCompiledValue="NULL" />
+                  </ParameterList>
+                </QueryPlan>
+              </StmtSimple>
+            </Statements>
+          </Then>
+        </StmtCond>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

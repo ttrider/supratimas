@@ -1,0 +1,556 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="CREATE PROCEDURE [dbo].[CommandExecute]&#xD;&#xA;&#xD;&#xA;@Command nvarchar(max),&#xD;&#xA;@CommandType nvarchar(max),&#xD;&#xA;@Mode int,&#xD;&#xA;@Comment nvarchar(max) = NULL,&#xD;&#xA;@DatabaseName nvarchar(max) = NULL,&#xD;&#xA;@SchemaName nvarchar(max) = NULL,&#xD;&#xA;@ObjectName nvarchar(max) = NULL,&#xD;&#xA;@ObjectType nvarchar(max) = NULL,&#xD;&#xA;@IndexName nvarchar(max) = NULL,&#xD;&#xA;@IndexType int = NULL,&#xD;&#xA;@StatisticsName nvarchar(max) = NULL,&#xD;&#xA;@PartitionNumber int = NULL,&#xD;&#xA;@ExtendedInfo xml = NULL,&#xD;&#xA;@LogToTable nvarchar(max),&#xD;&#xA;@Execute nvarchar(max)&#xD;&#xA;&#xD;&#xA;AS&#xD;&#xA;&#xD;&#xA;BEGIN&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;  SET NOCOUNT ON&#xD;&#xA;&#xD;&#xA; " StatementId="1" StatementCompId="2278" StatementType="SET ON/OFF" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" SET LOCK_TIMEOUT 3600000&#xD;&#xA;&#xD;&#xA; " StatementId="2" StatementCompId="2279" StatementType="SET CMD" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" DECLARE @StartMessage nvarchar(max)&#xD;&#xA;  DECLARE @EndMessage nvarchar(max)&#xD;&#xA;  DECLARE @ErrorMessage nvarchar(max)&#xD;&#xA;  DECLARE @ErrorMessageOriginal nvarchar(max)&#xD;&#xA;&#xD;&#xA;  DECLARE @StartTime datetime&#xD;&#xA;  DECLARE @EndTime datetime&#xD;&#xA;&#xD;&#xA;  DECLARE @StartTimeSec datetime&#xD;&#xA;  DECLARE @EndTimeSec datetime&#xD;&#xA;&#xD;&#xA;  DECLARE @ID int&#xD;&#xA;&#xD;&#xA;  DECLARE @Error int&#xD;&#xA;  DECLARE @ReturnCode int&#xD;&#xA;&#xD;&#xA;  SET @Error = 0&#xD;&#xA; " StatementId="3" StatementCompId="2280" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" SET @ReturnCode = 0&#xD;&#xA;&#xD;&#xA;  &#xD;&#xA;  ----------------------------------------------------------------------------------------------------&#xD;&#xA;  --// Check input parameters                                                                     //--&#xD;&#xA;  ----------------------------------------------------------------------------------------------------&#xD;&#xA;&#xD;&#xA; " StatementId="4" StatementCompId="2281" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtCond StatementText=" IF @Command IS NULL OR @Command = ''&#xD;&#xA; " StatementId="5" StatementCompId="2282" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;    SET @ErrorMessage = 'The value for the parameter @Command is not supported.' + CHAR(13) + CHAR(10) + ' '&#xD;&#xA;   " StatementId="6" StatementCompId="2283" StatementType="ASSIGN" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" RAISERROR(@ErrorMessage,16,1) WITH NOWAIT&#xD;&#xA;   " StatementId="7" StatementCompId="2284" StatementType="RAISERROR" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" SET @Error = @@ERROR&#xD;&#xA; " StatementId="8" StatementCompId="2285" StatementType="ASSIGN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtCond StatementText=" END&#xD;&#xA;&#xD;&#xA;  IF @CommandType IS NULL OR @CommandType = '' OR LEN(@CommandType) &gt; 60&#xD;&#xA; " StatementId="9" StatementCompId="2287" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;    SET @ErrorMessage = 'The value for the parameter @CommandType is not supported.' + CHAR(13) + CHAR(10) + ' '&#xD;&#xA;   " StatementId="10" StatementCompId="2288" StatementType="ASSIGN" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" RAISERROR(@ErrorMessage,16,1) WITH NOWAIT&#xD;&#xA;   " StatementId="11" StatementCompId="2289" StatementType="RAISERROR" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" SET @Error = @@ERROR&#xD;&#xA; " StatementId="12" StatementCompId="2290" StatementType="ASSIGN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtCond StatementText=" END&#xD;&#xA;&#xD;&#xA;  IF @Mode NOT IN(1,2) OR @Mode IS NULL&#xD;&#xA; " StatementId="13" StatementCompId="2292" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;    SET @ErrorMessage = 'The value for the parameter @Mode is not supported.' + CHAR(13) + CHAR(10) + ' '&#xD;&#xA;   " StatementId="14" StatementCompId="2293" StatementType="ASSIGN" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" RAISERROR(@ErrorMessage,16,1) WITH NOWAIT&#xD;&#xA;   " StatementId="15" StatementCompId="2294" StatementType="RAISERROR" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" SET @Error = @@ERROR&#xD;&#xA; " StatementId="16" StatementCompId="2295" StatementType="ASSIGN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtCond StatementText=" END&#xD;&#xA;&#xD;&#xA;  IF @LogToTable NOT IN('Y','N') OR @LogToTable IS NULL&#xD;&#xA; " StatementId="17" StatementCompId="2297" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;    SET @ErrorMessage = 'The value for the parameter @LogToTable is not supported.' + CHAR(13) + CHAR(10) + ' '&#xD;&#xA;   " StatementId="18" StatementCompId="2298" StatementType="ASSIGN" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" RAISERROR(@ErrorMessage,16,1) WITH NOWAIT&#xD;&#xA;   " StatementId="19" StatementCompId="2299" StatementType="RAISERROR" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" SET @Error = @@ERROR&#xD;&#xA; " StatementId="20" StatementCompId="2300" StatementType="ASSIGN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtCond StatementText=" END&#xD;&#xA;&#xD;&#xA;  IF @Execute NOT IN('Y','N') OR @Execute IS NULL&#xD;&#xA; " StatementId="21" StatementCompId="2302" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;    SET @ErrorMessage = 'The value for the parameter @Execute is not supported.' + CHAR(13) + CHAR(10) + ' '&#xD;&#xA;   " StatementId="22" StatementCompId="2303" StatementType="ASSIGN" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" RAISERROR(@ErrorMessage,16,1) WITH NOWAIT&#xD;&#xA;   " StatementId="23" StatementCompId="2304" StatementType="RAISERROR" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" SET @Error = @@ERROR&#xD;&#xA; " StatementId="24" StatementCompId="2305" StatementType="ASSIGN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtCond StatementText=" END&#xD;&#xA;&#xD;&#xA;  IF @Error &lt;&gt; 0&#xD;&#xA; " StatementId="25" StatementCompId="2307" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;    SET @ReturnCode = @Error&#xD;&#xA;   " StatementId="26" StatementCompId="2308" StatementType="ASSIGN" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" GOTO ReturnCode&#xD;&#xA; " StatementId="27" StatementCompId="2309" StatementType="GOTO" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtSimple StatementText=" END&#xD;&#xA;&#xD;&#xA;  ----------------------------------------------------------------------------------------------------&#xD;&#xA;  --// Log initial information                                                                    //--&#xD;&#xA;  ----------------------------------------------------------------------------------------------------&#xD;&#xA;&#xD;&#xA;  SET @StartTime = GETDATE()&#xD;&#xA; " StatementId="28" StatementCompId="2311" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" SET @StartTimeSec = CONVERT(datetime,CONVERT(nvarchar,@StartTime,120),120)&#xD;&#xA;&#xD;&#xA; " StatementId="29" StatementCompId="2312" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" SET @StartMessage = 'Date and time: ' + CONVERT(nvarchar,@StartTimeSec,120) + CHAR(13) + CHAR(10)&#xD;&#xA; " StatementId="30" StatementCompId="2313" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" SET @StartMessage = @StartMessage + 'Command: ' + @Command&#xD;&#xA; " StatementId="31" StatementCompId="2314" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtCond StatementText=" IF @Comment IS NOT NULL" StatementId="32" StatementCompId="2315" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" SET @StartMessage = @StartMessage + CHAR(13) + CHAR(10) + 'Comment: ' + @Comment&#xD;&#xA; " StatementId="33" StatementCompId="2316" StatementType="ASSIGN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtSimple StatementText=" SET @StartMessage = REPLACE(@StartMessage,'%','%%')&#xD;&#xA; " StatementId="34" StatementCompId="2318" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" RAISERROR(@StartMessage,10,1) WITH NOWAIT&#xD;&#xA;&#xD;&#xA; " StatementId="35" StatementCompId="2319" StatementType="RAISERROR" RetrievedFromCache="true" />
+        <StmtCond StatementText=" IF @LogToTable = 'Y'&#xD;&#xA; " StatementId="36" StatementCompId="2320" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;    INSERT INTO dbo.CommandLog (DatabaseName, SchemaName, ObjectName, ObjectType, IndexName, IndexType, StatisticsName, PartitionNumber, ExtendedInfo, CommandType, Command, StartTime)&#xD;&#xA;    VALUES (@DatabaseName, @SchemaName, @ObjectName, @ObjectType, @IndexName, @IndexType, @StatisticsName, @PartitionNumber, @ExtendedInfo, @CommandType, @Command, @StartTime)&#xD;&#xA; " StatementId="37" StatementCompId="2321" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.0100024" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x3FE25C4C3B151AD" QueryPlanHash="0xAD239F42C2086DFF">
+                <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="32" CompileTime="1" CompileCPU="1" CompileMemory="504">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="0" PhysicalOp="Clustered Index Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.01" EstimateCPU="1e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0100024" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList />
+                    <Update DMLRequestSort="0">
+                      <Object Database="[OPS]" Schema="[dbo]" Table="[CommandLog]" Index="[PK_CommandLog]" IndexKind="Clustered" />
+                      <SetPredicate>
+                        <ScalarOperator ScalarString="[OPS].[dbo].[CommandLog].[DatabaseName] = [Expr1004],[OPS].[dbo].[CommandLog].[SchemaName] = [Expr1005],[OPS].[dbo].[CommandLog].[ObjectName] = [Expr1006],[OPS].[dbo].[CommandLog].[ObjectType] = [Expr1007],[OPS].[dbo].[CommandLog].[IndexName] = [Expr1008],[OPS].[dbo].[CommandLog].[IndexType] = [Expr1009],[OPS].[dbo].[CommandLog].[StatisticsName] = [Expr1010],[OPS].[dbo].[CommandLog].[PartitionNumber] = [@PartitionNumber],[OPS].[dbo].[CommandLog].[ExtendedInfo] = [@ExtendedInfo],[OPS].[dbo].[CommandLog].[CommandType] = RaiseIfNullInsert([Expr1011]),[OPS].[dbo].[CommandLog].[Command] = RaiseIfNullInsert([@Command]),[OPS].[dbo].[CommandLog].[StartTime] = RaiseIfNullInsert([@StartTime]),[OPS].[dbo].[CommandLog].[ID] = [Expr1003],[OPS].[dbo].[CommandLog].[ErrorMessage] = NULL,[OPS].[dbo].[CommandLog].[EndTime] = NULL,[OPS].[dbo].[CommandLog].[ErrorNumber] = NULL">
+                          <ScalarExpressionList>
+                            <ScalarOperator>
+                              <MultipleAssign>
+                                <Assign>
+                                  <ColumnReference Database="[OPS]" Schema="[dbo]" Table="[CommandLog]" Column="DatabaseName" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Expr1004" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[OPS]" Schema="[dbo]" Table="[CommandLog]" Column="SchemaName" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Expr1005" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[OPS]" Schema="[dbo]" Table="[CommandLog]" Column="ObjectName" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Expr1006" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[OPS]" Schema="[dbo]" Table="[CommandLog]" Column="ObjectType" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Expr1007" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[OPS]" Schema="[dbo]" Table="[CommandLog]" Column="IndexName" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Expr1008" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[OPS]" Schema="[dbo]" Table="[CommandLog]" Column="IndexType" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Expr1009" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[OPS]" Schema="[dbo]" Table="[CommandLog]" Column="StatisticsName" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Expr1010" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[OPS]" Schema="[dbo]" Table="[CommandLog]" Column="PartitionNumber" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="@PartitionNumber" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[OPS]" Schema="[dbo]" Table="[CommandLog]" Column="ExtendedInfo" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="@ExtendedInfo" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[OPS]" Schema="[dbo]" Table="[CommandLog]" Column="CommandType" />
+                                  <ScalarOperator>
+                                    <Intrinsic FunctionName="RaiseIfNullInsert">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="Expr1011" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Intrinsic>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[OPS]" Schema="[dbo]" Table="[CommandLog]" Column="Command" />
+                                  <ScalarOperator>
+                                    <Intrinsic FunctionName="RaiseIfNullInsert">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="@Command" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Intrinsic>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[OPS]" Schema="[dbo]" Table="[CommandLog]" Column="StartTime" />
+                                  <ScalarOperator>
+                                    <Intrinsic FunctionName="RaiseIfNullInsert">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="@StartTime" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Intrinsic>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[OPS]" Schema="[dbo]" Table="[CommandLog]" Column="ID" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Expr1003" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[OPS]" Schema="[dbo]" Table="[CommandLog]" Column="ErrorMessage" />
+                                  <ScalarOperator>
+                                    <Const ConstValue="NULL" />
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[OPS]" Schema="[dbo]" Table="[CommandLog]" Column="EndTime" />
+                                  <ScalarOperator>
+                                    <Const ConstValue="NULL" />
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[OPS]" Schema="[dbo]" Table="[CommandLog]" Column="ErrorNumber" />
+                                  <ScalarOperator>
+                                    <Const ConstValue="NULL" />
+                                  </ScalarOperator>
+                                </Assign>
+                              </MultipleAssign>
+                            </ScalarOperator>
+                          </ScalarExpressionList>
+                        </ScalarOperator>
+                      </SetPredicate>
+                      <RelOp NodeId="1" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="729" EstimatedTotalSubtreeCost="1.357e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList>
+                          <ColumnReference Column="Expr1003" />
+                          <ColumnReference Column="Expr1004" />
+                          <ColumnReference Column="Expr1005" />
+                          <ColumnReference Column="Expr1006" />
+                          <ColumnReference Column="Expr1007" />
+                          <ColumnReference Column="Expr1008" />
+                          <ColumnReference Column="Expr1009" />
+                          <ColumnReference Column="Expr1010" />
+                          <ColumnReference Column="Expr1011" />
+                        </OutputList>
+                        <ComputeScalar>
+                          <DefinedValues>
+                            <DefinedValue>
+                              <ColumnReference Column="Expr1004" />
+                              <ScalarOperator ScalarString="CONVERT_IMPLICIT(nvarchar(128),[@DatabaseName],0)">
+                                <Convert DataType="nvarchar" Length="256" Style="0" Implicit="1">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="@DatabaseName" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Convert>
+                              </ScalarOperator>
+                            </DefinedValue>
+                            <DefinedValue>
+                              <ColumnReference Column="Expr1005" />
+                              <ScalarOperator ScalarString="CONVERT_IMPLICIT(nvarchar(128),[@SchemaName],0)">
+                                <Convert DataType="nvarchar" Length="256" Style="0" Implicit="1">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="@SchemaName" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Convert>
+                              </ScalarOperator>
+                            </DefinedValue>
+                            <DefinedValue>
+                              <ColumnReference Column="Expr1006" />
+                              <ScalarOperator ScalarString="CONVERT_IMPLICIT(nvarchar(128),[@ObjectName],0)">
+                                <Convert DataType="nvarchar" Length="256" Style="0" Implicit="1">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="@ObjectName" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Convert>
+                              </ScalarOperator>
+                            </DefinedValue>
+                            <DefinedValue>
+                              <ColumnReference Column="Expr1007" />
+                              <ScalarOperator ScalarString="CONVERT_IMPLICIT(char(2),[@ObjectType],0)">
+                                <Convert DataType="char" Length="2" Style="0" Implicit="1">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="@ObjectType" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Convert>
+                              </ScalarOperator>
+                            </DefinedValue>
+                            <DefinedValue>
+                              <ColumnReference Column="Expr1008" />
+                              <ScalarOperator ScalarString="CONVERT_IMPLICIT(nvarchar(128),[@IndexName],0)">
+                                <Convert DataType="nvarchar" Length="256" Style="0" Implicit="1">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="@IndexName" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Convert>
+                              </ScalarOperator>
+                            </DefinedValue>
+                            <DefinedValue>
+                              <ColumnReference Column="Expr1009" />
+                              <ScalarOperator ScalarString="CONVERT_IMPLICIT(tinyint,[@IndexType],0)">
+                                <Convert DataType="tinyint" Style="0" Implicit="1">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="@IndexType" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Convert>
+                              </ScalarOperator>
+                            </DefinedValue>
+                            <DefinedValue>
+                              <ColumnReference Column="Expr1010" />
+                              <ScalarOperator ScalarString="CONVERT_IMPLICIT(nvarchar(128),[@StatisticsName],0)">
+                                <Convert DataType="nvarchar" Length="256" Style="0" Implicit="1">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="@StatisticsName" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Convert>
+                              </ScalarOperator>
+                            </DefinedValue>
+                            <DefinedValue>
+                              <ColumnReference Column="Expr1011" />
+                              <ScalarOperator ScalarString="CONVERT_IMPLICIT(nvarchar(60),[@CommandType],0)">
+                                <Convert DataType="nvarchar" Length="120" Style="0" Implicit="1">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="@CommandType" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Convert>
+                              </ScalarOperator>
+                            </DefinedValue>
+                          </DefinedValues>
+                          <RelOp NodeId="2" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="1.257e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList>
+                              <ColumnReference Column="Expr1003" />
+                            </OutputList>
+                            <ComputeScalar ComputeSequence="1">
+                              <DefinedValues>
+                                <DefinedValue>
+                                  <ColumnReference Column="Expr1003" />
+                                  <ScalarOperator ScalarString="getidentity((245575913),(5),NULL)">
+                                    <Intrinsic FunctionName="getidentity">
+                                      <ScalarOperator>
+                                        <Const ConstValue="(245575913)" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(5)" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="NULL" />
+                                      </ScalarOperator>
+                                    </Intrinsic>
+                                  </ScalarOperator>
+                                </DefinedValue>
+                              </DefinedValues>
+                              <RelOp NodeId="3" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                <OutputList />
+                                <ConstantScan />
+                              </RelOp>
+                            </ComputeScalar>
+                          </RelOp>
+                        </ComputeScalar>
+                      </RelOp>
+                    </Update>
+                  </RelOp>
+                  <ParameterList>
+                    <ColumnReference Column="@Command" ParameterCompiledValue="N'ALTER INDEX [IX_Failures_TestcaseResultId] ON [OurLabReporting].[Reporting].[Failures] REORGANIZE PARTITION = 159 WITH (LOB_COMPACTION = ON)'" />
+                    <ColumnReference Column="@CommandType" ParameterCompiledValue="N'ALTER_INDEX'" />
+                    <ColumnReference Column="@ExtendedInfo" ParameterCompiledValue="N'&lt;ExtendedInfo&gt;&lt;PageCount&gt;15413&lt;/PageCount&gt;&lt;Fragmentation&gt;5.99494&lt;/Fragmentation&gt;&lt;/ExtendedInfo&gt;'" />
+                    <ColumnReference Column="@PartitionNumber" ParameterCompiledValue="(159)" />
+                    <ColumnReference Column="@StatisticsName" ParameterCompiledValue="NULL" />
+                    <ColumnReference Column="@IndexType" ParameterCompiledValue="(2)" />
+                    <ColumnReference Column="@IndexName" ParameterCompiledValue="N'IX_Failures_TestcaseResultId'" />
+                    <ColumnReference Column="@ObjectType" ParameterCompiledValue="N'U'" />
+                    <ColumnReference Column="@ObjectName" ParameterCompiledValue="N'Failures'" />
+                    <ColumnReference Column="@SchemaName" ParameterCompiledValue="N'Reporting'" />
+                    <ColumnReference Column="@DatabaseName" ParameterCompiledValue="N'OurLabReporting'" />
+                  </ParameterList>
+                </QueryPlan>
+              </StmtSimple>
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtSimple StatementText=" END&#xD;&#xA;&#xD;&#xA;  SET @ID = SCOPE_IDENTITY()&#xD;&#xA;&#xD;&#xA;  ----------------------------------------------------------------------------------------------------&#xD;&#xA;  --// Execute command                                                                            //--&#xD;&#xA;  ----------------------------------------------------------------------------------------------------&#xD;&#xA;&#xD;&#xA; " StatementId="38" StatementCompId="2323" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtCond StatementText=" IF @Mode = 1 AND @Execute = 'Y'&#xD;&#xA; " StatementId="39" StatementCompId="2324" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;    EXECUTE(@Command)&#xD;&#xA;   " StatementId="40" StatementCompId="2325" StatementType="EXECUTE STRING" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" SET @Error = @@ERROR&#xD;&#xA;   " StatementId="41" StatementCompId="2326" StatementType="ASSIGN" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" SET @ReturnCode = @Error&#xD;&#xA; " StatementId="42" StatementCompId="2327" StatementType="ASSIGN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtCond StatementText=" END&#xD;&#xA;&#xD;&#xA;  IF @Mode = 2 AND @Execute = 'Y'&#xD;&#xA; " StatementId="43" StatementCompId="2329" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;    BEGIN TRY&#xD;&#xA;     " StatementId="44" StatementCompId="2330" StatementType="BEGIN TRY" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" EXECUTE(@Command)&#xD;&#xA;   " StatementId="45" StatementCompId="2331" StatementType="EXECUTE STRING" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" END TRY&#xD;&#xA;   " StatementId="46" StatementCompId="2332" StatementType="END TRY" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" BEGIN CATCH&#xD;&#xA;     " StatementId="47" StatementCompId="2333" StatementType="BEGIN CATCH" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" SET @Error = ERROR_NUMBER()&#xD;&#xA;     " StatementId="48" StatementCompId="2334" StatementType="ASSIGN" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" SET @ReturnCode = @Error&#xD;&#xA;     " StatementId="49" StatementCompId="2335" StatementType="ASSIGN" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" SET @ErrorMessageOriginal = ERROR_MESSAGE()&#xD;&#xA;     " StatementId="50" StatementCompId="2336" StatementType="ASSIGN" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" SET @ErrorMessage = 'Msg ' + CAST(@Error AS nvarchar) + ', ' + ISNULL(@ErrorMessageOriginal,'')&#xD;&#xA;     " StatementId="51" StatementCompId="2337" StatementType="ASSIGN" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" RAISERROR(@ErrorMessage,16,1) WITH NOWAIT&#xD;&#xA;   " StatementId="52" StatementCompId="2338" StatementType="RAISERROR" RetrievedFromCache="true" />
+              <StmtSimple StatementText=" END CATC" StatementId="53" StatementCompId="2339" StatementType="END CATCH" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtSimple StatementText="H&#xD;&#xA;  END&#xD;&#xA;&#xD;&#xA;  ----------------------------------------------------------------------------------------------------&#xD;&#xA;  --// Log completing information                                                                 //--&#xD;&#xA;  ----------------------------------------------------------------------------------------------------&#xD;&#xA;&#xD;&#xA;  SET @EndTime = GETDATE()&#xD;&#xA; " StatementId="54" StatementCompId="2342" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" SET @EndTimeSec = CONVERT(datetime,CONVERT(varchar,@EndTime,120),120)&#xD;&#xA;&#xD;&#xA; " StatementId="55" StatementCompId="2343" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" SET @EndMessage = 'Outcome: ' + CASE WHEN @Execute = 'N' THEN 'Not Executed' WHEN @Error = 0 THEN 'Succeeded' ELSE 'Failed' END + CHAR(13) + CHAR(10)&#xD;&#xA; " StatementId="56" StatementCompId="2344" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" SET @EndMessage = @EndMessage + 'Duration: ' + CASE WHEN DATEDIFF(ss,@StartTimeSec, @EndTimeSec)/(24*3600) &gt; 0 THEN CAST(DATEDIFF(ss,@StartTimeSec, @EndTimeSec)/(24*3600) AS nvarchar) + '.' ELSE '' END + CONVERT(nvarchar,@EndTimeSec - @StartTimeSec,108) + CHAR(13) + CHAR(10)&#xD;&#xA; " StatementId="57" StatementCompId="2345" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" SET @EndMessage = @EndMessage + 'Date and time: ' + CONVERT(nvarchar,@EndTimeSec,120) + CHAR(13) + CHAR(10) + ' '&#xD;&#xA; " StatementId="58" StatementCompId="2346" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" SET @EndMessage = REPLACE(@EndMessage,'%','%%')&#xD;&#xA; " StatementId="59" StatementCompId="2347" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" RAISERROR(@EndMessage,10,1) WITH NOWAIT&#xD;&#xA;&#xD;&#xA; " StatementId="60" StatementCompId="2348" StatementType="RAISERROR" RetrievedFromCache="true" />
+        <StmtCond StatementText=" IF @LogToTable = 'Y'&#xD;&#xA; " StatementId="61" StatementCompId="2349" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;    UPDATE dbo.CommandLog&#xD;&#xA;    SET EndTime = @EndTime,&#xD;&#xA;        ErrorNumber = CASE WHEN @Execute = 'N' THEN NULL ELSE @Error END,&#xD;&#xA;        ErrorMessage = @ErrorMessageOriginal&#xD;&#xA;    WHERE ID = @ID&#xD;&#xA; " StatementId="62" StatementCompId="2350" StatementType="UPDATE" RetrievedFromCache="true" StatementSubTreeCost="0.0132842" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0xCC8798C60CC4B2B8" QueryPlanHash="0x867C50EB942941A1">
+                <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="1" CompileCPU="1" CompileMemory="584">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="0" PhysicalOp="Clustered Index Update" LogicalOp="Update" EstimateRows="1" EstimateIO="0.01" EstimateCPU="1e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0132842" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList />
+                    <SimpleUpdate DMLRequestSort="0">
+                      <DefinedValues>
+                        <DefinedValue>
+                          <ColumnReference Column="Expr1003" />
+                          <ScalarOperator ScalarString="CASE WHEN [@Execute]=N'N' THEN NULL ELSE [@Error] END">
+                            <IF>
+                              <Condition>
+                                <ScalarOperator>
+                                  <Compare CompareOp="EQ">
+                                    <ScalarOperator>
+                                      <Identifier>
+                                        <ColumnReference Column="@Execute" />
+                                      </Identifier>
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Const ConstValue="N'N'" />
+                                    </ScalarOperator>
+                                  </Compare>
+                                </ScalarOperator>
+                              </Condition>
+                              <Then>
+                                <ScalarOperator>
+                                  <Const ConstValue="NULL" />
+                                </ScalarOperator>
+                              </Then>
+                              <Else>
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="@Error" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Else>
+                            </IF>
+                          </ScalarOperator>
+                        </DefinedValue>
+                      </DefinedValues>
+                      <Object Database="[OPS]" Schema="[dbo]" Table="[CommandLog]" Index="[PK_CommandLog]" IndexKind="Clustered" />
+                      <SeekPredicateNew>
+                        <SeekKeys>
+                          <Prefix ScanType="EQ">
+                            <RangeColumns>
+                              <ColumnReference Database="[OPS]" Schema="[dbo]" Table="[CommandLog]" Column="ID" />
+                            </RangeColumns>
+                            <RangeExpressions>
+                              <ScalarOperator ScalarString="[@ID]">
+                                <Identifier>
+                                  <ColumnReference Column="@ID" />
+                                </Identifier>
+                              </ScalarOperator>
+                            </RangeExpressions>
+                          </Prefix>
+                        </SeekKeys>
+                      </SeekPredicateNew>
+                      <SetPredicate>
+                        <ScalarOperator ScalarString="[OPS].[dbo].[CommandLog].[EndTime] = [@EndTime],[OPS].[dbo].[CommandLog].[ErrorNumber] = [Expr1003],[OPS].[dbo].[CommandLog].[ErrorMessage] = [@ErrorMessageOriginal]">
+                          <ScalarExpressionList>
+                            <ScalarOperator>
+                              <MultipleAssign>
+                                <Assign>
+                                  <ColumnReference Database="[OPS]" Schema="[dbo]" Table="[CommandLog]" Column="EndTime" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="@EndTime" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[OPS]" Schema="[dbo]" Table="[CommandLog]" Column="ErrorNumber" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Expr1003" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[OPS]" Schema="[dbo]" Table="[CommandLog]" Column="ErrorMessage" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="@ErrorMessageOriginal" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                              </MultipleAssign>
+                            </ScalarOperator>
+                          </ScalarExpressionList>
+                        </ScalarOperator>
+                      </SetPredicate>
+                    </SimpleUpdate>
+                  </RelOp>
+                  <ParameterList>
+                    <ColumnReference Column="@Execute" ParameterCompiledValue="N'Y'" />
+                  </ParameterList>
+                </QueryPlan>
+              </StmtSimple>
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtCond StatementText=" END&#xD;&#xA;&#xD;&#xA;  ReturnCode:&#xD;&#xA;  IF @ReturnCode &lt;&gt; 0&#xD;&#xA; " StatementId="63" StatementCompId="2353" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;    RETURN @ReturnCode&#xD;&#xA; " StatementId="64" StatementCompId="2354" StatementType="RETURN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

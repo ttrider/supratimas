@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="CREATE PROCEDURE [dbo].[GetOrCreateUser]&#xD;&#xA;&#x9; @Alias&#x9;&#x9;NVARCHAR(50)&#xD;&#xA;&#x9;, @UserId&#x9;SMALLINT&#x9;= NULL OUTPUT&#xD;&#xA;AS&#xD;&#xA;BEGIN&#xD;&#xA;&#x9;SELECT @UserId = U.Id &#xD;&#xA;&#x9;FROM dbo.Users AS U&#xD;&#xA;&#x9;WHERE U.Alias = @Alias&#xD;&#xA;&#x9;&#xD;&#xA;" StatementId="1" StatementCompId="61" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032831" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x3B658F31B1EBB843" QueryPlanHash="0xED7376121DE7D154">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="0" CompileCPU="0" CompileMemory="136">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="3196" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Users]" Alias="[U]" Column="Id" />
+              </OutputList>
+              <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Users]" Alias="[U]" Column="Id" />
+                  </DefinedValue>
+                </DefinedValues>
+                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Users]" Index="[UX_Alias]" Alias="[U]" IndexKind="NonClustered" />
+                <SeekPredicates>
+                  <SeekPredicateNew>
+                    <SeekKeys>
+                      <Prefix ScanType="EQ">
+                        <RangeColumns>
+                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Users]" Alias="[U]" Column="Alias" />
+                        </RangeColumns>
+                        <RangeExpressions>
+                          <ScalarOperator ScalarString="[@Alias]">
+                            <Identifier>
+                              <ColumnReference Column="@Alias" />
+                            </Identifier>
+                          </ScalarOperator>
+                        </RangeExpressions>
+                      </Prefix>
+                    </SeekKeys>
+                  </SeekPredicateNew>
+                </SeekPredicates>
+              </IndexScan>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@UserId" ParameterCompiledValue="NULL" />
+              <ColumnReference Column="@Alias" ParameterCompiledValue="N'v-xiaan'" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtCond StatementText="&#x9;IF (@UserId IS NULL AND @Alias IS NOT NULL)&#xD;&#xA;" StatementId="2" StatementCompId="62" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;INSERT INTO dbo.Users(Alias)&#xD;&#xA;&#x9;&#x9;VALUES (@Alias)&#xD;&#xA;&#x9;&#x9;&#xD;&#xA;&#x9;" StatementId="3" StatementCompId="63" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.0200033" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0xB8971EFD844E3566" QueryPlanHash="0x453B21D63061E3F3">
+                <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="0" CompileCPU="0" CompileMemory="120">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="0" PhysicalOp="Clustered Index Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.02" EstimateCPU="2e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0200033" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList />
+                    <Update DMLRequestSort="0">
+                      <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Users]" Index="[PK_Users]" IndexKind="Clustered" />
+                      <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Users]" Index="[UX_Alias]" IndexKind="NonClustered" />
+                      <SetPredicate>
+                        <ScalarOperator ScalarString="[OurLabReporting].[dbo].[Users].[Alias] = RaiseIfNullInsert([@Alias]),[OurLabReporting].[dbo].[Users].[Id] = [Expr1003]">
+                          <ScalarExpressionList>
+                            <ScalarOperator>
+                              <MultipleAssign>
+                                <Assign>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Users]" Column="Alias" />
+                                  <ScalarOperator>
+                                    <Intrinsic FunctionName="RaiseIfNullInsert">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="@Alias" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Intrinsic>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Users]" Column="Id" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Expr1003" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                              </MultipleAssign>
+                            </ScalarOperator>
+                          </ScalarExpressionList>
+                        </ScalarOperator>
+                      </SetPredicate>
+                      <RelOp NodeId="1" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="9" EstimatedTotalSubtreeCost="1.257e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList>
+                          <ColumnReference Column="Expr1003" />
+                        </OutputList>
+                        <ComputeScalar ComputeSequence="1">
+                          <DefinedValues>
+                            <DefinedValue>
+                              <ColumnReference Column="Expr1003" />
+                              <ScalarOperator ScalarString="getidentity((1778105375),(6),NULL)">
+                                <Intrinsic FunctionName="getidentity">
+                                  <ScalarOperator>
+                                    <Const ConstValue="(1778105375)" />
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(6)" />
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="NULL" />
+                                  </ScalarOperator>
+                                </Intrinsic>
+                              </ScalarOperator>
+                            </DefinedValue>
+                          </DefinedValues>
+                          <RelOp NodeId="2" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList />
+                            <ConstantScan />
+                          </RelOp>
+                        </ComputeScalar>
+                      </RelOp>
+                    </Update>
+                  </RelOp>
+                  <ParameterList>
+                    <ColumnReference Column="@Alias" ParameterCompiledValue="N'v-xiaan'" />
+                  </ParameterList>
+                </QueryPlan>
+              </StmtSimple>
+              <StmtSimple StatementText="&#x9;SET @UserId = SCOPE_IDENTITY() &#xD;&#xA;" StatementId="4" StatementCompId="64" StatementType="ASSIGN" RetrievedFromCache="true" />
+            </Statements>
+          </Then>
+        </StmtCond>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

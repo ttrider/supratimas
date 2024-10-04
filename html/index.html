@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>Supratimas</title>
+    @@include("./parts/head.html")
+</head>
+
+<body id="rootws" class="web">
+    <a name="top"></a>
+    @@include("./parts/h.html", {"mode":"info"})
+
+    <section class="htoolbar">
+        <a href="#top">top</a>
+        <a href="/webapp" target="webapp">online app</a>
+        <a href="#features">features</a>
+        <a href="#downloads">downloads</a>
+    </section>
+
+    <section class="hframe">
+        <div class="centered larger" style="font-size: 2.2em;">Welcome to Supratimas</div>
+        <div class="centered larger">Web-based analysis tool for Microsoft SQL Server&reg; query execution plans.</div>
+        <div class="centered">also available as a SQL Server&reg Management Studio plug-in (<a href="#downloads">download</a>)</div>
+    </section>
+
+    <section class="hframe">
+        <a name="onlineapp"></a>
+        <div class="htitle">Online Application</div>
+        <div class="right-ad">
+            <section class="selector" data-bind="with: planSelector">
+                <div class="selector-header">
+                    <div class="selector-examples">
+                        <span>Examples:</span>
+                        <ul>
+                            <li><a class="openExamplePlan" id="openExample01" href="#">SELECT * FROM sys.objects</a></li>
+                            <li>
+                                <a class="openExamplePlan" id="openExample02" href="#">
+                                    <span>SELECT * FROM sys.objects ORDER BY [object_id];</span>
+                                    <br/>
+                                    <span>SELECT [type], count(*) from sys.tables GROUP BY [type];</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="openExamplePlan" id="openExample03" href="#">
+                                    <span>DECLARE @t TABLE (a int, b int);</span>
+                                    <br/>
+                                    <span>INSERT INTO @t VALUES (0,100), (1,101), (2, 102);</span>
+                                    <br/>
+                                    <span>SELECT a+b from @t WHERE a > 1 ORDER BY b;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div style="text-align: right;">
+                        <a id="openPlanButton" class="openPlan" href="#" data-bind="visible: fileReader">Open Query Plan File</a>
+                    </div>
+                </div>
+                <textarea id="openPlanText" class="planText" readonly="true" placeholder="paste query plan text here to begin"></textarea>
+
+                <section style="text-align: center; margin-top: 1em;">
+                    If you like Supratimas, please support us with your donation.
+                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                        <input type="hidden" name="cmd" value="_s-xclick">
+                        <input type="hidden" name="hosted_button_id" value="PVVBQN37RHRZU">
+                        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                        <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                    </form>
+                </section>
+            </section>
+
+            <div>
+                <br />
+                <!-- supratimas-sidebar-tall -->
+                <ins class="adsbygoogle" style="display:inline-block;width:300px;height:600px" data-ad-client="ca-pub-2261371684278796" data-ad-slot="8308011571"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+        </div>
+    </section>
+
+    <section class="hframe">
+        <a name="features"></a>
+        <div class="htitle">Features</div>
+
+        <section class="hsplit">
+            <div class="htext">
+
+                <div class="hheader">All Batch execution information in one view</div>
+
+                <img src="/css/i/overview.png" width="100%" style="box-shadow: #bcdbf3 0 0 3em 1px;" />
+            </div>
+
+        </section>
+
+        <div class="hsplit">
+            <div class="htext">
+                <div class="hheader">For all operations, display inline:</div>
+                <ul>
+                    <li>Overall cost. The number is color-coded when the cost is higher than 1%.</li>
+                    <li>Cost break-down: IO, CPU, Data size and the number of rows returned.</li>
+                    <ul>
+                        <li>Numbers are color-coded when they are more significant than a threshold.</li>
+                        <li>When the estimated number of rows is different from the actual number, the estimated number of rows is present and color-coded.</li>
+                    </ul>
+                    <li>Table and Index names, if available.</li>
+                    <li>Execution Flags.</li>
+                </ul>
+            </div>
+            <div class="himage">
+                @@include("./parts/feature_example01.html")
+            </div>
+        </div>
+
+        <div class="hsplit">
+
+            <div class="himage">
+                @@include("./parts/feature_example02.html")
+            </div>
+            <div class="htext">
+                <ul>
+                    <li value="5">Operation Properties</li>
+                    <ul>
+                        <li value="6">including Estimated vs Actual</li>
+                    </ul>
+                </ul>
+            </div>
+        </div>
+
+        <div class="hsplit">
+            <div class="htext">
+                <ul>
+                    <li value="7">Breakdown for Parallel executions</li>
+                </ul>
+            </div>
+            <div class="himage">
+                @@include("./parts/feature_example03.html")
+            </div>
+
+        </div>
+
+        <div class="hsplit">
+
+            <div class="himage">
+                @@include("./parts/feature_example04.html")
+            </div>
+            <div class="htext">
+                <ul>
+                    <li value="8">Joins insights</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="hsplit">
+            <div class="htext">
+                <ul>
+                    <li value="8">Aggregations insights</li>
+                </ul>
+            </div>
+            <div class="himage">
+                @@include("./parts/feature_example05.html")
+            </div>
+
+        </div>
+
+        <div class="hsplit">
+
+            <div class="himage">
+                @@include("./parts/feature_example06.html")
+            </div>
+            <div class="htext">
+                <ul>
+                    <li value="8">Sorting insights</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="hsplit">
+            <div class="htext">
+                <ul>
+                    <li value="7">Multiple statements analisys in a single view</li>
+                </ul>
+            </div>
+            <div class="himage">
+                @@include("./parts/feature_example07.html")
+            </div>
+
+        </div>
+    </section>
+
+    <section class="hframe">
+
+        <div class="hheader">All Nodes view</div>
+        <div>display all execution nodes</div>
+        <img src="/css/i/show-all.png" width="100%" />
+
+        <div class="hheader">Expensive Nodes view</div>
+        <div>display execution nodes with the cost over 1 percent only</div>
+        <img src="/css/i/show-costly.png" width="100%" />
+
+        <div class="hheader">Joins view</div>
+        <div>display only joins nodes</div>
+        <img src="/css/i/show-joins.png" width="100%" />
+    </section>
+
+    <section class="hframe">
+        <a name="downloads"></a>
+        <a name="SSMS2016"></a>
+        <div class="htitle">Downloads</div>
+
+        <div class="hdwnld">
+            <div>
+                <a href="/files/setup.supratimas.2.2.0.exe">Download Supratimas 2.2.0</a>
+                <br />for SQL Server Management Studio&reg; 2016
+                <br />for SQL Server Management Studio&reg; v17.x
+                <br />for SQL Server Management Studio&reg; v18.x
+            </div>
+            <div class="vsep"></div>
+            <div>
+                <a href="/files/setup.supratimas.addin.1.1.2000.exe">Download Supratimas 1.1.2000</a>
+                <br />for SQL Server Management Studio&reg; 2008-2014
+            </div>
+        </div>
+
+        <div class="centered">
+            <br />
+            <ins class="adsbygoogle" style="display:inline-block;width:468px;height:60px" data-ad-client="ca-pub-2261371684278796" data-ad-slot="8334905667"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+    </section>
+
+    @@include("./parts/footer.html")
+
+    <script type="text/javascript" language="javascript">
+        require.config({
+            baseUrl: "/js",
+            waitSeconds: 15
+        });
+    </script>
+
+
+
+    <!-- <script type="text/javascript" language="javascript" src="/js/supratimas.js"></script> -->
+    <script type="text/javascript" language="javascript">
+        document.addEventListener('readystatechange', event => {
+            if (event.target.readyState === "complete") {
+
+                require(["supratimas"], (supratimas) => {
+
+                    const openPlanButton = document.getElementById("openPlanButton");
+                    supratimas.attachToFileSelector(openPlanButton, (err) => {
+                        console.error(err);
+                    });
+
+
+                    const openPlanText = document.getElementById("openPlanText");
+                    supratimas.attachToTextarea(openPlanText, (err) => {
+                        console.error(err);
+                    });
+
+                    const openExample01 = document.getElementById("openExample01");
+                    supratimas.attachToExample(openExample01, "example01.sqlplan", (err) => {
+                        console.error(err);
+                    });
+                    const openExample02 = document.getElementById("openExample02");
+                    supratimas.attachToExample(openExample02, "example02.sqlplan", (err) => {
+                        console.error(err);
+                    });
+                    const openExample03 = document.getElementById("openExample03");
+                    supratimas.attachToExample(openExample03, "example03.sqlplan", (err) => {
+                        console.error(err);
+                    });
+                });
+            }
+        });
+    </script>
+
+
+</body>
+
+</html>

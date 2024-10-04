@@ -1,0 +1,1496 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="&#xD;&#xA;CREATE PROCEDURE [dbo].[spSaveSubmissionMetadata] &#xD;&#xA;(&#xD;&#xA;&#x9;@submissionSetPartition DATE,&#xD;&#xA;&#x9;@submissionSetId INT,&#xD;&#xA;&#x9;@submissionId INT,&#xD;&#xA;&#xD;&#xA;&#x9;@branch VARCHAR(255),&#xD;&#xA;&#x9;@branchHash UNIQUEIDENTIFIER,&#xD;&#xA;&#x9;@build VARCHAR(255),&#xD;&#xA;&#x9;@buildHash UNIQUEIDENTIFIER,&#xD;&#xA;&#x9;@deviceType VARCHAR(255),&#xD;&#xA;&#x9;@deviceTypeHash UNIQUEIDENTIFIER,&#xD;&#xA;&#x9;@imageType VARCHAR(255),&#xD;&#xA;&#x9;@imageTypeHash UNIQUEIDENTIFIER,&#xD;&#xA;&#x9;@requestedBy VARCHAR(255),&#xD;&#xA;&#x9;@requestedByHash UNIQUEIDENTIFIER,&#xD;&#xA;&#x9;@team VARCHAR(255),&#xD;&#xA;&#x9;@teamHash UNIQUEIDENTIFIER,&#xD;&#xA;&#x9;@testPass VARCHAR(255),&#xD;&#xA;&#x9;@testPassHash UNIQUEIDENTIFIER,&#xD;&#xA;&#x9;@uniqueKey VARCHAR(255),&#xD;&#xA;&#x9;@uniqueKeyHash UNIQUEIDENTIFIER,&#xD;&#xA;&#x9;@testPassType VARCHAR(255),&#xD;&#xA;&#x9;@testPassTypeHash UNIQUEIDENTIFIER,&#xD;&#xA;&#x9;@testLanguage VARCHAR(255),&#xD;&#xA;&#x9;@testLanguageHash UNIQUEIDENTIFIER,&#xD;&#xA;&#x9;@tellusFrTed VARCHAR(255),&#x9;&#x9;&#xD;&#xA;&#x9;@tellusFrTedHash UNIQUEIDENTIFIER&#xD;&#xA;)&#xD;&#xA;AS&#xD;&#xA;BEGIN&#xD;&#xA;&#x9;-- Updates the submission with specified metadata. The caller must provide a transaction to ensure atomicity of updating submission with its creation. (TODO: Move hash calculation to SQLCLR)&#xD;&#xA;&#x9;SET NOCOUNT ON;&#xD;&#xA;&#xD;&#xA;&#x9;-- Initialize variables to NULL (used in logic below).&#xD;&#xA;" StatementId="1" StatementCompId="2" StatementType="SET ON/OFF" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;DECLARE @branchId&#x9;&#x9;&#x9;BIGINT&#xD;&#xA;&#x9;DECLARE @buildId&#x9;&#x9;&#x9;BIGINT&#xD;&#xA;&#x9;DECLARE @deviceTypeId&#x9;&#x9;BIGINT&#xD;&#xA;&#x9;DECLARE @imageTypeId&#x9;&#x9;BIGINT&#xD;&#xA;&#x9;DECLARE @requestedById&#x9;&#x9;BIGINT&#xD;&#xA;&#x9;DECLARE @teamId&#x9;&#x9;&#x9;&#x9;BIGINT&#xD;&#xA;&#x9;DECLARE @testPassId&#x9;&#x9;&#x9;BIGINT&#xD;&#xA;&#x9;DECLARE @uniqueKeyId&#x9;&#x9;BIGINT&#xD;&#xA;&#x9;DECLARE @testPassTypeId&#x9;&#x9;BIGINT&#xD;&#xA;&#x9;DECLARE @testLanguageId&#x9;&#x9;BIGINT&#xD;&#xA;&#x9;DECLARE @tellusFrTedId&#x9;&#x9;BIGINT&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#x9;-- Intern the strings using its hash&#xD;&#xA;&#x9;EXEC [dbo].[spGetStringHashId] @input = @branch,&#x9;&#x9;&#x9;@inputHash = @branchHash,&#x9;&#x9;&#x9;@tableName = N'Branch',&#x9;&#x9;&#x9;&#x9;@id = @branchId OUTPUT&#xD;&#xA;" StatementId="2" StatementCompId="3" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;EXEC [dbo].[spGetStringHashId] @input = @build,&#x9;&#x9;&#x9;&#x9;@inputHash = @buildHash,&#x9;&#x9;&#x9;@tableName = N'Build',&#x9;&#x9;&#x9;&#x9;@id = @buildId OUTPUT&#xD;&#xA;" StatementId="3" StatementCompId="4" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;EXEC [dbo].[spGetStringHashId] @input = @deviceType,&#x9;&#x9;@inputHash = @deviceTypeHash,&#x9;&#x9;@tableName = N'DeviceType',&#x9;&#x9;&#x9;@id = @deviceTypeId OUTPUT&#xD;&#xA;" StatementId="4" StatementCompId="5" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;EXEC [dbo].[spGetStringHashId] @input = @imageType,&#x9;&#x9;&#x9;@inputHash = @imageTypeHash,&#x9;&#x9;@tableName = N'ImageType',&#x9;&#x9;&#x9;@id = @imageTypeId OUTPUT&#xD;&#xA;" StatementId="5" StatementCompId="6" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;EXEC [dbo].[spGetStringHashId] @input = @requestedBy,&#x9;&#x9;@inputHash = @requestedByHash,&#x9;&#x9;@tableName = N'RequestedBy',&#x9;&#x9;@id = @requestedById OUTPUT&#xD;&#xA;" StatementId="6" StatementCompId="7" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;EXEC [dbo].[spGetStringHashId] @input = @team,&#x9;&#x9;&#x9;&#x9;@inputHash = @teamHash,&#x9;&#x9;&#x9;&#x9;@tableName = N'Team',&#x9;&#x9;&#x9;&#x9;@id = @teamId OUTPUT&#xD;&#xA;" StatementId="7" StatementCompId="8" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;EXEC [dbo].[spGetStringHashId] @input = @testPass,&#x9;&#x9;&#x9;@inputHash = @testPassHash,&#x9;&#x9;&#x9;@tableName = N'TestPass',&#x9;&#x9;&#x9;@id = @testPassId OUTPUT&#xD;&#xA;" StatementId="8" StatementCompId="9" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;EXEC [dbo].[spGetStringHashId] @input = @uniqueKey,&#x9;&#x9;&#x9;@inputHash = @uniqueKeyHash,&#x9;&#x9;@tableName = N'UniqueKey',&#x9;&#x9;&#x9;@id = @uniqueKeyId OUTPUT&#xD;&#xA;" StatementId="9" StatementCompId="10" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;EXEC [dbo].[spGetStringHashId] @input = @testPassType,&#x9;&#x9;@inputHash = @testPassTypeHash,&#x9;&#x9;@tableName = N'TestPassType',&#x9;&#x9;@id = @testPassTypeId OUTPUT&#xD;&#xA;" StatementId="10" StatementCompId="11" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;EXEC [dbo].[spGetStringHashId] @input = @testLanguage,&#x9;&#x9;@inputHash = @testLanguageHash,&#x9;&#x9;@tableName = N'TestLanguage',&#x9;&#x9;@id = @testLanguageId OUTPUT&#xD;&#xA;" StatementId="11" StatementCompId="12" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;EXEC [dbo].[spGetStringHashId] @input = @tellusFrTed,&#x9;&#x9;@inputHash = @tellusFrTedHash,&#x9;&#x9;@tableName = N'TellusFrTed',&#x9;&#x9;@id = @tellusFrTedId OUTPUT&#xD;&#xA;&#xD;&#xA;&#x9;-- Update submission table.&#xD;&#xA;" StatementId="12" StatementCompId="13" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;UPDATE [execution].[Submission]&#xD;&#xA;&#x9;SET  &#xD;&#xA;&#x9;&#x9;BranchId = @branchId,&#xD;&#xA;&#x9;&#x9;BuildId = @buildId,&#xD;&#xA;&#x9;&#x9;DeviceTypeId = @deviceTypeId,&#xD;&#xA;&#x9;&#x9;ImageTypeId = @imageTypeId,&#xD;&#xA;&#x9;&#x9;RequestedById = @requestedById,&#xD;&#xA;&#x9;&#x9;TeamId = @teamId,&#xD;&#xA;&#x9;&#x9;TestPassId = @testPassId,&#xD;&#xA;&#x9;&#x9;UniqueKeyId = @uniqueKeyId,&#xD;&#xA;&#x9;&#x9;TestPassTypeId = @testPassTypeId,&#xD;&#xA;&#x9;&#x9;TestLanguageId = @testLanguageId,&#xD;&#xA;&#x9;&#x9;TellusFrTedId = @tellusFrTedId&#x9;&#xD;&#xA;&#xD;&#xA;&#x9;WHERE [PkSetId] = @submissionSetId AND [PkId] = @submissionId AND [PkSetPartition] = @submissionSetPartition&#xD;" StatementId="13" StatementCompId="14" StatementType="UPDATE" RetrievedFromCache="true" StatementSubTreeCost="0.0494444" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x3E62A1C21ED0B89" QueryPlanHash="0xAC6AEE0B42009B99">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="false" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="96" CompileTime="15" CompileCPU="15" CompileMemory="1312">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="1" PhysicalOp="Assert" LogicalOp="Assert" EstimateRows="1" EstimateIO="0" EstimateCPU="1.8e-007" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0494444" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <Assert StartupExpression="0">
+                <RelOp NodeId="2" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="12" EstimatedTotalSubtreeCost="0.0494442" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Expr1074" />
+                    <ColumnReference Column="Pass1075" />
+                    <ColumnReference Column="Expr1076" />
+                    <ColumnReference Column="Pass1077" />
+                    <ColumnReference Column="Expr1078" />
+                    <ColumnReference Column="Pass1079" />
+                    <ColumnReference Column="Expr1080" />
+                    <ColumnReference Column="Pass1081" />
+                    <ColumnReference Column="Expr1082" />
+                    <ColumnReference Column="Pass1083" />
+                    <ColumnReference Column="Expr1084" />
+                    <ColumnReference Column="Pass1085" />
+                    <ColumnReference Column="Expr1086" />
+                    <ColumnReference Column="Pass1087" />
+                    <ColumnReference Column="Expr1088" />
+                    <ColumnReference Column="Pass1089" />
+                    <ColumnReference Column="Expr1090" />
+                    <ColumnReference Column="Pass1091" />
+                    <ColumnReference Column="Expr1092" />
+                    <ColumnReference Column="Pass1093" />
+                    <ColumnReference Column="Expr1094" />
+                    <ColumnReference Column="Pass1095" />
+                  </OutputList>
+                  <NestedLoops Optimized="0">
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1094" />
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Column="Pass1095" />
+                      </DefinedValue>
+                    </DefinedValues>
+                    <PassThru>
+                      <ScalarOperator ScalarString="[TexusResults].[execution].[Submission].[UniqueKeyId] IS NULL">
+                        <Logical Operation="IS NULL">
+                          <ScalarOperator>
+                            <Identifier>
+                              <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="UniqueKeyId" />
+                            </Identifier>
+                          </ScalarOperator>
+                        </Logical>
+                      </ScalarOperator>
+                    </PassThru>
+                    <OuterReferences>
+                      <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="UniqueKeyId" />
+                    </OuterReferences>
+                    <ProbeColumn>
+                      <ColumnReference Column="Expr1094" />
+                    </ProbeColumn>
+                    <RelOp NodeId="3" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="20" EstimatedTotalSubtreeCost="0.0461569" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="UniqueKeyId" />
+                        <ColumnReference Column="Expr1074" />
+                        <ColumnReference Column="Pass1075" />
+                        <ColumnReference Column="Expr1076" />
+                        <ColumnReference Column="Pass1077" />
+                        <ColumnReference Column="Expr1078" />
+                        <ColumnReference Column="Pass1079" />
+                        <ColumnReference Column="Expr1080" />
+                        <ColumnReference Column="Pass1081" />
+                        <ColumnReference Column="Expr1082" />
+                        <ColumnReference Column="Pass1083" />
+                        <ColumnReference Column="Expr1084" />
+                        <ColumnReference Column="Pass1085" />
+                        <ColumnReference Column="Expr1086" />
+                        <ColumnReference Column="Pass1087" />
+                        <ColumnReference Column="Expr1088" />
+                        <ColumnReference Column="Pass1089" />
+                        <ColumnReference Column="Expr1090" />
+                        <ColumnReference Column="Pass1091" />
+                        <ColumnReference Column="Expr1092" />
+                        <ColumnReference Column="Pass1093" />
+                      </OutputList>
+                      <NestedLoops Optimized="0">
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1092" />
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Column="Pass1093" />
+                          </DefinedValue>
+                        </DefinedValues>
+                        <PassThru>
+                          <ScalarOperator ScalarString="[TexusResults].[execution].[Submission].[TestPassTypeId] IS NULL">
+                            <Logical Operation="IS NULL">
+                              <ScalarOperator>
+                                <Identifier>
+                                  <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestPassTypeId" />
+                                </Identifier>
+                              </ScalarOperator>
+                            </Logical>
+                          </ScalarOperator>
+                        </PassThru>
+                        <OuterReferences>
+                          <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestPassTypeId" />
+                        </OuterReferences>
+                        <ProbeColumn>
+                          <ColumnReference Column="Expr1092" />
+                        </ProbeColumn>
+                        <RelOp NodeId="4" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="28" EstimatedTotalSubtreeCost="0.0428696" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="UniqueKeyId" />
+                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestPassTypeId" />
+                            <ColumnReference Column="Expr1074" />
+                            <ColumnReference Column="Pass1075" />
+                            <ColumnReference Column="Expr1076" />
+                            <ColumnReference Column="Pass1077" />
+                            <ColumnReference Column="Expr1078" />
+                            <ColumnReference Column="Pass1079" />
+                            <ColumnReference Column="Expr1080" />
+                            <ColumnReference Column="Pass1081" />
+                            <ColumnReference Column="Expr1082" />
+                            <ColumnReference Column="Pass1083" />
+                            <ColumnReference Column="Expr1084" />
+                            <ColumnReference Column="Pass1085" />
+                            <ColumnReference Column="Expr1086" />
+                            <ColumnReference Column="Pass1087" />
+                            <ColumnReference Column="Expr1088" />
+                            <ColumnReference Column="Pass1089" />
+                            <ColumnReference Column="Expr1090" />
+                            <ColumnReference Column="Pass1091" />
+                          </OutputList>
+                          <NestedLoops Optimized="0">
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Column="Expr1090" />
+                              </DefinedValue>
+                              <DefinedValue>
+                                <ColumnReference Column="Pass1091" />
+                              </DefinedValue>
+                            </DefinedValues>
+                            <PassThru>
+                              <ScalarOperator ScalarString="[TexusResults].[execution].[Submission].[TestPassId] IS NULL">
+                                <Logical Operation="IS NULL">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestPassId" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Logical>
+                              </ScalarOperator>
+                            </PassThru>
+                            <OuterReferences>
+                              <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestPassId" />
+                            </OuterReferences>
+                            <ProbeColumn>
+                              <ColumnReference Column="Expr1090" />
+                            </ProbeColumn>
+                            <RelOp NodeId="5" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="35" EstimatedTotalSubtreeCost="0.0395823" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestPassId" />
+                                <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="UniqueKeyId" />
+                                <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestPassTypeId" />
+                                <ColumnReference Column="Expr1074" />
+                                <ColumnReference Column="Pass1075" />
+                                <ColumnReference Column="Expr1076" />
+                                <ColumnReference Column="Pass1077" />
+                                <ColumnReference Column="Expr1078" />
+                                <ColumnReference Column="Pass1079" />
+                                <ColumnReference Column="Expr1080" />
+                                <ColumnReference Column="Pass1081" />
+                                <ColumnReference Column="Expr1082" />
+                                <ColumnReference Column="Pass1083" />
+                                <ColumnReference Column="Expr1084" />
+                                <ColumnReference Column="Pass1085" />
+                                <ColumnReference Column="Expr1086" />
+                                <ColumnReference Column="Pass1087" />
+                                <ColumnReference Column="Expr1088" />
+                                <ColumnReference Column="Pass1089" />
+                              </OutputList>
+                              <NestedLoops Optimized="0">
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Column="Expr1088" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Column="Pass1089" />
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <PassThru>
+                                  <ScalarOperator ScalarString="[TexusResults].[execution].[Submission].[TestLanguageId] IS NULL">
+                                    <Logical Operation="IS NULL">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestLanguageId" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Logical>
+                                  </ScalarOperator>
+                                </PassThru>
+                                <OuterReferences>
+                                  <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestLanguageId" />
+                                </OuterReferences>
+                                <ProbeColumn>
+                                  <ColumnReference Column="Expr1088" />
+                                </ProbeColumn>
+                                <RelOp NodeId="6" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="43" EstimatedTotalSubtreeCost="0.0362951" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestPassId" />
+                                    <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="UniqueKeyId" />
+                                    <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestPassTypeId" />
+                                    <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestLanguageId" />
+                                    <ColumnReference Column="Expr1074" />
+                                    <ColumnReference Column="Pass1075" />
+                                    <ColumnReference Column="Expr1076" />
+                                    <ColumnReference Column="Pass1077" />
+                                    <ColumnReference Column="Expr1078" />
+                                    <ColumnReference Column="Pass1079" />
+                                    <ColumnReference Column="Expr1080" />
+                                    <ColumnReference Column="Pass1081" />
+                                    <ColumnReference Column="Expr1082" />
+                                    <ColumnReference Column="Pass1083" />
+                                    <ColumnReference Column="Expr1084" />
+                                    <ColumnReference Column="Pass1085" />
+                                    <ColumnReference Column="Expr1086" />
+                                    <ColumnReference Column="Pass1087" />
+                                  </OutputList>
+                                  <NestedLoops Optimized="0">
+                                    <DefinedValues>
+                                      <DefinedValue>
+                                        <ColumnReference Column="Expr1086" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Column="Pass1087" />
+                                      </DefinedValue>
+                                    </DefinedValues>
+                                    <PassThru>
+                                      <ScalarOperator ScalarString="[TexusResults].[execution].[Submission].[TellusFrTedId] IS NULL">
+                                        <Logical Operation="IS NULL">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TellusFrTedId" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </Logical>
+                                      </ScalarOperator>
+                                    </PassThru>
+                                    <OuterReferences>
+                                      <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TellusFrTedId" />
+                                    </OuterReferences>
+                                    <ProbeColumn>
+                                      <ColumnReference Column="Expr1086" />
+                                    </ProbeColumn>
+                                    <RelOp NodeId="7" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="51" EstimatedTotalSubtreeCost="0.0330078" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList>
+                                        <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestPassId" />
+                                        <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="UniqueKeyId" />
+                                        <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestPassTypeId" />
+                                        <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestLanguageId" />
+                                        <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TellusFrTedId" />
+                                        <ColumnReference Column="Expr1074" />
+                                        <ColumnReference Column="Pass1075" />
+                                        <ColumnReference Column="Expr1076" />
+                                        <ColumnReference Column="Pass1077" />
+                                        <ColumnReference Column="Expr1078" />
+                                        <ColumnReference Column="Pass1079" />
+                                        <ColumnReference Column="Expr1080" />
+                                        <ColumnReference Column="Pass1081" />
+                                        <ColumnReference Column="Expr1082" />
+                                        <ColumnReference Column="Pass1083" />
+                                        <ColumnReference Column="Expr1084" />
+                                        <ColumnReference Column="Pass1085" />
+                                      </OutputList>
+                                      <NestedLoops Optimized="0">
+                                        <DefinedValues>
+                                          <DefinedValue>
+                                            <ColumnReference Column="Expr1084" />
+                                          </DefinedValue>
+                                          <DefinedValue>
+                                            <ColumnReference Column="Pass1085" />
+                                          </DefinedValue>
+                                        </DefinedValues>
+                                        <PassThru>
+                                          <ScalarOperator ScalarString="[TexusResults].[execution].[Submission].[TeamId] IS NULL">
+                                            <Logical Operation="IS NULL">
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TeamId" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Logical>
+                                          </ScalarOperator>
+                                        </PassThru>
+                                        <OuterReferences>
+                                          <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TeamId" />
+                                        </OuterReferences>
+                                        <ProbeColumn>
+                                          <ColumnReference Column="Expr1084" />
+                                        </ProbeColumn>
+                                        <RelOp NodeId="8" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="58" EstimatedTotalSubtreeCost="0.0297205" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                          <OutputList>
+                                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TeamId" />
+                                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestPassId" />
+                                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="UniqueKeyId" />
+                                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestPassTypeId" />
+                                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestLanguageId" />
+                                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TellusFrTedId" />
+                                            <ColumnReference Column="Expr1074" />
+                                            <ColumnReference Column="Pass1075" />
+                                            <ColumnReference Column="Expr1076" />
+                                            <ColumnReference Column="Pass1077" />
+                                            <ColumnReference Column="Expr1078" />
+                                            <ColumnReference Column="Pass1079" />
+                                            <ColumnReference Column="Expr1080" />
+                                            <ColumnReference Column="Pass1081" />
+                                            <ColumnReference Column="Expr1082" />
+                                            <ColumnReference Column="Pass1083" />
+                                          </OutputList>
+                                          <NestedLoops Optimized="0">
+                                            <DefinedValues>
+                                              <DefinedValue>
+                                                <ColumnReference Column="Expr1082" />
+                                              </DefinedValue>
+                                              <DefinedValue>
+                                                <ColumnReference Column="Pass1083" />
+                                              </DefinedValue>
+                                            </DefinedValues>
+                                            <PassThru>
+                                              <ScalarOperator ScalarString="[TexusResults].[execution].[Submission].[RequestedById] IS NULL">
+                                                <Logical Operation="IS NULL">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="RequestedById" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Logical>
+                                              </ScalarOperator>
+                                            </PassThru>
+                                            <OuterReferences>
+                                              <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="RequestedById" />
+                                            </OuterReferences>
+                                            <ProbeColumn>
+                                              <ColumnReference Column="Expr1082" />
+                                            </ProbeColumn>
+                                            <RelOp NodeId="9" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="65" EstimatedTotalSubtreeCost="0.0264332" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                              <OutputList>
+                                                <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="RequestedById" />
+                                                <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TeamId" />
+                                                <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestPassId" />
+                                                <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="UniqueKeyId" />
+                                                <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestPassTypeId" />
+                                                <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestLanguageId" />
+                                                <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TellusFrTedId" />
+                                                <ColumnReference Column="Expr1074" />
+                                                <ColumnReference Column="Pass1075" />
+                                                <ColumnReference Column="Expr1076" />
+                                                <ColumnReference Column="Pass1077" />
+                                                <ColumnReference Column="Expr1078" />
+                                                <ColumnReference Column="Pass1079" />
+                                                <ColumnReference Column="Expr1080" />
+                                                <ColumnReference Column="Pass1081" />
+                                              </OutputList>
+                                              <NestedLoops Optimized="0">
+                                                <DefinedValues>
+                                                  <DefinedValue>
+                                                    <ColumnReference Column="Expr1080" />
+                                                  </DefinedValue>
+                                                  <DefinedValue>
+                                                    <ColumnReference Column="Pass1081" />
+                                                  </DefinedValue>
+                                                </DefinedValues>
+                                                <PassThru>
+                                                  <ScalarOperator ScalarString="[TexusResults].[execution].[Submission].[ImageTypeId] IS NULL">
+                                                    <Logical Operation="IS NULL">
+                                                      <ScalarOperator>
+                                                        <Identifier>
+                                                          <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="ImageTypeId" />
+                                                        </Identifier>
+                                                      </ScalarOperator>
+                                                    </Logical>
+                                                  </ScalarOperator>
+                                                </PassThru>
+                                                <OuterReferences>
+                                                  <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="ImageTypeId" />
+                                                </OuterReferences>
+                                                <ProbeColumn>
+                                                  <ColumnReference Column="Expr1080" />
+                                                </ProbeColumn>
+                                                <RelOp NodeId="10" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="73" EstimatedTotalSubtreeCost="0.0231459" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                  <OutputList>
+                                                    <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="ImageTypeId" />
+                                                    <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="RequestedById" />
+                                                    <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TeamId" />
+                                                    <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestPassId" />
+                                                    <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="UniqueKeyId" />
+                                                    <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestPassTypeId" />
+                                                    <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestLanguageId" />
+                                                    <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TellusFrTedId" />
+                                                    <ColumnReference Column="Expr1074" />
+                                                    <ColumnReference Column="Pass1075" />
+                                                    <ColumnReference Column="Expr1076" />
+                                                    <ColumnReference Column="Pass1077" />
+                                                    <ColumnReference Column="Expr1078" />
+                                                    <ColumnReference Column="Pass1079" />
+                                                  </OutputList>
+                                                  <NestedLoops Optimized="0">
+                                                    <DefinedValues>
+                                                      <DefinedValue>
+                                                        <ColumnReference Column="Expr1078" />
+                                                      </DefinedValue>
+                                                      <DefinedValue>
+                                                        <ColumnReference Column="Pass1079" />
+                                                      </DefinedValue>
+                                                    </DefinedValues>
+                                                    <PassThru>
+                                                      <ScalarOperator ScalarString="[TexusResults].[execution].[Submission].[DeviceTypeId] IS NULL">
+                                                        <Logical Operation="IS NULL">
+                                                          <ScalarOperator>
+                                                            <Identifier>
+                                                              <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="DeviceTypeId" />
+                                                            </Identifier>
+                                                          </ScalarOperator>
+                                                        </Logical>
+                                                      </ScalarOperator>
+                                                    </PassThru>
+                                                    <OuterReferences>
+                                                      <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="DeviceTypeId" />
+                                                    </OuterReferences>
+                                                    <ProbeColumn>
+                                                      <ColumnReference Column="Expr1078" />
+                                                    </ProbeColumn>
+                                                    <RelOp NodeId="11" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="81" EstimatedTotalSubtreeCost="0.0198587" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                      <OutputList>
+                                                        <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="DeviceTypeId" />
+                                                        <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="ImageTypeId" />
+                                                        <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="RequestedById" />
+                                                        <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TeamId" />
+                                                        <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestPassId" />
+                                                        <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="UniqueKeyId" />
+                                                        <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestPassTypeId" />
+                                                        <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestLanguageId" />
+                                                        <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TellusFrTedId" />
+                                                        <ColumnReference Column="Expr1074" />
+                                                        <ColumnReference Column="Pass1075" />
+                                                        <ColumnReference Column="Expr1076" />
+                                                        <ColumnReference Column="Pass1077" />
+                                                      </OutputList>
+                                                      <NestedLoops Optimized="0">
+                                                        <DefinedValues>
+                                                          <DefinedValue>
+                                                            <ColumnReference Column="Expr1076" />
+                                                          </DefinedValue>
+                                                          <DefinedValue>
+                                                            <ColumnReference Column="Pass1077" />
+                                                          </DefinedValue>
+                                                        </DefinedValues>
+                                                        <PassThru>
+                                                          <ScalarOperator ScalarString="[TexusResults].[execution].[Submission].[BuildId] IS NULL">
+                                                            <Logical Operation="IS NULL">
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="BuildId" />
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                            </Logical>
+                                                          </ScalarOperator>
+                                                        </PassThru>
+                                                        <OuterReferences>
+                                                          <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="BuildId" />
+                                                        </OuterReferences>
+                                                        <ProbeColumn>
+                                                          <ColumnReference Column="Expr1076" />
+                                                        </ProbeColumn>
+                                                        <RelOp NodeId="12" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="89" EstimatedTotalSubtreeCost="0.0165714" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                          <OutputList>
+                                                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="BuildId" />
+                                                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="DeviceTypeId" />
+                                                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="ImageTypeId" />
+                                                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="RequestedById" />
+                                                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TeamId" />
+                                                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestPassId" />
+                                                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="UniqueKeyId" />
+                                                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestPassTypeId" />
+                                                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestLanguageId" />
+                                                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TellusFrTedId" />
+                                                            <ColumnReference Column="Expr1074" />
+                                                            <ColumnReference Column="Pass1075" />
+                                                          </OutputList>
+                                                          <NestedLoops Optimized="0">
+                                                            <DefinedValues>
+                                                              <DefinedValue>
+                                                                <ColumnReference Column="Expr1074" />
+                                                              </DefinedValue>
+                                                              <DefinedValue>
+                                                                <ColumnReference Column="Pass1075" />
+                                                              </DefinedValue>
+                                                            </DefinedValues>
+                                                            <PassThru>
+                                                              <ScalarOperator ScalarString="[TexusResults].[execution].[Submission].[BranchId] IS NULL">
+                                                                <Logical Operation="IS NULL">
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="BranchId" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                </Logical>
+                                                              </ScalarOperator>
+                                                            </PassThru>
+                                                            <OuterReferences>
+                                                              <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="BranchId" />
+                                                            </OuterReferences>
+                                                            <ProbeColumn>
+                                                              <ColumnReference Column="Expr1074" />
+                                                            </ProbeColumn>
+                                                            <RelOp NodeId="13" PhysicalOp="Clustered Index Update" LogicalOp="Update" EstimateRows="1" EstimateIO="0.01" EstimateCPU="1e-006" AvgRowSize="96" EstimatedTotalSubtreeCost="0.0132841" Parallel="0" Partitioned="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                              <OutputList>
+                                                                <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="BranchId" />
+                                                                <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="BuildId" />
+                                                                <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="DeviceTypeId" />
+                                                                <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="ImageTypeId" />
+                                                                <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="RequestedById" />
+                                                                <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TeamId" />
+                                                                <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestPassId" />
+                                                                <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="UniqueKeyId" />
+                                                                <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestPassTypeId" />
+                                                                <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestLanguageId" />
+                                                                <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TellusFrTedId" />
+                                                              </OutputList>
+                                                              <SimpleUpdate DMLRequestSort="0">
+                                                                <Object Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Index="[Submission_PK]" IndexKind="Clustered" />
+                                                                <SeekPredicateNew>
+                                                                  <SeekKeys>
+                                                                    <Prefix ScanType="EQ">
+                                                                      <RangeColumns>
+                                                                        <ColumnReference Column="PtnId1004" ComputedColumn="1" />
+                                                                        <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="PkSetPartition" />
+                                                                        <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="PkSetId" />
+                                                                        <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="PkId" />
+                                                                      </RangeColumns>
+                                                                      <RangeExpressions>
+                                                                        <ScalarOperator ScalarString="RangePartitionNew([@submissionSetPartition],(1),'2011-02-01','2011-03-01','2011-04-01','2011-05-01','2011-06-01','2011-07-01','2011-08-01','2011-09-01','2011-10-01','2011-11-01','2011-12-01','2012-01-01','2012-02-01','2012-03-01','2012-04-01','2012-05-01','2012-06-01','2012-07-01','2012-08-01','2012-09-01','2012-10-01','2012-11-01','2012-12-01','2013-01-01','2013-02-01','2013-03-01','2013-04-01','2013-05-01','2013-06-01','2013-07-01','2013-08-01','2013-09-01','2013-10-01','2013-11-01','2013-12-01','2014-01-01')">
+                                                                          <Intrinsic FunctionName="RangePartitionNew">
+                                                                            <ScalarOperator>
+                                                                              <Identifier>
+                                                                                <ColumnReference Column="@submissionSetPartition" />
+                                                                              </Identifier>
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="(1)" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2011-02-01'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2011-03-01'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2011-04-01'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2011-05-01'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2011-06-01'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2011-07-01'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2011-08-01'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2011-09-01'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2011-10-01'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2011-11-01'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2011-12-01'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2012-01-01'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2012-02-01'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2012-03-01'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2012-04-01'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2012-05-01'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2012-06-01'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2012-07-01'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2012-08-01'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2012-09-01'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2012-10-01'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2012-11-01'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2012-12-01'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2013-01-01'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2013-02-01'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2013-03-01'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2013-04-01'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2013-05-01'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2013-06-01'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2013-07-01'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2013-08-01'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2013-09-01'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2013-10-01'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2013-11-01'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2013-12-01'" />
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Const ConstValue="'2014-01-01'" />
+                                                                            </ScalarOperator>
+                                                                          </Intrinsic>
+                                                                        </ScalarOperator>
+                                                                        <ScalarOperator ScalarString="[@submissionSetPartition]">
+                                                                          <Identifier>
+                                                                            <ColumnReference Column="@submissionSetPartition" />
+                                                                          </Identifier>
+                                                                        </ScalarOperator>
+                                                                        <ScalarOperator ScalarString="[@submissionSetId]">
+                                                                          <Identifier>
+                                                                            <ColumnReference Column="@submissionSetId" />
+                                                                          </Identifier>
+                                                                        </ScalarOperator>
+                                                                        <ScalarOperator ScalarString="[@submissionId]">
+                                                                          <Identifier>
+                                                                            <ColumnReference Column="@submissionId" />
+                                                                          </Identifier>
+                                                                        </ScalarOperator>
+                                                                      </RangeExpressions>
+                                                                    </Prefix>
+                                                                  </SeekKeys>
+                                                                </SeekPredicateNew>
+                                                                <SetPredicate>
+                                                                  <ScalarOperator ScalarString="[TexusResults].[execution].[Submission].[BranchId] = [@branchId],[TexusResults].[execution].[Submission].[BuildId] = [@buildId],[TexusResults].[execution].[Submission].[DeviceTypeId] = [@deviceTypeId],[TexusResults].[execution].[Submission].[ImageTypeId] = [@imageTypeId],[TexusResults].[execution].[Submission].[RequestedById] = [@requestedById],[TexusResults].[execution].[Submission].[TeamId] = [@teamId],[TexusResults].[execution].[Submission].[TestPassId] = [@testPassId],[TexusResults].[execution].[Submission].[UniqueKeyId] = [@uniqueKeyId],[TexusResults].[execution].[Submission].[TestPassTypeId] = [@testPassTypeId],[TexusResults].[execution].[Submission].[TestLanguageId] = [@testLanguageId],[TexusResults].[execution].[Submission].[TellusFrTedId] = [@tellusFrTedId]">
+                                                                    <ScalarExpressionList>
+                                                                      <ScalarOperator>
+                                                                        <MultipleAssign>
+                                                                          <Assign>
+                                                                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="BranchId" />
+                                                                            <ScalarOperator>
+                                                                              <Identifier>
+                                                                                <ColumnReference Column="@branchId" />
+                                                                              </Identifier>
+                                                                            </ScalarOperator>
+                                                                          </Assign>
+                                                                          <Assign>
+                                                                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="BuildId" />
+                                                                            <ScalarOperator>
+                                                                              <Identifier>
+                                                                                <ColumnReference Column="@buildId" />
+                                                                              </Identifier>
+                                                                            </ScalarOperator>
+                                                                          </Assign>
+                                                                          <Assign>
+                                                                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="DeviceTypeId" />
+                                                                            <ScalarOperator>
+                                                                              <Identifier>
+                                                                                <ColumnReference Column="@deviceTypeId" />
+                                                                              </Identifier>
+                                                                            </ScalarOperator>
+                                                                          </Assign>
+                                                                          <Assign>
+                                                                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="ImageTypeId" />
+                                                                            <ScalarOperator>
+                                                                              <Identifier>
+                                                                                <ColumnReference Column="@imageTypeId" />
+                                                                              </Identifier>
+                                                                            </ScalarOperator>
+                                                                          </Assign>
+                                                                          <Assign>
+                                                                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="RequestedById" />
+                                                                            <ScalarOperator>
+                                                                              <Identifier>
+                                                                                <ColumnReference Column="@requestedById" />
+                                                                              </Identifier>
+                                                                            </ScalarOperator>
+                                                                          </Assign>
+                                                                          <Assign>
+                                                                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TeamId" />
+                                                                            <ScalarOperator>
+                                                                              <Identifier>
+                                                                                <ColumnReference Column="@teamId" />
+                                                                              </Identifier>
+                                                                            </ScalarOperator>
+                                                                          </Assign>
+                                                                          <Assign>
+                                                                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestPassId" />
+                                                                            <ScalarOperator>
+                                                                              <Identifier>
+                                                                                <ColumnReference Column="@testPassId" />
+                                                                              </Identifier>
+                                                                            </ScalarOperator>
+                                                                          </Assign>
+                                                                          <Assign>
+                                                                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="UniqueKeyId" />
+                                                                            <ScalarOperator>
+                                                                              <Identifier>
+                                                                                <ColumnReference Column="@uniqueKeyId" />
+                                                                              </Identifier>
+                                                                            </ScalarOperator>
+                                                                          </Assign>
+                                                                          <Assign>
+                                                                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestPassTypeId" />
+                                                                            <ScalarOperator>
+                                                                              <Identifier>
+                                                                                <ColumnReference Column="@testPassTypeId" />
+                                                                              </Identifier>
+                                                                            </ScalarOperator>
+                                                                          </Assign>
+                                                                          <Assign>
+                                                                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestLanguageId" />
+                                                                            <ScalarOperator>
+                                                                              <Identifier>
+                                                                                <ColumnReference Column="@testLanguageId" />
+                                                                              </Identifier>
+                                                                            </ScalarOperator>
+                                                                          </Assign>
+                                                                          <Assign>
+                                                                            <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TellusFrTedId" />
+                                                                            <ScalarOperator>
+                                                                              <Identifier>
+                                                                                <ColumnReference Column="@tellusFrTedId" />
+                                                                              </Identifier>
+                                                                            </ScalarOperator>
+                                                                          </Assign>
+                                                                        </MultipleAssign>
+                                                                      </ScalarOperator>
+                                                                    </ScalarExpressionList>
+                                                                  </ScalarOperator>
+                                                                </SetPredicate>
+                                                              </SimpleUpdate>
+                                                            </RelOp>
+                                                            <RelOp NodeId="14" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                              <OutputList />
+                                                              <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                                                <DefinedValues />
+                                                                <Object Database="[TexusResults]" Schema="[catalog]" Table="[Branch]" Index="[Branch_PK]" IndexKind="Clustered" />
+                                                                <SeekPredicates>
+                                                                  <SeekPredicateNew>
+                                                                    <SeekKeys>
+                                                                      <Prefix ScanType="EQ">
+                                                                        <RangeColumns>
+                                                                          <ColumnReference Database="[TexusResults]" Schema="[catalog]" Table="[Branch]" Column="PkId" />
+                                                                        </RangeColumns>
+                                                                        <RangeExpressions>
+                                                                          <ScalarOperator ScalarString="[TexusResults].[execution].[Submission].[BranchId]">
+                                                                            <Identifier>
+                                                                              <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="BranchId" />
+                                                                            </Identifier>
+                                                                          </ScalarOperator>
+                                                                        </RangeExpressions>
+                                                                      </Prefix>
+                                                                    </SeekKeys>
+                                                                  </SeekPredicateNew>
+                                                                </SeekPredicates>
+                                                              </IndexScan>
+                                                            </RelOp>
+                                                          </NestedLoops>
+                                                        </RelOp>
+                                                        <RelOp NodeId="15" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                          <OutputList />
+                                                          <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                                            <DefinedValues />
+                                                            <Object Database="[TexusResults]" Schema="[catalog]" Table="[Build]" Index="[Build_PK]" IndexKind="Clustered" />
+                                                            <SeekPredicates>
+                                                              <SeekPredicateNew>
+                                                                <SeekKeys>
+                                                                  <Prefix ScanType="EQ">
+                                                                    <RangeColumns>
+                                                                      <ColumnReference Database="[TexusResults]" Schema="[catalog]" Table="[Build]" Column="PkId" />
+                                                                    </RangeColumns>
+                                                                    <RangeExpressions>
+                                                                      <ScalarOperator ScalarString="[TexusResults].[execution].[Submission].[BuildId]">
+                                                                        <Identifier>
+                                                                          <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="BuildId" />
+                                                                        </Identifier>
+                                                                      </ScalarOperator>
+                                                                    </RangeExpressions>
+                                                                  </Prefix>
+                                                                </SeekKeys>
+                                                              </SeekPredicateNew>
+                                                            </SeekPredicates>
+                                                          </IndexScan>
+                                                        </RelOp>
+                                                      </NestedLoops>
+                                                    </RelOp>
+                                                    <RelOp NodeId="16" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                      <OutputList />
+                                                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                                        <DefinedValues />
+                                                        <Object Database="[TexusResults]" Schema="[catalog]" Table="[DeviceType]" Index="[DeviceType_PK]" IndexKind="Clustered" />
+                                                        <SeekPredicates>
+                                                          <SeekPredicateNew>
+                                                            <SeekKeys>
+                                                              <Prefix ScanType="EQ">
+                                                                <RangeColumns>
+                                                                  <ColumnReference Database="[TexusResults]" Schema="[catalog]" Table="[DeviceType]" Column="PkId" />
+                                                                </RangeColumns>
+                                                                <RangeExpressions>
+                                                                  <ScalarOperator ScalarString="[TexusResults].[execution].[Submission].[DeviceTypeId]">
+                                                                    <Identifier>
+                                                                      <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="DeviceTypeId" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                </RangeExpressions>
+                                                              </Prefix>
+                                                            </SeekKeys>
+                                                          </SeekPredicateNew>
+                                                        </SeekPredicates>
+                                                      </IndexScan>
+                                                    </RelOp>
+                                                  </NestedLoops>
+                                                </RelOp>
+                                                <RelOp NodeId="17" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                  <OutputList />
+                                                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                                    <DefinedValues />
+                                                    <Object Database="[TexusResults]" Schema="[catalog]" Table="[ImageType]" Index="[ImageType_PK]" IndexKind="Clustered" />
+                                                    <SeekPredicates>
+                                                      <SeekPredicateNew>
+                                                        <SeekKeys>
+                                                          <Prefix ScanType="EQ">
+                                                            <RangeColumns>
+                                                              <ColumnReference Database="[TexusResults]" Schema="[catalog]" Table="[ImageType]" Column="PkId" />
+                                                            </RangeColumns>
+                                                            <RangeExpressions>
+                                                              <ScalarOperator ScalarString="[TexusResults].[execution].[Submission].[ImageTypeId]">
+                                                                <Identifier>
+                                                                  <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="ImageTypeId" />
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                            </RangeExpressions>
+                                                          </Prefix>
+                                                        </SeekKeys>
+                                                      </SeekPredicateNew>
+                                                    </SeekPredicates>
+                                                  </IndexScan>
+                                                </RelOp>
+                                              </NestedLoops>
+                                            </RelOp>
+                                            <RelOp NodeId="18" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                              <OutputList />
+                                              <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                                <DefinedValues />
+                                                <Object Database="[TexusResults]" Schema="[catalog]" Table="[RequestedBy]" Index="[RequestedBy_PK]" IndexKind="Clustered" />
+                                                <SeekPredicates>
+                                                  <SeekPredicateNew>
+                                                    <SeekKeys>
+                                                      <Prefix ScanType="EQ">
+                                                        <RangeColumns>
+                                                          <ColumnReference Database="[TexusResults]" Schema="[catalog]" Table="[RequestedBy]" Column="PkId" />
+                                                        </RangeColumns>
+                                                        <RangeExpressions>
+                                                          <ScalarOperator ScalarString="[TexusResults].[execution].[Submission].[RequestedById]">
+                                                            <Identifier>
+                                                              <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="RequestedById" />
+                                                            </Identifier>
+                                                          </ScalarOperator>
+                                                        </RangeExpressions>
+                                                      </Prefix>
+                                                    </SeekKeys>
+                                                  </SeekPredicateNew>
+                                                </SeekPredicates>
+                                              </IndexScan>
+                                            </RelOp>
+                                          </NestedLoops>
+                                        </RelOp>
+                                        <RelOp NodeId="19" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                          <OutputList />
+                                          <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                            <DefinedValues />
+                                            <Object Database="[TexusResults]" Schema="[catalog]" Table="[Team]" Index="[Team_PK]" IndexKind="Clustered" />
+                                            <SeekPredicates>
+                                              <SeekPredicateNew>
+                                                <SeekKeys>
+                                                  <Prefix ScanType="EQ">
+                                                    <RangeColumns>
+                                                      <ColumnReference Database="[TexusResults]" Schema="[catalog]" Table="[Team]" Column="PkId" />
+                                                    </RangeColumns>
+                                                    <RangeExpressions>
+                                                      <ScalarOperator ScalarString="[TexusResults].[execution].[Submission].[TeamId]">
+                                                        <Identifier>
+                                                          <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TeamId" />
+                                                        </Identifier>
+                                                      </ScalarOperator>
+                                                    </RangeExpressions>
+                                                  </Prefix>
+                                                </SeekKeys>
+                                              </SeekPredicateNew>
+                                            </SeekPredicates>
+                                          </IndexScan>
+                                        </RelOp>
+                                      </NestedLoops>
+                                    </RelOp>
+                                    <RelOp NodeId="20" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList />
+                                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                        <DefinedValues />
+                                        <Object Database="[TexusResults]" Schema="[catalog]" Table="[TellusFrTed]" Index="[TellusFrTed_PK]" IndexKind="Clustered" />
+                                        <SeekPredicates>
+                                          <SeekPredicateNew>
+                                            <SeekKeys>
+                                              <Prefix ScanType="EQ">
+                                                <RangeColumns>
+                                                  <ColumnReference Database="[TexusResults]" Schema="[catalog]" Table="[TellusFrTed]" Column="PkId" />
+                                                </RangeColumns>
+                                                <RangeExpressions>
+                                                  <ScalarOperator ScalarString="[TexusResults].[execution].[Submission].[TellusFrTedId]">
+                                                    <Identifier>
+                                                      <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TellusFrTedId" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </RangeExpressions>
+                                              </Prefix>
+                                            </SeekKeys>
+                                          </SeekPredicateNew>
+                                        </SeekPredicates>
+                                      </IndexScan>
+                                    </RelOp>
+                                  </NestedLoops>
+                                </RelOp>
+                                <RelOp NodeId="21" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList />
+                                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                    <DefinedValues />
+                                    <Object Database="[TexusResults]" Schema="[catalog]" Table="[TestLanguage]" Index="[TestLanguage_PK]" IndexKind="Clustered" />
+                                    <SeekPredicates>
+                                      <SeekPredicateNew>
+                                        <SeekKeys>
+                                          <Prefix ScanType="EQ">
+                                            <RangeColumns>
+                                              <ColumnReference Database="[TexusResults]" Schema="[catalog]" Table="[TestLanguage]" Column="PkId" />
+                                            </RangeColumns>
+                                            <RangeExpressions>
+                                              <ScalarOperator ScalarString="[TexusResults].[execution].[Submission].[TestLanguageId]">
+                                                <Identifier>
+                                                  <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestLanguageId" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </RangeExpressions>
+                                          </Prefix>
+                                        </SeekKeys>
+                                      </SeekPredicateNew>
+                                    </SeekPredicates>
+                                  </IndexScan>
+                                </RelOp>
+                              </NestedLoops>
+                            </RelOp>
+                            <RelOp NodeId="22" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList />
+                              <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                <DefinedValues />
+                                <Object Database="[TexusResults]" Schema="[catalog]" Table="[TestPass]" Index="[TestPass_PK]" IndexKind="Clustered" />
+                                <SeekPredicates>
+                                  <SeekPredicateNew>
+                                    <SeekKeys>
+                                      <Prefix ScanType="EQ">
+                                        <RangeColumns>
+                                          <ColumnReference Database="[TexusResults]" Schema="[catalog]" Table="[TestPass]" Column="PkId" />
+                                        </RangeColumns>
+                                        <RangeExpressions>
+                                          <ScalarOperator ScalarString="[TexusResults].[execution].[Submission].[TestPassId]">
+                                            <Identifier>
+                                              <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestPassId" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </RangeExpressions>
+                                      </Prefix>
+                                    </SeekKeys>
+                                  </SeekPredicateNew>
+                                </SeekPredicates>
+                              </IndexScan>
+                            </RelOp>
+                          </NestedLoops>
+                        </RelOp>
+                        <RelOp NodeId="23" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList />
+                          <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                            <DefinedValues />
+                            <Object Database="[TexusResults]" Schema="[catalog]" Table="[TestPassType]" Index="[TestPassType_PK]" IndexKind="Clustered" />
+                            <SeekPredicates>
+                              <SeekPredicateNew>
+                                <SeekKeys>
+                                  <Prefix ScanType="EQ">
+                                    <RangeColumns>
+                                      <ColumnReference Database="[TexusResults]" Schema="[catalog]" Table="[TestPassType]" Column="PkId" />
+                                    </RangeColumns>
+                                    <RangeExpressions>
+                                      <ScalarOperator ScalarString="[TexusResults].[execution].[Submission].[TestPassTypeId]">
+                                        <Identifier>
+                                          <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="TestPassTypeId" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </RangeExpressions>
+                                  </Prefix>
+                                </SeekKeys>
+                              </SeekPredicateNew>
+                            </SeekPredicates>
+                          </IndexScan>
+                        </RelOp>
+                      </NestedLoops>
+                    </RelOp>
+                    <RelOp NodeId="24" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList />
+                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                        <DefinedValues />
+                        <Object Database="[TexusResults]" Schema="[catalog]" Table="[UniqueKey]" Index="[UniqueKey_PK]" IndexKind="Clustered" />
+                        <SeekPredicates>
+                          <SeekPredicateNew>
+                            <SeekKeys>
+                              <Prefix ScanType="EQ">
+                                <RangeColumns>
+                                  <ColumnReference Database="[TexusResults]" Schema="[catalog]" Table="[UniqueKey]" Column="PkId" />
+                                </RangeColumns>
+                                <RangeExpressions>
+                                  <ScalarOperator ScalarString="[TexusResults].[execution].[Submission].[UniqueKeyId]">
+                                    <Identifier>
+                                      <ColumnReference Database="[TexusResults]" Schema="[execution]" Table="[Submission]" Column="UniqueKeyId" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </RangeExpressions>
+                              </Prefix>
+                            </SeekKeys>
+                          </SeekPredicateNew>
+                        </SeekPredicates>
+                      </IndexScan>
+                    </RelOp>
+                  </NestedLoops>
+                </RelOp>
+                <Predicate>
+                  <ScalarOperator ScalarString="CASE WHEN NOT [Pass1075] AND [Expr1074] IS NULL THEN (0) ELSE CASE WHEN NOT [Pass1077] AND [Expr1076] IS NULL THEN (1) ELSE CASE WHEN NOT [Pass1079] AND [Expr1078] IS NULL THEN (2) ELSE CASE WHEN NOT [Pass1081] AND [Expr1080] IS NULL THEN (3) ELSE CASE WHEN NOT [Pass1083] AND [Expr1082] IS NULL THEN (4) ELSE CASE WHEN NOT [Pass1085] AND [Expr1084] IS NULL THEN (5) ELSE CASE WHEN NOT [Pass1087] AND [Expr1086] IS NULL THEN (6) ELSE CASE WHEN NOT [Pass1089] AND [Expr1088] IS NULL THEN (7) ELSE CASE WHEN NOT [Pass1091] AND [Expr1090] IS NULL THEN (8) ELSE CASE WHEN NOT [Pass1093] AND [Expr1092] IS NULL THEN (9) ELSE CASE WHEN NOT [Pass1095] AND [Expr1094] IS NULL THEN (10) ELSE NULL END END END END END END END END END END END">
+                    <IF>
+                      <Condition>
+                        <ScalarOperator>
+                          <Logical Operation="AND">
+                            <ScalarOperator>
+                              <Logical Operation="NOT">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="Pass1075" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Logical>
+                            </ScalarOperator>
+                            <ScalarOperator>
+                              <Logical Operation="IS NULL">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="Expr1074" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Logical>
+                            </ScalarOperator>
+                          </Logical>
+                        </ScalarOperator>
+                      </Condition>
+                      <Then>
+                        <ScalarOperator>
+                          <Const ConstValue="(0)" />
+                        </ScalarOperator>
+                      </Then>
+                      <Else>
+                        <ScalarOperator>
+                          <IF>
+                            <Condition>
+                              <ScalarOperator>
+                                <Logical Operation="AND">
+                                  <ScalarOperator>
+                                    <Logical Operation="NOT">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="Pass1077" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Logical>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Logical Operation="IS NULL">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="Expr1076" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Logical>
+                                  </ScalarOperator>
+                                </Logical>
+                              </ScalarOperator>
+                            </Condition>
+                            <Then>
+                              <ScalarOperator>
+                                <Const ConstValue="(1)" />
+                              </ScalarOperator>
+                            </Then>
+                            <Else>
+                              <ScalarOperator>
+                                <IF>
+                                  <Condition>
+                                    <ScalarOperator>
+                                      <Logical Operation="AND">
+                                        <ScalarOperator>
+                                          <Logical Operation="NOT">
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Column="Pass1079" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </Logical>
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Logical Operation="IS NULL">
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Column="Expr1078" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </Logical>
+                                        </ScalarOperator>
+                                      </Logical>
+                                    </ScalarOperator>
+                                  </Condition>
+                                  <Then>
+                                    <ScalarOperator>
+                                      <Const ConstValue="(2)" />
+                                    </ScalarOperator>
+                                  </Then>
+                                  <Else>
+                                    <ScalarOperator>
+                                      <IF>
+                                        <Condition>
+                                          <ScalarOperator>
+                                            <Logical Operation="AND">
+                                              <ScalarOperator>
+                                                <Logical Operation="NOT">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="Pass1081" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Logical>
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Logical Operation="IS NULL">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="Expr1080" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Logical>
+                                              </ScalarOperator>
+                                            </Logical>
+                                          </ScalarOperator>
+                                        </Condition>
+                                        <Then>
+                                          <ScalarOperator>
+                                            <Const ConstValue="(3)" />
+                                          </ScalarOperator>
+                                        </Then>
+                                        <Else>
+                                          <ScalarOperator>
+                                            <IF>
+                                              <Condition>
+                                                <ScalarOperator>
+                                                  <Logical Operation="AND">
+                                                    <ScalarOperator>
+                                                      <Logical Operation="NOT">
+                                                        <ScalarOperator>
+                                                          <Identifier>
+                                                            <ColumnReference Column="Pass1083" />
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                      </Logical>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Logical Operation="IS NULL">
+                                                        <ScalarOperator>
+                                                          <Identifier>
+                                                            <ColumnReference Column="Expr1082" />
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                      </Logical>
+                                                    </ScalarOperator>
+                                                  </Logical>
+                                                </ScalarOperator>
+                                              </Condition>
+                                              <Then>
+                                                <ScalarOperator>
+                                                  <Const ConstValue="(4)" />
+                                                </ScalarOperator>
+                                              </Then>
+                                              <Else>
+                                                <ScalarOperator>
+                                                  <IF>
+                                                    <Condition>
+                                                      <ScalarOperator>
+                                                        <Logical Operation="AND">
+                                                          <ScalarOperator>
+                                                            <Logical Operation="NOT">
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Column="Pass1085" />
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                            </Logical>
+                                                          </ScalarOperator>
+                                                          <ScalarOperator>
+                                                            <Logical Operation="IS NULL">
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Column="Expr1084" />
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                            </Logical>
+                                                          </ScalarOperator>
+                                                        </Logical>
+                                                      </ScalarOperator>
+                                                    </Condition>
+                                                    <Then>
+                                                      <ScalarOperator>
+                                                        <Const ConstValue="(5)" />
+                                                      </ScalarOperator>
+                                                    </Then>
+                                                    <Else>
+                                                      <ScalarOperator>
+                                                        <IF>
+                                                          <Condition>
+                                                            <ScalarOperator>
+                                                              <Logical Operation="AND">
+                                                                <ScalarOperator>
+                                                                  <Logical Operation="NOT">
+                                                                    <ScalarOperator>
+                                                                      <Identifier>
+                                                                        <ColumnReference Column="Pass1087" />
+                                                                      </Identifier>
+                                                                    </ScalarOperator>
+                                                                  </Logical>
+                                                                </ScalarOperator>
+                                                                <ScalarOperator>
+                                                                  <Logical Operation="IS NULL">
+                                                                    <ScalarOperator>
+                                                                      <Identifier>
+                                                                        <ColumnReference Column="Expr1086" />
+                                                                      </Identifier>
+                                                                    </ScalarOperator>
+                                                                  </Logical>
+                                                                </ScalarOperator>
+                                                              </Logical>
+                                                            </ScalarOperator>
+                                                          </Condition>
+                                                          <Then>
+                                                            <ScalarOperator>
+                                                              <Const ConstValue="(6)" />
+                                                            </ScalarOperator>
+                                                          </Then>
+                                                          <Else>
+                                                            <ScalarOperator>
+                                                              <IF>
+                                                                <Condition>
+                                                                  <ScalarOperator>
+                                                                    <Logical Operation="AND">
+                                                                      <ScalarOperator>
+                                                                        <Logical Operation="NOT">
+                                                                          <ScalarOperator>
+                                                                            <Identifier>
+                                                                              <ColumnReference Column="Pass1089" />
+                                                                            </Identifier>
+                                                                          </ScalarOperator>
+                                                                        </Logical>
+                                                                      </ScalarOperator>
+                                                                      <ScalarOperator>
+                                                                        <Logical Operation="IS NULL">
+                                                                          <ScalarOperator>
+                                                                            <Identifier>
+                                                                              <ColumnReference Column="Expr1088" />
+                                                                            </Identifier>
+                                                                          </ScalarOperator>
+                                                                        </Logical>
+                                                                      </ScalarOperator>
+                                                                    </Logical>
+                                                                  </ScalarOperator>
+                                                                </Condition>
+                                                                <Then>
+                                                                  <ScalarOperator>
+                                                                    <Const ConstValue="(7)" />
+                                                                  </ScalarOperator>
+                                                                </Then>
+                                                                <Else>
+                                                                  <ScalarOperator>
+                                                                    <IF>
+                                                                      <Condition>
+                                                                        <ScalarOperator>
+                                                                          <Logical Operation="AND">
+                                                                            <ScalarOperator>
+                                                                              <Logical Operation="NOT">
+                                                                                <ScalarOperator>
+                                                                                  <Identifier>
+                                                                                    <ColumnReference Column="Pass1091" />
+                                                                                  </Identifier>
+                                                                                </ScalarOperator>
+                                                                              </Logical>
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Logical Operation="IS NULL">
+                                                                                <ScalarOperator>
+                                                                                  <Identifier>
+                                                                                    <ColumnReference Column="Expr1090" />
+                                                                                  </Identifier>
+                                                                                </ScalarOperator>
+                                                                              </Logical>
+                                                                            </ScalarOperator>
+                                                                          </Logical>
+                                                                        </ScalarOperator>
+                                                                      </Condition>
+                                                                      <Then>
+                                                                        <ScalarOperator>
+                                                                          <Const ConstValue="(8)" />
+                                                                        </ScalarOperator>
+                                                                      </Then>
+                                                                      <Else>
+                                                                        <ScalarOperator>
+                                                                          <IF>
+                                                                            <Condition>
+                                                                              <ScalarOperator>
+                                                                                <Logical Operation="AND">
+                                                                                  <ScalarOperator>
+                                                                                    <Logical Operation="NOT">
+                                                                                      <ScalarOperator>
+                                                                                        <Identifier>
+                                                                                          <ColumnReference Column="Pass1093" />
+                                                                                        </Identifier>
+                                                                                      </ScalarOperator>
+                                                                                    </Logical>
+                                                                                  </ScalarOperator>
+                                                                                  <ScalarOperator>
+                                                                                    <Logical Operation="IS NULL">
+                                                                                      <ScalarOperator>
+                                                                                        <Identifier>
+                                                                                          <ColumnReference Column="Expr1092" />
+                                                                                        </Identifier>
+                                                                                      </ScalarOperator>
+                                                                                    </Logical>
+                                                                                  </ScalarOperator>
+                                                                                </Logical>
+                                                                              </ScalarOperator>
+                                                                            </Condition>
+                                                                            <Then>
+                                                                              <ScalarOperator>
+                                                                                <Const ConstValue="(9)" />
+                                                                              </ScalarOperator>
+                                                                            </Then>
+                                                                            <Else>
+                                                                              <ScalarOperator>
+                                                                                <IF>
+                                                                                  <Condition>
+                                                                                    <ScalarOperator>
+                                                                                      <Logical Operation="AND">
+                                                                                        <ScalarOperator>
+                                                                                          <Logical Operation="NOT">
+                                                                                            <ScalarOperator>
+                                                                                              <Identifier>
+                                                                                                <ColumnReference Column="Pass1095" />
+                                                                                              </Identifier>
+                                                                                            </ScalarOperator>
+                                                                                          </Logical>
+                                                                                        </ScalarOperator>
+                                                                                        <ScalarOperator>
+                                                                                          <Logical Operation="IS NULL">
+                                                                                            <ScalarOperator>
+                                                                                              <Identifier>
+                                                                                                <ColumnReference Column="Expr1094" />
+                                                                                              </Identifier>
+                                                                                            </ScalarOperator>
+                                                                                          </Logical>
+                                                                                        </ScalarOperator>
+                                                                                      </Logical>
+                                                                                    </ScalarOperator>
+                                                                                  </Condition>
+                                                                                  <Then>
+                                                                                    <ScalarOperator>
+                                                                                      <Const ConstValue="(10)" />
+                                                                                    </ScalarOperator>
+                                                                                  </Then>
+                                                                                  <Else>
+                                                                                    <ScalarOperator>
+                                                                                      <Const ConstValue="NULL" />
+                                                                                    </ScalarOperator>
+                                                                                  </Else>
+                                                                                </IF>
+                                                                              </ScalarOperator>
+                                                                            </Else>
+                                                                          </IF>
+                                                                        </ScalarOperator>
+                                                                      </Else>
+                                                                    </IF>
+                                                                  </ScalarOperator>
+                                                                </Else>
+                                                              </IF>
+                                                            </ScalarOperator>
+                                                          </Else>
+                                                        </IF>
+                                                      </ScalarOperator>
+                                                    </Else>
+                                                  </IF>
+                                                </ScalarOperator>
+                                              </Else>
+                                            </IF>
+                                          </ScalarOperator>
+                                        </Else>
+                                      </IF>
+                                    </ScalarOperator>
+                                  </Else>
+                                </IF>
+                              </ScalarOperator>
+                            </Else>
+                          </IF>
+                        </ScalarOperator>
+                      </Else>
+                    </IF>
+                  </ScalarOperator>
+                </Predicate>
+              </Assert>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@submissionSetPartition" ParameterCompiledValue="'2015-01-30'" />
+              <ColumnReference Column="@submissionId" ParameterCompiledValue="(748113)" />
+              <ColumnReference Column="@submissionSetId" ParameterCompiledValue="(748114)" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

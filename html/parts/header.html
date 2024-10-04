@@ -1,0 +1,73 @@
+<div id="fb-root"></div>
+<!-- <script>
+    (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=288265101312963&version=v2.0";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+</script> -->
+<header>
+    <a href="/" id="logoLink">
+        <div class="logo">
+            <div>SQL SERVER QUERY EXECUTION DEMYSTIFIER</div>
+        </div>
+    </a>
+
+    @@if (mode === "info") {
+    <div class="alt-ad">
+        <ins class="adsbygoogle" style="display:inline-block;width:468px;height:60px" data-ad-client="ca-pub-2261371684278796" data-ad-slot="8334905667"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+    } @@if (mode === "app"){
+    <div class="content">
+        <div id="planSelector">
+            <div class="plan-selector" data-bind="with: planSelector">
+
+                <div id="input_container" style="height: 0; width: 0; overflow: hidden;">
+                </div>
+                <div style="height: 0; width: 0; overflow: hidden;">
+                    <input multiple type="file" name="files[]" />
+                </div>
+                <div id="dropZoneText" class="drop" contenteditable="true">
+                    paste query plan text here
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ad">
+        <!-- Supratimas_header -->
+        <ins class="adsbygoogle" style="display:inline-block;width:468px;height:60px" data-ad-client="ca-pub-2261371684278796" data-ad-slot="8334905667"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+    }
+
+    <div class="linkbar" data-bind="with: planSelector">
+
+        @@if (mode === "app"){
+        <div style="float: right; display: none;" id="planSelectorOpen" data-bind="visible: fileReader">
+            Open Query plan File
+        </div>
+        }
+
+        <div>
+            <a href="/">Home</a>
+        </div>
+        <div>
+            <a href="/features.html">Features</a>
+        </div>
+        <div>
+            <a href="/demo.html">Demo</a>
+        </div>
+        <div>
+            <a href="/downloads.html">Downloads</a>
+        </div>
+    </div>
+</header>

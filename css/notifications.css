@@ -1,0 +1,146 @@
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: url(f/Roboto-Regular.ttf);
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  src: url(f/Roboto-Bold.ttf);
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: italic;
+  font-weight: 400;
+  src: url(f/Roboto-Italic.ttf);
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: italic;
+  font-weight: 700;
+  src: url(f/Roboto-BoldItalic.ttf);
+}
+.pi-default-stroke {
+  stroke-width: 7px;
+}
+.pi_default-dark-fill {
+  fill: #1d3e58;
+}
+.pi_default-dark-stroke {
+  stroke: #1d3e58;
+}
+.pi-light-fill {
+  fill: #BCDBF3;
+}
+.pi-medium-fill {
+  fill: #4B8FC3;
+}
+.pi-dark-fill {
+  fill: #2a5a7e;
+}
+.pi-normal-stroke {
+  stroke: #2a5a7e;
+}
+.pi-light-stroke {
+  fill: #4B8FC3;
+}
+.pi-alt-normal-stroke {
+  stroke: #307e2a;
+}
+.pi-alt-light-stroke {
+  stroke: #53c34b;
+}
+.pi-alt-light-fill {
+  fill: #c0f3bc;
+}
+.pi-alt-medium-fill {
+  fill: #53c34b;
+}
+.pi-alt2-dark-fill {
+  fill: #7e6a2a;
+}
+.pi-alt2-light-fill {
+  fill: #f3e6bc;
+}
+.pi-alt2-medium-fill {
+  fill: #c3a74b;
+}
+.pi-alt2-dark-fill {
+  fill: #7e6a2a;
+}
+.pi-alt2-normal-stroke {
+  stroke: #7e6a2a;
+}
+.pi-alt2-light-stroke {
+  stroke: #c3a74b;
+}
+.pi-alt3-light-fill {
+  fill: #f3bcc0;
+}
+.pi-alt3-medium-fill {
+  fill: #c34b53;
+}
+.pi-alt3-dark-fill {
+  fill: #7e2a30;
+}
+.pi-alt3-normal-stroke {
+  stroke: #7e2a30;
+}
+.pi-alt3-light-stroke {
+  stroke: #c34b53;
+}
+.pi-focus-stroke {
+  stroke: #EECF00;
+}
+.pi-attn-fill {
+  fill: #EE2C00;
+}
+.pi-attn-stroke {
+  stroke: #D45619;
+}
+.pi-alert-fill {
+  fill: #FF5637;
+}
+.clickable {
+  cursor: pointer;
+}
+.flexrow {
+  display: flex;
+  flex-direction: row;
+  white-space: nowrap;
+  flex-wrap: nowrap;
+}
+.flexcolumn {
+  display: flex;
+  flex-direction: column;
+}
+.flexcolumn-grow {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+.notifications {
+  position: absolute;
+  top: 40px;
+  right: 4em;
+  left: 4em;
+  min-width: 20em;
+  background-color: #1d3e58;
+  background-image: url(i/texturebg.png);
+  background-repeat: repeat;
+  box-shadow: #1d3e58 0 0.1em 0.3em;
+  border-top: 1px solid #2a5a7e;
+  border-bottom-left-radius: 1em;
+  border-bottom-right-radius: 1em;
+  padding: 0.5em;
+  z-index: 10000;
+}
+.notifications .item {
+  background-color: #E7F3FD;
+  margin: 0.25em;
+  padding: 0.25em;
+  cursor: pointer;
+  border-radius: 5px;
+}

@@ -1,0 +1,251 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="-- Writes the stop watch time to performance log. Object name is an input, rather than calculated, because logging supports a 'named' scenario which are not schema objects (e.g. batch INSERT statements).&#xD;&#xA;CREATE PROCEDURE [dbo].[spEndStopwatch]&#xD;&#xA;    @objectName varchar(64), &#xD;&#xA;    @stopwatchBeginTime datetime2, &#xD;&#xA;    @metaData nvarchar(1024) = NULL&#xD;&#xA;AS&#xD;&#xA;    SET NOCOUNT ON;&#xD;&#xA;&#xD;&#xA;   " StatementId="1" StatementCompId="10" StatementType="SET ON/OFF" RetrievedFromCache="true" />
+        <StmtCond StatementText=" IF @objectName IS NOT NULL AND @stopwatchBeginTime IS NOT NULL&#xD;&#xA;   " StatementId="2" StatementCompId="11" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText=" BEGIN&#xD;&#xA;        DECLARE @objectId int&#xD;&#xA;        DECLARE @isStopwatchEnabled bit&#xD;&#xA;&#xD;&#xA;        -- Verify specified object is enabled for performance logging.&#xD;&#xA;        SELECT &#xD;&#xA;            @objectId = Id, &#xD;&#xA;            @isStopwatchEnabled = IsEnabled &#xD;&#xA;        FROM [dbo].[PerformanceLogConfiguration] (NOLOCK)&#xD;&#xA;            WHERE Name = @objectName&#xD;&#xA;&#xD;&#xA;       " StatementId="3" StatementCompId="12" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032831" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x3FA734F1438B971F" QueryPlanHash="0x7C3121ED33DB9AC6">
+                <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="1" CompileCPU="1" CompileMemory="160">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="0" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="12" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="126" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList>
+                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PerformanceLogConfiguration]" Column="Id" />
+                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PerformanceLogConfiguration]" Column="IsEnabled" />
+                    </OutputList>
+                    <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                      <DefinedValues>
+                        <DefinedValue>
+                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PerformanceLogConfiguration]" Column="Id" />
+                        </DefinedValue>
+                        <DefinedValue>
+                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PerformanceLogConfiguration]" Column="IsEnabled" />
+                        </DefinedValue>
+                      </DefinedValues>
+                      <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[PerformanceLogConfiguration]" Index="[PerformanceLogConfiguration_IDX_Name]" IndexKind="NonClustered" />
+                      <SeekPredicates>
+                        <SeekPredicateNew>
+                          <SeekKeys>
+                            <Prefix ScanType="EQ">
+                              <RangeColumns>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PerformanceLogConfiguration]" Column="Name" />
+                              </RangeColumns>
+                              <RangeExpressions>
+                                <ScalarOperator ScalarString="[@objectName]">
+                                  <Identifier>
+                                    <ColumnReference Column="@objectName" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </RangeExpressions>
+                            </Prefix>
+                          </SeekKeys>
+                        </SeekPredicateNew>
+                      </SeekPredicates>
+                    </IndexScan>
+                  </RelOp>
+                  <ParameterList>
+                    <ColumnReference Column="@objectName" ParameterCompiledValue="'Uploader_GetOrCreateStatusId'" />
+                  </ParameterList>
+                </QueryPlan>
+              </StmtSimple>
+              <StmtCond StatementText=" IF @isStopwatchEnabled = 1 -- Can be null if object not specified in configuration; ignore nulls.&#xD;&#xA;       " StatementId="4" StatementCompId="13" StatementType="COND" RetrievedFromCache="true">
+                <Condition />
+                <Then>
+                  <Statements>
+                    <StmtSimple StatementText=" BEGIN&#xD;&#xA;            DECLARE @duration int&#xD;&#xA;            DECLARE @stopwatchEndTime datetime2&#xD;&#xA;&#xD;&#xA;            -- Retrieve current timestamp. This includes the cost of querying log configuration but not write to log.&#xD;&#xA;            SELECT @stopwatchEndTime = [dbo].[fnBeginStopwatch]()&#xD;&#xA;&#xD;&#xA;            -- Calculate stop watch time difference in milliseconds.&#xD;&#xA;           " StatementId="5" StatementCompId="14" StatementType="ASSIGN WITH QUERY" RetrievedFromCache="true" />
+                    <StmtSimple StatementText=" SET @duration = DATEDIFF(millisecond, @stopwatchBeginTime, @stopwatchEndTime)&#xD;&#xA;&#xD;&#xA;            -- Save performance in log.&#xD;&#xA;           " StatementId="6" StatementCompId="15" StatementType="ASSIGN" RetrievedFromCache="true" />
+                    <StmtSimple StatementText=" INSERT INTO [dbo].[PerformanceLog] &#xD;&#xA;                (ConfigurationId, LogTimestamp, Duration, MetaData)&#xD;&#xA;            VALUES&#xD;&#xA;                (@objectId, @stopwatchEndTime, @duration, @metaData)&#xD;&#xA;       " StatementId="7" StatementCompId="16" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.0232907" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x56BB02BA299B2F7B" QueryPlanHash="0xA073879EE10CBFD2">
+                      <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                      <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="24" CompileTime="2" CompileCPU="2" CompileMemory="184">
+                        <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                        <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                        <RelOp NodeId="1" PhysicalOp="Assert" LogicalOp="Assert" EstimateRows="1" EstimateIO="0" EstimateCPU="1.8e-007" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0232907" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList />
+                          <Assert StartupExpression="0">
+                            <RelOp NodeId="2" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0232905" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Column="Expr1007" />
+                              </OutputList>
+                              <NestedLoops Optimized="0">
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Column="Expr1007" />
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <OuterReferences>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PerformanceLog]" Column="ConfigurationId" />
+                                </OuterReferences>
+                                <ProbeColumn>
+                                  <ColumnReference Column="Expr1007" />
+                                </ProbeColumn>
+                                <RelOp NodeId="3" PhysicalOp="Clustered Index Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.02" EstimateCPU="2e-006" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0200033" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PerformanceLog]" Column="ConfigurationId" />
+                                  </OutputList>
+                                  <Update DMLRequestSort="0">
+                                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[PerformanceLog]" Index="[PerformanceLog_PK]" IndexKind="Clustered" />
+                                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[PerformanceLog]" Index="[PerformanceLog_IDX_LogTimestamp]" IndexKind="NonClustered" />
+                                    <SetPredicate>
+                                      <ScalarOperator ScalarString="[OurLabReporting].[dbo].[PerformanceLog].[ConfigurationId] = RaiseIfNullInsert([@objectId]),[OurLabReporting].[dbo].[PerformanceLog].[LogTimestamp] = RaiseIfNullInsert([@stopwatchEndTime]),[OurLabReporting].[dbo].[PerformanceLog].[Duration] = RaiseIfNullInsert([@duration]),[OurLabReporting].[dbo].[PerformanceLog].[MetaData] = [@metaData],[OurLabReporting].[dbo].[PerformanceLog].[Id] = RaiseIfNullInsert([Expr1003])">
+                                        <ScalarExpressionList>
+                                          <ScalarOperator>
+                                            <MultipleAssign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PerformanceLog]" Column="ConfigurationId" />
+                                                <ScalarOperator>
+                                                  <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Column="@objectId" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                  </Intrinsic>
+                                                </ScalarOperator>
+                                              </Assign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PerformanceLog]" Column="LogTimestamp" />
+                                                <ScalarOperator>
+                                                  <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Column="@stopwatchEndTime" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                  </Intrinsic>
+                                                </ScalarOperator>
+                                              </Assign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PerformanceLog]" Column="Duration" />
+                                                <ScalarOperator>
+                                                  <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Column="@duration" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                  </Intrinsic>
+                                                </ScalarOperator>
+                                              </Assign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PerformanceLog]" Column="MetaData" />
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Column="@metaData" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                              </Assign>
+                                              <Assign>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PerformanceLog]" Column="Id" />
+                                                <ScalarOperator>
+                                                  <Intrinsic FunctionName="RaiseIfNullInsert">
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Column="Expr1003" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                  </Intrinsic>
+                                                </ScalarOperator>
+                                              </Assign>
+                                            </MultipleAssign>
+                                          </ScalarOperator>
+                                        </ScalarExpressionList>
+                                      </ScalarOperator>
+                                    </SetPredicate>
+                                    <RelOp NodeId="4" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="23" EstimatedTotalSubtreeCost="1.257e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList>
+                                        <ColumnReference Column="Expr1003" />
+                                      </OutputList>
+                                      <ComputeScalar ComputeSequence="1">
+                                        <DefinedValues>
+                                          <DefinedValue>
+                                            <ColumnReference Column="Expr1003" />
+                                            <ScalarOperator ScalarString="newsequentialid()">
+                                              <Intrinsic FunctionName="newsequentialid" />
+                                            </ScalarOperator>
+                                          </DefinedValue>
+                                        </DefinedValues>
+                                        <RelOp NodeId="5" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                          <OutputList />
+                                          <ConstantScan />
+                                        </RelOp>
+                                      </ComputeScalar>
+                                    </RelOp>
+                                  </Update>
+                                </RelOp>
+                                <RelOp NodeId="9" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="126" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList />
+                                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                    <DefinedValues />
+                                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[PerformanceLogConfiguration]" Index="[PerformanceLogConfiguration_PK]" IndexKind="Clustered" />
+                                    <SeekPredicates>
+                                      <SeekPredicateNew>
+                                        <SeekKeys>
+                                          <Prefix ScanType="EQ">
+                                            <RangeColumns>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PerformanceLogConfiguration]" Column="Id" />
+                                            </RangeColumns>
+                                            <RangeExpressions>
+                                              <ScalarOperator ScalarString="[OurLabReporting].[dbo].[PerformanceLog].[ConfigurationId]">
+                                                <Identifier>
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[PerformanceLog]" Column="ConfigurationId" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </RangeExpressions>
+                                          </Prefix>
+                                        </SeekKeys>
+                                      </SeekPredicateNew>
+                                    </SeekPredicates>
+                                  </IndexScan>
+                                </RelOp>
+                              </NestedLoops>
+                            </RelOp>
+                            <Predicate>
+                              <ScalarOperator ScalarString="CASE WHEN [Expr1007] IS NULL THEN (0) ELSE NULL END">
+                                <IF>
+                                  <Condition>
+                                    <ScalarOperator>
+                                      <Logical Operation="IS NULL">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="Expr1007" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Logical>
+                                    </ScalarOperator>
+                                  </Condition>
+                                  <Then>
+                                    <ScalarOperator>
+                                      <Const ConstValue="(0)" />
+                                    </ScalarOperator>
+                                  </Then>
+                                  <Else>
+                                    <ScalarOperator>
+                                      <Const ConstValue="NULL" />
+                                    </ScalarOperator>
+                                  </Else>
+                                </IF>
+                              </ScalarOperator>
+                            </Predicate>
+                          </Assert>
+                        </RelOp>
+                        <ParameterList>
+                          <ColumnReference Column="@metaData" ParameterCompiledValue="NULL" />
+                        </ParameterList>
+                      </QueryPlan>
+                    </StmtSimple>
+                  </Statements>
+                </Then>
+              </StmtCond>
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtSimple StatementText=" END&#xD;&#xA;    END&#xD;&#xA;RETURN 0" StatementId="8" StatementCompId="19" StatementType="RETURN" RetrievedFromCache="true" />
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

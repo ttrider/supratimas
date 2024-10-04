@@ -1,0 +1,520 @@
+<?xml version="1.0" encoding="utf-16"?>
+<ShowPlanXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="1.2" Build="12.0.2269.0" xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementCompId="1" StatementEstRows="305.708" StatementId="1" StatementOptmLevel="FULL" StatementOptmEarlyAbortReason="GoodEnoughPlanFound" CardinalityEstimationModelVersion="120" StatementSubTreeCost="0.16569" StatementText="select TOP 10 percent with ties object_id from sys.objects order by name" StatementType="SELECT" QueryHash="0x34408E71C8B94A7A" QueryPlanHash="0x870DA06527AE98EC" RetrievedFromCache="true">
+          <StatementSetOptions ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" NUMERIC_ROUNDABORT="false" QUOTED_IDENTIFIER="true" />
+          <QueryPlan DegreeOfParallelism="0" NonParallelPlanReason="CouldNotGenerateValidParallelPlan" MemoryGrant="1136" CachedPlanSize="24" CompileTime="5" CompileCPU="5" CompileMemory="872">
+            <MemoryGrantInfo SerialRequiredMemory="512" SerialDesiredMemory="1136" RequiredMemory="512" DesiredMemory="1136" RequestedMemory="1136" GrantWaitTime="0" GrantedMemory="1136" MaxUsedMemory="392" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="104847" EstimatedPagesCached="157270" EstimatedAvailableDegreeOfParallelism="12" />
+            <RelOp AvgRowSize="11" EstimateCPU="3.05708E-05" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="305.708" LogicalOp="Top" NodeId="0" Parallel="false" PhysicalOp="Top" EstimatedTotalSubtreeCost="0.16569">
+              <OutputList>
+                <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+              </OutputList>
+              <RunTimeInformation>
+                <RunTimeCountersPerThread Thread="0" ActualRows="393" ActualEndOfScans="1" ActualExecutions="1" />
+              </RunTimeInformation>
+              <Top RowCount="false" IsPercent="true" WithTies="true">
+                <TieColumns>
+                  <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="name" />
+                </TieColumns>
+                <TopExpression>
+                  <ScalarOperator ScalarString="(1.000000000000000e+001)">
+                    <Const ConstValue="(1.000000000000000e+001)" />
+                  </ScalarOperator>
+                </TopExpression>
+                <RelOp AvgRowSize="62" EstimateCPU="0.0552634" EstimateIO="0.0112613" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="305.708" LogicalOp="Sort" NodeId="1" Parallel="false" PhysicalOp="Sort" EstimatedTotalSubtreeCost="0.165659">
+                  <OutputList>
+                    <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                    <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="name" />
+                  </OutputList>
+                  <MemoryFractions Input="1" Output="1" />
+                  <RunTimeInformation>
+                    <RunTimeCountersPerThread Thread="0" ActualRebinds="1" ActualRewinds="0" ActualRows="394" ActualEndOfScans="0" ActualExecutions="1" />
+                  </RunTimeInformation>
+                  <Sort Distinct="false">
+                    <OrderBy>
+                      <OrderByColumn Ascending="true">
+                        <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="name" />
+                      </OrderByColumn>
+                    </OrderBy>
+                    <RelOp AvgRowSize="62" EstimateCPU="0.0114849" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="3054.5" LogicalOp="Filter" NodeId="2" Parallel="false" PhysicalOp="Filter" EstimatedTotalSubtreeCost="0.0991348">
+                      <OutputList>
+                        <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                        <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="name" />
+                      </OutputList>
+                      <RunTimeInformation>
+                        <RunTimeCountersPerThread Thread="0" ActualRows="3929" ActualEndOfScans="1" ActualExecutions="1" />
+                      </RunTimeInformation>
+                      <Filter StartupExpression="false">
+                        <RelOp AvgRowSize="68" EstimateCPU="0.0068769" EstimateIO="0.080162" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="3054.5" LogicalOp="Clustered Index Scan" NodeId="4" Parallel="false" PhysicalOp="Clustered Index Scan" EstimatedTotalSubtreeCost="0.0870389" TableCardinality="6109">
+                          <OutputList>
+                            <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                            <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="name" />
+                          </OutputList>
+                          <RunTimeInformation>
+                            <RunTimeCountersPerThread Thread="0" ActualRows="6103" ActualEndOfScans="1" ActualExecutions="1" />
+                          </RunTimeInformation>
+                          <IndexScan Ordered="false" ForcedIndex="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                              </DefinedValue>
+                              <DefinedValue>
+                                <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="name" />
+                              </DefinedValue>
+                            </DefinedValues>
+                            <Object Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Index="[clst]" Alias="[o]" IndexKind="Clustered" Storage="RowStore" />
+                            <Predicate>
+                              <ScalarOperator ScalarString="[healthcare].[sys].[sysschobjs].[nsclass] as [o].[nsclass]=(0) AND [healthcare].[sys].[sysschobjs].[pclass] as [o].[pclass]=(1) AND CONVERT(bit,[healthcare].[sys].[sysschobjs].[status2] as [o].[status2]&amp;(32),0)=(0)">
+                                <Logical Operation="AND">
+                                  <ScalarOperator>
+                                    <Compare CompareOp="EQ">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="nsclass" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(0)" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Compare CompareOp="EQ">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="pclass" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(1)" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Compare CompareOp="EQ">
+                                      <ScalarOperator>
+                                        <Convert DataType="bit" Style="0" Implicit="false">
+                                          <ScalarOperator>
+                                            <Arithmetic Operation="BIT_AND">
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="status2" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="(32)" />
+                                              </ScalarOperator>
+                                            </Arithmetic>
+                                          </ScalarOperator>
+                                        </Convert>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(0)" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                </Logical>
+                              </ScalarOperator>
+                            </Predicate>
+                          </IndexScan>
+                        </RelOp>
+                        <Predicate>
+                          <ScalarOperator ScalarString="has_access('CO',[healthcare].[sys].[sysschobjs].[id] as [o].[id])=(1)">
+                            <Compare CompareOp="EQ">
+                              <ScalarOperator>
+                                <Intrinsic FunctionName="has_access">
+                                  <ScalarOperator>
+                                    <Const ConstValue="'CO'" />
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="" />
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="" />
+                                  </ScalarOperator>
+                                </Intrinsic>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Const ConstValue="(1)" />
+                              </ScalarOperator>
+                            </Compare>
+                          </ScalarOperator>
+                        </Predicate>
+                      </Filter>
+                    </RelOp>
+                  </Sort>
+                </RelOp>
+              </Top>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementCompId="3" StatementEstRows="100.232" StatementId="2" StatementOptmLevel="FULL" StatementOptmEarlyAbortReason="GoodEnoughPlanFound" CardinalityEstimationModelVersion="120" StatementSubTreeCost="0.165669" StatementText="select top (@psz) with ties object_id from sys.objects order by name" StatementType="SELECT" QueryHash="0x8F334DC00C1C20B5" QueryPlanHash="0x15BEA97C3E19790F" RetrievedFromCache="true">
+          <StatementSetOptions ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" NUMERIC_ROUNDABORT="false" QUOTED_IDENTIFIER="true" />
+          <QueryPlan DegreeOfParallelism="0" NonParallelPlanReason="CouldNotGenerateValidParallelPlan" MemoryGrant="1136" CachedPlanSize="24" CompileTime="4" CompileCPU="4" CompileMemory="880">
+            <MemoryGrantInfo SerialRequiredMemory="512" SerialDesiredMemory="1136" RequiredMemory="512" DesiredMemory="1136" RequestedMemory="1136" GrantWaitTime="0" GrantedMemory="1136" MaxUsedMemory="392" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="104847" EstimatedPagesCached="157270" EstimatedAvailableDegreeOfParallelism="12" />
+            <RelOp AvgRowSize="11" EstimateCPU="1.00232E-05" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="100.232" LogicalOp="Top" NodeId="0" Parallel="false" PhysicalOp="Top" EstimatedTotalSubtreeCost="0.165669">
+              <OutputList>
+                <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+              </OutputList>
+              <RunTimeInformation>
+                <RunTimeCountersPerThread Thread="0" ActualRows="10" ActualEndOfScans="1" ActualExecutions="1" />
+              </RunTimeInformation>
+              <Top RowCount="false" IsPercent="false" WithTies="true">
+                <TieColumns>
+                  <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="name" />
+                </TieColumns>
+                <TopExpression>
+                  <ScalarOperator ScalarString="CONVERT_IMPLICIT(bigint,[@psz],0)">
+                    <Identifier>
+                      <ColumnReference Column="ConstExpr1042">
+                        <ScalarOperator>
+                          <Convert DataType="bigint" Style="0" Implicit="true">
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="@psz" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Convert>
+                        </ScalarOperator>
+                      </ColumnReference>
+                    </Identifier>
+                  </ScalarOperator>
+                </TopExpression>
+                <RelOp AvgRowSize="62" EstimateCPU="0.0552634" EstimateIO="0.0112613" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="100.232" LogicalOp="Sort" NodeId="1" Parallel="false" PhysicalOp="Sort" EstimatedTotalSubtreeCost="0.165659">
+                  <OutputList>
+                    <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                    <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="name" />
+                  </OutputList>
+                  <MemoryFractions Input="1" Output="1" />
+                  <RunTimeInformation>
+                    <RunTimeCountersPerThread Thread="0" ActualRebinds="1" ActualRewinds="0" ActualRows="11" ActualEndOfScans="0" ActualExecutions="1" />
+                  </RunTimeInformation>
+                  <Sort Distinct="false">
+                    <OrderBy>
+                      <OrderByColumn Ascending="true">
+                        <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="name" />
+                      </OrderByColumn>
+                    </OrderBy>
+                    <RelOp AvgRowSize="62" EstimateCPU="0.0114849" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="3054.5" LogicalOp="Filter" NodeId="2" Parallel="false" PhysicalOp="Filter" EstimatedTotalSubtreeCost="0.0991348">
+                      <OutputList>
+                        <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                        <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="name" />
+                      </OutputList>
+                      <RunTimeInformation>
+                        <RunTimeCountersPerThread Thread="0" ActualRows="3929" ActualEndOfScans="1" ActualExecutions="1" />
+                      </RunTimeInformation>
+                      <Filter StartupExpression="false">
+                        <RelOp AvgRowSize="68" EstimateCPU="0.0068769" EstimateIO="0.080162" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="3054.5" LogicalOp="Clustered Index Scan" NodeId="4" Parallel="false" PhysicalOp="Clustered Index Scan" EstimatedTotalSubtreeCost="0.0870389" TableCardinality="6109">
+                          <OutputList>
+                            <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                            <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="name" />
+                          </OutputList>
+                          <RunTimeInformation>
+                            <RunTimeCountersPerThread Thread="0" ActualRows="6103" ActualEndOfScans="1" ActualExecutions="1" />
+                          </RunTimeInformation>
+                          <IndexScan Ordered="false" ForcedIndex="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                              </DefinedValue>
+                              <DefinedValue>
+                                <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="name" />
+                              </DefinedValue>
+                            </DefinedValues>
+                            <Object Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Index="[clst]" Alias="[o]" IndexKind="Clustered" Storage="RowStore" />
+                            <Predicate>
+                              <ScalarOperator ScalarString="[healthcare].[sys].[sysschobjs].[nsclass] as [o].[nsclass]=(0) AND [healthcare].[sys].[sysschobjs].[pclass] as [o].[pclass]=(1) AND CONVERT(bit,[healthcare].[sys].[sysschobjs].[status2] as [o].[status2]&amp;(32),0)=(0)">
+                                <Logical Operation="AND">
+                                  <ScalarOperator>
+                                    <Compare CompareOp="EQ">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="nsclass" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(0)" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Compare CompareOp="EQ">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="pclass" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(1)" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Compare CompareOp="EQ">
+                                      <ScalarOperator>
+                                        <Convert DataType="bit" Style="0" Implicit="false">
+                                          <ScalarOperator>
+                                            <Arithmetic Operation="BIT_AND">
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="status2" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="(32)" />
+                                              </ScalarOperator>
+                                            </Arithmetic>
+                                          </ScalarOperator>
+                                        </Convert>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(0)" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                </Logical>
+                              </ScalarOperator>
+                            </Predicate>
+                          </IndexScan>
+                        </RelOp>
+                        <Predicate>
+                          <ScalarOperator ScalarString="has_access('CO',[healthcare].[sys].[sysschobjs].[id] as [o].[id])=(1)">
+                            <Compare CompareOp="EQ">
+                              <ScalarOperator>
+                                <Intrinsic FunctionName="has_access">
+                                  <ScalarOperator>
+                                    <Const ConstValue="'CO'" />
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="" />
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="" />
+                                  </ScalarOperator>
+                                </Intrinsic>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Const ConstValue="(1)" />
+                              </ScalarOperator>
+                            </Compare>
+                          </ScalarOperator>
+                        </Predicate>
+                      </Filter>
+                    </RelOp>
+                  </Sort>
+                </RelOp>
+              </Top>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@psz" ParameterRuntimeValue="(10)" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementCompId="4" StatementEstRows="100" StatementId="3" StatementOptmLevel="FULL" StatementOptmEarlyAbortReason="GoodEnoughPlanFound" CardinalityEstimationModelVersion="120" StatementSubTreeCost="0.165669" StatementText="select object_id from sys.objects order by name OFFSET (@psz) ROWS FETCH NEXT (@psz) ROWS ONLY" StatementType="SELECT" QueryHash="0x45626BACC8C21A7C" QueryPlanHash="0x79350E5AA51812E6" RetrievedFromCache="true">
+          <StatementSetOptions ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" NUMERIC_ROUNDABORT="false" QUOTED_IDENTIFIER="true" />
+          <QueryPlan DegreeOfParallelism="0" NonParallelPlanReason="CouldNotGenerateValidParallelPlan" MemoryGrant="1616" CachedPlanSize="24" CompileTime="3" CompileCPU="3" CompileMemory="808">
+            <MemoryGrantInfo SerialRequiredMemory="512" SerialDesiredMemory="1616" RequiredMemory="512" DesiredMemory="1616" RequestedMemory="1616" GrantWaitTime="0" GrantedMemory="1616" MaxUsedMemory="392" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="104847" EstimatedPagesCached="157270" EstimatedAvailableDegreeOfParallelism="12" />
+            <RelOp AvgRowSize="11" EstimateCPU="1E-05" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="100" LogicalOp="Top" NodeId="0" Parallel="false" PhysicalOp="Top" EstimatedTotalSubtreeCost="0.165669">
+              <OutputList>
+                <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+              </OutputList>
+              <RunTimeInformation>
+                <RunTimeCountersPerThread Thread="0" ActualRows="10" ActualEndOfScans="1" ActualExecutions="1" />
+              </RunTimeInformation>
+              <Top RowCount="false" IsPercent="false" WithTies="false">
+                <OffsetExpression>
+                  <ScalarOperator ScalarString="CONVERT_IMPLICIT(bigint,[@psz],0)">
+                    <Identifier>
+                      <ColumnReference Column="ConstExpr1043">
+                        <ScalarOperator>
+                          <Convert DataType="bigint" Style="0" Implicit="true">
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="@psz" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Convert>
+                        </ScalarOperator>
+                      </ColumnReference>
+                    </Identifier>
+                  </ScalarOperator>
+                </OffsetExpression>
+                <TopExpression>
+                  <ScalarOperator ScalarString="CONVERT_IMPLICIT(bigint,[@psz],0)">
+                    <Identifier>
+                      <ColumnReference Column="ConstExpr1042">
+                        <ScalarOperator>
+                          <Convert DataType="bigint" Style="0" Implicit="true">
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="@psz" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Convert>
+                        </ScalarOperator>
+                      </ColumnReference>
+                    </Identifier>
+                  </ScalarOperator>
+                </TopExpression>
+                <RelOp AvgRowSize="143" EstimateCPU="0.0552634" EstimateIO="0.0112613" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="100" LogicalOp="Sort" NodeId="1" Parallel="false" PhysicalOp="Sort" EstimatedTotalSubtreeCost="0.165659">
+                  <OutputList>
+                    <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                    <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="name" />
+                  </OutputList>
+                  <MemoryFractions Input="1" Output="1" />
+                  <RunTimeInformation>
+                    <RunTimeCountersPerThread Thread="0" ActualRebinds="1" ActualRewinds="0" ActualRows="20" ActualEndOfScans="0" ActualExecutions="1" />
+                  </RunTimeInformation>
+                  <Sort Distinct="false">
+                    <OrderBy>
+                      <OrderByColumn Ascending="true">
+                        <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="name" />
+                      </OrderByColumn>
+                    </OrderBy>
+                    <RelOp AvgRowSize="143" EstimateCPU="0.0114849" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="3054.5" LogicalOp="Filter" NodeId="2" Parallel="false" PhysicalOp="Filter" EstimatedTotalSubtreeCost="0.0991348">
+                      <OutputList>
+                        <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                        <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="name" />
+                      </OutputList>
+                      <RunTimeInformation>
+                        <RunTimeCountersPerThread Thread="0" ActualRows="3929" ActualEndOfScans="1" ActualExecutions="1" />
+                      </RunTimeInformation>
+                      <Filter StartupExpression="false">
+                        <RelOp AvgRowSize="149" EstimateCPU="0.0068769" EstimateIO="0.080162" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="3054.5" LogicalOp="Clustered Index Scan" NodeId="4" Parallel="false" PhysicalOp="Clustered Index Scan" EstimatedTotalSubtreeCost="0.0870389" TableCardinality="6109">
+                          <OutputList>
+                            <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                            <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="name" />
+                          </OutputList>
+                          <RunTimeInformation>
+                            <RunTimeCountersPerThread Thread="0" ActualRows="6103" ActualEndOfScans="1" ActualExecutions="1" />
+                          </RunTimeInformation>
+                          <IndexScan Ordered="false" ForcedIndex="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                              </DefinedValue>
+                              <DefinedValue>
+                                <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="name" />
+                              </DefinedValue>
+                            </DefinedValues>
+                            <Object Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Index="[clst]" Alias="[o]" IndexKind="Clustered" Storage="RowStore" />
+                            <Predicate>
+                              <ScalarOperator ScalarString="[healthcare].[sys].[sysschobjs].[nsclass] as [o].[nsclass]=(0) AND [healthcare].[sys].[sysschobjs].[pclass] as [o].[pclass]=(1) AND CONVERT(bit,[healthcare].[sys].[sysschobjs].[status2] as [o].[status2]&amp;(32),0)=(0)">
+                                <Logical Operation="AND">
+                                  <ScalarOperator>
+                                    <Compare CompareOp="EQ">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="nsclass" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(0)" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Compare CompareOp="EQ">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="pclass" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(1)" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Compare CompareOp="EQ">
+                                      <ScalarOperator>
+                                        <Convert DataType="bit" Style="0" Implicit="false">
+                                          <ScalarOperator>
+                                            <Arithmetic Operation="BIT_AND">
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="status2" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="(32)" />
+                                              </ScalarOperator>
+                                            </Arithmetic>
+                                          </ScalarOperator>
+                                        </Convert>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(0)" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                </Logical>
+                              </ScalarOperator>
+                            </Predicate>
+                          </IndexScan>
+                        </RelOp>
+                        <Predicate>
+                          <ScalarOperator ScalarString="has_access('CO',[healthcare].[sys].[sysschobjs].[id] as [o].[id])=(1)">
+                            <Compare CompareOp="EQ">
+                              <ScalarOperator>
+                                <Intrinsic FunctionName="has_access">
+                                  <ScalarOperator>
+                                    <Const ConstValue="'CO'" />
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[healthcare]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="" />
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="" />
+                                  </ScalarOperator>
+                                </Intrinsic>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Const ConstValue="(1)" />
+                              </ScalarOperator>
+                            </Compare>
+                          </ScalarOperator>
+                        </Predicate>
+                      </Filter>
+                    </RelOp>
+                  </Sort>
+                </RelOp>
+              </Top>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@psz" ParameterRuntimeValue="(10)" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

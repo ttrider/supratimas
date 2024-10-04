@@ -1,0 +1,177 @@
+<section class="smt-list">
+
+    <section>
+        <div class="checkbox" data-bind="click: toggleAll">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <g>
+                        <title>Toggle selection</title>
+                        <rect x="10" y="10" width="80" height="80" rx="10" ry="10" fill="transparent" stroke-width="7" class="pi-normal-stroke"></rect>
+                        <rect x="30" y="30" width="40" height="40" rx="10" ry="10" stroke-width="7" class="pi-normal-stroke pi-medium-fill"></rect>
+                    </g>
+                </svg>
+        </div>
+        <div data-bind="text: statementNodes.length">2</div>
+        <div>statements</div>
+        <hr class="header-line">
+    </section>
+
+
+
+
+
+
+
+    <div class="smt-node" data-bind="attr: { id: nodeId }, clickToSelectItem: 'alwaysSelect'" id="Node1">
+        <div class="flexrow clickable frame frame-sel-back" data-bind="css: {'frame-sel-back': selected(), 'frame-back': !selected() }">
+
+
+            <div>
+                <div class="checkbox" data-bind="clickToSelectItem: 'toggle'">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <g>
+                <title>Toggle selection</title>
+                <rect x="10" y="10" width="80" height="80" rx="10" ry="10" fill="transparent" stroke-width="7" class="pi-normal-stroke"></rect>
+                <rect x="30" y="30" width="40" height="40" rx="10" ry="10" stroke-width="7" class="pi-normal-stroke pi-medium-fill" data-bind="visible: selected"></rect>
+            </g>
+        </svg>
+                </div>
+                <div class="cost" data-bind="text: formattedCost, costColor: formattedCost" style="color: rgb(170, 0, 0);">99.82%</div>
+            </div>
+
+            <div class="flexcolumn-grow">
+                <div class="join-node-info">
+                    <div class="join-node-icon" data-bind="template:iconTemplate">
+                        <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+<g>
+<rect x="20" y="40" width="280" height="240" class="pi-alt-light-fill pi-default-stroke" stroke="none"></rect>
+<rect x="20" y="40" width="280" height="40" class="pi-alt-medium-fill pi-default-stroke" stroke="none"></rect>
+<rect x="20" y="40" width="280" height="240" fill="none" class="pi-alt-normal-stroke pi-default-stroke"></rect>
+<line x1="20" y1="80" x2="300" y2="80" class="pi-alt-normal-stroke" stroke-width="4px"></line>
+<line x1="40" y1="110" x2="280" y2="110" class="pi-alt-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10"></line>
+<line x1="40" y1="140" x2="280" y2="140" class="pi-alt-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10"></line>
+<line x1="40" y1="170" x2="280" y2="170" class="pi-alt-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10"></line>
+<line x1="40" y1="200" x2="280" y2="200" class="pi-alt-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10"></line>
+<line x1="40" y1="230" x2="280" y2="230" class="pi-alt-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10"></line>
+</g>
+</svg>
+                    </div>
+                </div>
+
+                <div class="name-set" data-bind="foreach: nameSet.items">
+                    <div class="query-box" style="min-height:1.1em;">
+                        <div data-bind="text: originalValue, attr:{title:originalValue}" title="select  event_code, 
+max(person_id), 
+min(person_id) as minp 
+
+from phs.event 
+group by event_code
+having event_code like 'H%'
+order by event_code desc
+offset 2 row fetch next 2 row only">select event_code, max(person_id), min(person_id) as minp from phs.event group by event_code having event_code like 'H%' order by event_code desc offset 2 row fetch next 2 row only</div>
+                    </div>
+                </div>
+
+
+                <div class="join-node-propertyset" data-bind="click:toggle, cancelBubble:true">Properties</div>
+
+
+
+
+
+
+
+            </div>
+        </div>
+
+
+        <div class="join-node-incoming" data-bind="foreach: children">
+            <div class="join-node-incoming-item" data-bind="clickToSelectNode: {nodeId: nodeId, left: 10, top: 10}">
+                <span data-bind="text: formattedSubtreeCost">99.82%</span>
+                <span>❯</span>
+            </div>
+        </div>
+
+    </div>
+
+    <section>
+        <div>GO</div>
+        <hr class="header-line">
+    </section>
+
+
+
+
+
+
+    <div class="smt-node" data-bind="attr: { id: nodeId }, clickToSelectItem: 'alwaysSelect'" id="Node7">
+        <div class="flexrow clickable frame frame-sel-back" data-bind="css: {'frame-sel-back': selected(), 'frame-back': !selected() }">
+
+
+            <div>
+                <div class="checkbox" data-bind="clickToSelectItem: 'toggle'">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <g>
+                <title>Toggle selection</title>
+                <rect x="10" y="10" width="80" height="80" rx="10" ry="10" fill="transparent" stroke-width="7" class="pi-normal-stroke"></rect>
+                <rect x="30" y="30" width="40" height="40" rx="10" ry="10" stroke-width="7" class="pi-normal-stroke pi-medium-fill" data-bind="visible: selected"></rect>
+            </g>
+        </svg>
+                </div>
+                <div class="cost" data-bind="text: formattedCost, costColor: formattedCost" style="color: rgb(0, 0, 0);">0.18%</div>
+            </div>
+
+            <div class="flexcolumn-grow">
+                <div class="join-node-info">
+                    <div class="join-node-icon" data-bind="template:iconTemplate">
+                        <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+<g>
+<rect x="20" y="40" width="280" height="240" class="pi-alt-light-fill pi-default-stroke" stroke="none"></rect>
+<rect x="20" y="40" width="280" height="40" class="pi-alt-medium-fill pi-default-stroke" stroke="none"></rect>
+<rect x="20" y="40" width="280" height="240" fill="none" class="pi-alt-normal-stroke pi-default-stroke"></rect>
+<line x1="20" y1="80" x2="300" y2="80" class="pi-alt-normal-stroke" stroke-width="4px"></line>
+<line x1="40" y1="110" x2="280" y2="110" class="pi-alt-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10"></line>
+<line x1="40" y1="140" x2="280" y2="140" class="pi-alt-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10"></line>
+<line x1="40" y1="170" x2="280" y2="170" class="pi-alt-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10"></line>
+<line x1="40" y1="200" x2="280" y2="200" class="pi-alt-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10"></line>
+<line x1="40" y1="230" x2="280" y2="230" class="pi-alt-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10"></line>
+</g>
+</svg>
+                    </div>
+                </div>
+
+                <div class="name-set" data-bind="foreach: nameSet.items">
+                    <div class="query-box" style="min-height:1.1em;">
+                        <div data-bind="text: originalValue, attr:{title:originalValue}" title="select top 1 * from phs.event">select top 1 * from phs.event</div>
+                    </div>
+                </div>
+
+
+                <div class="join-node-propertyset" data-bind="click:toggle, cancelBubble:true">Properties</div>
+
+
+
+
+
+
+
+            </div>
+        </div>
+
+
+        <div class="join-node-incoming" data-bind="foreach: children">
+            <div class="join-node-incoming-item" data-bind="clickToSelectNode: {nodeId: nodeId, left: 10, top: 10}">
+                <span data-bind="text: formattedSubtreeCost">0.18%</span>
+                <span>❯</span>
+            </div>
+        </div>
+
+    </div>
+
+    <section>
+        <div>GO</div>
+        <hr class="header-line">
+    </section>
+
+
+
+</section>

@@ -1,0 +1,418 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="CREATE PROCEDURE [dbo].[Web_GetMachineSetListForMix]&#xD;&#xA;@MixId INT&#xD;&#xA;AS&#xD;&#xA;BEGIN&#xD;&#xA;&#x9;-- SET NOCOUNT ON added to prevent extra result sets from&#xD;&#xA;&#x9;-- interfering with SELECT statements.&#xD;&#xA;&#x9;SET NOCOUNT ON;&#xD;&#xA;&#xD;&#xA;" StatementId="1" StatementCompId="2" StatementType="SET ON/OFF" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;SELECT dbo.MachineSet.Id as MachineSetId, &#xD;&#xA;           dbo.MachineSet.StartDate As MachineSetStartDate,&#xD;&#xA;           dbo.MachineSet.EndDate As MachineSetEndDate, &#xD;&#xA;&#x9;&#x9;   dbo.MachineSet.RunLogDirectory AS MachineSetDirectory,&#xD;&#xA;&#x9;       dbo.MachineSet.EnvironmentSetupFailure,&#xD;&#xA;           dbo.MachineSet.ReclaimedBeforeCompletion,&#xD;&#xA;&#x9;&#x9;   dbo.MachineSet.EnvironmentSetupStarted,&#xD;&#xA;&#x9;&#x9;   dbo.MachineSet.TestExecutionStarted,&#x9;&#xD;&#xA;&#x9;&#x9;   dbo.MachineSet.Comments,&#xD;&#xA;&#x9;&#x9;   dbo.ResolvedTED.Id as ResolvedTEDId,&#xD;&#xA;           CASE WHEN dbo.ResolvedTED.ResolvedName IS NOT NULL THEN dbo.ResolvedTED.ResolvedName&#xD;&#xA;&#x9;&#x9;   ELSE dbo.ResolvedTED.Name&#x9;&#xD;&#xA;&#x9;&#x9;   END AS ResolvedTEDName,&#xD;&#xA;&#x9;&#x9;   tb_MachineSetStatus.Status as MachineSetStatus,&#xD;&#xA;&#x9;&#x9;   dbo.Mix.EffectiveContextName,          &#x9;&#xD;&#xA;&#x9;&#x9;   dbo.Mix.EffectivePackageName&#x9;&#x9;   &#xD;&#xA;&#x9;FROM dbo.Mix WITH (NOLOCK) INNER JOIN &#xD;&#xA;         dbo.MachineSet WITH (NOLOCK) ON dbo.Mix.Id = dbo.MachineSet.MixId INNER JOIN &#xD;&#xA;         dbo.[Status] AS tb_MachineSetStatus WITH (NOLOCK) ON tb_MachineSetStatus.Id = dbo.MachineSet.StatusId INNER JOIN &#xD;&#xA;         dbo.ResolvedTED WITH (NOLOCK) ON dbo.MachineSet.ResolvedTEDId = dbo.ResolvedTED.Id &#xD;&#xA;&#x9;WHERE dbo.Mix.Id =  @MixId&#xD;&#xA;&#x9;ORDER BY EffectivePackageName ASC,&#xD;&#xA;             EffectiveContextName ASC,&#xD;&#xA;&#x9;&#x9;&#x9; ResolvedTEDId ASC,&#xD;&#xA;&#x9;&#x9;&#x9; ResolvedName ASC,&#xD;&#xA;&#x9;&#x9;&#x9; dbo.MachineSet.StartDate ASC&#xD;" StatementId="2" StatementCompId="3" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.651207" StatementEstRows="93.4116" StatementOptmLevel="FULL" QueryHash="0x3DBC0FBAF7125F1C" QueryPlanHash="0x86446B48CB51236B" StatementOptmEarlyAbortReason="TimeOut">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="64" CompileTime="20" CompileCPU="20" CompileMemory="832">
+            <MissingIndexes>
+              <MissingIndexGroup Impact="43.5816">
+                <MissingIndex Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]">
+                  <ColumnGroup Usage="EQUALITY">
+                    <Column Name="[MixId]" ColumnId="2" />
+                  </ColumnGroup>
+                  <ColumnGroup Usage="INCLUDE">
+                    <Column Name="[Id]" ColumnId="1" />
+                    <Column Name="[ResolvedTEDId]" ColumnId="3" />
+                    <Column Name="[StartDate]" ColumnId="5" />
+                    <Column Name="[EndDate]" ColumnId="6" />
+                    <Column Name="[RunLogDirectory]" ColumnId="9" />
+                    <Column Name="[EnvironmentSetupStarted]" ColumnId="15" />
+                    <Column Name="[TestExecutionStarted]" ColumnId="16" />
+                    <Column Name="[EnvironmentSetupFailure]" ColumnId="17" />
+                    <Column Name="[ReclaimedBeforeCompletion]" ColumnId="18" />
+                    <Column Name="[Comments]" ColumnId="19" />
+                    <Column Name="[StatusId]" ColumnId="22" />
+                  </ColumnGroup>
+                </MissingIndex>
+              </MissingIndexGroup>
+            </MissingIndexes>
+            <MemoryGrantInfo SerialRequiredMemory="512" SerialDesiredMemory="768" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="93.4116" EstimateIO="0" EstimateCPU="0.000390461" AvgRowSize="3813" EstimatedTotalSubtreeCost="0.651207" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Column="EffectiveContextName" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Column="EffectivePackageName" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="Id" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ResolvedTEDId" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StartDate" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="EndDate" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="RunLogDirectory" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="EnvironmentSetupStarted" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="TestExecutionStarted" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="EnvironmentSetupFailure" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ReclaimedBeforeCompletion" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="Comments" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Alias="[tb_MachineSetStatus]" Column="Status" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Column="Id" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Column="ResolvedName" />
+                <ColumnReference Column="Expr1011" />
+              </OutputList>
+              <NestedLoops Optimized="0">
+                <RelOp NodeId="1" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="413" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.48176e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Column="EffectiveContextName" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Column="EffectivePackageName" />
+                  </OutputList>
+                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Column="EffectiveContextName" />
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Column="EffectivePackageName" />
+                      </DefinedValue>
+                    </DefinedValues>
+                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Index="[Mix_PK]" IndexKind="Clustered" />
+                    <SeekPredicates>
+                      <SeekPredicateNew>
+                        <SeekKeys>
+                          <Prefix ScanType="EQ">
+                            <RangeColumns>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Mix]" Column="Id" />
+                            </RangeColumns>
+                            <RangeExpressions>
+                              <ScalarOperator ScalarString="[@MixId]">
+                                <Identifier>
+                                  <ColumnReference Column="@MixId" />
+                                </Identifier>
+                              </ScalarOperator>
+                            </RangeExpressions>
+                          </Prefix>
+                        </SeekKeys>
+                      </SeekPredicateNew>
+                    </SeekPredicates>
+                  </IndexScan>
+                </RelOp>
+                <RelOp NodeId="2" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="93.4116" EstimateIO="0" EstimateCPU="0.000390685" AvgRowSize="3409" EstimatedTotalSubtreeCost="0.647534" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="Id" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ResolvedTEDId" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StartDate" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="EndDate" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="RunLogDirectory" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="EnvironmentSetupStarted" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="TestExecutionStarted" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="EnvironmentSetupFailure" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ReclaimedBeforeCompletion" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="Comments" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Alias="[tb_MachineSetStatus]" Column="Status" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Column="Id" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Column="ResolvedName" />
+                    <ColumnReference Column="Expr1011" />
+                  </OutputList>
+                  <NestedLoops Optimized="0">
+                    <OuterReferences>
+                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StatusId" />
+                    </OuterReferences>
+                    <RelOp NodeId="3" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="93.4654" EstimateIO="0" EstimateCPU="9.34654e-006" AvgRowSize="3311" EstimatedTotalSubtreeCost="0.629241" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="Id" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ResolvedTEDId" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StartDate" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="EndDate" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="RunLogDirectory" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="EnvironmentSetupStarted" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="TestExecutionStarted" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="EnvironmentSetupFailure" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ReclaimedBeforeCompletion" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="Comments" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StatusId" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Column="Id" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Column="ResolvedName" />
+                        <ColumnReference Column="Expr1011" />
+                      </OutputList>
+                      <ComputeScalar>
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1011" />
+                            <ScalarOperator ScalarString="CASE WHEN [OurLabReporting].[dbo].[ResolvedTED].[ResolvedName] IS NOT NULL THEN [OurLabReporting].[dbo].[ResolvedTED].[ResolvedName] ELSE [OurLabReporting].[dbo].[ResolvedTED].[Name] END">
+                              <IF>
+                                <Condition>
+                                  <ScalarOperator>
+                                    <Compare CompareOp="IS NOT">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Column="ResolvedName" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="NULL" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                </Condition>
+                                <Then>
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Column="ResolvedName" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Then>
+                                <Else>
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Column="Name" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Else>
+                              </IF>
+                            </ScalarOperator>
+                          </DefinedValue>
+                        </DefinedValues>
+                        <RelOp NodeId="4" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="93.4654" EstimateIO="0" EstimateCPU="0.000390685" AvgRowSize="2511" EstimatedTotalSubtreeCost="0.629232" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="Id" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ResolvedTEDId" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StartDate" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="EndDate" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="RunLogDirectory" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="EnvironmentSetupStarted" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="TestExecutionStarted" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="EnvironmentSetupFailure" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ReclaimedBeforeCompletion" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="Comments" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StatusId" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Column="Id" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Column="Name" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Column="ResolvedName" />
+                          </OutputList>
+                          <NestedLoops Optimized="0" WithOrderedPrefetch="1">
+                            <OuterReferences>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ResolvedTEDId" />
+                              <ColumnReference Column="Expr1013" />
+                            </OuterReferences>
+                            <RelOp NodeId="6" PhysicalOp="Sort" LogicalOp="Sort" EstimateRows="93.4654" EstimateIO="0.0112613" EstimateCPU="0.0010558" AvgRowSize="1303" EstimatedTotalSubtreeCost="0.325174" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="Id" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ResolvedTEDId" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StartDate" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="EndDate" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="RunLogDirectory" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="EnvironmentSetupStarted" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="TestExecutionStarted" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="EnvironmentSetupFailure" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ReclaimedBeforeCompletion" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="Comments" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StatusId" />
+                              </OutputList>
+                              <MemoryFractions Input="1" Output="1" />
+                              <Sort Distinct="0">
+                                <OrderBy>
+                                  <OrderByColumn Ascending="1">
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ResolvedTEDId" />
+                                  </OrderByColumn>
+                                  <OrderByColumn Ascending="1">
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StartDate" />
+                                  </OrderByColumn>
+                                </OrderBy>
+                                <RelOp NodeId="7" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="93.4654" EstimateIO="0" EstimateCPU="0.000390685" AvgRowSize="1303" EstimatedTotalSubtreeCost="0.312857" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="Id" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ResolvedTEDId" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StartDate" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="EndDate" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="RunLogDirectory" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="EnvironmentSetupStarted" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="TestExecutionStarted" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="EnvironmentSetupFailure" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ReclaimedBeforeCompletion" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="Comments" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StatusId" />
+                                  </OutputList>
+                                  <NestedLoops Optimized="0" WithUnorderedPrefetch="1">
+                                    <OuterReferences>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="Id" />
+                                      <ColumnReference Column="Expr1012" />
+                                    </OuterReferences>
+                                    <RelOp NodeId="9" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="93.4654" EstimateIO="0.00847877" EstimateCPU="0.000259812" AvgRowSize="31" EstimatedTotalSubtreeCost="0.00873858" TableCardinality="1.23247e+007" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="Id" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StartDate" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="EndDate" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StatusId" />
+                                      </OutputList>
+                                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                        <DefinedValues>
+                                          <DefinedValue>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="Id" />
+                                          </DefinedValue>
+                                          <DefinedValue>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StartDate" />
+                                          </DefinedValue>
+                                          <DefinedValue>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="EndDate" />
+                                          </DefinedValue>
+                                          <DefinedValue>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StatusId" />
+                                          </DefinedValue>
+                                        </DefinedValues>
+                                        <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Index="[MachineSet_IDX_MixId]" IndexKind="NonClustered" />
+                                        <SeekPredicates>
+                                          <SeekPredicateNew>
+                                            <SeekKeys>
+                                              <Prefix ScanType="EQ">
+                                                <RangeColumns>
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="MixId" />
+                                                </RangeColumns>
+                                                <RangeExpressions>
+                                                  <ScalarOperator ScalarString="[@MixId]">
+                                                    <Identifier>
+                                                      <ColumnReference Column="@MixId" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </RangeExpressions>
+                                              </Prefix>
+                                            </SeekKeys>
+                                          </SeekPredicateNew>
+                                        </SeekPredicates>
+                                      </IndexScan>
+                                    </RelOp>
+                                    <RelOp NodeId="11" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="1278" EstimatedTotalSubtreeCost="0.303728" TableCardinality="1.23247e+007" Parallel="0" EstimateRebinds="92.4654" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ResolvedTEDId" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="RunLogDirectory" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="EnvironmentSetupStarted" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="TestExecutionStarted" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="EnvironmentSetupFailure" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ReclaimedBeforeCompletion" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="Comments" />
+                                      </OutputList>
+                                      <IndexScan Lookup="1" Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                        <DefinedValues>
+                                          <DefinedValue>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ResolvedTEDId" />
+                                          </DefinedValue>
+                                          <DefinedValue>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="RunLogDirectory" />
+                                          </DefinedValue>
+                                          <DefinedValue>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="EnvironmentSetupStarted" />
+                                          </DefinedValue>
+                                          <DefinedValue>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="TestExecutionStarted" />
+                                          </DefinedValue>
+                                          <DefinedValue>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="EnvironmentSetupFailure" />
+                                          </DefinedValue>
+                                          <DefinedValue>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ReclaimedBeforeCompletion" />
+                                          </DefinedValue>
+                                          <DefinedValue>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="Comments" />
+                                          </DefinedValue>
+                                        </DefinedValues>
+                                        <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Index="[MachineSet_PK]" TableReferenceId="-1" IndexKind="Clustered" />
+                                        <SeekPredicates>
+                                          <SeekPredicateNew>
+                                            <SeekKeys>
+                                              <Prefix ScanType="EQ">
+                                                <RangeColumns>
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="Id" />
+                                                </RangeColumns>
+                                                <RangeExpressions>
+                                                  <ScalarOperator ScalarString="[OurLabReporting].[dbo].[MachineSet].[Id]">
+                                                    <Identifier>
+                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="Id" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </RangeExpressions>
+                                              </Prefix>
+                                            </SeekKeys>
+                                          </SeekPredicateNew>
+                                        </SeekPredicates>
+                                      </IndexScan>
+                                    </RelOp>
+                                  </NestedLoops>
+                                </RelOp>
+                              </Sort>
+                            </RelOp>
+                            <RelOp NodeId="27" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="1217" EstimatedTotalSubtreeCost="0.303667" TableCardinality="1.37084e+006" Parallel="0" EstimateRebinds="92.4654" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Column="Id" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Column="Name" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Column="ResolvedName" />
+                              </OutputList>
+                              <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Column="Id" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Column="Name" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Column="ResolvedName" />
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Index="[ResolvedTED_PK]" IndexKind="Clustered" />
+                                <SeekPredicates>
+                                  <SeekPredicateNew>
+                                    <SeekKeys>
+                                      <Prefix ScanType="EQ">
+                                        <RangeColumns>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[ResolvedTED]" Column="Id" />
+                                        </RangeColumns>
+                                        <RangeExpressions>
+                                          <ScalarOperator ScalarString="[OurLabReporting].[dbo].[MachineSet].[ResolvedTEDId]">
+                                            <Identifier>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="ResolvedTEDId" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </RangeExpressions>
+                                      </Prefix>
+                                    </SeekKeys>
+                                  </SeekPredicateNew>
+                                </SeekPredicates>
+                              </IndexScan>
+                            </RelOp>
+                          </NestedLoops>
+                        </RelOp>
+                      </ComputeScalar>
+                    </RelOp>
+                    <RelOp NodeId="31" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="111" EstimatedTotalSubtreeCost="0.0179019" TableCardinality="96" Parallel="0" EstimateRebinds="4.07572" EstimateRewinds="88.3897" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Alias="[tb_MachineSetStatus]" Column="Status" />
+                      </OutputList>
+                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Alias="[tb_MachineSetStatus]" Column="Status" />
+                          </DefinedValue>
+                        </DefinedValues>
+                        <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Index="[Status_PK]" Alias="[tb_MachineSetStatus]" IndexKind="Clustered" />
+                        <SeekPredicates>
+                          <SeekPredicateNew>
+                            <SeekKeys>
+                              <Prefix ScanType="EQ">
+                                <RangeColumns>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Alias="[tb_MachineSetStatus]" Column="Id" />
+                                </RangeColumns>
+                                <RangeExpressions>
+                                  <ScalarOperator ScalarString="[OurLabReporting].[dbo].[MachineSet].[StatusId]">
+                                    <Identifier>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Column="StatusId" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </RangeExpressions>
+                              </Prefix>
+                            </SeekKeys>
+                          </SeekPredicateNew>
+                        </SeekPredicates>
+                      </IndexScan>
+                    </RelOp>
+                  </NestedLoops>
+                </RelOp>
+              </NestedLoops>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@MixId" ParameterCompiledValue="(1482441)" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

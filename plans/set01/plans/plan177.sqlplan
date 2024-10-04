@@ -1,0 +1,690 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="(@Branch nvarchar(13),@Build nvarchar(6),@TaskNames nvarchar(14))--Uncomment these lines for debugging/testing&#xD;&#xA;--DECLARE @Branch NVARCHAR(255) = N'WINMAIN'&#xD;&#xA;--DECLARE @Build NVARCHAR(255) = N'9750.0'&#xD;&#xA;--DECLARE @TaskNames NVARCHAR(MAX) = N'RunAppCompatLCR_Client_x86;RunAppCompat_Client_x86 x86fre'&#xD;&#xA;&#xD;&#xA;DECLARE @tempTasks TABLE (TaskName NVARCHAR(255))&#xD;&#xA;INSERT INTO @tempTasks (TaskName)&#xD;&#xA;SELECT [String] from dbo.Function_Split(@TaskNames, ';')&#xD;&#xA;&#xD;" StatementId="1" StatementCompId="2" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.0100083" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0xE4A5AB4CA90FF33B" QueryPlanHash="0x4FE356EC18107B3D" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="32" CompileTime="2" CompileCPU="2" CompileMemory="360">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Table Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.01" EstimateCPU="1e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0100083" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <Update DMLRequestSort="0">
+                <Object Table="[@tempTasks]" />
+                <SetPredicate>
+                  <ScalarOperator ScalarString="[TaskName] = [Expr1012]">
+                    <ScalarExpressionList>
+                      <ScalarOperator>
+                        <MultipleAssign>
+                          <Assign>
+                            <ColumnReference Column="TaskName" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1012" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                        </MultipleAssign>
+                      </ScalarOperator>
+                    </ScalarExpressionList>
+                  </ScalarOperator>
+                </SetPredicate>
+                <RelOp NodeId="1" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="266" EstimatedTotalSubtreeCost="7.314e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Expr1012" />
+                  </OutputList>
+                  <ComputeScalar>
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1012" />
+                        <ScalarOperator ScalarString="CONVERT_IMPLICIT(nvarchar(255),substring(CONVERT_IMPLICIT(varchar(2048),[@TaskNames],0),[Recr1009],CASE WHEN [Recr1010]&gt;(1) THEN [Recr1010]-[Recr1009]-(1) ELSE len(CONVERT_IMPLICIT(varchar(2048),[@TaskNames],0))-[Recr1009]+(1) END),0)">
+                          <Convert DataType="nvarchar" Length="510" Style="0" Implicit="1">
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="substring">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="ConstExpr1014">
+                                      <ScalarOperator>
+                                        <Convert DataType="varchar" Length="2048" Style="0" Implicit="1">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Column="@TaskNames" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </Convert>
+                                      </ScalarOperator>
+                                    </ColumnReference>
+                                  </Identifier>
+                                </ScalarOperator>
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="Recr1009" />
+                                  </Identifier>
+                                </ScalarOperator>
+                                <ScalarOperator>
+                                  <IF>
+                                    <Condition>
+                                      <ScalarOperator>
+                                        <Compare CompareOp="GT">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Column="Recr1010" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="(1)" />
+                                          </ScalarOperator>
+                                        </Compare>
+                                      </ScalarOperator>
+                                    </Condition>
+                                    <Then>
+                                      <ScalarOperator>
+                                        <Arithmetic Operation="SUB">
+                                          <ScalarOperator>
+                                            <Arithmetic Operation="SUB">
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="Recr1010" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="Recr1009" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Arithmetic>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="(1)" />
+                                          </ScalarOperator>
+                                        </Arithmetic>
+                                      </ScalarOperator>
+                                    </Then>
+                                    <Else>
+                                      <ScalarOperator>
+                                        <Arithmetic Operation="ADD">
+                                          <ScalarOperator>
+                                            <Arithmetic Operation="SUB">
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="len">
+                                                  <ScalarOperator>
+                                                    <Convert DataType="varchar" Length="2048" Style="0" Implicit="1">
+                                                      <ScalarOperator>
+                                                        <Identifier>
+                                                          <ColumnReference Column="@TaskNames" />
+                                                        </Identifier>
+                                                      </ScalarOperator>
+                                                    </Convert>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="Recr1009" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Arithmetic>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="(1)" />
+                                          </ScalarOperator>
+                                        </Arithmetic>
+                                      </ScalarOperator>
+                                    </Else>
+                                  </IF>
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </Convert>
+                        </ScalarOperator>
+                      </DefinedValue>
+                    </DefinedValues>
+                    <RelOp NodeId="2" PhysicalOp="Filter" LogicalOp="Filter" EstimateRows="1" EstimateIO="0" EstimateCPU="9.6e-007" AvgRowSize="15" EstimatedTotalSubtreeCost="7.214e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Column="Recr1009" />
+                        <ColumnReference Column="Recr1010" />
+                      </OutputList>
+                      <Filter StartupExpression="0">
+                        <RelOp NodeId="3" PhysicalOp="Index Spool" LogicalOp="Lazy Spool" EstimateRows="2" EstimateIO="0" EstimateCPU="1e-008" AvgRowSize="15" EstimatedTotalSubtreeCost="6.254e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Column="Expr1018" />
+                            <ColumnReference Column="Recr1009" />
+                            <ColumnReference Column="Recr1010" />
+                          </OutputList>
+                          <Spool Stack="1">
+                            <RelOp NodeId="4" PhysicalOp="Concatenation" LogicalOp="Concatenation" EstimateRows="2" EstimateIO="0" EstimateCPU="2e-009" AvgRowSize="15" EstimatedTotalSubtreeCost="4.664e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Column="Expr1018" />
+                                <ColumnReference Column="Recr1009" />
+                                <ColumnReference Column="Recr1010" />
+                              </OutputList>
+                              <Concat>
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Column="Expr1018" />
+                                    <ColumnReference Column="Expr1015" />
+                                    <ColumnReference Column="Expr1017" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Column="Recr1009" />
+                                    <ColumnReference Column="Expr1004" />
+                                    <ColumnReference Column="Recr1007" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Column="Recr1010" />
+                                    <ColumnReference Column="Expr1005" />
+                                    <ColumnReference Column="Expr1008" />
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <RelOp NodeId="5" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="2e-008" AvgRowSize="15" EstimatedTotalSubtreeCost="2e-008" Parallel="0" EstimateRebinds="2" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Column="Expr1015" />
+                                    <ColumnReference Column="Expr1004" />
+                                    <ColumnReference Column="Expr1005" />
+                                  </OutputList>
+                                  <ComputeScalar>
+                                    <DefinedValues>
+                                      <DefinedValue>
+                                        <ColumnReference Column="Expr1015" />
+                                        <ScalarOperator ScalarString="(0)">
+                                          <Const ConstValue="(0)" />
+                                        </ScalarOperator>
+                                      </DefinedValue>
+                                    </DefinedValues>
+                                    <RelOp NodeId="6" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="15" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList>
+                                        <ColumnReference Column="Expr1004" />
+                                        <ColumnReference Column="Expr1005" />
+                                      </OutputList>
+                                      <ConstantScan>
+                                        <Values>
+                                          <Row>
+                                            <ScalarOperator ScalarString="(0)">
+                                              <Const ConstValue="(0)" />
+                                            </ScalarOperator>
+                                            <ScalarOperator ScalarString="(1)">
+                                              <Const ConstValue="(1)" />
+                                            </ScalarOperator>
+                                          </Row>
+                                        </Values>
+                                      </ConstantScan>
+                                    </RelOp>
+                                  </ComputeScalar>
+                                </RelOp>
+                                <RelOp NodeId="12" PhysicalOp="Assert" LogicalOp="Assert" EstimateRows="2" EstimateIO="0" EstimateCPU="1.68e-007" AvgRowSize="15" EstimatedTotalSubtreeCost="3.505e-006" Parallel="0" EstimateRebinds="2" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Column="Expr1017" />
+                                    <ColumnReference Column="Recr1007" />
+                                    <ColumnReference Column="Expr1008" />
+                                  </OutputList>
+                                  <Assert StartupExpression="0">
+                                    <RelOp NodeId="13" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="2" EstimateIO="0" EstimateCPU="1.68e-007" AvgRowSize="15" EstimatedTotalSubtreeCost="3.505e-006" Parallel="0" EstimateRebinds="2" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList>
+                                        <ColumnReference Column="Expr1017" />
+                                        <ColumnReference Column="Recr1007" />
+                                        <ColumnReference Column="Expr1008" />
+                                      </OutputList>
+                                      <NestedLoops Optimized="0">
+                                        <OuterReferences>
+                                          <ColumnReference Column="Expr1017" />
+                                          <ColumnReference Column="Recr1006" />
+                                          <ColumnReference Column="Recr1007" />
+                                        </OuterReferences>
+                                        <RelOp NodeId="14" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="2e-008" AvgRowSize="15" EstimatedTotalSubtreeCost="2e-008" Parallel="0" EstimateRebinds="2" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                          <OutputList>
+                                            <ColumnReference Column="Expr1017" />
+                                            <ColumnReference Column="Recr1006" />
+                                            <ColumnReference Column="Recr1007" />
+                                          </OutputList>
+                                          <ComputeScalar>
+                                            <DefinedValues>
+                                              <DefinedValue>
+                                                <ColumnReference Column="Expr1017" />
+                                                <ScalarOperator ScalarString="[Expr1016]+(1)">
+                                                  <Arithmetic Operation="ADD">
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Column="Expr1016" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="(1)" />
+                                                    </ScalarOperator>
+                                                  </Arithmetic>
+                                                </ScalarOperator>
+                                              </DefinedValue>
+                                            </DefinedValues>
+                                            <RelOp NodeId="15" PhysicalOp="Table Spool" LogicalOp="Lazy Spool" EstimateRows="1" EstimateIO="0" EstimateCPU="2e-008" AvgRowSize="15" EstimatedTotalSubtreeCost="2e-008" Parallel="0" EstimateRebinds="2" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                              <OutputList>
+                                                <ColumnReference Column="Expr1016" />
+                                                <ColumnReference Column="Recr1006" />
+                                                <ColumnReference Column="Recr1007" />
+                                              </OutputList>
+                                              <Spool PrimaryNodeId="3" Stack="1" />
+                                            </RelOp>
+                                          </ComputeScalar>
+                                        </RelOp>
+                                        <RelOp NodeId="19" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="3.317e-006" Parallel="0" EstimateRebinds="1" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                          <OutputList>
+                                            <ColumnReference Column="Expr1008" />
+                                          </OutputList>
+                                          <ComputeScalar>
+                                            <DefinedValues>
+                                              <DefinedValue>
+                                                <ColumnReference Column="Expr1008" />
+                                                <ScalarOperator ScalarString="charindex(';',CONVERT_IMPLICIT(varchar(2048),[@TaskNames],0),[Recr1007])+(1)">
+                                                  <Arithmetic Operation="ADD">
+                                                    <ScalarOperator>
+                                                      <Intrinsic FunctionName="charindex">
+                                                        <ScalarOperator>
+                                                          <Const ConstValue="';'" />
+                                                        </ScalarOperator>
+                                                        <ScalarOperator>
+                                                          <Identifier>
+                                                            <ColumnReference Column="ConstExpr1013">
+                                                              <ScalarOperator>
+                                                                <Convert DataType="varchar" Length="2048" Style="0" Implicit="1">
+                                                                  <ScalarOperator>
+                                                                    <Identifier>
+                                                                      <ColumnReference Column="@TaskNames" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                </Convert>
+                                                              </ScalarOperator>
+                                                            </ColumnReference>
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator>
+                                                          <Identifier>
+                                                            <ColumnReference Column="Recr1007" />
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                      </Intrinsic>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="(1)" />
+                                                    </ScalarOperator>
+                                                  </Arithmetic>
+                                                </ScalarOperator>
+                                              </DefinedValue>
+                                            </DefinedValues>
+                                            <RelOp NodeId="20" PhysicalOp="Filter" LogicalOp="Filter" EstimateRows="1" EstimateIO="0" EstimateCPU="4.8e-007" AvgRowSize="9" EstimatedTotalSubtreeCost="3.117e-006" Parallel="0" EstimateRebinds="1" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                              <OutputList />
+                                              <Filter StartupExpression="1">
+                                                <RelOp NodeId="21" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="2.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="1" EstimatedExecutionMode="Row">
+                                                  <OutputList />
+                                                  <ConstantScan />
+                                                </RelOp>
+                                                <Predicate>
+                                                  <ScalarOperator ScalarString="[Recr1007]&gt;[Recr1006]">
+                                                    <Compare CompareOp="GT">
+                                                      <ScalarOperator>
+                                                        <Identifier>
+                                                          <ColumnReference Column="Recr1007" />
+                                                        </Identifier>
+                                                      </ScalarOperator>
+                                                      <ScalarOperator>
+                                                        <Identifier>
+                                                          <ColumnReference Column="Recr1006" />
+                                                        </Identifier>
+                                                      </ScalarOperator>
+                                                    </Compare>
+                                                  </ScalarOperator>
+                                                </Predicate>
+                                              </Filter>
+                                            </RelOp>
+                                          </ComputeScalar>
+                                        </RelOp>
+                                      </NestedLoops>
+                                    </RelOp>
+                                    <Predicate>
+                                      <ScalarOperator ScalarString="CASE WHEN [Expr1017]&gt;(100) THEN (0) ELSE NULL END">
+                                        <IF>
+                                          <Condition>
+                                            <ScalarOperator>
+                                              <Compare CompareOp="GT">
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Column="Expr1017" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                                <ScalarOperator>
+                                                  <Const ConstValue="(100)" />
+                                                </ScalarOperator>
+                                              </Compare>
+                                            </ScalarOperator>
+                                          </Condition>
+                                          <Then>
+                                            <ScalarOperator>
+                                              <Const ConstValue="(0)" />
+                                            </ScalarOperator>
+                                          </Then>
+                                          <Else>
+                                            <ScalarOperator>
+                                              <Const ConstValue="NULL" />
+                                            </ScalarOperator>
+                                          </Else>
+                                        </IF>
+                                      </ScalarOperator>
+                                    </Predicate>
+                                  </Assert>
+                                </RelOp>
+                              </Concat>
+                            </RelOp>
+                          </Spool>
+                        </RelOp>
+                        <Predicate>
+                          <ScalarOperator ScalarString="[Recr1009]&gt;(0)">
+                            <Compare CompareOp="GT">
+                              <ScalarOperator>
+                                <Identifier>
+                                  <ColumnReference Column="Recr1009" />
+                                </Identifier>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Const ConstValue="(0)" />
+                              </ScalarOperator>
+                            </Compare>
+                          </ScalarOperator>
+                        </Predicate>
+                      </Filter>
+                    </RelOp>
+                  </ComputeScalar>
+                </RelOp>
+              </Update>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@TaskNames" ParameterCompiledValue="N'RunTVS;RunTVS;'" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText="&#xA;SELECT&#xD;&#xA;&#x9;temp.TaskName AS TaskName,&#xD;&#xA;&#x9;@Branch as Branch,&#xD;&#xA;&#x9;@Build AS Build,&#xD;&#xA;    B.Number,&#xD;&#xA;    B.DatabaseName AS BugDatabase,&#x9;&#xD;&#xA;    B.Title,&#xD;&#xA;&#x9;B.[Path] AS AreaPath,&#xD;&#xA;    ISNULL(ISNULL(B.SubProduct, B.ExternalPartner), N'') AS Triad,&#xD;&#xA;    B.Milestone,&#xD;&#xA;    B.[Priority],&#xD;&#xA;    B.Severity,&#xD;&#xA;    B.[Status],&#xD;&#xA;    B.SubStatus,&#xD;&#xA;&#x9;CAST(1 AS BIT) AS PrimaryFailure,&#xD;&#xA;    B.NumInstances AS IncidenceCount&#xD;&#xA;  FROM &#xD;&#xA;&#x9;[dbo].[Bug] AS B WITH (NOLOCK)&#xD;&#xA;&#x9;INNER JOIN @tempTasks AS temp ON B.FoundInEnvironment = temp.TaskName&#xD;&#xA;  WHERE &#xD;&#xA;  B.FoundInBranch = @Branch&#xD;&#xA;  AND B.FoundIn = @Build&#xD;&#xA;&#xD;&#xA;" StatementId="2" StatementCompId="3" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0278216" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x17BEBE4BDCA15143" QueryPlanHash="0xB00E1DC3C32BB243" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="72" CompileTime="5" CompileCPU="5" CompileMemory="448">
+            <MemoryGrantInfo SerialRequiredMemory="1024" SerialDesiredMemory="1056" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="2676" EstimatedTotalSubtreeCost="0.0278216" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Number" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="DatabaseName" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Title" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Status" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Priority" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Severity" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Milestone" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Path" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="NumInstances" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="SubStatus" />
+                <ColumnReference Table="@tempTasks" Alias="[temp]" Column="TaskName" />
+                <ColumnReference Column="Expr1005" />
+                <ColumnReference Column="Expr1006" />
+              </OutputList>
+              <ComputeScalar>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1006" />
+                    <ScalarOperator ScalarString="(1)">
+                      <Const ConstValue="(1)" />
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp NodeId="1" PhysicalOp="Hash Match" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="0.0179408" AvgRowSize="2675" EstimatedTotalSubtreeCost="0.0278215" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Number" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="DatabaseName" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Title" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Status" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Priority" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Severity" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Milestone" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Path" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="NumInstances" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="SubStatus" />
+                    <ColumnReference Table="@tempTasks" Alias="[temp]" Column="TaskName" />
+                    <ColumnReference Column="Expr1005" />
+                  </OutputList>
+                  <MemoryFractions Input="1" Output="1" />
+                  <Hash>
+                    <DefinedValues />
+                    <HashKeysBuild>
+                      <ColumnReference Table="@tempTasks" Alias="[temp]" Column="TaskName" />
+                    </HashKeysBuild>
+                    <HashKeysProbe>
+                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="FoundInEnvironment" />
+                    </HashKeysProbe>
+                    <ProbeResidual>
+                      <ScalarOperator ScalarString="@tempTasks.[TaskName] as [temp].[TaskName]=[OurLabReporting].[dbo].[Bug].[FoundInEnvironment] as [B].[FoundInEnvironment]">
+                        <Compare CompareOp="EQ">
+                          <ScalarOperator>
+                            <Identifier>
+                              <ColumnReference Table="@tempTasks" Alias="[temp]" Column="TaskName" />
+                            </Identifier>
+                          </ScalarOperator>
+                          <ScalarOperator>
+                            <Identifier>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="FoundInEnvironment" />
+                            </Identifier>
+                          </ScalarOperator>
+                        </Compare>
+                      </ScalarOperator>
+                    </ProbeResidual>
+                    <RelOp NodeId="2" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="266" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Table="@tempTasks" Alias="[temp]" Column="TaskName" />
+                      </OutputList>
+                      <TableScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Table="@tempTasks" Alias="[temp]" Column="TaskName" />
+                          </DefinedValue>
+                        </DefinedValues>
+                        <Object Table="[@tempTasks]" Alias="[temp]" />
+                      </TableScan>
+                    </RelOp>
+                    <RelOp NodeId="3" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="2675" EstimatedTotalSubtreeCost="0.00659466" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Number" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="DatabaseName" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Title" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Status" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Priority" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Severity" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Milestone" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Path" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="NumInstances" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="SubStatus" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="FoundInEnvironment" />
+                        <ColumnReference Column="Expr1005" />
+                      </OutputList>
+                      <ComputeScalar>
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1005" />
+                            <ScalarOperator ScalarString="isnull(isnull([OurLabReporting].[dbo].[Bug].[SubProduct] as [B].[SubProduct],[OurLabReporting].[dbo].[Bug].[ExternalPartner] as [B].[ExternalPartner]),N'')">
+                              <Intrinsic FunctionName="isnull">
+                                <ScalarOperator>
+                                  <Intrinsic FunctionName="isnull">
+                                    <ScalarOperator>
+                                      <Identifier>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="SubProduct" />
+                                      </Identifier>
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Identifier>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="ExternalPartner" />
+                                      </Identifier>
+                                    </ScalarOperator>
+                                  </Intrinsic>
+                                </ScalarOperator>
+                                <ScalarOperator>
+                                  <Const ConstValue="N''" />
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </DefinedValue>
+                        </DefinedValues>
+                        <RelOp NodeId="4" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="2709" EstimatedTotalSubtreeCost="0.00659456" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Number" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="DatabaseName" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Title" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Status" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Priority" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Severity" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Milestone" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Path" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="NumInstances" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="SubProduct" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="ExternalPartner" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="SubStatus" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="FoundInEnvironment" />
+                          </OutputList>
+                          <NestedLoops Optimized="0">
+                            <OuterReferences>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Id" />
+                            </OuterReferences>
+                            <RelOp NodeId="5" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001746" AvgRowSize="526" EstimatedTotalSubtreeCost="0.0032996" TableCardinality="37279" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Number" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="DatabaseName" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Id" />
+                              </OutputList>
+                              <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Number" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="DatabaseName" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Id" />
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Index="[Bug_IX_FoundBranch_INC_FoundIn_FoundInEnvironment_BugNo_BugDb]" Alias="[B]" IndexKind="NonClustered" />
+                                <SeekPredicates>
+                                  <SeekPredicateNew>
+                                    <SeekKeys>
+                                      <Prefix ScanType="EQ">
+                                        <RangeColumns>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="FoundInBranch" />
+                                        </RangeColumns>
+                                        <RangeExpressions>
+                                          <ScalarOperator ScalarString="[@Branch]">
+                                            <Identifier>
+                                              <ColumnReference Column="@Branch" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </RangeExpressions>
+                                      </Prefix>
+                                    </SeekKeys>
+                                  </SeekPredicateNew>
+                                </SeekPredicates>
+                                <Predicate>
+                                  <ScalarOperator ScalarString="[OurLabReporting].[dbo].[Bug].[FoundIn] as [B].[FoundIn]=[@Build]">
+                                    <Compare CompareOp="EQ">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="FoundIn" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="@Build" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                </Predicate>
+                              </IndexScan>
+                            </RelOp>
+                            <RelOp NodeId="7" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="2453" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="37279" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Title" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Status" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Priority" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Severity" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Milestone" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Path" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="NumInstances" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="SubProduct" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="ExternalPartner" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="SubStatus" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="FoundInEnvironment" />
+                              </OutputList>
+                              <IndexScan Lookup="1" Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Title" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Status" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Priority" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Severity" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Milestone" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Path" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="NumInstances" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="SubProduct" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="ExternalPartner" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="SubStatus" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="FoundInEnvironment" />
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Index="[Bug_PK]" Alias="[B]" TableReferenceId="-1" IndexKind="Clustered" />
+                                <SeekPredicates>
+                                  <SeekPredicateNew>
+                                    <SeekKeys>
+                                      <Prefix ScanType="EQ">
+                                        <RangeColumns>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Id" />
+                                        </RangeColumns>
+                                        <RangeExpressions>
+                                          <ScalarOperator ScalarString="[OurLabReporting].[dbo].[Bug].[Id] as [B].[Id]">
+                                            <Identifier>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Id" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </RangeExpressions>
+                                      </Prefix>
+                                    </SeekKeys>
+                                  </SeekPredicateNew>
+                                </SeekPredicates>
+                              </IndexScan>
+                            </RelOp>
+                          </NestedLoops>
+                        </RelOp>
+                      </ComputeScalar>
+                    </RelOp>
+                  </Hash>
+                </RelOp>
+              </ComputeScalar>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@Build" ParameterCompiledValue="N'9899.0'" />
+              <ColumnReference Column="@Branch" ParameterCompiledValue="N'fbl_dev02_mfs'" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

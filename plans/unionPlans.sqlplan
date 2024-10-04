@@ -1,0 +1,1418 @@
+﻿<?xml version="1.0" encoding="utf-16"?>
+<ShowPlanXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="1.5" Build="13.0.4001.0" xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementCompId="1" StatementEstRows="2172.72" StatementId="1" StatementOptmLevel="FULL" StatementOptmEarlyAbortReason="GoodEnoughPlanFound" CardinalityEstimationModelVersion="130" StatementSubTreeCost="0.148621" StatementText="select object_id from sys.objects&#xD;&#xA;except&#xD;&#xA;select object_id from sys.tables&#xD;&#xA;except&#xD;&#xA;select object_id from sys.indexes" StatementType="SELECT" QueryHash="0x17DC7EFF5AD5A998" QueryPlanHash="0x5CEC085B84E4D79B" RetrievedFromCache="true" SecurityPolicyApplied="false">
+          <StatementSetOptions ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" NUMERIC_ROUNDABORT="false" QUOTED_IDENTIFIER="true" />
+          <QueryPlan DegreeOfParallelism="0" NonParallelPlanReason="CouldNotGenerateValidParallelPlan" CachedPlanSize="48" CompileTime="19" CompileCPU="19" CompileMemory="2920">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="104409" EstimatedPagesCached="26102" EstimatedAvailableDegreeOfParallelism="2" MaxCompileMemory="262808" />
+            <QueryTimeStats CpuTime="2" ElapsedTime="2" />
+            <RelOp AvgRowSize="11" EstimateCPU="0.0105394" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="2172.72" LogicalOp="Right Anti Semi Join" NodeId="0" Parallel="false" PhysicalOp="Merge Join" EstimatedTotalSubtreeCost="0.148621">
+              <OutputList>
+                <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+              </OutputList>
+              <RunTimeInformation>
+                <RunTimeCountersPerThread Thread="0" ActualRows="6" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="1" ActualCPUms="1" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+              </RunTimeInformation>
+              <Merge ManyToMany="false">
+                <InnerSideJoinColumns>
+                  <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                </InnerSideJoinColumns>
+                <OuterSideJoinColumns>
+                  <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                </OuterSideJoinColumns>
+                <Residual>
+                  <ScalarOperator ScalarString="[master].[sys].[sysschobjs].[id] as [o].[id]=[master].[sys].[sysidxstats].[id] as [i].[id]">
+                    <Compare CompareOp="EQ">
+                      <ScalarOperator>
+                        <Identifier>
+                          <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                        </Identifier>
+                      </ScalarOperator>
+                      <ScalarOperator>
+                        <Identifier>
+                          <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                        </Identifier>
+                      </ScalarOperator>
+                    </Compare>
+                  </ScalarOperator>
+                </Residual>
+                <RelOp AvgRowSize="11" EstimateCPU="0.0107172" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="39.7321" LogicalOp="Inner Join" NodeId="2" Parallel="false" PhysicalOp="Merge Join" EstimatedTotalSubtreeCost="0.0501989">
+                  <OutputList>
+                    <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                  </OutputList>
+                  <RunTimeInformation>
+                    <RunTimeCountersPerThread Thread="0" ActualRows="98" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                  </RunTimeInformation>
+                  <Merge ManyToMany="false">
+                    <InnerSideJoinColumns>
+                      <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                    </InnerSideJoinColumns>
+                    <OuterSideJoinColumns>
+                      <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[obj]" Column="id" />
+                    </OuterSideJoinColumns>
+                    <Residual>
+                      <ScalarOperator ScalarString="[master].[sys].[sysidxstats].[id] as [i].[id]=[master].[sys].[sysschobjs].[id] as [obj].[id]">
+                        <Compare CompareOp="EQ">
+                          <ScalarOperator>
+                            <Identifier>
+                              <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                            </Identifier>
+                          </ScalarOperator>
+                          <ScalarOperator>
+                            <Identifier>
+                              <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[obj]" Column="id" />
+                            </Identifier>
+                          </ScalarOperator>
+                        </Compare>
+                      </ScalarOperator>
+                    </Residual>
+                    <RelOp AvgRowSize="11" EstimateCPU="0.0027893" EstimateIO="0.0312731" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="2393" EstimatedRowsRead="2393" LogicalOp="Clustered Index Scan" NodeId="3" Parallel="false" PhysicalOp="Clustered Index Scan" EstimatedTotalSubtreeCost="0.0340624" TableCardinality="2393">
+                      <OutputList>
+                        <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[obj]" Column="id" />
+                      </OutputList>
+                      <RunTimeInformation>
+                        <RunTimeCountersPerThread Thread="0" ActualRows="2392" ActualRowsRead="2392" Batches="0" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" ActualScans="1" ActualLogicalReads="41" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                      </RunTimeInformation>
+                      <IndexScan Ordered="true" ScanDirection="FORWARD" ForcedIndex="false" ForceSeek="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[obj]" Column="id" />
+                          </DefinedValue>
+                        </DefinedValues>
+                        <Object Database="[master]" Schema="[sys]" Table="[sysschobjs]" Index="[clst]" Alias="[obj]" IndexKind="Clustered" Storage="RowStore" />
+                      </IndexScan>
+                    </RelOp>
+                    <RelOp AvgRowSize="11" EstimateCPU="7.985E-05" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="41.8899" LogicalOp="Aggregate" NodeId="4" Parallel="false" PhysicalOp="Stream Aggregate" EstimatedTotalSubtreeCost="0.00541621">
+                      <OutputList>
+                        <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                      </OutputList>
+                      <RunTimeInformation>
+                        <RunTimeCountersPerThread Thread="0" ActualRows="98" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" />
+                      </RunTimeInformation>
+                      <StreamAggregate>
+                        <DefinedValues />
+                        <GroupBy>
+                          <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                        </GroupBy>
+                        <RelOp AvgRowSize="11" EstimateCPU="0.00029568" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="117.81" LogicalOp="Filter" NodeId="5" Parallel="false" PhysicalOp="Filter" EstimatedTotalSubtreeCost="0.00533636">
+                          <OutputList>
+                            <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                          </OutputList>
+                          <RunTimeInformation>
+                            <RunTimeCountersPerThread Thread="0" ActualRows="161" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" />
+                          </RunTimeInformation>
+                          <Filter StartupExpression="false">
+                            <RelOp AvgRowSize="15" EstimateCPU="0.0004111" EstimateIO="0.00460648" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="117.81" EstimatedRowsRead="231" LogicalOp="Clustered Index Scan" NodeId="7" Parallel="false" PhysicalOp="Clustered Index Scan" EstimatedTotalSubtreeCost="0.00501758" TableCardinality="231">
+                              <OutputList>
+                                <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                              </OutputList>
+                              <RunTimeInformation>
+                                <RunTimeCountersPerThread Thread="0" ActualRows="161" ActualRowsRead="231" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" ActualScans="1" ActualLogicalReads="5" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                              </RunTimeInformation>
+                              <IndexScan Ordered="true" ScanDirection="FORWARD" ForcedIndex="false" ForceSeek="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <Object Database="[master]" Schema="[sys]" Table="[sysidxstats]" Index="[clst]" Alias="[i]" IndexKind="Clustered" Storage="RowStore" />
+                                <Predicate>
+                                  <ScalarOperator ScalarString="([master].[sys].[sysidxstats].[status] as [i].[status]&amp;(1))&lt;&gt;(0)">
+                                    <Compare CompareOp="NE">
+                                      <ScalarOperator>
+                                        <Arithmetic Operation="BIT_AND">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="status" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="(1)" />
+                                          </ScalarOperator>
+                                        </Arithmetic>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(0)" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                </Predicate>
+                              </IndexScan>
+                            </RelOp>
+                            <Predicate>
+                              <ScalarOperator ScalarString="has_access('CO',[master].[sys].[sysidxstats].[id] as [i].[id])=(1)">
+                                <Compare CompareOp="EQ">
+                                  <ScalarOperator>
+                                    <Intrinsic FunctionName="has_access">
+                                      <ScalarOperator>
+                                        <Const ConstValue="'CO'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="" />
+                                      </ScalarOperator>
+                                    </Intrinsic>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(1)" />
+                                  </ScalarOperator>
+                                </Compare>
+                              </ScalarOperator>
+                            </Predicate>
+                          </Filter>
+                        </RelOp>
+                      </StreamAggregate>
+                    </RelOp>
+                  </Merge>
+                </RelOp>
+                <RelOp AvgRowSize="11" EstimateCPU="0.0112328" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="2208.92" LogicalOp="Left Anti Semi Join" NodeId="8" Parallel="false" PhysicalOp="Merge Join" EstimatedTotalSubtreeCost="0.0878797">
+                  <OutputList>
+                    <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                  </OutputList>
+                  <RunTimeInformation>
+                    <RunTimeCountersPerThread Thread="0" ActualRows="99" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="1" ActualCPUms="1" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                  </RunTimeInformation>
+                  <Merge ManyToMany="false">
+                    <InnerSideJoinColumns>
+                      <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                    </InnerSideJoinColumns>
+                    <OuterSideJoinColumns>
+                      <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                    </OuterSideJoinColumns>
+                    <Residual>
+                      <ScalarOperator ScalarString="[master].[sys].[sysschobjs].[id] as [o].[id]=[master].[sys].[sysschobjs].[id] as [o].[id]">
+                        <Compare CompareOp="EQ">
+                          <ScalarOperator>
+                            <Identifier>
+                              <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                            </Identifier>
+                          </ScalarOperator>
+                          <ScalarOperator>
+                            <Identifier>
+                              <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                            </Identifier>
+                          </ScalarOperator>
+                        </Compare>
+                      </ScalarOperator>
+                    </Residual>
+                    <RelOp AvgRowSize="11" EstimateCPU="0.00378094" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="2393" LogicalOp="Filter" NodeId="9" Parallel="false" PhysicalOp="Filter" EstimatedTotalSubtreeCost="0.0378434">
+                      <OutputList>
+                        <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                      </OutputList>
+                      <RunTimeInformation>
+                        <RunTimeCountersPerThread Thread="0" ActualRows="104" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" />
+                      </RunTimeInformation>
+                      <Filter StartupExpression="false">
+                        <RelOp AvgRowSize="13" EstimateCPU="0.0027893" EstimateIO="0.0312731" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="2393" EstimatedRowsRead="2393" LogicalOp="Clustered Index Scan" NodeId="10" Parallel="false" PhysicalOp="Clustered Index Scan" EstimatedTotalSubtreeCost="0.0340624" TableCardinality="2393">
+                          <OutputList>
+                            <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                          </OutputList>
+                          <RunTimeInformation>
+                            <RunTimeCountersPerThread Thread="0" ActualRows="2393" ActualRowsRead="2393" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" ActualScans="1" ActualLogicalReads="41" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                          </RunTimeInformation>
+                          <IndexScan Ordered="true" ScanDirection="FORWARD" ForcedIndex="false" ForceSeek="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                              </DefinedValue>
+                            </DefinedValues>
+                            <Object Database="[master]" Schema="[sys]" Table="[sysschobjs]" Index="[clst]" Alias="[o]" TableReferenceId="1" IndexKind="Clustered" Storage="RowStore" />
+                            <Predicate>
+                              <ScalarOperator ScalarString="[master].[sys].[sysschobjs].[nsclass] as [o].[nsclass]=(0) AND [master].[sys].[sysschobjs].[pclass] as [o].[pclass]=(1)">
+                                <Logical Operation="AND">
+                                  <ScalarOperator>
+                                    <Compare CompareOp="EQ">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="nsclass" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(0)" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Compare CompareOp="EQ">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="pclass" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(1)" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                </Logical>
+                              </ScalarOperator>
+                            </Predicate>
+                          </IndexScan>
+                        </RelOp>
+                        <Predicate>
+                          <ScalarOperator ScalarString="has_access('CO',[master].[sys].[sysschobjs].[id] as [o].[id])=(1)">
+                            <Compare CompareOp="EQ">
+                              <ScalarOperator>
+                                <Intrinsic FunctionName="has_access">
+                                  <ScalarOperator>
+                                    <Const ConstValue="'CO'" />
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="" />
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="" />
+                                  </ScalarOperator>
+                                </Intrinsic>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Const ConstValue="(1)" />
+                              </ScalarOperator>
+                            </Compare>
+                          </ScalarOperator>
+                        </Predicate>
+                      </Filter>
+                    </RelOp>
+                    <RelOp AvgRowSize="11" EstimateCPU="0.00449884" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="184.077" LogicalOp="Filter" NodeId="11" Parallel="false" PhysicalOp="Filter" EstimatedTotalSubtreeCost="0.0388006">
+                      <OutputList>
+                        <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                      </OutputList>
+                      <RunTimeInformation>
+                        <RunTimeCountersPerThread Thread="0" ActualRows="5" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" />
+                      </RunTimeInformation>
+                      <Filter StartupExpression="false">
+                        <RelOp AvgRowSize="15" EstimateCPU="0.0027893" EstimateIO="0.0312731" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="184.077" EstimatedRowsRead="2393" LogicalOp="Clustered Index Scan" NodeId="13" Parallel="false" PhysicalOp="Clustered Index Scan" EstimatedTotalSubtreeCost="0.0340624" TableCardinality="2393">
+                          <OutputList>
+                            <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                          </OutputList>
+                          <RunTimeInformation>
+                            <RunTimeCountersPerThread Thread="0" ActualRows="7" ActualRowsRead="2393" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" ActualScans="1" ActualLogicalReads="41" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                          </RunTimeInformation>
+                          <IndexScan Ordered="true" ScanDirection="FORWARD" ForcedIndex="false" ForceSeek="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                              </DefinedValue>
+                            </DefinedValues>
+                            <Object Database="[master]" Schema="[sys]" Table="[sysschobjs]" Index="[clst]" Alias="[o]" TableReferenceId="2" IndexKind="Clustered" Storage="RowStore" />
+                            <Predicate>
+                              <ScalarOperator ScalarString="[master].[sys].[sysschobjs].[nsclass] as [o].[nsclass]=(0) AND [master].[sys].[sysschobjs].[pclass] as [o].[pclass]=(1) AND CONVERT(char(2),CASE WHEN [master].[sys].[sysschobjs].[type] as [o].[type]='ET' THEN 'U' ELSE [master].[sys].[sysschobjs].[type] as [o].[type] END,0)='U'">
+                                <Logical Operation="AND">
+                                  <ScalarOperator>
+                                    <Compare CompareOp="EQ">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="nsclass" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(0)" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Compare CompareOp="EQ">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="pclass" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(1)" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Compare CompareOp="EQ">
+                                      <ScalarOperator>
+                                        <Convert DataType="char" Length="2" Style="0" Implicit="false">
+                                          <ScalarOperator>
+                                            <IF>
+                                              <Condition>
+                                                <ScalarOperator>
+                                                  <Compare CompareOp="EQ">
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="type" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="'ET'" />
+                                                    </ScalarOperator>
+                                                  </Compare>
+                                                </ScalarOperator>
+                                              </Condition>
+                                              <Then>
+                                                <ScalarOperator>
+                                                  <Const ConstValue="'U'" />
+                                                </ScalarOperator>
+                                              </Then>
+                                              <Else>
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="type" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                              </Else>
+                                            </IF>
+                                          </ScalarOperator>
+                                        </Convert>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'U'" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                </Logical>
+                              </ScalarOperator>
+                            </Predicate>
+                          </IndexScan>
+                        </RelOp>
+                        <Predicate>
+                          <ScalarOperator ScalarString="has_access('CO',[master].[sys].[sysschobjs].[id] as [o].[id])=(1)">
+                            <Compare CompareOp="EQ">
+                              <ScalarOperator>
+                                <Intrinsic FunctionName="has_access">
+                                  <ScalarOperator>
+                                    <Const ConstValue="'CO'" />
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="" />
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="" />
+                                  </ScalarOperator>
+                                </Intrinsic>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Const ConstValue="(1)" />
+                              </ScalarOperator>
+                            </Compare>
+                          </ScalarOperator>
+                        </Predicate>
+                      </Filter>
+                    </RelOp>
+                  </Merge>
+                </RelOp>
+              </Merge>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementCompId="1" StatementEstRows="2504.87" StatementId="1" StatementOptmLevel="FULL" StatementOptmEarlyAbortReason="GoodEnoughPlanFound" CardinalityEstimationModelVersion="130" StatementSubTreeCost="0.138189" StatementText="select object_id from sys.objects&#xD;&#xA;union&#xD;&#xA;select object_id from sys.tables&#xD;&#xA;union&#xD;&#xA;select object_id from sys.indexes" StatementType="SELECT" QueryHash="0xAF210156476A2942" QueryPlanHash="0xB9B4BFC67A5B8BFE" RetrievedFromCache="true" SecurityPolicyApplied="false">
+          <StatementSetOptions ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" NUMERIC_ROUNDABORT="false" QUOTED_IDENTIFIER="true" />
+          <QueryPlan DegreeOfParallelism="0" NonParallelPlanReason="CouldNotGenerateValidParallelPlan" CachedPlanSize="48" CompileTime="19" CompileCPU="19" CompileMemory="2696">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="104409" EstimatedPagesCached="26102" EstimatedAvailableDegreeOfParallelism="2" MaxCompileMemory="262808" />
+            <QueryTimeStats CpuTime="2" ElapsedTime="2" />
+            <RelOp AvgRowSize="11" EstimateCPU="0.00567289" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="2504.87" LogicalOp="Union" NodeId="0" Parallel="false" PhysicalOp="Merge Join" EstimatedTotalSubtreeCost="0.138189">
+              <OutputList>
+                <ColumnReference Column="Union1124" />
+              </OutputList>
+              <RunTimeInformation>
+                <RunTimeCountersPerThread Thread="0" ActualRows="104" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="1" ActualCPUms="1" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+              </RunTimeInformation>
+              <Merge>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Union1124" />
+                    <ColumnReference Column="Union1124" />
+                    <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp AvgRowSize="11" EstimateCPU="0.00567289" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="2504.87" LogicalOp="Union" NodeId="1" Parallel="false" PhysicalOp="Merge Join" EstimatedTotalSubtreeCost="0.0823169">
+                  <OutputList>
+                    <ColumnReference Column="Union1124" />
+                  </OutputList>
+                  <RunTimeInformation>
+                    <RunTimeCountersPerThread Thread="0" ActualRows="104" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="1" ActualCPUms="1" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                  </RunTimeInformation>
+                  <Merge>
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="Union1124" />
+                        <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                        <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                      </DefinedValue>
+                    </DefinedValues>
+                    <RelOp AvgRowSize="11" EstimateCPU="0.00378094" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="2393" LogicalOp="Filter" NodeId="2" Parallel="false" PhysicalOp="Filter" EstimatedTotalSubtreeCost="0.0378434">
+                      <OutputList>
+                        <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                      </OutputList>
+                      <RunTimeInformation>
+                        <RunTimeCountersPerThread Thread="0" ActualRows="104" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" />
+                      </RunTimeInformation>
+                      <Filter StartupExpression="false">
+                        <RelOp AvgRowSize="13" EstimateCPU="0.0027893" EstimateIO="0.0312731" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="2393" EstimatedRowsRead="2393" LogicalOp="Clustered Index Scan" NodeId="3" Parallel="false" PhysicalOp="Clustered Index Scan" EstimatedTotalSubtreeCost="0.0340624" TableCardinality="2393">
+                          <OutputList>
+                            <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                          </OutputList>
+                          <RunTimeInformation>
+                            <RunTimeCountersPerThread Thread="0" ActualRows="2393" ActualRowsRead="2393" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" ActualScans="1" ActualLogicalReads="41" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                          </RunTimeInformation>
+                          <IndexScan Ordered="true" ScanDirection="FORWARD" ForcedIndex="false" ForceSeek="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                              </DefinedValue>
+                            </DefinedValues>
+                            <Object Database="[master]" Schema="[sys]" Table="[sysschobjs]" Index="[clst]" Alias="[o]" TableReferenceId="1" IndexKind="Clustered" Storage="RowStore" />
+                            <Predicate>
+                              <ScalarOperator ScalarString="[master].[sys].[sysschobjs].[nsclass] as [o].[nsclass]=(0) AND [master].[sys].[sysschobjs].[pclass] as [o].[pclass]=(1)">
+                                <Logical Operation="AND">
+                                  <ScalarOperator>
+                                    <Compare CompareOp="EQ">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="nsclass" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(0)" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Compare CompareOp="EQ">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="pclass" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(1)" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                </Logical>
+                              </ScalarOperator>
+                            </Predicate>
+                          </IndexScan>
+                        </RelOp>
+                        <Predicate>
+                          <ScalarOperator ScalarString="has_access('CO',[master].[sys].[sysschobjs].[id] as [o].[id])=(1)">
+                            <Compare CompareOp="EQ">
+                              <ScalarOperator>
+                                <Intrinsic FunctionName="has_access">
+                                  <ScalarOperator>
+                                    <Const ConstValue="'CO'" />
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="" />
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="" />
+                                  </ScalarOperator>
+                                </Intrinsic>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Const ConstValue="(1)" />
+                              </ScalarOperator>
+                            </Compare>
+                          </ScalarOperator>
+                        </Predicate>
+                      </Filter>
+                    </RelOp>
+                    <RelOp AvgRowSize="11" EstimateCPU="0.00449884" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="184.077" LogicalOp="Filter" NodeId="4" Parallel="false" PhysicalOp="Filter" EstimatedTotalSubtreeCost="0.0388006">
+                      <OutputList>
+                        <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                      </OutputList>
+                      <RunTimeInformation>
+                        <RunTimeCountersPerThread Thread="0" ActualRows="5" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" />
+                      </RunTimeInformation>
+                      <Filter StartupExpression="false">
+                        <RelOp AvgRowSize="15" EstimateCPU="0.0027893" EstimateIO="0.0312731" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="184.077" EstimatedRowsRead="2393" LogicalOp="Clustered Index Scan" NodeId="6" Parallel="false" PhysicalOp="Clustered Index Scan" EstimatedTotalSubtreeCost="0.0340624" TableCardinality="2393">
+                          <OutputList>
+                            <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                          </OutputList>
+                          <RunTimeInformation>
+                            <RunTimeCountersPerThread Thread="0" ActualRows="7" ActualRowsRead="2393" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" ActualScans="1" ActualLogicalReads="41" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                          </RunTimeInformation>
+                          <IndexScan Ordered="true" ScanDirection="FORWARD" ForcedIndex="false" ForceSeek="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                              </DefinedValue>
+                            </DefinedValues>
+                            <Object Database="[master]" Schema="[sys]" Table="[sysschobjs]" Index="[clst]" Alias="[o]" TableReferenceId="2" IndexKind="Clustered" Storage="RowStore" />
+                            <Predicate>
+                              <ScalarOperator ScalarString="[master].[sys].[sysschobjs].[nsclass] as [o].[nsclass]=(0) AND [master].[sys].[sysschobjs].[pclass] as [o].[pclass]=(1) AND CONVERT(char(2),CASE WHEN [master].[sys].[sysschobjs].[type] as [o].[type]='ET' THEN 'U' ELSE [master].[sys].[sysschobjs].[type] as [o].[type] END,0)='U'">
+                                <Logical Operation="AND">
+                                  <ScalarOperator>
+                                    <Compare CompareOp="EQ">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="nsclass" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(0)" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Compare CompareOp="EQ">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="pclass" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(1)" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Compare CompareOp="EQ">
+                                      <ScalarOperator>
+                                        <Convert DataType="char" Length="2" Style="0" Implicit="false">
+                                          <ScalarOperator>
+                                            <IF>
+                                              <Condition>
+                                                <ScalarOperator>
+                                                  <Compare CompareOp="EQ">
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="type" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="'ET'" />
+                                                    </ScalarOperator>
+                                                  </Compare>
+                                                </ScalarOperator>
+                                              </Condition>
+                                              <Then>
+                                                <ScalarOperator>
+                                                  <Const ConstValue="'U'" />
+                                                </ScalarOperator>
+                                              </Then>
+                                              <Else>
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="type" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                              </Else>
+                                            </IF>
+                                          </ScalarOperator>
+                                        </Convert>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="'U'" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                </Logical>
+                              </ScalarOperator>
+                            </Predicate>
+                          </IndexScan>
+                        </RelOp>
+                        <Predicate>
+                          <ScalarOperator ScalarString="has_access('CO',[master].[sys].[sysschobjs].[id] as [o].[id])=(1)">
+                            <Compare CompareOp="EQ">
+                              <ScalarOperator>
+                                <Intrinsic FunctionName="has_access">
+                                  <ScalarOperator>
+                                    <Const ConstValue="'CO'" />
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="" />
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="" />
+                                  </ScalarOperator>
+                                </Intrinsic>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Const ConstValue="(1)" />
+                              </ScalarOperator>
+                            </Compare>
+                          </ScalarOperator>
+                        </Predicate>
+                      </Filter>
+                    </RelOp>
+                  </Merge>
+                </RelOp>
+                <RelOp AvgRowSize="11" EstimateCPU="0.0107172" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="39.7321" LogicalOp="Inner Join" NodeId="8" Parallel="false" PhysicalOp="Merge Join" EstimatedTotalSubtreeCost="0.0501989">
+                  <OutputList>
+                    <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                  </OutputList>
+                  <RunTimeInformation>
+                    <RunTimeCountersPerThread Thread="0" ActualRows="98" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                  </RunTimeInformation>
+                  <Merge ManyToMany="false">
+                    <InnerSideJoinColumns>
+                      <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                    </InnerSideJoinColumns>
+                    <OuterSideJoinColumns>
+                      <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[obj]" Column="id" />
+                    </OuterSideJoinColumns>
+                    <Residual>
+                      <ScalarOperator ScalarString="[master].[sys].[sysidxstats].[id] as [i].[id]=[master].[sys].[sysschobjs].[id] as [obj].[id]">
+                        <Compare CompareOp="EQ">
+                          <ScalarOperator>
+                            <Identifier>
+                              <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                            </Identifier>
+                          </ScalarOperator>
+                          <ScalarOperator>
+                            <Identifier>
+                              <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[obj]" Column="id" />
+                            </Identifier>
+                          </ScalarOperator>
+                        </Compare>
+                      </ScalarOperator>
+                    </Residual>
+                    <RelOp AvgRowSize="11" EstimateCPU="0.0027893" EstimateIO="0.0312731" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="2393" EstimatedRowsRead="2393" LogicalOp="Clustered Index Scan" NodeId="9" Parallel="false" PhysicalOp="Clustered Index Scan" EstimatedTotalSubtreeCost="0.0340624" TableCardinality="2393">
+                      <OutputList>
+                        <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[obj]" Column="id" />
+                      </OutputList>
+                      <RunTimeInformation>
+                        <RunTimeCountersPerThread Thread="0" ActualRows="2392" ActualRowsRead="2392" Batches="0" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" ActualScans="1" ActualLogicalReads="41" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                      </RunTimeInformation>
+                      <IndexScan Ordered="true" ScanDirection="FORWARD" ForcedIndex="false" ForceSeek="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[obj]" Column="id" />
+                          </DefinedValue>
+                        </DefinedValues>
+                        <Object Database="[master]" Schema="[sys]" Table="[sysschobjs]" Index="[clst]" Alias="[obj]" IndexKind="Clustered" Storage="RowStore" />
+                      </IndexScan>
+                    </RelOp>
+                    <RelOp AvgRowSize="11" EstimateCPU="7.985E-05" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="41.8899" LogicalOp="Aggregate" NodeId="10" Parallel="false" PhysicalOp="Stream Aggregate" EstimatedTotalSubtreeCost="0.00541621">
+                      <OutputList>
+                        <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                      </OutputList>
+                      <RunTimeInformation>
+                        <RunTimeCountersPerThread Thread="0" ActualRows="98" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" />
+                      </RunTimeInformation>
+                      <StreamAggregate>
+                        <DefinedValues />
+                        <GroupBy>
+                          <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                        </GroupBy>
+                        <RelOp AvgRowSize="11" EstimateCPU="0.00029568" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="117.81" LogicalOp="Filter" NodeId="11" Parallel="false" PhysicalOp="Filter" EstimatedTotalSubtreeCost="0.00533636">
+                          <OutputList>
+                            <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                          </OutputList>
+                          <RunTimeInformation>
+                            <RunTimeCountersPerThread Thread="0" ActualRows="161" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" />
+                          </RunTimeInformation>
+                          <Filter StartupExpression="false">
+                            <RelOp AvgRowSize="15" EstimateCPU="0.0004111" EstimateIO="0.00460648" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="117.81" EstimatedRowsRead="231" LogicalOp="Clustered Index Scan" NodeId="13" Parallel="false" PhysicalOp="Clustered Index Scan" EstimatedTotalSubtreeCost="0.00501758" TableCardinality="231">
+                              <OutputList>
+                                <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                              </OutputList>
+                              <RunTimeInformation>
+                                <RunTimeCountersPerThread Thread="0" ActualRows="161" ActualRowsRead="231" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" ActualScans="1" ActualLogicalReads="5" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                              </RunTimeInformation>
+                              <IndexScan Ordered="true" ScanDirection="FORWARD" ForcedIndex="false" ForceSeek="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <Object Database="[master]" Schema="[sys]" Table="[sysidxstats]" Index="[clst]" Alias="[i]" IndexKind="Clustered" Storage="RowStore" />
+                                <Predicate>
+                                  <ScalarOperator ScalarString="([master].[sys].[sysidxstats].[status] as [i].[status]&amp;(1))&lt;&gt;(0)">
+                                    <Compare CompareOp="NE">
+                                      <ScalarOperator>
+                                        <Arithmetic Operation="BIT_AND">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="status" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="(1)" />
+                                          </ScalarOperator>
+                                        </Arithmetic>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(0)" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                </Predicate>
+                              </IndexScan>
+                            </RelOp>
+                            <Predicate>
+                              <ScalarOperator ScalarString="has_access('CO',[master].[sys].[sysidxstats].[id] as [i].[id])=(1)">
+                                <Compare CompareOp="EQ">
+                                  <ScalarOperator>
+                                    <Intrinsic FunctionName="has_access">
+                                      <ScalarOperator>
+                                        <Const ConstValue="'CO'" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="" />
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="" />
+                                      </ScalarOperator>
+                                    </Intrinsic>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(1)" />
+                                  </ScalarOperator>
+                                </Compare>
+                              </ScalarOperator>
+                            </Predicate>
+                          </Filter>
+                        </RelOp>
+                      </StreamAggregate>
+                    </RelOp>
+                  </Merge>
+                </RelOp>
+              </Merge>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementCompId="1" StatementEstRows="2695.22" StatementId="1" StatementOptmLevel="FULL" StatementOptmEarlyAbortReason="GoodEnoughPlanFound" CardinalityEstimationModelVersion="130" StatementSubTreeCost="0.16764" StatementText="select object_id from sys.objects&#xD;&#xA;union all&#xD;&#xA;select object_id from sys.tables&#xD;&#xA;union all&#xD;&#xA;select object_id from sys.indexes" StatementType="SELECT" QueryHash="0xE7F974D1EC91DD79" QueryPlanHash="0xB1176B403F5475B" RetrievedFromCache="true" SecurityPolicyApplied="false">
+          <StatementSetOptions ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" NUMERIC_ROUNDABORT="false" QUOTED_IDENTIFIER="true" />
+          <QueryPlan DegreeOfParallelism="0" NonParallelPlanReason="CouldNotGenerateValidParallelPlan" MemoryGrant="1120" CachedPlanSize="96" CompileTime="16" CompileCPU="16" CompileMemory="2936">
+            <MemoryGrantInfo SerialRequiredMemory="1024" SerialDesiredMemory="1120" RequiredMemory="1024" DesiredMemory="1120" RequestedMemory="1120" GrantWaitTime="0" GrantedMemory="1120" MaxUsedMemory="320" MaxQueryMemory="104616" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="104409" EstimatedPagesCached="26102" EstimatedAvailableDegreeOfParallelism="2" MaxCompileMemory="262808" />
+            <QueryTimeStats CpuTime="3" ElapsedTime="3" />
+            <RelOp AvgRowSize="11" EstimateCPU="0.000269522" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="2695.22" LogicalOp="Concatenation" NodeId="0" Parallel="false" PhysicalOp="Concatenation" EstimatedTotalSubtreeCost="0.16764">
+              <OutputList>
+                <ColumnReference Column="Union1124" />
+              </OutputList>
+              <RunTimeInformation>
+                <RunTimeCountersPerThread Thread="0" ActualRows="270" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="2" ActualCPUms="2" />
+              </RunTimeInformation>
+              <Concat>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Union1124" />
+                    <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                    <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                    <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp AvgRowSize="11" EstimateCPU="0.00378094" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="2393" LogicalOp="Filter" NodeId="1" Parallel="false" PhysicalOp="Filter" EstimatedTotalSubtreeCost="0.0378434">
+                  <OutputList>
+                    <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                  </OutputList>
+                  <RunTimeInformation>
+                    <RunTimeCountersPerThread Thread="0" ActualRows="104" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" />
+                  </RunTimeInformation>
+                  <Filter StartupExpression="false">
+                    <RelOp AvgRowSize="13" EstimateCPU="0.0027893" EstimateIO="0.0312731" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="2393" EstimatedRowsRead="2393" LogicalOp="Clustered Index Scan" NodeId="2" Parallel="false" PhysicalOp="Clustered Index Scan" EstimatedTotalSubtreeCost="0.0340624" TableCardinality="2393">
+                      <OutputList>
+                        <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                      </OutputList>
+                      <RunTimeInformation>
+                        <RunTimeCountersPerThread Thread="0" ActualRows="2393" ActualRowsRead="2393" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" ActualScans="1" ActualLogicalReads="41" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                      </RunTimeInformation>
+                      <IndexScan Ordered="false" ForcedIndex="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                          </DefinedValue>
+                        </DefinedValues>
+                        <Object Database="[master]" Schema="[sys]" Table="[sysschobjs]" Index="[clst]" Alias="[o]" TableReferenceId="1" IndexKind="Clustered" Storage="RowStore" />
+                        <Predicate>
+                          <ScalarOperator ScalarString="[master].[sys].[sysschobjs].[nsclass] as [o].[nsclass]=(0) AND [master].[sys].[sysschobjs].[pclass] as [o].[pclass]=(1)">
+                            <Logical Operation="AND">
+                              <ScalarOperator>
+                                <Compare CompareOp="EQ">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="nsclass" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(0)" />
+                                  </ScalarOperator>
+                                </Compare>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Compare CompareOp="EQ">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="pclass" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(1)" />
+                                  </ScalarOperator>
+                                </Compare>
+                              </ScalarOperator>
+                            </Logical>
+                          </ScalarOperator>
+                        </Predicate>
+                      </IndexScan>
+                    </RelOp>
+                    <Predicate>
+                      <ScalarOperator ScalarString="has_access('CO',[master].[sys].[sysschobjs].[id] as [o].[id])=(1)">
+                        <Compare CompareOp="EQ">
+                          <ScalarOperator>
+                            <Intrinsic FunctionName="has_access">
+                              <ScalarOperator>
+                                <Const ConstValue="'CO'" />
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Identifier>
+                                  <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                                </Identifier>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Const ConstValue="" />
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Const ConstValue="" />
+                              </ScalarOperator>
+                            </Intrinsic>
+                          </ScalarOperator>
+                          <ScalarOperator>
+                            <Const ConstValue="(1)" />
+                          </ScalarOperator>
+                        </Compare>
+                      </ScalarOperator>
+                    </Predicate>
+                  </Filter>
+                </RelOp>
+                <RelOp AvgRowSize="11" EstimateCPU="0.00567012" EstimateIO="0.000313" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="190.775" LogicalOp="Right Outer Join" NodeId="3" Parallel="false" PhysicalOp="Merge Join" EstimatedTotalSubtreeCost="0.0831566">
+                  <OutputList>
+                    <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                  </OutputList>
+                  <RunTimeInformation>
+                    <RunTimeCountersPerThread Thread="0" ActualRows="5" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                  </RunTimeInformation>
+                  <Merge ManyToMany="true">
+                    <InnerSideJoinColumns>
+                      <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                    </InnerSideJoinColumns>
+                    <OuterSideJoinColumns>
+                      <ColumnReference Database="[master]" Schema="[sys]" Table="[syssingleobjrefs]" Alias="[ht]" Column="depid" />
+                    </OuterSideJoinColumns>
+                    <Residual>
+                      <ScalarOperator ScalarString="[master].[sys].[syssingleobjrefs].[depid] as [ht].[depid]=[master].[sys].[sysschobjs].[id] as [o].[id]">
+                        <Compare CompareOp="EQ">
+                          <ScalarOperator>
+                            <Identifier>
+                              <ColumnReference Database="[master]" Schema="[sys]" Table="[syssingleobjrefs]" Alias="[ht]" Column="depid" />
+                            </Identifier>
+                          </ScalarOperator>
+                          <ScalarOperator>
+                            <Identifier>
+                              <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                            </Identifier>
+                          </ScalarOperator>
+                        </Compare>
+                      </ScalarOperator>
+                    </Residual>
+                    <RelOp AvgRowSize="12" EstimateCPU="0.0003792" EstimateIO="0.003125" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="1" EstimatedRowsRead="202" LogicalOp="Clustered Index Scan" NodeId="4" Parallel="false" PhysicalOp="Clustered Index Scan" EstimatedTotalSubtreeCost="0.0035042" TableCardinality="202">
+                      <OutputList>
+                        <ColumnReference Database="[master]" Schema="[sys]" Table="[syssingleobjrefs]" Alias="[ht]" Column="depid" />
+                      </OutputList>
+                      <RunTimeInformation>
+                        <RunTimeCountersPerThread Thread="0" ActualRows="0" ActualRowsRead="202" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" ActualScans="1" ActualLogicalReads="2" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                      </RunTimeInformation>
+                      <IndexScan Ordered="true" ScanDirection="FORWARD" ForcedIndex="false" ForceSeek="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Database="[master]" Schema="[sys]" Table="[syssingleobjrefs]" Alias="[ht]" Column="depid" />
+                          </DefinedValue>
+                        </DefinedValues>
+                        <Object Database="[master]" Schema="[sys]" Table="[syssingleobjrefs]" Index="[clst]" Alias="[ht]" IndexKind="Clustered" Storage="RowStore" />
+                        <Predicate>
+                          <ScalarOperator ScalarString="[master].[sys].[syssingleobjrefs].[class] as [ht].[class]=(112)">
+                            <Compare CompareOp="EQ">
+                              <ScalarOperator>
+                                <Identifier>
+                                  <ColumnReference Database="[master]" Schema="[sys]" Table="[syssingleobjrefs]" Alias="[ht]" Column="class" />
+                                </Identifier>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Const ConstValue="(112)" />
+                              </ScalarOperator>
+                            </Compare>
+                          </ScalarOperator>
+                        </Predicate>
+                      </IndexScan>
+                    </RelOp>
+                    <RelOp AvgRowSize="11" EstimateCPU="0.00567011" EstimateIO="0.000313" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="190.775" LogicalOp="Right Outer Join" NodeId="5" Parallel="false" PhysicalOp="Merge Join" EstimatedTotalSubtreeCost="0.0735693">
+                      <OutputList>
+                        <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                      </OutputList>
+                      <RunTimeInformation>
+                        <RunTimeCountersPerThread Thread="0" ActualRows="5" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                      </RunTimeInformation>
+                      <Merge ManyToMany="true">
+                        <InnerSideJoinColumns>
+                          <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                        </InnerSideJoinColumns>
+                        <OuterSideJoinColumns>
+                          <ColumnReference Database="[master]" Schema="[sys]" Table="[syssingleobjrefs]" Alias="[ct]" Column="indepid" />
+                        </OuterSideJoinColumns>
+                        <Residual>
+                          <ScalarOperator ScalarString="[master].[sys].[syssingleobjrefs].[indepid] as [ct].[indepid]=[master].[sys].[sysschobjs].[id] as [o].[id]">
+                            <Compare CompareOp="EQ">
+                              <ScalarOperator>
+                                <Identifier>
+                                  <ColumnReference Database="[master]" Schema="[sys]" Table="[syssingleobjrefs]" Alias="[ct]" Column="indepid" />
+                                </Identifier>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Identifier>
+                                  <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                                </Identifier>
+                              </ScalarOperator>
+                            </Compare>
+                          </ScalarOperator>
+                        </Residual>
+                        <RelOp AvgRowSize="12" EstimateCPU="0.0003792" EstimateIO="0.003125" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="1" EstimatedRowsRead="202" LogicalOp="Index Scan" NodeId="6" Parallel="false" PhysicalOp="Index Scan" EstimatedTotalSubtreeCost="0.0035042" TableCardinality="202">
+                          <OutputList>
+                            <ColumnReference Database="[master]" Schema="[sys]" Table="[syssingleobjrefs]" Alias="[ct]" Column="indepid" />
+                          </OutputList>
+                          <RunTimeInformation>
+                            <RunTimeCountersPerThread Thread="0" ActualRows="0" ActualRowsRead="202" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" ActualScans="1" ActualLogicalReads="2" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                          </RunTimeInformation>
+                          <IndexScan Ordered="true" ScanDirection="FORWARD" ForcedIndex="false" ForceSeek="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Database="[master]" Schema="[sys]" Table="[syssingleobjrefs]" Alias="[ct]" Column="indepid" />
+                              </DefinedValue>
+                            </DefinedValues>
+                            <Object Database="[master]" Schema="[sys]" Table="[syssingleobjrefs]" Index="[nc1]" Alias="[ct]" IndexKind="NonClustered" Storage="RowStore" />
+                            <Predicate>
+                              <ScalarOperator ScalarString="[master].[sys].[syssingleobjrefs].[class] as [ct].[class]=(112)">
+                                <Compare CompareOp="EQ">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[master]" Schema="[sys]" Table="[syssingleobjrefs]" Alias="[ct]" Column="class" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(112)" />
+                                  </ScalarOperator>
+                                </Compare>
+                              </ScalarOperator>
+                            </Predicate>
+                          </IndexScan>
+                        </RelOp>
+                        <RelOp AvgRowSize="11" EstimateCPU="0.00656981" EstimateIO="0.0035544" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="190.732" LogicalOp="Right Outer Join" NodeId="7" Parallel="false" PhysicalOp="Merge Join" EstimatedTotalSubtreeCost="0.0639821">
+                          <OutputList>
+                            <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                          </OutputList>
+                          <RunTimeInformation>
+                            <RunTimeCountersPerThread Thread="0" ActualRows="5" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                          </RunTimeInformation>
+                          <Merge ManyToMany="true">
+                            <InnerSideJoinColumns>
+                              <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                            </InnerSideJoinColumns>
+                            <OuterSideJoinColumns>
+                              <ColumnReference Database="[master]" Schema="[sys]" Table="[syssingleobjrefs]" Alias="[ds]" Column="depid" />
+                            </OuterSideJoinColumns>
+                            <Residual>
+                              <ScalarOperator ScalarString="[master].[sys].[syssingleobjrefs].[depid] as [ds].[depid]=[master].[sys].[sysschobjs].[id] as [o].[id]">
+                                <Compare CompareOp="EQ">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[master]" Schema="[sys]" Table="[syssingleobjrefs]" Alias="[ds]" Column="depid" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Compare>
+                              </ScalarOperator>
+                            </Residual>
+                            <RelOp AvgRowSize="16" EstimateCPU="0.0003792" EstimateIO="0.003125" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="11.961" EstimatedRowsRead="202" LogicalOp="Clustered Index Scan" NodeId="8" Parallel="false" PhysicalOp="Clustered Index Scan" EstimatedTotalSubtreeCost="0.0035042" TableCardinality="202">
+                              <OutputList>
+                                <ColumnReference Database="[master]" Schema="[sys]" Table="[syssingleobjrefs]" Alias="[ds]" Column="depid" />
+                              </OutputList>
+                              <RunTimeInformation>
+                                <RunTimeCountersPerThread Thread="0" ActualRows="13" ActualRowsRead="202" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" ActualScans="1" ActualLogicalReads="2" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                              </RunTimeInformation>
+                              <IndexScan Ordered="true" ScanDirection="FORWARD" ForcedIndex="false" ForceSeek="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[master]" Schema="[sys]" Table="[syssingleobjrefs]" Alias="[ds]" Column="depid" />
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <Object Database="[master]" Schema="[sys]" Table="[syssingleobjrefs]" Index="[clst]" Alias="[ds]" TableReferenceId="1" IndexKind="Clustered" Storage="RowStore" />
+                                <Predicate>
+                                  <ScalarOperator ScalarString="[master].[sys].[syssingleobjrefs].[class] as [ds].[class]=(8) AND [master].[sys].[syssingleobjrefs].[depsubid] as [ds].[depsubid]&lt;=(1)">
+                                    <Logical Operation="AND">
+                                      <ScalarOperator>
+                                        <Compare CompareOp="EQ">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Database="[master]" Schema="[sys]" Table="[syssingleobjrefs]" Alias="[ds]" Column="class" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="(8)" />
+                                          </ScalarOperator>
+                                        </Compare>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Compare CompareOp="LE">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Database="[master]" Schema="[sys]" Table="[syssingleobjrefs]" Alias="[ds]" Column="depsubid" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="(1)" />
+                                          </ScalarOperator>
+                                        </Compare>
+                                      </ScalarOperator>
+                                    </Logical>
+                                  </ScalarOperator>
+                                </Predicate>
+                              </IndexScan>
+                            </RelOp>
+                            <RelOp AvgRowSize="11" EstimateCPU="0.00624084" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="189.283" LogicalOp="Left Outer Join" NodeId="9" Parallel="false" PhysicalOp="Merge Join" EstimatedTotalSubtreeCost="0.0501729">
+                              <OutputList>
+                                <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                              </OutputList>
+                              <RunTimeInformation>
+                                <RunTimeCountersPerThread Thread="0" ActualRows="5" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                              </RunTimeInformation>
+                              <Merge ManyToMany="false">
+                                <InnerSideJoinColumns>
+                                  <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[lob]" Column="id" />
+                                </InnerSideJoinColumns>
+                                <OuterSideJoinColumns>
+                                  <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                                </OuterSideJoinColumns>
+                                <Residual>
+                                  <ScalarOperator ScalarString="[master].[sys].[sysidxstats].[id] as [lob].[id]=[master].[sys].[sysschobjs].[id] as [o].[id]">
+                                    <Compare CompareOp="EQ">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[lob]" Column="id" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                </Residual>
+                                <RelOp AvgRowSize="11" EstimateCPU="0.00449884" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="184.077" LogicalOp="Filter" NodeId="10" Parallel="false" PhysicalOp="Filter" EstimatedTotalSubtreeCost="0.0388006">
+                                  <OutputList>
+                                    <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                                  </OutputList>
+                                  <RunTimeInformation>
+                                    <RunTimeCountersPerThread Thread="0" ActualRows="5" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" />
+                                  </RunTimeInformation>
+                                  <Filter StartupExpression="false">
+                                    <RelOp AvgRowSize="15" EstimateCPU="0.0027893" EstimateIO="0.0312731" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="184.077" EstimatedRowsRead="2393" LogicalOp="Clustered Index Scan" NodeId="12" Parallel="false" PhysicalOp="Clustered Index Scan" EstimatedTotalSubtreeCost="0.0340624" TableCardinality="2393">
+                                      <OutputList>
+                                        <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                                      </OutputList>
+                                      <RunTimeInformation>
+                                        <RunTimeCountersPerThread Thread="0" ActualRows="7" ActualRowsRead="2393" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" ActualScans="1" ActualLogicalReads="41" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                      </RunTimeInformation>
+                                      <IndexScan Ordered="true" ScanDirection="FORWARD" ForcedIndex="false" ForceSeek="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                                        <DefinedValues>
+                                          <DefinedValue>
+                                            <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                                          </DefinedValue>
+                                        </DefinedValues>
+                                        <Object Database="[master]" Schema="[sys]" Table="[sysschobjs]" Index="[clst]" Alias="[o]" TableReferenceId="2" IndexKind="Clustered" Storage="RowStore" />
+                                        <Predicate>
+                                          <ScalarOperator ScalarString="[master].[sys].[sysschobjs].[nsclass] as [o].[nsclass]=(0) AND [master].[sys].[sysschobjs].[pclass] as [o].[pclass]=(1) AND CONVERT(char(2),CASE WHEN [master].[sys].[sysschobjs].[type] as [o].[type]='ET' THEN 'U' ELSE [master].[sys].[sysschobjs].[type] as [o].[type] END,0)='U'">
+                                            <Logical Operation="AND">
+                                              <ScalarOperator>
+                                                <Compare CompareOp="EQ">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="nsclass" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                  <ScalarOperator>
+                                                    <Const ConstValue="(0)" />
+                                                  </ScalarOperator>
+                                                </Compare>
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Compare CompareOp="EQ">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="pclass" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                  <ScalarOperator>
+                                                    <Const ConstValue="(1)" />
+                                                  </ScalarOperator>
+                                                </Compare>
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Compare CompareOp="EQ">
+                                                  <ScalarOperator>
+                                                    <Convert DataType="char" Length="2" Style="0" Implicit="false">
+                                                      <ScalarOperator>
+                                                        <IF>
+                                                          <Condition>
+                                                            <ScalarOperator>
+                                                              <Compare CompareOp="EQ">
+                                                                <ScalarOperator>
+                                                                  <Identifier>
+                                                                    <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="type" />
+                                                                  </Identifier>
+                                                                </ScalarOperator>
+                                                                <ScalarOperator>
+                                                                  <Const ConstValue="'ET'" />
+                                                                </ScalarOperator>
+                                                              </Compare>
+                                                            </ScalarOperator>
+                                                          </Condition>
+                                                          <Then>
+                                                            <ScalarOperator>
+                                                              <Const ConstValue="'U'" />
+                                                            </ScalarOperator>
+                                                          </Then>
+                                                          <Else>
+                                                            <ScalarOperator>
+                                                              <Identifier>
+                                                                <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="type" />
+                                                              </Identifier>
+                                                            </ScalarOperator>
+                                                          </Else>
+                                                        </IF>
+                                                      </ScalarOperator>
+                                                    </Convert>
+                                                  </ScalarOperator>
+                                                  <ScalarOperator>
+                                                    <Const ConstValue="'U'" />
+                                                  </ScalarOperator>
+                                                </Compare>
+                                              </ScalarOperator>
+                                            </Logical>
+                                          </ScalarOperator>
+                                        </Predicate>
+                                      </IndexScan>
+                                    </RelOp>
+                                    <Predicate>
+                                      <ScalarOperator ScalarString="has_access('CO',[master].[sys].[sysschobjs].[id] as [o].[id])=(1)">
+                                        <Compare CompareOp="EQ">
+                                          <ScalarOperator>
+                                            <Intrinsic FunctionName="has_access">
+                                              <ScalarOperator>
+                                                <Const ConstValue="'CO'" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[o]" Column="id" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="" />
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="" />
+                                              </ScalarOperator>
+                                            </Intrinsic>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="(1)" />
+                                          </ScalarOperator>
+                                        </Compare>
+                                      </ScalarOperator>
+                                    </Predicate>
+                                  </Filter>
+                                </RelOp>
+                                <RelOp AvgRowSize="15" EstimateCPU="0.0004111" EstimateIO="0.00460648" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="112.069" EstimatedRowsRead="231" LogicalOp="Clustered Index Scan" NodeId="13" Parallel="false" PhysicalOp="Clustered Index Scan" EstimatedTotalSubtreeCost="0.00501758" TableCardinality="231">
+                                  <OutputList>
+                                    <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[lob]" Column="id" />
+                                  </OutputList>
+                                  <RunTimeInformation>
+                                    <RunTimeCountersPerThread Thread="0" ActualRows="98" ActualRowsRead="231" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" ActualScans="1" ActualLogicalReads="5" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                  </RunTimeInformation>
+                                  <IndexScan Ordered="true" ScanDirection="FORWARD" ForcedIndex="false" ForceSeek="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                                    <DefinedValues>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[lob]" Column="id" />
+                                      </DefinedValue>
+                                    </DefinedValues>
+                                    <Object Database="[master]" Schema="[sys]" Table="[sysidxstats]" Index="[clst]" Alias="[lob]" IndexKind="Clustered" Storage="RowStore" />
+                                    <Predicate>
+                                      <ScalarOperator ScalarString="[master].[sys].[sysidxstats].[indid] as [lob].[indid]&lt;=(1)">
+                                        <Compare CompareOp="LE">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[lob]" Column="indid" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="(1)" />
+                                          </ScalarOperator>
+                                        </Compare>
+                                      </ScalarOperator>
+                                    </Predicate>
+                                  </IndexScan>
+                                </RelOp>
+                              </Merge>
+                            </RelOp>
+                          </Merge>
+                        </RelOp>
+                      </Merge>
+                    </RelOp>
+                  </Merge>
+                </RelOp>
+                <RelOp AvgRowSize="11" EstimateCPU="0.029932" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="111.442" LogicalOp="Inner Join" NodeId="14" Parallel="false" PhysicalOp="Hash Match" EstimatedTotalSubtreeCost="0.0463708">
+                  <OutputList>
+                    <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                  </OutputList>
+                  <MemoryFractions Input="1" Output="1" />
+                  <RunTimeInformation>
+                    <RunTimeCountersPerThread Thread="0" ActualRows="161" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="1" ActualCPUms="1" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" InputMemoryGrant="1120" OutputMemoryGrant="1120" UsedMemoryGrant="320" />
+                  </RunTimeInformation>
+                  <Hash>
+                    <DefinedValues />
+                    <HashKeysBuild>
+                      <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                    </HashKeysBuild>
+                    <HashKeysProbe>
+                      <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[obj]" Column="id" />
+                    </HashKeysProbe>
+                    <RelOp AvgRowSize="11" EstimateCPU="0.00029568" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="117.81" LogicalOp="Filter" NodeId="15" Parallel="false" PhysicalOp="Filter" EstimatedTotalSubtreeCost="0.00533636">
+                      <OutputList>
+                        <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                      </OutputList>
+                      <RunTimeInformation>
+                        <RunTimeCountersPerThread Thread="0" ActualRows="161" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" />
+                      </RunTimeInformation>
+                      <Filter StartupExpression="false">
+                        <RelOp AvgRowSize="15" EstimateCPU="0.0004111" EstimateIO="0.00460648" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="117.81" EstimatedRowsRead="231" LogicalOp="Clustered Index Scan" NodeId="17" Parallel="false" PhysicalOp="Clustered Index Scan" EstimatedTotalSubtreeCost="0.00501758" TableCardinality="231">
+                          <OutputList>
+                            <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                          </OutputList>
+                          <RunTimeInformation>
+                            <RunTimeCountersPerThread Thread="0" ActualRows="161" ActualRowsRead="231" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" ActualScans="1" ActualLogicalReads="5" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                          </RunTimeInformation>
+                          <IndexScan Ordered="false" ForcedIndex="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                              </DefinedValue>
+                            </DefinedValues>
+                            <Object Database="[master]" Schema="[sys]" Table="[sysidxstats]" Index="[clst]" Alias="[i]" IndexKind="Clustered" Storage="RowStore" />
+                            <Predicate>
+                              <ScalarOperator ScalarString="([master].[sys].[sysidxstats].[status] as [i].[status]&amp;(1))&lt;&gt;(0)">
+                                <Compare CompareOp="NE">
+                                  <ScalarOperator>
+                                    <Arithmetic Operation="BIT_AND">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="status" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(1)" />
+                                      </ScalarOperator>
+                                    </Arithmetic>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(0)" />
+                                  </ScalarOperator>
+                                </Compare>
+                              </ScalarOperator>
+                            </Predicate>
+                          </IndexScan>
+                        </RelOp>
+                        <Predicate>
+                          <ScalarOperator ScalarString="has_access('CO',[master].[sys].[sysidxstats].[id] as [i].[id])=(1)">
+                            <Compare CompareOp="EQ">
+                              <ScalarOperator>
+                                <Intrinsic FunctionName="has_access">
+                                  <ScalarOperator>
+                                    <Const ConstValue="'CO'" />
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[master]" Schema="[sys]" Table="[sysidxstats]" Alias="[i]" Column="id" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="" />
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="" />
+                                  </ScalarOperator>
+                                </Intrinsic>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Const ConstValue="(1)" />
+                              </ScalarOperator>
+                            </Compare>
+                          </ScalarOperator>
+                        </Predicate>
+                      </Filter>
+                    </RelOp>
+                    <RelOp AvgRowSize="11" EstimateCPU="0.0027893" EstimateIO="0.00831019" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="2393" EstimatedRowsRead="2393" LogicalOp="Index Scan" NodeId="18" Parallel="false" PhysicalOp="Index Scan" EstimatedTotalSubtreeCost="0.0110995" TableCardinality="2393">
+                      <OutputList>
+                        <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[obj]" Column="id" />
+                      </OutputList>
+                      <RunTimeInformation>
+                        <RunTimeCountersPerThread Thread="0" ActualRows="2393" ActualRowsRead="2393" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" ActualScans="1" ActualLogicalReads="10" ActualPhysicalReads="0" ActualReadAheads="21" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                      </RunTimeInformation>
+                      <IndexScan Ordered="false" ForcedIndex="false" ForceSeek="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Database="[master]" Schema="[sys]" Table="[sysschobjs]" Alias="[obj]" Column="id" />
+                          </DefinedValue>
+                        </DefinedValues>
+                        <Object Database="[master]" Schema="[sys]" Table="[sysschobjs]" Index="[nc3]" Alias="[obj]" IndexKind="NonClustered" Storage="RowStore" />
+                      </IndexScan>
+                    </RelOp>
+                  </Hash>
+                </RelOp>
+              </Concat>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

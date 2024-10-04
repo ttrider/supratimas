@@ -1,0 +1,60 @@
+{
+    "name": "supra-2",
+    "version": "1.0.0",
+    "description": "TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project.",
+    "main": "gulpfile.js",
+    "directories": {
+        "test": "test"
+    },
+    "dependencies": {
+        "animejs": "^2.2.0",
+        "char-encoding-detector": "0.0.7",
+        "knockout": "^3.4.2",
+        "requirejs": "^2.3.5"
+    },
+    "devDependencies": {
+        "@types/animejs": "^2.0.0",
+        "@types/jquery": "^3.3.0",
+        "@types/knockout": "^3.4.49",
+        "@types/mustache": "^0.8.30",
+        "@types/node": "^10.1.2",
+        "@types/tape": "^4.2.32",
+        "@types/xmldom": "^0.1.29",
+        "dir-glob": "^2.0.0",
+        "gulp": "^3.9.1",
+        "gulp-concat": "^2.6.1",
+        "gulp-file-include": "^2.0.1",
+        "gulp-htmlmin": "^4.0.0",
+        "gulp-less": "^3.4.0",
+        "gulp-newer": "^1.4.0",
+        "gulp-print": "^4.0.0",
+        "gulp-rename": "^1.2.2",
+        "gulp-shell": "^0.6.5",
+        "gulp-sourcemap": "^1.0.1",
+        "gulp-typescript": "^3.2.4",
+        "gulp-uglify": "^3.0.0",
+        "gulp-uglifycss": "^1.0.9",
+        "gulp-watch": "^5.0.0",
+        "jquery": "^3.3.1",
+        "merge2": "^1.2.1",
+        "mustache": "^2.3.0",
+        "strip-bom-buf": "^1.0.0",
+        "strip-bom-buffer": "^1.0.1",
+        "strip-bom-stream": "^3.0.0",
+        "tape": "^4.9.1",
+        "types": "^0.1.1",
+        "typescript": "^2.9.1",
+        "undertaker": "^1.2.0",
+        "xmldom": "^0.1.27",
+        "xpath": "0.0.27"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://ttrider.visualstudio.com/DefaultCollection/Supratimas/_git/supra-2"
+    },
+    "author": "",
+    "license": "ISC"
+}

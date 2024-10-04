@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="CREATE PROCEDURE [upload].[TeuResult_ProcessRecalcPassFail]&#xD;&#xA;&#x9;@logId int&#xD;&#xA;AS&#xD;&#xA;    SET NOCOUNT ON;&#xD;&#xA;   " StatementId="1" StatementCompId="79" StatementType="SET ON/OFF" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" SET XACT_ABORT ON;&#xD;&#xA;&#xD;&#xA;" StatementId="2" StatementCompId="80" StatementType="SET ON/OFF" RetrievedFromCache="true" />
+        <StmtCursor StatementText="&#x9;DECLARE @teuId uniqueidentifier&#xD;&#xA;&#xD;&#xA;&#x9;/*&#xD;&#xA;&#x9;** Loop over every Group this agent is processing and snag out the Teu ids&#xD;&#xA;&#x9;*/&#xD;&#xA;&#x9;DECLARE c1 CURSOR FAST_FORWARD&#xD;&#xA;&#x9;FOR&#xD;&#xA;&#x9;SELECT R.TeuId&#xD;&#xA;&#x9;FROM upload.TeuResult AS R&#xD;&#xA;&#x9;INNER JOIN upload.TeuResultLog AS RL ON RL.Id = R.TeuResultLogId&#xD;&#xA;&#x9;WHERE RL.Id = @logId AND R.TeuId IS NOT NULL&#xD;&#xA;&#xD;&#xA;&#x9;/*&#xD;&#xA;&#x9;** Recalc the pass\fail summaries for each Teu&#xD;&#xA;&#x9;*/&#xD;&#xA;" StatementId="3" StatementCompId="81" StatementType="DECLARE CURSOR" RetrievedFromCache="true">
+          <CursorPlan CursorName="c1" CursorActualType="FastForward" CursorRequestedType="FastForward" CursorConcurrency="Read Only" ForwardOnly="true">
+            <Operation OperationType="FetchQuery">
+              <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="24" CompileTime="2" CompileCPU="2" CompileMemory="256">
+                <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                <RelOp NodeId="0" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="23" EstimatedTotalSubtreeCost="0.00657038" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResult]" Alias="[R]" Column="TeuId" />
+                  </OutputList>
+                  <NestedLoops Optimized="0">
+                    <RelOp NodeId="1" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.35982e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList />
+                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                        <DefinedValues />
+                        <Object Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResultLog]" Index="[TeuResultLog_PK]" Alias="[RL]" IndexKind="Clustered" />
+                        <SeekPredicates>
+                          <SeekPredicateNew>
+                            <SeekKeys>
+                              <Prefix ScanType="EQ">
+                                <RangeColumns>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResultLog]" Alias="[RL]" Column="Id" />
+                                </RangeColumns>
+                                <RangeExpressions>
+                                  <ScalarOperator ScalarString="[@logId]">
+                                    <Identifier>
+                                      <ColumnReference Column="@logId" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </RangeExpressions>
+                              </Prefix>
+                            </SeekKeys>
+                          </SeekPredicateNew>
+                        </SeekPredicates>
+                      </IndexScan>
+                    </RelOp>
+                    <RelOp NodeId="2" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="23" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="4.1884e+007" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResult]" Alias="[R]" Column="TeuId" />
+                      </OutputList>
+                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResult]" Alias="[R]" Column="TeuId" />
+                          </DefinedValue>
+                        </DefinedValues>
+                        <Object Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResult]" Index="[TeuResult_AgentLog]" Alias="[R]" IndexKind="NonClustered" />
+                        <SeekPredicates>
+                          <SeekPredicateNew>
+                            <SeekKeys>
+                              <Prefix ScanType="EQ">
+                                <RangeColumns>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResult]" Alias="[R]" Column="TeuResultLogId" />
+                                </RangeColumns>
+                                <RangeExpressions>
+                                  <ScalarOperator ScalarString="[@logId]">
+                                    <Identifier>
+                                      <ColumnReference Column="@logId" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </RangeExpressions>
+                              </Prefix>
+                            </SeekKeys>
+                          </SeekPredicateNew>
+                        </SeekPredicates>
+                      </IndexScan>
+                    </RelOp>
+                  </NestedLoops>
+                </RelOp>
+                <ParameterList>
+                  <ColumnReference Column="@logId" ParameterCompiledValue="(1378308)" />
+                </ParameterList>
+              </QueryPlan>
+            </Operation>
+          </CursorPlan>
+        </StmtCursor>
+        <StmtSimple StatementText="&#x9;BEGIN TRANSACTION&#xD;&#xA;" StatementId="4" StatementCompId="82" StatementType="BEGIN TRANSACTION" RetrievedFromCache="true" />
+        <StmtCursor StatementText="&#x9;OPEN c1&#xD;&#xA;&#xD;&#xA;" StatementId="5" StatementCompId="83" StatementType="OPEN CURSOR" RetrievedFromCache="true">
+          <CursorPlan CursorName="c1" />
+        </StmtCursor>
+        <StmtCursor StatementText="&#x9;FETCH NEXT FROM c1&#xD;&#xA;&#x9;INTO @teuId&#xD;&#xA;&#xD;&#xA;" StatementId="6" StatementCompId="84" StatementType="FETCH CURSOR" RetrievedFromCache="true">
+          <CursorPlan CursorName="c1" />
+        </StmtCursor>
+        <StmtCond StatementText="&#x9;WHILE @@FETCH_STATUS = 0&#xD;&#xA;" StatementId="7" StatementCompId="85" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#xD;&#xA;&#x9;&#x9;EXEC upload.TeuResult_ProcessAdjustTeu&#x9;@teuId = @teuId&#xD;&#xA;&#xD;&#xA;&#x9;" StatementId="8" StatementCompId="86" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+              <StmtCursor StatementText="&#x9;FETCH NEXT FROM c1&#xD;&#xA;&#x9;&#x9;INTO @teuId&#xD;&#xA;&#xD;&#xA;" StatementId="9" StatementCompId="87" StatementType="FETCH CURSOR" RetrievedFromCache="true">
+                <CursorPlan CursorName="c1" />
+              </StmtCursor>
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtSimple StatementText="&#x9;END&#xD;&#xA;&#x9;COMMIT TRANSACTION&#xD;&#xA;&#xD;&#xA;" StatementId="10" StatementCompId="90" StatementType="COMMIT TRANSACTION" RetrievedFromCache="true" />
+        <StmtCursor StatementText="&#x9;CLOSE c1&#xD;&#xA;" StatementId="11" StatementCompId="91" StatementType="CLOSE CURSOR" RetrievedFromCache="true">
+          <CursorPlan CursorName="c1" />
+        </StmtCursor>
+        <StmtCursor StatementText="&#x9;DEALLOCATE c1&#xD;" StatementId="12" StatementCompId="92" StatementType="DEALLOCATE CURSOR" RetrievedFromCache="true">
+          <CursorPlan CursorName="c1" />
+        </StmtCursor>
+        <StmtSimple StatementText="&#xA;RETURN 0" StatementId="13" StatementCompId="93" StatementType="RETURN" RetrievedFromCache="true" />
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

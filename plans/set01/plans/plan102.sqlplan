@@ -1,0 +1,535 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="CREATE FUNCTION [dbo].[Function_Token] &#xD;&#xA;      (&#xD;&#xA;            @StringParse varchar(max),&#xD;&#xA;            @Separator varchar(128),&#xD;&#xA;            @TokenId int&#xD;&#xA;      )&#xD;&#xA;      RETURNS varchar(max)&#xD;&#xA;      AS&#xD;&#xA;      BEGIN&#xD;&#xA;            DECLARE @Tokens TABLE (&#xD;&#xA;                  Id int Identity(1,1) NOT NULL,&#xD;&#xA;                  Token varchar(max),&#xD;&#xA;                  StartIndex int&#xD;&#xA;            )&#xD;&#xA;            &#xD;&#xA;            INSERT INTO @Tokens SELECT String AS [Token], StartIndex AS [StartIndex] FROM dbo.Function_Split(@StringParse, @Separator);&#xD;&#xA;            &#xD;&#xA;           " StatementId="1" StatementCompId="32" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.0100085" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x50C9075099AD01C7" QueryPlanHash="0x1BD00373415733C1" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="40" CompileTime="9" CompileCPU="9" CompileMemory="352">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Table Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.01" EstimateCPU="1e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0100085" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <Update DMLRequestSort="0">
+                <Object Table="[@Tokens]" />
+                <SetPredicate>
+                  <ScalarOperator ScalarString="[Token] = [Expr1013],[StartIndex] = [Recr1009],[Id] = [Expr1012]">
+                    <ScalarExpressionList>
+                      <ScalarOperator>
+                        <MultipleAssign>
+                          <Assign>
+                            <ColumnReference Column="Token" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1013" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Column="StartIndex" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Recr1009" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Column="Id" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1012" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                        </MultipleAssign>
+                      </ScalarOperator>
+                    </ScalarExpressionList>
+                  </ScalarOperator>
+                </SetPredicate>
+                <RelOp NodeId="1" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="4043" EstimatedTotalSubtreeCost="7.514e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Recr1009" />
+                    <ColumnReference Column="Expr1012" />
+                    <ColumnReference Column="Expr1013" />
+                  </OutputList>
+                  <ComputeScalar>
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1013" />
+                        <ScalarOperator ScalarString="CONVERT_IMPLICIT(varchar(max),[Expr1011],0)">
+                          <Convert DataType="varchar(max)" Length="2147483647" Style="0" Implicit="1">
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1011" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Convert>
+                        </ScalarOperator>
+                      </DefinedValue>
+                    </DefinedValues>
+                    <RelOp NodeId="2" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="1043" EstimatedTotalSubtreeCost="7.414e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Column="Recr1009" />
+                        <ColumnReference Column="Expr1011" />
+                        <ColumnReference Column="Expr1012" />
+                      </OutputList>
+                      <ComputeScalar ComputeSequence="1">
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1012" />
+                            <ScalarOperator ScalarString="getidentity((-1255529732),(2),N'@Tokens')">
+                              <Intrinsic FunctionName="getidentity">
+                                <ScalarOperator>
+                                  <Const ConstValue="(-1255529732)" />
+                                </ScalarOperator>
+                                <ScalarOperator>
+                                  <Const ConstValue="(2)" />
+                                </ScalarOperator>
+                                <ScalarOperator>
+                                  <Const ConstValue="N'@Tokens'" />
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </DefinedValue>
+                        </DefinedValues>
+                        <RelOp NodeId="3" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="1039" EstimatedTotalSubtreeCost="7.314e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Column="Recr1009" />
+                            <ColumnReference Column="Expr1011" />
+                          </OutputList>
+                          <ComputeScalar>
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Column="Expr1011" />
+                                <ScalarOperator ScalarString="substring(CONVERT_IMPLICIT(varchar(2048),[@StringParse],0),[Recr1009],CASE WHEN [Recr1010]&gt;len([@Separator]) THEN [Recr1010]-[Recr1009]-len([@Separator]) ELSE len(CONVERT_IMPLICIT(varchar(2048),[@StringParse],0))-[Recr1009]+(1) END)">
+                                  <Intrinsic FunctionName="substring">
+                                    <ScalarOperator>
+                                      <Identifier>
+                                        <ColumnReference Column="ConstExpr1016">
+                                          <ScalarOperator>
+                                            <Convert DataType="varchar" Length="2048" Style="0" Implicit="1">
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@StringParse" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </Convert>
+                                          </ScalarOperator>
+                                        </ColumnReference>
+                                      </Identifier>
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Identifier>
+                                        <ColumnReference Column="Recr1009" />
+                                      </Identifier>
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <IF>
+                                        <Condition>
+                                          <ScalarOperator>
+                                            <Compare CompareOp="GT">
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="Recr1010" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="len">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@Separator" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Compare>
+                                          </ScalarOperator>
+                                        </Condition>
+                                        <Then>
+                                          <ScalarOperator>
+                                            <Arithmetic Operation="SUB">
+                                              <ScalarOperator>
+                                                <Arithmetic Operation="SUB">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="Recr1010" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="Recr1009" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Arithmetic>
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="len">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="@Separator" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Arithmetic>
+                                          </ScalarOperator>
+                                        </Then>
+                                        <Else>
+                                          <ScalarOperator>
+                                            <Arithmetic Operation="ADD">
+                                              <ScalarOperator>
+                                                <Arithmetic Operation="SUB">
+                                                  <ScalarOperator>
+                                                    <Intrinsic FunctionName="len">
+                                                      <ScalarOperator>
+                                                        <Convert DataType="varchar" Length="2048" Style="0" Implicit="1">
+                                                          <ScalarOperator>
+                                                            <Identifier>
+                                                              <ColumnReference Column="@StringParse" />
+                                                            </Identifier>
+                                                          </ScalarOperator>
+                                                        </Convert>
+                                                      </ScalarOperator>
+                                                    </Intrinsic>
+                                                  </ScalarOperator>
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="Recr1009" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Arithmetic>
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="(1)" />
+                                              </ScalarOperator>
+                                            </Arithmetic>
+                                          </ScalarOperator>
+                                        </Else>
+                                      </IF>
+                                    </ScalarOperator>
+                                  </Intrinsic>
+                                </ScalarOperator>
+                              </DefinedValue>
+                            </DefinedValues>
+                            <RelOp NodeId="4" PhysicalOp="Filter" LogicalOp="Filter" EstimateRows="1" EstimateIO="0" EstimateCPU="9.6e-007" AvgRowSize="15" EstimatedTotalSubtreeCost="7.214e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Column="Recr1009" />
+                                <ColumnReference Column="Recr1010" />
+                              </OutputList>
+                              <Filter StartupExpression="0">
+                                <RelOp NodeId="5" PhysicalOp="Index Spool" LogicalOp="Lazy Spool" EstimateRows="2" EstimateIO="0" EstimateCPU="1e-008" AvgRowSize="15" EstimatedTotalSubtreeCost="6.254e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Column="Expr1020" />
+                                    <ColumnReference Column="Recr1009" />
+                                    <ColumnReference Column="Recr1010" />
+                                  </OutputList>
+                                  <Spool Stack="1">
+                                    <RelOp NodeId="6" PhysicalOp="Concatenation" LogicalOp="Concatenation" EstimateRows="2" EstimateIO="0" EstimateCPU="2e-009" AvgRowSize="15" EstimatedTotalSubtreeCost="4.664e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList>
+                                        <ColumnReference Column="Expr1020" />
+                                        <ColumnReference Column="Recr1009" />
+                                        <ColumnReference Column="Recr1010" />
+                                      </OutputList>
+                                      <Concat>
+                                        <DefinedValues>
+                                          <DefinedValue>
+                                            <ColumnReference Column="Expr1020" />
+                                            <ColumnReference Column="Expr1017" />
+                                            <ColumnReference Column="Expr1019" />
+                                          </DefinedValue>
+                                          <DefinedValue>
+                                            <ColumnReference Column="Recr1009" />
+                                            <ColumnReference Column="Expr1004" />
+                                            <ColumnReference Column="Recr1007" />
+                                          </DefinedValue>
+                                          <DefinedValue>
+                                            <ColumnReference Column="Recr1010" />
+                                            <ColumnReference Column="Expr1005" />
+                                            <ColumnReference Column="Expr1008" />
+                                          </DefinedValue>
+                                        </DefinedValues>
+                                        <RelOp NodeId="7" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="2e-008" AvgRowSize="15" EstimatedTotalSubtreeCost="2e-008" Parallel="0" EstimateRebinds="2" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                          <OutputList>
+                                            <ColumnReference Column="Expr1017" />
+                                            <ColumnReference Column="Expr1004" />
+                                            <ColumnReference Column="Expr1005" />
+                                          </OutputList>
+                                          <ComputeScalar>
+                                            <DefinedValues>
+                                              <DefinedValue>
+                                                <ColumnReference Column="Expr1017" />
+                                                <ScalarOperator ScalarString="(0)">
+                                                  <Const ConstValue="(0)" />
+                                                </ScalarOperator>
+                                              </DefinedValue>
+                                            </DefinedValues>
+                                            <RelOp NodeId="8" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="15" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                              <OutputList>
+                                                <ColumnReference Column="Expr1004" />
+                                                <ColumnReference Column="Expr1005" />
+                                              </OutputList>
+                                              <ConstantScan>
+                                                <Values>
+                                                  <Row>
+                                                    <ScalarOperator ScalarString="(0)">
+                                                      <Const ConstValue="(0)" />
+                                                    </ScalarOperator>
+                                                    <ScalarOperator ScalarString="(1)">
+                                                      <Const ConstValue="(1)" />
+                                                    </ScalarOperator>
+                                                  </Row>
+                                                </Values>
+                                              </ConstantScan>
+                                            </RelOp>
+                                          </ComputeScalar>
+                                        </RelOp>
+                                        <RelOp NodeId="14" PhysicalOp="Assert" LogicalOp="Assert" EstimateRows="2" EstimateIO="0" EstimateCPU="1.68e-007" AvgRowSize="15" EstimatedTotalSubtreeCost="3.505e-006" Parallel="0" EstimateRebinds="2" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                          <OutputList>
+                                            <ColumnReference Column="Expr1019" />
+                                            <ColumnReference Column="Recr1007" />
+                                            <ColumnReference Column="Expr1008" />
+                                          </OutputList>
+                                          <Assert StartupExpression="0">
+                                            <RelOp NodeId="15" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="2" EstimateIO="0" EstimateCPU="1.68e-007" AvgRowSize="15" EstimatedTotalSubtreeCost="3.505e-006" Parallel="0" EstimateRebinds="2" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                              <OutputList>
+                                                <ColumnReference Column="Expr1019" />
+                                                <ColumnReference Column="Recr1007" />
+                                                <ColumnReference Column="Expr1008" />
+                                              </OutputList>
+                                              <NestedLoops Optimized="0">
+                                                <OuterReferences>
+                                                  <ColumnReference Column="Expr1019" />
+                                                  <ColumnReference Column="Recr1006" />
+                                                  <ColumnReference Column="Recr1007" />
+                                                </OuterReferences>
+                                                <RelOp NodeId="16" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="2e-008" AvgRowSize="15" EstimatedTotalSubtreeCost="2e-008" Parallel="0" EstimateRebinds="2" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                  <OutputList>
+                                                    <ColumnReference Column="Expr1019" />
+                                                    <ColumnReference Column="Recr1006" />
+                                                    <ColumnReference Column="Recr1007" />
+                                                  </OutputList>
+                                                  <ComputeScalar>
+                                                    <DefinedValues>
+                                                      <DefinedValue>
+                                                        <ColumnReference Column="Expr1019" />
+                                                        <ScalarOperator ScalarString="[Expr1018]+(1)">
+                                                          <Arithmetic Operation="ADD">
+                                                            <ScalarOperator>
+                                                              <Identifier>
+                                                                <ColumnReference Column="Expr1018" />
+                                                              </Identifier>
+                                                            </ScalarOperator>
+                                                            <ScalarOperator>
+                                                              <Const ConstValue="(1)" />
+                                                            </ScalarOperator>
+                                                          </Arithmetic>
+                                                        </ScalarOperator>
+                                                      </DefinedValue>
+                                                    </DefinedValues>
+                                                    <RelOp NodeId="17" PhysicalOp="Table Spool" LogicalOp="Lazy Spool" EstimateRows="1" EstimateIO="0" EstimateCPU="2e-008" AvgRowSize="15" EstimatedTotalSubtreeCost="2e-008" Parallel="0" EstimateRebinds="2" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                      <OutputList>
+                                                        <ColumnReference Column="Expr1018" />
+                                                        <ColumnReference Column="Recr1006" />
+                                                        <ColumnReference Column="Recr1007" />
+                                                      </OutputList>
+                                                      <Spool PrimaryNodeId="5" Stack="1" />
+                                                    </RelOp>
+                                                  </ComputeScalar>
+                                                </RelOp>
+                                                <RelOp NodeId="21" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="11" EstimatedTotalSubtreeCost="3.317e-006" Parallel="0" EstimateRebinds="1" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                  <OutputList>
+                                                    <ColumnReference Column="Expr1008" />
+                                                  </OutputList>
+                                                  <ComputeScalar>
+                                                    <DefinedValues>
+                                                      <DefinedValue>
+                                                        <ColumnReference Column="Expr1008" />
+                                                        <ScalarOperator ScalarString="charindex([@Separator],CONVERT_IMPLICIT(varchar(2048),[@StringParse],0),[Recr1007])+len([@Separator])">
+                                                          <Arithmetic Operation="ADD">
+                                                            <ScalarOperator>
+                                                              <Intrinsic FunctionName="charindex">
+                                                                <ScalarOperator>
+                                                                  <Identifier>
+                                                                    <ColumnReference Column="@Separator" />
+                                                                  </Identifier>
+                                                                </ScalarOperator>
+                                                                <ScalarOperator>
+                                                                  <Identifier>
+                                                                    <ColumnReference Column="ConstExpr1014">
+                                                                      <ScalarOperator>
+                                                                        <Convert DataType="varchar" Length="2048" Style="0" Implicit="1">
+                                                                          <ScalarOperator>
+                                                                            <Identifier>
+                                                                              <ColumnReference Column="@StringParse" />
+                                                                            </Identifier>
+                                                                          </ScalarOperator>
+                                                                        </Convert>
+                                                                      </ScalarOperator>
+                                                                    </ColumnReference>
+                                                                  </Identifier>
+                                                                </ScalarOperator>
+                                                                <ScalarOperator>
+                                                                  <Identifier>
+                                                                    <ColumnReference Column="Recr1007" />
+                                                                  </Identifier>
+                                                                </ScalarOperator>
+                                                              </Intrinsic>
+                                                            </ScalarOperator>
+                                                            <ScalarOperator>
+                                                              <Identifier>
+                                                                <ColumnReference Column="ConstExpr1015">
+                                                                  <ScalarOperator>
+                                                                    <Intrinsic FunctionName="len">
+                                                                      <ScalarOperator>
+                                                                        <Identifier>
+                                                                          <ColumnReference Column="@Separator" />
+                                                                        </Identifier>
+                                                                      </ScalarOperator>
+                                                                    </Intrinsic>
+                                                                  </ScalarOperator>
+                                                                </ColumnReference>
+                                                              </Identifier>
+                                                            </ScalarOperator>
+                                                          </Arithmetic>
+                                                        </ScalarOperator>
+                                                      </DefinedValue>
+                                                    </DefinedValues>
+                                                    <RelOp NodeId="22" PhysicalOp="Filter" LogicalOp="Filter" EstimateRows="1" EstimateIO="0" EstimateCPU="4.8e-007" AvgRowSize="9" EstimatedTotalSubtreeCost="3.117e-006" Parallel="0" EstimateRebinds="1" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                      <OutputList />
+                                                      <Filter StartupExpression="1">
+                                                        <RelOp NodeId="23" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="2.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="1" EstimatedExecutionMode="Row">
+                                                          <OutputList />
+                                                          <ConstantScan />
+                                                        </RelOp>
+                                                        <Predicate>
+                                                          <ScalarOperator ScalarString="[Recr1007]&gt;[Recr1006]">
+                                                            <Compare CompareOp="GT">
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Column="Recr1007" />
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Column="Recr1006" />
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                            </Compare>
+                                                          </ScalarOperator>
+                                                        </Predicate>
+                                                      </Filter>
+                                                    </RelOp>
+                                                  </ComputeScalar>
+                                                </RelOp>
+                                              </NestedLoops>
+                                            </RelOp>
+                                            <Predicate>
+                                              <ScalarOperator ScalarString="CASE WHEN [Expr1019]&gt;(100) THEN (0) ELSE NULL END">
+                                                <IF>
+                                                  <Condition>
+                                                    <ScalarOperator>
+                                                      <Compare CompareOp="GT">
+                                                        <ScalarOperator>
+                                                          <Identifier>
+                                                            <ColumnReference Column="Expr1019" />
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator>
+                                                          <Const ConstValue="(100)" />
+                                                        </ScalarOperator>
+                                                      </Compare>
+                                                    </ScalarOperator>
+                                                  </Condition>
+                                                  <Then>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="(0)" />
+                                                    </ScalarOperator>
+                                                  </Then>
+                                                  <Else>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="NULL" />
+                                                    </ScalarOperator>
+                                                  </Else>
+                                                </IF>
+                                              </ScalarOperator>
+                                            </Predicate>
+                                          </Assert>
+                                        </RelOp>
+                                      </Concat>
+                                    </RelOp>
+                                  </Spool>
+                                </RelOp>
+                                <Predicate>
+                                  <ScalarOperator ScalarString="[Recr1009]&gt;(0)">
+                                    <Compare CompareOp="GT">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="Recr1009" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(0)" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                </Predicate>
+                              </Filter>
+                            </RelOp>
+                          </ComputeScalar>
+                        </RelOp>
+                      </ComputeScalar>
+                    </RelOp>
+                  </ComputeScalar>
+                </RelOp>
+              </Update>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@StringParse" ParameterCompiledValue="'FBL_BLDSVC.10008.12491.20150128-1734'" />
+              <ColumnReference Column="@Separator" ParameterCompiledValue="'.'" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText=" DECLARE @ReturnValue varchar(max);&#xD;&#xA;            &#xD;&#xA;            SELECT @ReturnValue=[Token] FROM @Tokens WHERE [Id]=@TokenId;&#xD;&#xA;            &#xD;&#xA;           " StatementId="2" StatementCompId="33" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032831" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0xCB3CFD9C1720D702" QueryPlanHash="0x6CF1C4B56897C6BD">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="0" CompileCPU="0" CompileMemory="104">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="1" EstimateIO="0.0032035" EstimateCPU="7.96e-005" AvgRowSize="4039" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Column="Token" />
+              </OutputList>
+              <TableScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Token" />
+                  </DefinedValue>
+                </DefinedValues>
+                <Object Table="[@Tokens]" />
+                <Predicate>
+                  <ScalarOperator ScalarString="[Id]=[@TokenId]">
+                    <Compare CompareOp="EQ">
+                      <ScalarOperator>
+                        <Identifier>
+                          <ColumnReference Column="Id" />
+                        </Identifier>
+                      </ScalarOperator>
+                      <ScalarOperator>
+                        <Identifier>
+                          <ColumnReference Column="@TokenId" />
+                        </Identifier>
+                      </ScalarOperator>
+                    </Compare>
+                  </ScalarOperator>
+                </Predicate>
+              </TableScan>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@TokenId" ParameterCompiledValue="(2)" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText=" RETURN @ReturnValue;&#xD;&#xA;     " StatementId="3" StatementCompId="34" StatementType="RETURN" RetrievedFromCache="true" />
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

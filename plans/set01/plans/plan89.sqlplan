@@ -1,0 +1,1164 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="CREATE PROCEDURE [upload].[TeuResult_ProcessPath]&#xD;&#xA;&#x9;@logId int&#xD;&#xA;AS&#xD;&#xA;&#x9;DECLARE @pathCount int;&#xD;&#xA;&#x9;DECLARE @missingPaths TABLE (PathHash varbinary(16), Path nvarchar(max));&#xD;&#xA;&#xD;&#xA;&#x9;SET NOCOUNT ON;&#xD;&#xA;   " StatementId="1" StatementCompId="42" StatementType="SET ON/OFF" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" SET XACT_ABORT ON;&#xD;&#xA;&#xD;&#xA;" StatementId="2" StatementCompId="43" StatementType="SET ON/OFF" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;BEGIN TRANSACTION&#xD;&#xA;&#xD;&#xA;&#x9;/*&#xD;&#xA;&#x9;** Calculate our hash values&#xD;&#xA;&#x9;*/&#xD;&#xA;" StatementId="3" StatementCompId="44" StatementType="BEGIN TRANSACTION" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;UPDATE TCR&#xD;&#xA;&#x9;&#x9;SET TestCasePathHash = hashbytes('md5',TestCasePath)&#xD;&#xA;&#x9;FROM upload.TestCaseResult AS TCR&#xD;&#xA;&#x9;INNER JOIN upload.TeuResult AS R ON R.Id = TCR.GroupId&#xD;&#xA;&#x9;INNER JOIN upload.TeuResultLog AS RL ON RL.Id = R.TeuResultLogId&#xD;&#xA;&#x9;WHERE RL.Id = @logId&#xD;&#xA;&#xD;&#xA;&#x9;&#xD;&#xA;&#x9;/*&#xD;&#xA;&#x9;** Insert new rows in TestCasePath&#xD;&#xA;&#x9;*/&#x9;&#xD;&#xA;" StatementId="4" StatementCompId="45" StatementType="UPDATE" RetrievedFromCache="true" StatementSubTreeCost="2.90578" StatementEstRows="189.782" StatementOptmLevel="FULL" QueryHash="0xA007979B40D84934" QueryPlanHash="0x874476D915AF4D7B">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="64" CompileTime="20" CompileCPU="16" CompileMemory="832">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="1" PhysicalOp="Clustered Index Update" LogicalOp="Update" EstimateRows="189.782" EstimateIO="2.75338" EstimateCPU="0.000379563" AvgRowSize="9" EstimatedTotalSubtreeCost="2.90578" Parallel="0" Partitioned="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <Update WithUnorderedPrefetch="1" DMLRequestSort="0">
+                <Object Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Index="[TestCaseResultUpload_PK]" Alias="[TCR]" IndexKind="Clustered" />
+                <Object Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Index="[IX_TestCaseResult_GroupId]" Alias="[TCR]" IndexKind="NonClustered" />
+                <SetPredicate>
+                  <ScalarOperator ScalarString="[OurLabReporting].[upload].[TestCaseResult].[TestcasePathHash] as [TCR].[TestcasePathHash] = [Expr1007]">
+                    <ScalarExpressionList>
+                      <ScalarOperator>
+                        <MultipleAssign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestcasePathHash" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1007" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                        </MultipleAssign>
+                      </ScalarOperator>
+                    </ScalarExpressionList>
+                  </ScalarOperator>
+                </SetPredicate>
+                <RelOp NodeId="2" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="189.782" EstimateIO="0" EstimateCPU="1.89782e-005" AvgRowSize="66" EstimatedTotalSubtreeCost="0.152018" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="PtnId1000" ComputedColumn="1" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="GroupId" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCaseResultId" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="DbTimestamp" />
+                    <ColumnReference Column="Expr1007" />
+                    <ColumnReference Column="Expr1015" />
+                    <ColumnReference Column="Expr1017" />
+                  </OutputList>
+                  <ComputeScalar>
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1015" />
+                        <ScalarOperator ScalarString="[Expr1015]">
+                          <Identifier>
+                            <ColumnReference Column="Expr1015" />
+                          </Identifier>
+                        </ScalarOperator>
+                      </DefinedValue>
+                    </DefinedValues>
+                    <RelOp NodeId="4" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="189.782" EstimateIO="0" EstimateCPU="1.89782e-005" AvgRowSize="66" EstimatedTotalSubtreeCost="0.152018" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Column="PtnId1000" ComputedColumn="1" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="GroupId" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCaseResultId" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="DbTimestamp" />
+                        <ColumnReference Column="Expr1007" />
+                        <ColumnReference Column="Expr1015" />
+                      </OutputList>
+                      <ComputeScalar>
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1015" />
+                            <ScalarOperator ScalarString="CASE WHEN [Expr1011] THEN (0) ELSE (1) END">
+                              <IF>
+                                <Condition>
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Expr1011" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Condition>
+                                <Then>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(0)" />
+                                  </ScalarOperator>
+                                </Then>
+                                <Else>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(1)" />
+                                  </ScalarOperator>
+                                </Else>
+                              </IF>
+                            </ScalarOperator>
+                          </DefinedValue>
+                        </DefinedValues>
+                        <RelOp NodeId="5" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="189.782" EstimateIO="0" EstimateCPU="1.89782e-005" AvgRowSize="63" EstimatedTotalSubtreeCost="0.151999" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Column="PtnId1000" ComputedColumn="1" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="GroupId" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCaseResultId" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="DbTimestamp" />
+                            <ColumnReference Column="Expr1007" />
+                            <ColumnReference Column="Expr1011" />
+                          </OutputList>
+                          <ComputeScalar>
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Column="Expr1007" />
+                                <ScalarOperator ScalarString="CONVERT_IMPLICIT(varbinary(16),hashbytes(N'md5',[OurLabReporting].[upload].[TestCaseResult].[TestCasePath] as [TCR].[TestCasePath]),0)">
+                                  <Convert DataType="varbinary" Length="16" Style="0" Implicit="1">
+                                    <ScalarOperator>
+                                      <Intrinsic FunctionName="hashbytes">
+                                        <ScalarOperator>
+                                          <Const ConstValue="N'md5'" />
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCasePath" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Intrinsic>
+                                    </ScalarOperator>
+                                  </Convert>
+                                </ScalarOperator>
+                              </DefinedValue>
+                              <DefinedValue>
+                                <ColumnReference Column="Expr1011" />
+                                <ScalarOperator ScalarString="CASE WHEN [OurLabReporting].[upload].[TestCaseResult].[TestcasePathHash] as [TCR].[TestcasePathHash] = CONVERT_IMPLICIT(varbinary(16),hashbytes(N'md5',[OurLabReporting].[upload].[TestCaseResult].[TestCasePath] as [TCR].[TestCasePath]),0) THEN (1) ELSE (0) END">
+                                  <IF>
+                                    <Condition>
+                                      <ScalarOperator>
+                                        <Compare CompareOp="BINARY IS">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestcasePathHash" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Convert DataType="varbinary" Length="16" Style="0" Implicit="1">
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="hashbytes">
+                                                  <ScalarOperator>
+                                                    <Const ConstValue="N'md5'" />
+                                                  </ScalarOperator>
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCasePath" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Convert>
+                                          </ScalarOperator>
+                                        </Compare>
+                                      </ScalarOperator>
+                                    </Condition>
+                                    <Then>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(1)" />
+                                      </ScalarOperator>
+                                    </Then>
+                                    <Else>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(0)" />
+                                      </ScalarOperator>
+                                    </Else>
+                                  </IF>
+                                </ScalarOperator>
+                              </DefinedValue>
+                            </DefinedValues>
+                            <RelOp NodeId="6" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="189.782" EstimateIO="0" EstimateCPU="0.000793288" AvgRowSize="506" EstimatedTotalSubtreeCost="0.15198" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Column="PtnId1000" ComputedColumn="1" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="GroupId" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCaseResultId" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCasePath" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestcasePathHash" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="DbTimestamp" />
+                              </OutputList>
+                              <NestedLoops Optimized="0">
+                                <OuterReferences>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResult]" Alias="[R]" Column="Id" />
+                                </OuterReferences>
+                                <RelOp NodeId="7" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="23" EstimatedTotalSubtreeCost="0.00657038" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResult]" Alias="[R]" Column="Id" />
+                                  </OutputList>
+                                  <NestedLoops Optimized="0">
+                                    <RelOp NodeId="8" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.35983e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList />
+                                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                        <DefinedValues />
+                                        <Object Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResultLog]" Index="[TeuResultLog_PK]" Alias="[RL]" IndexKind="Clustered" />
+                                        <SeekPredicates>
+                                          <SeekPredicateNew>
+                                            <SeekKeys>
+                                              <Prefix ScanType="EQ">
+                                                <RangeColumns>
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResultLog]" Alias="[RL]" Column="Id" />
+                                                </RangeColumns>
+                                                <RangeExpressions>
+                                                  <ScalarOperator ScalarString="[@logId]">
+                                                    <Identifier>
+                                                      <ColumnReference Column="@logId" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </RangeExpressions>
+                                              </Prefix>
+                                            </SeekKeys>
+                                          </SeekPredicateNew>
+                                        </SeekPredicates>
+                                      </IndexScan>
+                                    </RelOp>
+                                    <RelOp NodeId="9" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="23" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="4.18843e+007" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResult]" Alias="[R]" Column="Id" />
+                                      </OutputList>
+                                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                        <DefinedValues>
+                                          <DefinedValue>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResult]" Alias="[R]" Column="Id" />
+                                          </DefinedValue>
+                                        </DefinedValues>
+                                        <Object Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResult]" Index="[TeuResult_AgentLog]" Alias="[R]" IndexKind="NonClustered" />
+                                        <SeekPredicates>
+                                          <SeekPredicateNew>
+                                            <SeekKeys>
+                                              <Prefix ScanType="EQ">
+                                                <RangeColumns>
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResult]" Alias="[R]" Column="TeuResultLogId" />
+                                                </RangeColumns>
+                                                <RangeExpressions>
+                                                  <ScalarOperator ScalarString="[@logId]">
+                                                    <Identifier>
+                                                      <ColumnReference Column="@logId" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </RangeExpressions>
+                                              </Prefix>
+                                            </SeekKeys>
+                                          </SeekPredicateNew>
+                                        </SeekPredicates>
+                                      </IndexScan>
+                                    </RelOp>
+                                  </NestedLoops>
+                                </RelOp>
+                                <RelOp NodeId="10" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="189.782" EstimateIO="0.1375" EstimateCPU="0.00711676" AvgRowSize="506" EstimatedTotalSubtreeCost="0.144617" TableCardinality="1.70172e+006" Parallel="0" Partitioned="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Column="PtnId1000" ComputedColumn="1" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="GroupId" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCaseResultId" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCasePath" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestcasePathHash" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="DbTimestamp" />
+                                  </OutputList>
+                                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                    <DefinedValues>
+                                      <DefinedValue>
+                                        <ColumnReference Column="PtnId1000" ComputedColumn="1" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="GroupId" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCaseResultId" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCasePath" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestcasePathHash" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="DbTimestamp" />
+                                      </DefinedValue>
+                                    </DefinedValues>
+                                    <Object Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Index="[IX_TestCaseResult_GroupId]" Alias="[TCR]" IndexKind="NonClustered" />
+                                    <SeekPredicates>
+                                      <SeekPredicateNew>
+                                        <SeekKeys>
+                                          <StartRange ScanType="GE">
+                                            <RangeColumns>
+                                              <ColumnReference Column="PtnId1000" />
+                                            </RangeColumns>
+                                            <RangeExpressions>
+                                              <ScalarOperator ScalarString="(1)">
+                                                <Const ConstValue="(1)" />
+                                              </ScalarOperator>
+                                            </RangeExpressions>
+                                          </StartRange>
+                                          <EndRange ScanType="LE">
+                                            <RangeColumns>
+                                              <ColumnReference Column="PtnId1000" />
+                                            </RangeColumns>
+                                            <RangeExpressions>
+                                              <ScalarOperator ScalarString="(44)">
+                                                <Const ConstValue="(44)" />
+                                              </ScalarOperator>
+                                            </RangeExpressions>
+                                          </EndRange>
+                                        </SeekKeys>
+                                        <SeekKeys>
+                                          <Prefix ScanType="EQ">
+                                            <RangeColumns>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="GroupId" />
+                                            </RangeColumns>
+                                            <RangeExpressions>
+                                              <ScalarOperator ScalarString="[OurLabReporting].[upload].[TeuResult].[Id] as [R].[Id]">
+                                                <Identifier>
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResult]" Alias="[R]" Column="Id" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </RangeExpressions>
+                                          </Prefix>
+                                        </SeekKeys>
+                                      </SeekPredicateNew>
+                                    </SeekPredicates>
+                                  </IndexScan>
+                                </RelOp>
+                              </NestedLoops>
+                            </RelOp>
+                          </ComputeScalar>
+                        </RelOp>
+                      </ComputeScalar>
+                    </RelOp>
+                  </ComputeScalar>
+                </RelOp>
+              </Update>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@logId" ParameterCompiledValue="(1378317)" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText="&#x9;INSERT INTO @missingPaths (Path, PathHash)&#xD;&#xA;&#x9;SELECT T.TestCasePath, T.TestcasePathHash&#xD;&#xA;&#x9;FROM (&#xD;&#xA;&#x9;&#x9;SELECT DISTINCT TCR.TestCasePath, TCR.TestCasePathHash&#xD;&#xA;&#x9;&#x9;FROM upload.TestCaseResult AS TCR WITH(NOLOCK)&#xD;&#xA;&#x9;&#x9;INNER JOIN upload.TeuResult AS R WITH(NOLOCK) ON R.Id = TCR.GroupId&#xD;&#xA;&#x9;&#x9;INNER JOIN upload.TeuResultLog AS RL WITH(NOLOCK) ON RL.Id = R.TeuResultLogId&#xD;&#xA;&#x9;&#x9;WHERE RL.Id = @logId&#xD;&#xA;&#x9;) AS T&#xD;&#xA;&#x9;WHERE NOT EXISTS (&#xD;&#xA;&#x9;&#x9;SELECT 1&#xD;&#xA;&#x9;&#x9;FROM dbo.TestCasePath AS TCP&#xD;&#xA;&#x9;&#x9;WHERE TCP.PathHash = T.TestcasePathHash&#xD;&#xA;&#x9;)&#xD;&#xA;&#xD;&#xA;" StatementId="5" StatementCompId="46" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.795686" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0xE03615F9130F294D" QueryPlanHash="0x1E2060FCE4320A41" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="48" CompileTime="23" CompileCPU="23" CompileMemory="848">
+            <MemoryGrantInfo SerialRequiredMemory="512" SerialDesiredMemory="592" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Table Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.01" EstimateCPU="1e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.795686" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <Update DMLRequestSort="0">
+                <Object Table="[@missingPaths]" />
+                <SetPredicate>
+                  <ScalarOperator ScalarString="[Path] = [Expr1014],[PathHash] = [OurLabReporting].[upload].[TestCaseResult].[TestcasePathHash] as [TCR].[TestcasePathHash]">
+                    <ScalarExpressionList>
+                      <ScalarOperator>
+                        <MultipleAssign>
+                          <Assign>
+                            <ColumnReference Column="Path" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1014" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Column="PathHash" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestcasePathHash" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                        </MultipleAssign>
+                      </ScalarOperator>
+                    </ScalarExpressionList>
+                  </ScalarOperator>
+                </SetPredicate>
+                <RelOp NodeId="1" PhysicalOp="Nested Loops" LogicalOp="Left Anti Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="0.000793288" AvgRowSize="164" EstimatedTotalSubtreeCost="0.785685" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestcasePathHash" />
+                    <ColumnReference Column="Expr1014" />
+                  </OutputList>
+                  <NestedLoops Optimized="0" WithUnorderedPrefetch="1">
+                    <OuterReferences>
+                      <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestcasePathHash" />
+                      <ColumnReference Column="Expr1015" />
+                    </OuterReferences>
+                    <RelOp NodeId="3" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="189.782" EstimateIO="0" EstimateCPU="1.89782e-005" AvgRowSize="164" EstimatedTotalSubtreeCost="0.165601" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestcasePathHash" />
+                        <ColumnReference Column="Expr1014" />
+                      </OutputList>
+                      <ComputeScalar>
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1014" />
+                            <ScalarOperator ScalarString="CONVERT_IMPLICIT(nvarchar(max),[OurLabReporting].[upload].[TestCaseResult].[TestCasePath] as [TCR].[TestCasePath],0)">
+                              <Convert DataType="nvarchar(max)" Length="2147483647" Style="0" Implicit="1">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCasePath" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Convert>
+                            </ScalarOperator>
+                          </DefinedValue>
+                        </DefinedValues>
+                        <RelOp NodeId="4" PhysicalOp="Sort" LogicalOp="Distinct Sort" EstimateRows="189.782" EstimateIO="0.0112613" EstimateCPU="0.00234078" AvgRowSize="140" EstimatedTotalSubtreeCost="0.165582" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCasePath" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestcasePathHash" />
+                          </OutputList>
+                          <MemoryFractions Input="1" Output="1" />
+                          <Sort Distinct="1">
+                            <OrderBy>
+                              <OrderByColumn Ascending="1">
+                                <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestcasePathHash" />
+                              </OrderByColumn>
+                              <OrderByColumn Ascending="1">
+                                <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCasePath" />
+                              </OrderByColumn>
+                            </OrderBy>
+                            <RelOp NodeId="5" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="189.782" EstimateIO="0" EstimateCPU="0.000793288" AvgRowSize="140" EstimatedTotalSubtreeCost="0.15198" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCasePath" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestcasePathHash" />
+                              </OutputList>
+                              <NestedLoops Optimized="0">
+                                <OuterReferences>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResult]" Alias="[R]" Column="Id" />
+                                </OuterReferences>
+                                <RelOp NodeId="6" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="23" EstimatedTotalSubtreeCost="0.00657038" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResult]" Alias="[R]" Column="Id" />
+                                  </OutputList>
+                                  <NestedLoops Optimized="0">
+                                    <RelOp NodeId="7" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.35983e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList />
+                                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                        <DefinedValues />
+                                        <Object Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResultLog]" Index="[TeuResultLog_PK]" Alias="[RL]" IndexKind="Clustered" />
+                                        <SeekPredicates>
+                                          <SeekPredicateNew>
+                                            <SeekKeys>
+                                              <Prefix ScanType="EQ">
+                                                <RangeColumns>
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResultLog]" Alias="[RL]" Column="Id" />
+                                                </RangeColumns>
+                                                <RangeExpressions>
+                                                  <ScalarOperator ScalarString="[@logId]">
+                                                    <Identifier>
+                                                      <ColumnReference Column="@logId" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </RangeExpressions>
+                                              </Prefix>
+                                            </SeekKeys>
+                                          </SeekPredicateNew>
+                                        </SeekPredicates>
+                                      </IndexScan>
+                                    </RelOp>
+                                    <RelOp NodeId="8" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="23" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="4.18843e+007" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResult]" Alias="[R]" Column="Id" />
+                                      </OutputList>
+                                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                        <DefinedValues>
+                                          <DefinedValue>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResult]" Alias="[R]" Column="Id" />
+                                          </DefinedValue>
+                                        </DefinedValues>
+                                        <Object Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResult]" Index="[TeuResult_AgentLog]" Alias="[R]" IndexKind="NonClustered" />
+                                        <SeekPredicates>
+                                          <SeekPredicateNew>
+                                            <SeekKeys>
+                                              <Prefix ScanType="EQ">
+                                                <RangeColumns>
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResult]" Alias="[R]" Column="TeuResultLogId" />
+                                                </RangeColumns>
+                                                <RangeExpressions>
+                                                  <ScalarOperator ScalarString="[@logId]">
+                                                    <Identifier>
+                                                      <ColumnReference Column="@logId" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </RangeExpressions>
+                                              </Prefix>
+                                            </SeekKeys>
+                                          </SeekPredicateNew>
+                                        </SeekPredicates>
+                                      </IndexScan>
+                                    </RelOp>
+                                  </NestedLoops>
+                                </RelOp>
+                                <RelOp NodeId="9" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="189.782" EstimateIO="0.1375" EstimateCPU="0.00711676" AvgRowSize="140" EstimatedTotalSubtreeCost="0.144617" TableCardinality="1.70172e+006" Parallel="0" Partitioned="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCasePath" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestcasePathHash" />
+                                  </OutputList>
+                                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                    <DefinedValues>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCasePath" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestcasePathHash" />
+                                      </DefinedValue>
+                                    </DefinedValues>
+                                    <Object Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Index="[IX_TestCaseResult_GroupId]" Alias="[TCR]" IndexKind="NonClustered" />
+                                    <SeekPredicates>
+                                      <SeekPredicateNew>
+                                        <SeekKeys>
+                                          <StartRange ScanType="GE">
+                                            <RangeColumns>
+                                              <ColumnReference Column="PtnId1004" />
+                                            </RangeColumns>
+                                            <RangeExpressions>
+                                              <ScalarOperator ScalarString="(1)">
+                                                <Const ConstValue="(1)" />
+                                              </ScalarOperator>
+                                            </RangeExpressions>
+                                          </StartRange>
+                                          <EndRange ScanType="LE">
+                                            <RangeColumns>
+                                              <ColumnReference Column="PtnId1004" />
+                                            </RangeColumns>
+                                            <RangeExpressions>
+                                              <ScalarOperator ScalarString="(44)">
+                                                <Const ConstValue="(44)" />
+                                              </ScalarOperator>
+                                            </RangeExpressions>
+                                          </EndRange>
+                                        </SeekKeys>
+                                        <SeekKeys>
+                                          <Prefix ScanType="EQ">
+                                            <RangeColumns>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="GroupId" />
+                                            </RangeColumns>
+                                            <RangeExpressions>
+                                              <ScalarOperator ScalarString="[OurLabReporting].[upload].[TeuResult].[Id] as [R].[Id]">
+                                                <Identifier>
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResult]" Alias="[R]" Column="Id" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </RangeExpressions>
+                                          </Prefix>
+                                        </SeekKeys>
+                                      </SeekPredicateNew>
+                                    </SeekPredicates>
+                                  </IndexScan>
+                                </RelOp>
+                              </NestedLoops>
+                            </RelOp>
+                          </Sort>
+                        </RelOp>
+                      </ComputeScalar>
+                    </RelOp>
+                    <RelOp NodeId="13" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.61929" TableCardinality="7.01828e+007" Parallel="0" EstimateRebinds="188.607" EstimateRewinds="0.17493" EstimatedExecutionMode="Row">
+                      <OutputList />
+                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                        <DefinedValues />
+                        <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TestCasePath]" Index="[TestCasePath_IDX_PathHash]" Alias="[TCP]" IndexKind="NonClustered" />
+                        <SeekPredicates>
+                          <SeekPredicateNew>
+                            <SeekKeys>
+                              <Prefix ScanType="EQ">
+                                <RangeColumns>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestCasePath]" Alias="[TCP]" Column="PathHash" />
+                                </RangeColumns>
+                                <RangeExpressions>
+                                  <ScalarOperator ScalarString="[OurLabReporting].[upload].[TestCaseResult].[TestcasePathHash] as [TCR].[TestcasePathHash]">
+                                    <Identifier>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestcasePathHash" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </RangeExpressions>
+                              </Prefix>
+                            </SeekKeys>
+                          </SeekPredicateNew>
+                        </SeekPredicates>
+                      </IndexScan>
+                    </RelOp>
+                  </NestedLoops>
+                </RelOp>
+              </Update>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@logId" ParameterCompiledValue="(1378317)" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText="&#x9;SELECT @pathCount = COUNT(*) FROM @missingPaths&#xD;&#xA;" StatementId="6" StatementCompId="47" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032842" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x23ABF38490BADCB" QueryPlanHash="0x446BBB86BB1BAF04">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="0" CompileCPU="0" CompileMemory="184">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1.1e-006" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032842" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Column="Expr1004" />
+              </OutputList>
+              <ComputeScalar>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1004" />
+                    <ScalarOperator ScalarString="CONVERT_IMPLICIT(int,[Expr1005],0)">
+                      <Convert DataType="int" Style="0" Implicit="1">
+                        <ScalarOperator>
+                          <Identifier>
+                            <ColumnReference Column="Expr1005" />
+                          </Identifier>
+                        </ScalarOperator>
+                      </Convert>
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp NodeId="1" PhysicalOp="Stream Aggregate" LogicalOp="Aggregate" EstimateRows="1" EstimateIO="0" EstimateCPU="1.1e-006" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032842" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Expr1005" />
+                  </OutputList>
+                  <StreamAggregate>
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1005" />
+                        <ScalarOperator ScalarString="Count(*)">
+                          <Aggregate AggType="countstar" Distinct="0" />
+                        </ScalarOperator>
+                      </DefinedValue>
+                    </DefinedValues>
+                    <RelOp NodeId="2" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="1" EstimateIO="0.0032035" EstimateCPU="7.96e-005" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList />
+                      <TableScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                        <DefinedValues />
+                        <Object Table="[@missingPaths]" />
+                      </TableScan>
+                    </RelOp>
+                  </StreamAggregate>
+                </RelOp>
+              </ComputeScalar>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtCond StatementText="&#x9;IF @pathCount &gt; 0 &#xD;&#xA;" StatementId="7" StatementCompId="48" StatementType="COND" RetrievedFromCache="true">
+          <Condition />
+          <Then>
+            <Statements>
+              <StmtSimple StatementText="&#x9;BEGIN&#xD;&#xA;&#x9;&#x9;INSERT INTO dbo.TestCasePath (Path, PathHash)&#xD;&#xA;&#x9;&#x9;SELECT MP.Path, MP.PathHash FROM @missingPaths AS MP&#x9;&#xD;&#xA;" StatementId="8" StatementCompId="49" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.0232852" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0x605C2068D4B7C2FE" QueryPlanHash="0x80B11FA7B6998C54">
+                <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+                <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="0" CompileCPU="0" CompileMemory="208">
+                  <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+                  <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+                  <RelOp NodeId="0" PhysicalOp="Clustered Index Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.02" EstimateCPU="2e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0232852" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                    <OutputList />
+                    <Update DMLRequestSort="0">
+                      <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TestCasePath]" Index="[TestCasePath_PK]" IndexKind="Clustered" />
+                      <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TestCasePath]" Index="[TestCasePath_IDX_PathHash]" IndexKind="NonClustered" />
+                      <SetPredicate>
+                        <ScalarOperator ScalarString="[OurLabReporting].[dbo].[TestCasePath].[Path] = RaiseIfNullInsert(@missingPaths.[Path] as [MP].[Path]),[OurLabReporting].[dbo].[TestCasePath].[PathHash] = @missingPaths.[PathHash] as [MP].[PathHash],[OurLabReporting].[dbo].[TestCasePath].[Id] = [Expr1006]">
+                          <ScalarExpressionList>
+                            <ScalarOperator>
+                              <MultipleAssign>
+                                <Assign>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestCasePath]" Column="Path" />
+                                  <ScalarOperator>
+                                    <Intrinsic FunctionName="RaiseIfNullInsert">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Table="@missingPaths" Alias="[MP]" Column="Path" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Intrinsic>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestCasePath]" Column="PathHash" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Table="@missingPaths" Alias="[MP]" Column="PathHash" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                                <Assign>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestCasePath]" Column="Id" />
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Expr1006" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Assign>
+                              </MultipleAssign>
+                            </ScalarOperator>
+                          </ScalarExpressionList>
+                        </ScalarOperator>
+                      </SetPredicate>
+                      <RelOp NodeId="1" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="4049" EstimatedTotalSubtreeCost="0.0032832" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                        <OutputList>
+                          <ColumnReference Table="@missingPaths" Alias="[MP]" Column="PathHash" />
+                          <ColumnReference Table="@missingPaths" Alias="[MP]" Column="Path" />
+                          <ColumnReference Column="Expr1006" />
+                        </OutputList>
+                        <ComputeScalar ComputeSequence="1">
+                          <DefinedValues>
+                            <DefinedValue>
+                              <ColumnReference Column="Expr1006" />
+                              <ScalarOperator ScalarString="getidentity((1090102924),(6),NULL)">
+                                <Intrinsic FunctionName="getidentity">
+                                  <ScalarOperator>
+                                    <Const ConstValue="(1090102924)" />
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(6)" />
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="NULL" />
+                                  </ScalarOperator>
+                                </Intrinsic>
+                              </ScalarOperator>
+                            </DefinedValue>
+                          </DefinedValues>
+                          <RelOp NodeId="2" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="1" EstimateIO="0.0032035" EstimateCPU="7.96e-005" AvgRowSize="4045" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList>
+                              <ColumnReference Table="@missingPaths" Alias="[MP]" Column="PathHash" />
+                              <ColumnReference Table="@missingPaths" Alias="[MP]" Column="Path" />
+                            </OutputList>
+                            <TableScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                              <DefinedValues>
+                                <DefinedValue>
+                                  <ColumnReference Table="@missingPaths" Alias="[MP]" Column="PathHash" />
+                                </DefinedValue>
+                                <DefinedValue>
+                                  <ColumnReference Table="@missingPaths" Alias="[MP]" Column="Path" />
+                                </DefinedValue>
+                              </DefinedValues>
+                              <Object Table="[@missingPaths]" Alias="[MP]" />
+                            </TableScan>
+                          </RelOp>
+                        </ComputeScalar>
+                      </RelOp>
+                    </Update>
+                  </RelOp>
+                </QueryPlan>
+              </StmtSimple>
+            </Statements>
+          </Then>
+        </StmtCond>
+        <StmtSimple StatementText="&#x9;END&#xD;&#xA;&#xD;&#xA;&#x9;/*&#xD;&#xA;&#x9;** Point our rows to the right paths&#xD;&#xA;&#x9;*/&#xD;&#xA;&#x9;UPDATE TCR&#xD;&#xA;&#x9;&#x9;SET TCR.TestCasePathId = TP.Id&#xD;&#xA;&#x9;FROM upload.TestCaseResult AS TCR&#xD;&#xA;&#x9;INNER JOIN upload.TeuResult AS R ON R.Id = TCR.GroupId&#xD;&#xA;&#x9;INNER JOIN upload.TeuResultLog AS RL ON RL.Id = R.TeuResultLogId&#xD;&#xA;&#x9;INNER JOIN dbo.TestCasePath AS TP ON TP.PathHash = TCR.TestcasePathHash AND TP.Path = TCR.TestCasePath&#xD;&#xA;&#x9;WHERE RL.Id = @logId&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;" StatementId="9" StatementCompId="51" StatementType="UPDATE" RetrievedFromCache="true" StatementSubTreeCost="4.114" StatementEstRows="188.308" StatementOptmLevel="FULL" QueryHash="0x658E8856CDC66CED" QueryPlanHash="0xAFD4F0167285C967">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="96" CompileTime="68" CompileCPU="68" CompileMemory="1576">
+            <MemoryGrantInfo SerialRequiredMemory="1024" SerialDesiredMemory="1216" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="1" PhysicalOp="Clustered Index Update" LogicalOp="Update" EstimateRows="188.308" EstimateIO="2.73196" EstimateCPU="0.000376616" AvgRowSize="9" EstimatedTotalSubtreeCost="4.114" Parallel="0" Partitioned="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <Update WithUnorderedPrefetch="1" DMLRequestSort="0">
+                <Object Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Index="[TestCaseResultUpload_PK]" Alias="[TCR]" IndexKind="Clustered" />
+                <Object Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Index="[IX_TestCaseResult_GroupId]" Alias="[TCR]" IndexKind="NonClustered" />
+                <SetPredicate>
+                  <ScalarOperator ScalarString="[OurLabReporting].[upload].[TestCaseResult].[TestCasePathId] as [TCR].[TestCasePathId] = [OurLabReporting].[dbo].[TestCasePath].[Id] as [TP].[Id]">
+                    <ScalarExpressionList>
+                      <ScalarOperator>
+                        <MultipleAssign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCasePathId" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestCasePath]" Alias="[TP]" Column="Id" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                        </MultipleAssign>
+                      </ScalarOperator>
+                    </ScalarExpressionList>
+                  </ScalarOperator>
+                </SetPredicate>
+                <RelOp NodeId="2" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="188.308" EstimateIO="0" EstimateCPU="1.88308e-005" AvgRowSize="58" EstimatedTotalSubtreeCost="1.38167" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="PtnId1000" ComputedColumn="1" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="GroupId" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCaseResultId" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="DbTimestamp" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestCasePath]" Alias="[TP]" Column="Id" />
+                    <ColumnReference Column="Expr1016" />
+                    <ColumnReference Column="Expr1020" />
+                  </OutputList>
+                  <ComputeScalar>
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1016" />
+                        <ScalarOperator ScalarString="[Expr1016]">
+                          <Identifier>
+                            <ColumnReference Column="Expr1016" />
+                          </Identifier>
+                        </ScalarOperator>
+                      </DefinedValue>
+                    </DefinedValues>
+                    <RelOp NodeId="4" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="188.308" EstimateIO="0" EstimateCPU="1.88308e-005" AvgRowSize="58" EstimatedTotalSubtreeCost="1.38167" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Column="PtnId1000" ComputedColumn="1" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="GroupId" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCaseResultId" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="DbTimestamp" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestCasePath]" Alias="[TP]" Column="Id" />
+                        <ColumnReference Column="Expr1016" />
+                      </OutputList>
+                      <ComputeScalar>
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1016" />
+                            <ScalarOperator ScalarString="CASE WHEN [Expr1012] THEN (0) ELSE (1) END">
+                              <IF>
+                                <Condition>
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Expr1012" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Condition>
+                                <Then>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(0)" />
+                                  </ScalarOperator>
+                                </Then>
+                                <Else>
+                                  <ScalarOperator>
+                                    <Const ConstValue="(1)" />
+                                  </ScalarOperator>
+                                </Else>
+                              </IF>
+                            </ScalarOperator>
+                          </DefinedValue>
+                        </DefinedValues>
+                        <RelOp NodeId="5" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="188.308" EstimateIO="0" EstimateCPU="1.88308e-005" AvgRowSize="55" EstimatedTotalSubtreeCost="1.38165" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Column="PtnId1000" ComputedColumn="1" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="GroupId" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCaseResultId" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="DbTimestamp" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestCasePath]" Alias="[TP]" Column="Id" />
+                            <ColumnReference Column="Expr1012" />
+                          </OutputList>
+                          <ComputeScalar>
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Column="Expr1012" />
+                                <ScalarOperator ScalarString="CASE WHEN [OurLabReporting].[upload].[TestCaseResult].[TestCasePathId] as [TCR].[TestCasePathId] = [OurLabReporting].[dbo].[TestCasePath].[Id] as [TP].[Id] THEN (1) ELSE (0) END">
+                                  <IF>
+                                    <Condition>
+                                      <ScalarOperator>
+                                        <Compare CompareOp="BINARY IS">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCasePathId" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestCasePath]" Alias="[TP]" Column="Id" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </Compare>
+                                      </ScalarOperator>
+                                    </Condition>
+                                    <Then>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(1)" />
+                                      </ScalarOperator>
+                                    </Then>
+                                    <Else>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(0)" />
+                                      </ScalarOperator>
+                                    </Else>
+                                  </IF>
+                                </ScalarOperator>
+                              </DefinedValue>
+                            </DefinedValues>
+                            <RelOp NodeId="6" PhysicalOp="Filter" LogicalOp="Filter" EstimateRows="188.308" EstimateIO="0" EstimateCPU="9.10302e-005" AvgRowSize="58" EstimatedTotalSubtreeCost="1.38163" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Column="PtnId1000" ComputedColumn="1" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="GroupId" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCaseResultId" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCasePathId" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="DbTimestamp" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestCasePath]" Alias="[TP]" Column="Id" />
+                              </OutputList>
+                              <Filter StartupExpression="0">
+                                <RelOp NodeId="7" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="189.646" EstimateIO="0" EstimateCPU="0.000792721" AvgRowSize="319" EstimatedTotalSubtreeCost="1.38154" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Column="PtnId1000" ComputedColumn="1" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="GroupId" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCaseResultId" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCasePath" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCasePathId" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="DbTimestamp" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestCasePath]" Alias="[TP]" Column="Id" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestCasePath]" Alias="[TP]" Column="Path" />
+                                  </OutputList>
+                                  <NestedLoops Optimized="1" WithUnorderedPrefetch="1">
+                                    <OuterReferences>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestCasePath]" Alias="[TP]" Column="Id" />
+                                      <ColumnReference Column="Expr1019" />
+                                    </OuterReferences>
+                                    <RelOp NodeId="10" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="189.646" EstimateIO="0" EstimateCPU="0.000793288" AvgRowSize="174" EstimatedTotalSubtreeCost="0.76128" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList>
+                                        <ColumnReference Column="PtnId1000" ComputedColumn="1" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="GroupId" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCaseResultId" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCasePath" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCasePathId" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="DbTimestamp" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestCasePath]" Alias="[TP]" Column="Id" />
+                                      </OutputList>
+                                      <NestedLoops Optimized="1" WithUnorderedPrefetch="1">
+                                        <OuterReferences>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestcasePathHash" />
+                                          <ColumnReference Column="Expr1018" />
+                                        </OuterReferences>
+                                        <RelOp NodeId="13" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="189.782" EstimateIO="0" EstimateCPU="0.000793288" AvgRowSize="187" EstimatedTotalSubtreeCost="0.15198" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                          <OutputList>
+                                            <ColumnReference Column="PtnId1000" ComputedColumn="1" />
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="GroupId" />
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCaseResultId" />
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCasePath" />
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestcasePathHash" />
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCasePathId" />
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="DbTimestamp" />
+                                          </OutputList>
+                                          <NestedLoops Optimized="0">
+                                            <OuterReferences>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResult]" Alias="[R]" Column="Id" />
+                                            </OuterReferences>
+                                            <RelOp NodeId="14" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="23" EstimatedTotalSubtreeCost="0.00657038" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                              <OutputList>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResult]" Alias="[R]" Column="Id" />
+                                              </OutputList>
+                                              <NestedLoops Optimized="0">
+                                                <RelOp NodeId="15" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.35983e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                  <OutputList />
+                                                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                                    <DefinedValues />
+                                                    <Object Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResultLog]" Index="[TeuResultLog_PK]" Alias="[RL]" IndexKind="Clustered" />
+                                                    <SeekPredicates>
+                                                      <SeekPredicateNew>
+                                                        <SeekKeys>
+                                                          <Prefix ScanType="EQ">
+                                                            <RangeColumns>
+                                                              <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResultLog]" Alias="[RL]" Column="Id" />
+                                                            </RangeColumns>
+                                                            <RangeExpressions>
+                                                              <ScalarOperator ScalarString="[@logId]">
+                                                                <Identifier>
+                                                                  <ColumnReference Column="@logId" />
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                            </RangeExpressions>
+                                                          </Prefix>
+                                                        </SeekKeys>
+                                                      </SeekPredicateNew>
+                                                    </SeekPredicates>
+                                                  </IndexScan>
+                                                </RelOp>
+                                                <RelOp NodeId="16" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="23" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="4.18843e+007" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                  <OutputList>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResult]" Alias="[R]" Column="Id" />
+                                                  </OutputList>
+                                                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                                    <DefinedValues>
+                                                      <DefinedValue>
+                                                        <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResult]" Alias="[R]" Column="Id" />
+                                                      </DefinedValue>
+                                                    </DefinedValues>
+                                                    <Object Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResult]" Index="[TeuResult_AgentLog]" Alias="[R]" IndexKind="NonClustered" />
+                                                    <SeekPredicates>
+                                                      <SeekPredicateNew>
+                                                        <SeekKeys>
+                                                          <Prefix ScanType="EQ">
+                                                            <RangeColumns>
+                                                              <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResult]" Alias="[R]" Column="TeuResultLogId" />
+                                                            </RangeColumns>
+                                                            <RangeExpressions>
+                                                              <ScalarOperator ScalarString="[@logId]">
+                                                                <Identifier>
+                                                                  <ColumnReference Column="@logId" />
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                            </RangeExpressions>
+                                                          </Prefix>
+                                                        </SeekKeys>
+                                                      </SeekPredicateNew>
+                                                    </SeekPredicates>
+                                                  </IndexScan>
+                                                </RelOp>
+                                              </NestedLoops>
+                                            </RelOp>
+                                            <RelOp NodeId="17" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="189.782" EstimateIO="0.1375" EstimateCPU="0.00711676" AvgRowSize="187" EstimatedTotalSubtreeCost="0.144617" TableCardinality="1.70172e+006" Parallel="0" Partitioned="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                              <OutputList>
+                                                <ColumnReference Column="PtnId1000" ComputedColumn="1" />
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="GroupId" />
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCaseResultId" />
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCasePath" />
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestcasePathHash" />
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCasePathId" />
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="DbTimestamp" />
+                                              </OutputList>
+                                              <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                                <DefinedValues>
+                                                  <DefinedValue>
+                                                    <ColumnReference Column="PtnId1000" ComputedColumn="1" />
+                                                  </DefinedValue>
+                                                  <DefinedValue>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="GroupId" />
+                                                  </DefinedValue>
+                                                  <DefinedValue>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCaseResultId" />
+                                                  </DefinedValue>
+                                                  <DefinedValue>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCasePath" />
+                                                  </DefinedValue>
+                                                  <DefinedValue>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestcasePathHash" />
+                                                  </DefinedValue>
+                                                  <DefinedValue>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCasePathId" />
+                                                  </DefinedValue>
+                                                  <DefinedValue>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="DbTimestamp" />
+                                                  </DefinedValue>
+                                                </DefinedValues>
+                                                <Object Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Index="[IX_TestCaseResult_GroupId]" Alias="[TCR]" IndexKind="NonClustered" />
+                                                <SeekPredicates>
+                                                  <SeekPredicateNew>
+                                                    <SeekKeys>
+                                                      <StartRange ScanType="GE">
+                                                        <RangeColumns>
+                                                          <ColumnReference Column="PtnId1000" />
+                                                        </RangeColumns>
+                                                        <RangeExpressions>
+                                                          <ScalarOperator ScalarString="(1)">
+                                                            <Const ConstValue="(1)" />
+                                                          </ScalarOperator>
+                                                        </RangeExpressions>
+                                                      </StartRange>
+                                                      <EndRange ScanType="LE">
+                                                        <RangeColumns>
+                                                          <ColumnReference Column="PtnId1000" />
+                                                        </RangeColumns>
+                                                        <RangeExpressions>
+                                                          <ScalarOperator ScalarString="(44)">
+                                                            <Const ConstValue="(44)" />
+                                                          </ScalarOperator>
+                                                        </RangeExpressions>
+                                                      </EndRange>
+                                                    </SeekKeys>
+                                                    <SeekKeys>
+                                                      <Prefix ScanType="EQ">
+                                                        <RangeColumns>
+                                                          <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="GroupId" />
+                                                        </RangeColumns>
+                                                        <RangeExpressions>
+                                                          <ScalarOperator ScalarString="[OurLabReporting].[upload].[TeuResult].[Id] as [R].[Id]">
+                                                            <Identifier>
+                                                              <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TeuResult]" Alias="[R]" Column="Id" />
+                                                            </Identifier>
+                                                          </ScalarOperator>
+                                                        </RangeExpressions>
+                                                      </Prefix>
+                                                    </SeekKeys>
+                                                  </SeekPredicateNew>
+                                                </SeekPredicates>
+                                              </IndexScan>
+                                            </RelOp>
+                                          </NestedLoops>
+                                        </RelOp>
+                                        <RelOp NodeId="18" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.608506" TableCardinality="7.01828e+007" Parallel="0" EstimateRebinds="188.726" EstimateRewinds="0.0553684" EstimatedExecutionMode="Row">
+                                          <OutputList>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestCasePath]" Alias="[TP]" Column="Id" />
+                                          </OutputList>
+                                          <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                            <DefinedValues>
+                                              <DefinedValue>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestCasePath]" Alias="[TP]" Column="Id" />
+                                              </DefinedValue>
+                                            </DefinedValues>
+                                            <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TestCasePath]" Index="[TestCasePath_IDX_PathHash]" Alias="[TP]" IndexKind="NonClustered" />
+                                            <SeekPredicates>
+                                              <SeekPredicateNew>
+                                                <SeekKeys>
+                                                  <Prefix ScanType="EQ">
+                                                    <RangeColumns>
+                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestCasePath]" Alias="[TP]" Column="PathHash" />
+                                                    </RangeColumns>
+                                                    <RangeExpressions>
+                                                      <ScalarOperator ScalarString="[OurLabReporting].[upload].[TestCaseResult].[TestcasePathHash] as [TCR].[TestcasePathHash]">
+                                                        <Identifier>
+                                                          <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestcasePathHash" />
+                                                        </Identifier>
+                                                      </ScalarOperator>
+                                                    </RangeExpressions>
+                                                  </Prefix>
+                                                </SeekKeys>
+                                              </SeekPredicateNew>
+                                            </SeekPredicates>
+                                          </IndexScan>
+                                        </RelOp>
+                                      </NestedLoops>
+                                    </RelOp>
+                                    <RelOp NodeId="20" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="4035" EstimatedTotalSubtreeCost="0.619465" TableCardinality="7.01828e+007" Parallel="0" EstimateRebinds="188.646" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestCasePath]" Alias="[TP]" Column="Path" />
+                                      </OutputList>
+                                      <IndexScan Lookup="1" Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                        <DefinedValues>
+                                          <DefinedValue>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestCasePath]" Alias="[TP]" Column="Path" />
+                                          </DefinedValue>
+                                        </DefinedValues>
+                                        <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[TestCasePath]" Index="[TestCasePath_PK]" Alias="[TP]" TableReferenceId="-1" IndexKind="Clustered" />
+                                        <SeekPredicates>
+                                          <SeekPredicateNew>
+                                            <SeekKeys>
+                                              <Prefix ScanType="EQ">
+                                                <RangeColumns>
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestCasePath]" Alias="[TP]" Column="Id" />
+                                                </RangeColumns>
+                                                <RangeExpressions>
+                                                  <ScalarOperator ScalarString="[OurLabReporting].[dbo].[TestCasePath].[Id] as [TP].[Id]">
+                                                    <Identifier>
+                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestCasePath]" Alias="[TP]" Column="Id" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </RangeExpressions>
+                                              </Prefix>
+                                            </SeekKeys>
+                                          </SeekPredicateNew>
+                                        </SeekPredicates>
+                                      </IndexScan>
+                                    </RelOp>
+                                  </NestedLoops>
+                                </RelOp>
+                                <Predicate>
+                                  <ScalarOperator ScalarString="[OurLabReporting].[dbo].[TestCasePath].[Path] as [TP].[Path]=[OurLabReporting].[upload].[TestCaseResult].[TestCasePath] as [TCR].[TestCasePath]">
+                                    <Compare CompareOp="EQ">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[TestCasePath]" Alias="[TP]" Column="Path" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[upload]" Table="[TestCaseResult]" Alias="[TCR]" Column="TestCasePath" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                </Predicate>
+                              </Filter>
+                            </RelOp>
+                          </ComputeScalar>
+                        </RelOp>
+                      </ComputeScalar>
+                    </RelOp>
+                  </ComputeScalar>
+                </RelOp>
+              </Update>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@logId" ParameterCompiledValue="(1378317)" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText="&#x9;COMMIT TRANSACTION&#xD;" StatementId="10" StatementCompId="52" StatementType="COMMIT TRANSACTION" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#xA;RETURN 0" StatementId="11" StatementCompId="53" StatementType="RETURN" RetrievedFromCache="true" />
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

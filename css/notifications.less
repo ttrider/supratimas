@@ -1,0 +1,26 @@
+@import "fonts.less";
+@import "colors.less";
+@appHeaderHeight: 40px;
+.notifications {
+    position: absolute;
+    top: @appHeaderHeight;
+    right: 4em;
+    left: 4em;
+    min-width: 20em;
+    background-color: @color-dark;
+    background-image: url(i/texturebg.png);
+    background-repeat: repeat;
+    box-shadow: @color-dark 0 0.1em 0.3em;
+    border-top: 1px solid @color-primary-5;
+    border-bottom-left-radius: 1em;
+    border-bottom-right-radius: 1em;
+    padding: 0.5em;
+    .item {
+        background-color: @color-primary-1;
+        margin: 0.25em;
+        padding: 0.25em;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+    z-index: 10000;
+}

@@ -1,0 +1,2114 @@
+﻿<script id="parallel-node" type="text/html">
+    <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+        <g>
+            <title>Parallel</title>
+            <path class="pi-alt3-light-stroke pi-medium-fill" style="stroke-linejoin: round; stroke-linecap: round; stroke-width: 15px;" 
+            d="m95,28 l-60,0 l0,-10 l-25,10 l25,10 l0,-10 z" />
+            <path class="pi-alt3-light-stroke pi-medium-fill" style="stroke-linejoin: round; stroke-linecap: round; stroke-width: 15px;" 
+            d="m95,72 l-60,0 l0,-10 l-25,10 l25,10 l0,-10 z" />
+        </g>
+    </svg>
+</script>
+
+<script id="partitioned-node" type="text/html">
+    <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <g>
+        <title>Partitioned</title>
+        <line class="pi-alt3-light-stroke pi-medium-fill" style="stroke-linejoin: round; stroke-linecap: round; stroke-width: 10px;" 
+            x1="18" y1="10" x2="18" y2="90" />
+        <line class="pi-alt3-light-stroke pi-medium-fill" style="stroke-linejoin: round; stroke-linecap: round; stroke-width: 10px;" 
+            x1="50" y1="10" x2="50" y2="90" />
+        <line class="pi-alt3-light-stroke pi-medium-fill" style="stroke-linejoin: round; stroke-linecap: round; stroke-width: 10px;" 
+            x1="78" y1="10" x2="78" y2="90" />
+        <line class="pi-alt3-light-stroke pi-medium-fill" style="stroke-linejoin: round; stroke-linecap: round; stroke-width: 20px;" 
+            x1="12" y1="88" x2="88" y2="88" />
+    </g>
+</svg>
+</script>
+
+<script id="search-button" type="text/html">
+    <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+        <g>
+            <title>Search</title>
+            <circle cx="35" cy="35" r="30" stroke-width="5" class="pi-light-fill pi-normal-stroke" />
+            <path stroke-width="5" style="stroke-linejoin: round; stroke-linecap: round;" class="pi-light-fill pi-normal-stroke" d="M81,91 l10,-10 l-30,-30 l-10,10 z"/>
+        </g>
+    </svg>
+</script>
+
+
+
+<script id="zoomout-button" type="text/html">
+    <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+        <g>
+            <title>Zoom in</title>
+            <circle cx="50" cy="50" r="46" fill="none" stroke-width="5" stroke="none" class="stroked" />
+            <line x1="30" x2="70" y1="50" y2="50" stroke-width="15" fill="none" stroke="none" class="stroked" />
+        </g>
+    </svg>
+</script>
+<script id="zoomin-button" type="text/html">
+    <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+        <g>
+            <title>Zoom in</title>
+            <circle cx="50" cy="50" r="46" fill="none" stroke-width="5" stroke="none" class="stroked" />
+            <line x1="30" x2="70" y1="50" y2="50" stroke-width="15" fill="none" stroke="none" class="stroked" />
+            <line x1="50" x2="50" y1="70" y2="30" stroke-width="15" fill="none" stroke="none" class="stroked" />
+        </g>
+    </svg>
+</script>
+<script id="compact-button" type="text/html">
+    <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+        <g>
+            <title>Compact View</title>
+            <circle cx="50" cy="50" r="46" fill="none" stroke-width="5" stroke="none" class="stroked" />
+            <path d="M 20,50 l10,0 0,-20 16,20 -16,20 0,-20 z M 80,50 l-10,0 0,-20 -16,20 16,20 0,-20 z " fill="none" stroke="none" class="stroked" stroke-linejoin="round" stroke-width="5" />
+        </g>
+    </svg>
+</script>
+<script id="warnings-button" type="text/html">
+    <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+        <g>
+            <title>Warnings</title>
+            <circle cx="50" cy="50" r="46" fill="none" stroke-width="5" stroke="none" class="stroked" />
+            <path d="M 50 14 l 27 60 l -54 0 z" fill="none" stroke-width="5" stroke="none" class="stroked" stroke-linejoin="round"></path>
+            <text x="50" y="70" font-weight="bold" font-size="46" text-anchor="middle" class="stroked filled">!</text>
+        </g>
+    </svg>
+</script>
+<script id="indexes-button" type="text/html">
+    <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+        <g>
+            <title>Missing indexes</title>
+            <circle cx="50" cy="50" r="46" fill="none" stroke-width="5" stroke="none" class="stroked" />
+
+            <rect x="41" y="16" width="18" height="16" fill="none" stroke="none" stroke-width="4" class="stroked"></rect>
+            <rect x="16" y="53" width="18" height="16" fill="none" stroke="none" stroke-width="4" class="stroked"></rect>
+            <rect x="41" y="53" width="18" height="16" fill="none" stroke="none" stroke-width="4" class="stroked"></rect>
+            <rect x="65" y="53" width="18" height="16" fill="none" stroke="none" stroke-width="4" class="stroked"></rect>
+
+            <line x1="50" y1="32" x2="50" y2="53" fill="none" stroke="none" class="stroked" stroke-width="4"></line>
+            <line x1="23" y1="40" x2="23" y2="53" fill="none" stroke="none" class="stroked" stroke-width="4"></line>
+            <line x1="76" y1="40" x2="76" y2="53" fill="none" stroke="none" class="stroked" stroke-width="4"></line>
+            <line x1="23" y1="40" x2="76" y2="40" fill="none" stroke="none" class="stroked" stroke-width="4"></line>
+        </g>
+    </svg>
+</script>
+<script id="expensive-button" type="text/html">
+    <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+        <g>
+            <title>Expensive Operations</title>
+            <circle cx="50" cy="50" r="46" fill="none" stroke-width="5" stroke="none" class="stroked" />
+            <text x="50" y="75" font-weight="bold" font-size="80" text-anchor="middle" class="stroked">$</text>
+        </g>
+</script>
+<script id="script-button" type="text/html">
+    <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+        <g>
+            <title>Show SQL Script</title>
+            <circle cx="50" cy="50" r="46" fill="none" stroke-width="5" stroke="none" class="stroked" />
+            <text x="50" y="75" font-weight="bold" font-size="60" text-anchor="middle" class="stroked">Aa</text>
+        </g>
+    </svg>
+</script>
+<script id="dataheavy-button" type="text/html">
+    <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+        <g>
+            <title>Data-heavy Operations</title>
+            <circle cx="50" cy="50" r="46" fill="none" stroke-width="5" stroke="none" class="stroked" />
+            <path d="m14,40 l0,20 l20,0 l0,-20 z M68,40 l0,20 l20,0 l0,-20 z M45,50 l10,25 l20,0 l-20,-3 -3,-22 3,-22 20,-3 -22,0 z" class="stroked" stroke-width="5" fill="none" />
+        </g>
+    </svg>
+</script>
+<script id="add-statement" type="text/html">
+    <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+        <g>
+            <title>Add the workspace</title>
+            <circle cx="50" cy="50" r="46" fill="none" stroke-width="5" stroke="none" class="stroked" />
+            <line x1="50" x2="50" y1="20" y2="80" stroke-width="15" fill="none" stroke="none" class="stroked" />
+            <line x1="20" x2="80" y1="50" y2="50" stroke-width="15" fill="none" stroke="none" class="stroked" />
+        </g>
+    </svg>
+</script>
+<script id="remove-statement" type="text/html">
+    <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+        <g>
+            <title>Remove statement</title>
+            <circle cx="50" cy="50" r="46" fill="none" stroke-width="5" stroke="none" class="stroked" />
+            <line x1="30" x2="70" y1="30" y2="70" stroke-width="15" fill="none" stroke="none" class="stroked" />
+            <line x1="30" x2="70" y1="70" y2="30" stroke-width="15" fill="none" stroke="none" class="stroked" />
+        </g>
+    </svg>
+</script>
+<script id="close-button" type="text/html">
+    <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+        <g>
+            <title>Remove plan</title>
+            <circle cx="50" cy="50" r="46" fill="none" stroke-width="5" stroke="none" class="stroked" />
+            <line x1="30" x2="70" y1="30" y2="70" stroke-width="15" fill="none" stroke="none" class="stroked" />
+            <line x1="30" x2="70" y1="70" y2="30" stroke-width="15" fill="none" stroke="none" class="stroked" />
+        </g>
+    </svg>
+</script>
+<script id="close-all-button" type="text/html">
+    <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+        <g>
+            <title>Remove all</title>
+
+            <rect x="25" y="5" width="70" height="60" fill="none" stroke-width="5" stroke="none" class="stroked filled" />
+            <rect x="15" y="20" width="70" height="60" fill="none" stroke-width="5" stroke="none" class="stroked filled" />
+            <rect x="5" y="35" width="70" height="60" fill="none" stroke-width="5" stroke="none" class="stroked filled" />
+
+            <line x1="25" x2="55" y1="50" y2="80" stroke-width="10" fill="none" stroke="none" class="stroked" />
+            <line x1="25" x2="55" y1="80" y2="50" stroke-width="10" fill="none" stroke="none" class="stroked" />
+        </g>
+    </svg>
+</script>
+
+
+
+<script id="next-button" type="text/html">
+    <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+        <g>
+            <title></title>
+            <path d="m90,50 l-50,40 l0,-80 z" stroke-width="15" fill="none" stroke="none" class="stroked filled" />
+        </g>
+    </svg>
+</script>
+<script id="prev-button" type="text/html">
+    <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+        <g>
+            <title></title>
+            <path d="m10,50 l50,40 l0,-80 z" stroke-width="15" fill="none" stroke="none" class="stroked filled" />
+        </g>
+    </svg>
+</script>
+<!-- #region PlanIcons -->
+<script type="text/html" id="pi_default">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <rect x="20" y="40" width="280" height="240" fill="none" class="pi-alt-light-fill pi-alt-normal-stroke pi-default-stroke" />
+        <text text-anchor="middle" x="160" y="180" font-size="80px" font-family="monospace" font-weight="bold">T-SQL</text>
+    </svg>
+</script>
+<script type="text/html" id="pi_table_insert">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(10,-30)">
+            <rect x="20" y="40" width="280" height="240" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="240" fill="none" class="pi-normal-stroke pi-default-stroke" />
+            <line x1="20" y1="80" x2="300" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+            <line x1="40" y1="110" x2="280" y2="110" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="140" x2="280" y2="140" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="170" x2="280" y2="170" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="200" x2="280" y2="200" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="230" x2="280" y2="230" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+        </g>
+
+        <g transform="translate(-10,130)">
+            <rect x="20" y="40" width="280" height="140" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="140" fill="none" class="pi-normal-stroke pi-default-stroke" />
+            <line x1="20" y1="80" x2="300" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+            <line x1="40" y1="110" x2="280" y2="110" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="140" x2="280" y2="140" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+        </g>
+
+        <path class="pi-focus-stroke pi-dark-fill" d="M160,70 l50,50 l-30,0 l0,100 l-40,0 l0,-100 l-30,0 z" stroke-width="14px" />
+
+    </svg>
+</script>
+<script type="text/html" id="pi_table_scan">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+
+        <g>
+            <rect x="20" y="40" width="280" height="240" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="240" fill="none" class="pi-normal-stroke pi-default-stroke" />
+            <line x1="20" y1="80" x2="300" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+            <line x1="40" y1="110" x2="280" y2="110" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="140" x2="280" y2="140" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="170" x2="280" y2="170" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="200" x2="280" y2="200" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="230" x2="280" y2="230" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+        </g>
+
+        <g>
+            <path class="pi-normal-stroke pi-dark-fill" d="M160,270 l-50,-50 l30,0 l0,-130 l40,0 l0,130 l30,0 z" />
+        </g>
+    </svg>
+</script>
+<script type="text/html" id="pi_table">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+
+        <g>
+            <rect x="20" y="40" width="280" height="240" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="240" fill="none" class="pi-normal-stroke pi-default-stroke" />
+            <line x1="20" y1="80" x2="300" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+            <line x1="40" y1="110" x2="280" y2="110" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="140" x2="280" y2="140" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="170" x2="280" y2="170" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="200" x2="280" y2="200" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="230" x2="280" y2="230" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+        </g>
+    </svg>
+</script>
+<script type="text/html" id="pi_table_pk">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+
+        <g>
+            <rect x="20" y="40" width="280" height="240" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="240" fill="none" class="pi-normal-stroke pi-default-stroke" />
+        </g>
+
+        <g transform="scale(0.8) translate(40,90)">
+            <!-- index group -->
+            <rect x="125" y="20" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="30" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="125" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="220" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <path d="m60,150 l0,-20 l100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m260,150 l0,-20 l-100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m160,150 l0,-40" class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+        </g>
+    </svg>
+</script>
+<script type="text/html" id="pi_parameter_table_scan">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+
+        <g>
+            <rect x="20" y="40" width="280" height="240" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="240" fill="none" class="pi-normal-stroke pi-default-stroke" />
+            <line x1="20" y1="80" x2="300" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+        </g>
+
+        <g>
+            <path class="pi-normal-stroke pi-dark-fill" d="M160,270 l-50,-50 l30,0 l0,-130 l40,0 l0,130 l30,0 z" />
+        </g>
+    </svg>
+</script>
+<script type="text/html" id="pi_constant_scan">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+
+        <g transform="translate(0,30)">
+            <rect x="20" y="40" width="280" height="240" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="240" fill="none" class="pi-normal-stroke pi-default-stroke" />
+            <line x1="20" y1="80" x2="300" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+        </g>
+
+        <g>
+            <path class="pi-normal-stroke pi-dark-fill" d="M160,190 l-50,-50 l30,0 l0,-130 l40,0 l0,130 l30,0 z" />
+        </g>
+    </svg>
+</script>
+<script type="text/html" id="pi_sort">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <rect x="20" y="40" width="280" height="240" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="240" fill="none" class="pi-normal-stroke pi-default-stroke" />
+            <line x1="20" y1="80" x2="300" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+            <line x1="40" y1="110" x2="280" y2="110" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="140" x2="280" y2="140" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="170" x2="280" y2="170" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="200" x2="280" y2="200" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="230" x2="280" y2="230" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+        </g>
+
+        <g>
+            <text class="pi-normal-stroke pi-alt3-medium-fill" text-anchor="middle" x="130" y="170" font-size="125px" font-family="monospace" font-weight="bold">A</text>
+            <text class="pi-normal-stroke pi-alt3-medium-fill" text-anchor="middle" x="130" y="260" font-size="125px" font-family="monospace" font-weight="bold">Z</text>
+            <path class="pi-normal-stroke pi-dark-fill" d="M210,270 l-50,-50 l30,0 l0,-130 l40,0 l0,130 l30,0 z" />
+        </g>
+    </svg>
+</script>
+<script type="text/html" id="pi_split">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <rect x="20" y="40" width="280" height="240" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="240" fill="none" class="pi-normal-stroke pi-default-stroke" />
+            <line x1="20" y1="80" x2="300" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+            <line x1="40" y1="110" x2="280" y2="110" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="140" x2="280" y2="140" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="170" x2="280" y2="170" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="200" x2="280" y2="200" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="230" x2="280" y2="230" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+        </g>
+
+        <path class="pi-normal-stroke pi-dark-fill" d="M160,315 l-50,-50 l30,0 l0,-80 l40,0 l0,80 l30,0 z" />
+        <path class="pi-normal-stroke pi-dark-fill" d="M160,5 l50,50 l-30,0 l0,80 l-40,0 l0,-80 l-30,0 z" />
+
+    </svg>
+</script>
+<script type="text/html" id="pi_collapse">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <rect x="20" y="40" width="280" height="240" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="240" fill="none" class="pi-normal-stroke pi-default-stroke" />
+            <line x1="20" y1="80" x2="300" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+            <line x1="40" y1="110" x2="280" y2="110" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="140" x2="280" y2="140" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="170" x2="280" y2="170" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="200" x2="280" y2="200" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="230" x2="280" y2="230" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+        </g>
+
+        <path class="pi-normal-stroke pi-dark-fill" d="M160,135 l-50,-50 l30,0 l0,-80 l40,0 l0,80 l30,0 z" />
+        <path class="pi-normal-stroke pi-dark-fill" d="M160,185 l50,50 l-30,0 l0,80 l-40,0 l0,-80 l-30,0 z" />
+
+    </svg>
+</script>
+<script type="text/html" id="pi_table_merge">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <rect x="20" y="40" width="280" height="240" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="240" fill="none" class="pi-normal-stroke pi-default-stroke" />
+            <line x1="20" y1="80" x2="300" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+            <line x1="40" y1="110" x2="280" y2="110" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="140" x2="280" y2="140" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="170" x2="280" y2="170" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="200" x2="280" y2="200" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="230" x2="280" y2="230" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+        </g>
+
+        <path transform="rotate(90,160,160)" class="pi-normal-stroke pi-dark-fill" d="M160,170 l-50,-50 l30,0 l0,-80 l40,0 l0,80 l30,0 z" />
+        <path transform="rotate(90,160,160)" class="pi-normal-stroke pi-dark-fill" d="M160,150 l50,50 l-30,0 l0,80 l-40,0 l0,-80 l-30,0 z" />
+
+    </svg>
+</script>
+<script type="text/html" id="pi_assert">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <rect x="20" y="40" width="280" height="240" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="240" fill="none" class="pi-normal-stroke pi-default-stroke" />
+            <line x1="20" y1="80" x2="300" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+            <line x1="40" y1="110" x2="280" y2="110" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="140" x2="280" y2="140" class="pi-alt3-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="170" x2="280" y2="170" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="200" x2="280" y2="200" class="pi-alt3-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="230" x2="280" y2="230" class="pi-alt3-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+        </g>
+    </svg>
+</script>
+<script type="text/html" id="pi_compute_scalar">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(-10,-30)">
+            <rect x="20" y="40" width="280" height="240" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="240" fill="none" class="pi-normal-stroke pi-default-stroke" />
+            <line x1="20" y1="80" x2="300" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+            <line x1="40" y1="110" x2="280" y2="110" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="140" x2="280" y2="140" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="170" x2="280" y2="170" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="200" x2="280" y2="200" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="230" x2="280" y2="230" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+        </g>
+
+        <g>
+            <rect x="200" y="150" width="110" height="160" class="pi-medium-fill pi-normal-stroke pi-default-stroke" />
+            <rect x="210" y="160" width="90" height="40" class="pi-light-fill" stroke="none" rx="5" ry="5" />
+
+            <rect x="215" y="210" width="20" height="20" class="pi-alt3-medium-fill" rx="5" ry="5" />
+            <rect x="245" y="210" width="20" height="20" class="pi-alt3-medium-fill" rx="5" ry="5" />
+            <rect x="275" y="210" width="20" height="20" class="pi-alt3-medium-fill" rx="5" ry="5" />
+
+            <rect x="215" y="240" width="20" height="20" class="pi-alt-light-fill" rx="5" ry="5" />
+            <rect x="245" y="240" width="20" height="20" class="pi-alt-light-fill" rx="5" ry="5" />
+            <rect x="275" y="240" width="20" height="20" class="pi-alt-light-fill" rx="5" ry="5" />
+
+            <rect x="215" y="270" width="20" height="20" class="pi-alt-light-fill" rx="5" ry="5" />
+            <rect x="245" y="270" width="20" height="20" class="pi-alt-light-fill" rx="5" ry="5" />
+            <rect x="275" y="270" width="20" height="20" class="pi-alt-light-fill" rx="5" ry="5" />
+        </g>
+    </svg>
+</script>
+<script type="text/html" id="pi_concatenation">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(-5,-25)">
+            <rect x="20" y="40" width="180" height="140" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="180" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="180" height="140" fill="none" class="pi-normal-stroke pi-default-stroke" />
+            <line x1="20" y1="80" x2="200" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+            <line x1="40" y1="110" x2="180" y2="110" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="140" x2="180" y2="140" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+        </g>
+
+
+        <g transform="translate(110,130)">
+            <rect x="20" y="40" width="180" height="140" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="180" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="180" height="140" fill="none" class="pi-normal-stroke pi-default-stroke" />
+            <line x1="20" y1="80" x2="200" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+            <line x1="40" y1="110" x2="180" y2="110" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="140" x2="180" y2="140" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+        </g>
+
+        <path class="pi-focus-stroke pi-dark-fill" d="M100,130 l50,0 l0,-50 l50,0 l0,50 l50,0 l0,50 l-50,0 l0,50 l-50,0 l0,-50 l-50,0 z" stroke-width="14px" />
+
+    </svg>
+</script>
+<script type="text/html" id="pi_table_update">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <rect x="20" y="40" width="280" height="240" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="240" fill="none" class="pi-normal-stroke pi-default-stroke" />
+            <line x1="20" y1="80" x2="300" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+            <line x1="40" y1="110" x2="280" y2="110" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="140" x2="280" y2="140" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="170" x2="280" y2="170" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="200" x2="280" y2="200" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="230" x2="280" y2="230" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+        </g>
+
+        <!--refresh -->
+        <g transform="rotate(10,160,160) scale(0.8) translate(30,50)">
+            <path class="pi-normal-stroke pi-dark-fill" d="M260,100 l-50,-50 l0,30 s-50,-10,-130,50 l20,30 s50,-60,110,-40 l0,30 z" />
+            <path transform="rotate(180,160,160)" class="pi-normal-stroke pi-dark-fill" d="M240,100 l-50,-50 l0,30 s-50,-10,-130,50 l20,30 s50,-60,110,-40 l0,30 z" />
+        </g>
+    </svg>
+</script>
+<script type="text/html" id="pi_update">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <rect x="20" y="40" width="280" height="240" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="240" fill="none" class="pi-normal-stroke pi-default-stroke" />
+            <line x1="20" y1="80" x2="300" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+            <line x1="40" y1="110" x2="280" y2="110" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="140" x2="280" y2="140" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="170" x2="280" y2="170" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="200" x2="280" y2="200" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="230" x2="280" y2="230" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+        </g>
+
+        <!--refresh -->
+        <g transform="rotate(10,160,160) scale(0.8) translate(30,50)">
+            <path class="pi-normal-stroke pi-dark-fill" d="M260,100 l-50,-50 l0,30 s-50,-10,-130,50 l20,30 s50,-60,110,-40 l0,30 z" />
+            <path transform="rotate(180,160,160)" class="pi-normal-stroke pi-dark-fill" d="M240,100 l-50,-50 l0,30 s-50,-10,-130,50 l20,30 s50,-60,110,-40 l0,30 z" />
+        </g>
+    </svg>
+</script>
+<script type="text/html" id="pi_top">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <rect x="20" y="40" width="280" height="240" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="240" fill="none" class="pi-normal-stroke pi-default-stroke" />
+            <rect x="25" y="82" width="270" height="80" class="pi-alt3-medium-fill" />
+            <line x1="20" y1="80" x2="300" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+            <line x1="40" y1="110" x2="280" y2="110" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="140" x2="280" y2="140" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="170" x2="280" y2="170" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="200" x2="280" y2="200" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="230" x2="280" y2="230" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+        </g>
+    </svg>
+</script>
+<script type="text/html" id="pi_table-valued_function">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <rect x="20" y="40" width="280" height="240" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="240" fill="none" class="pi-normal-stroke pi-default-stroke" />
+            <line x1="20" y1="80" x2="300" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+            <line x1="40" y1="110" x2="280" y2="110" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="140" x2="280" y2="140" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="170" x2="280" y2="170" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="200" x2="280" y2="200" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="230" x2="280" y2="230" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+        </g>
+
+        <g transform="translate(150,185)">
+            <rect x="0" y="0" width="120" height="120" class="pi-light-fill pi-default-stroke pi-normal-stroke" />
+
+            <text class="pi-normal-stroke pi-alt3-medium-fill" text-anchor="middle" x="40" y="90" font-size="120px" font-family="monospace" font-weight="bold" font-style="italic">f</text>
+            <text class="pi-normal-stroke pi-alt3-medium-fill" text-anchor="middle" x="80" y="100" font-size="80px" font-family="monospace" font-weight="bold">x</text>
+        </g>
+    </svg>
+</script>
+<script type="text/html" id="pi_table-value_function">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <rect x="20" y="40" width="280" height="240" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="240" fill="none" class="pi-normal-stroke pi-default-stroke" />
+            <line x1="20" y1="80" x2="300" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+            <line x1="40" y1="110" x2="280" y2="110" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="140" x2="280" y2="140" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="170" x2="280" y2="170" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="200" x2="280" y2="200" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="230" x2="280" y2="230" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+        </g>
+
+        <g transform="translate(150,185)">
+            <rect x="0" y="0" width="120" height="120" class="pi-light-fill pi-default-stroke pi-normal-stroke" />
+
+            <text class="pi-normal-stroke pi-alt3-medium-fill" text-anchor="middle" x="40" y="90" font-size="120px" font-family="monospace" font-weight="bold" font-style="italic">f</text>
+            <text class="pi-normal-stroke pi-alt3-medium-fill" text-anchor="middle" x="80" y="100" font-size="80px" font-family="monospace" font-weight="bold">x</text>
+        </g>
+    </svg>
+</script>
+<script type="text/html" id="pi_result">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <rect x="20" y="40" width="280" height="240" class="pi-alt-light-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="40" class="pi-alt-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="240" fill="none" class="pi-alt-normal-stroke pi-default-stroke" />
+            <line x1="20" y1="80" x2="300" y2="80" class="pi-alt-normal-stroke" stroke-width="4px" />
+            <line x1="40" y1="110" x2="280" y2="110" class="pi-alt-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="140" x2="280" y2="140" class="pi-alt-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="170" x2="280" y2="170" class="pi-alt-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="200" x2="280" y2="200" class="pi-alt-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="230" x2="280" y2="230" class="pi-alt-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+        </g>
+    </svg>
+</script>
+<script type="text/html" id="pi_select">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <rect x="20" y="40" width="280" height="240" class="pi-alt-light-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="40" class="pi-alt-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="240" fill="none" class="pi-alt-normal-stroke pi-default-stroke" />
+            <line x1="20" y1="80" x2="300" y2="80" class="pi-alt-normal-stroke" stroke-width="4px" />
+            <line x1="40" y1="110" x2="280" y2="110" class="pi-alt-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="140" x2="280" y2="140" class="pi-alt-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="170" x2="280" y2="170" class="pi-alt-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="200" x2="280" y2="200" class="pi-alt-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="230" x2="280" y2="230" class="pi-alt-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+        </g>
+    </svg>
+</script>
+<script type="text/html" id="pi_filter">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+
+        <g>
+            <rect x="20" y="40" width="280" height="240" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="240" fill="none" class="pi-normal-stroke pi-default-stroke" />
+            <line x1="20" y1="80" x2="300" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+            <line x1="40" y1="110" x2="280" y2="110" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="140" x2="280" y2="140" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="170" x2="280" y2="170" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="200" x2="280" y2="200" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="230" x2="280" y2="230" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+        </g>
+
+        <path class="pi-normal-stroke pi-dark-fill" d="M160,260 l-20,0 l0,-50 l-80,-80 l0,-20 l200,0 l0,20 l-80,80 l0,50 z" />
+
+    </svg>
+</script>
+<script type="text/html" id="pi_delay">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <rect x="20" y="40" width="280" height="240" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="240" fill="none" class="pi-normal-stroke pi-default-stroke" />
+            <line x1="20" y1="80" x2="300" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+            <line x1="40" y1="110" x2="280" y2="110" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="140" x2="280" y2="140" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="170" x2="280" y2="170" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="200" x2="280" y2="200" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="230" x2="280" y2="230" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+        </g>
+
+        <circle cx="100" cy="200" r="70" class="pi-normal-stroke pi-light-fill" stroke-width="10" />
+        <line x1="100" y1="210" x2="100" y2="150" class="pi-normal-stroke" stroke-width="15" stroke-linecap="round" />
+        <line x1="90" y1="200" x2="140" y2="200" class="pi-normal-stroke" stroke-width="15" stroke-linecap="round" />
+
+    </svg>
+</script>
+<script type="text/html" id="pi_table_delete">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <rect x="20" y="40" width="280" height="240" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="240" fill="none" class="pi-normal-stroke pi-default-stroke" />
+            <line x1="20" y1="80" x2="300" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+            <line x1="40" y1="110" x2="280" y2="110" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="140" x2="280" y2="140" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="170" x2="280" y2="170" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="200" x2="280" y2="200" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="230" x2="280" y2="230" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+        </g>
+
+        <path class="pi-alt3-light-stroke pi-alt3-medium-fill" d="M240,100 s-180,110,-150,150 s10,-10,90,-100 z" />
+        <path class="pi-alt3-light-stroke pi-alt3-medium-fill" d="M80,80 s180,110,150,150 s10,10,-90,-100 z" />
+
+    </svg>
+</script>
+<script type="text/html" id="pi_arithmetic_expression">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <text class="pi-normal-stroke pi-dark-fill" text-anchor="middle" x="160" y="140" font-size="120px" font-family="monospace" font-weight="bold">A</text>
+        <text class="pi-normal-stroke pi-dark-fill" text-anchor="middle" x="160" y="240" font-size="120px" font-family="monospace" font-weight="bold">(B+C)</text>
+        <line x1="20" y1="160" x2="300" y2="160" class="pi-normal-stroke" stroke-width="4px" />
+    </svg>
+</script>
+<script type="text/html" id="pi_assign">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <text class="pi-normal-stroke pi-alt-medium-fill" text-anchor="middle" x="70" y="210" font-size="180px" font-family="monospace" font-weight="bold">A</text>
+        <text class="pi-normal-stroke pi-alt-medium-fill" text-anchor="middle" x="260" y="210" font-size="180px" font-family="monospace" font-weight="bold">B</text>
+        <path transform="rotate(-90,160,160) scale(0.7) translate(70,70)" class="pi-normal-stroke pi-alt-medium-fill" d="M160,100 l50,50 l-30,0 l0,80 l-40,0 l0,-80 l-30,0 z" />-->
+    </svg>
+</script>
+<script type="text/html" id="pi_batch_hash_table_build">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <rect x="210" y="40" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+        <rect x="210" y="80" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+        <rect x="210" y="120" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+        <rect x="210" y="160" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+        <rect x="210" y="200" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+        <rect x="210" y="240" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+
+
+        <rect x="10" y="120" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+        <rect x="10" y="180" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+        <rect x="10" y="240" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+
+        <path transform="rotate(90,160,160) scale(0.7) translate(-30,70)" class="pi-normal-stroke pi-dark-fill" d="M160,100 l50,50 l-30,0 l0,80 l-40,0 l0,-80 l-30,0 z" />-->-->
+
+    </svg>
+</script>
+<script type="text/html" id="pi_declare">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+
+        <rect x="210" y="40" width="100" height="40" class="pi-alt-normal-stroke pi-default-stroke pi-alt-light-fill" />
+        <rect x="210" y="80" width="100" height="40" class="pi-alt-normal-stroke pi-default-stroke pi-alt-light-fill" />
+        <rect x="210" y="120" width="100" height="40" class="pi-alt-normal-stroke pi-default-stroke pi-alt-light-fill" />
+        <rect x="210" y="160" width="100" height="40" class="pi-alt-normal-stroke pi-default-stroke pi-alt-light-fill" />
+        <rect x="210" y="200" width="100" height="40" class="pi-alt-normal-stroke pi-default-stroke pi-alt-light-fill" />
+        <rect x="210" y="240" width="100" height="40" class="pi-alt-normal-stroke pi-default-stroke pi-alt-light-fill" />
+
+        <path transform="rotate(90,160,160) scale(0.7) translate(70,60)" class="pi-alt-normal-stroke pi-alt-dark-fill" d="M160,100 l50,50 l-30,0 l0,80 l-40,0 l0,-80 l-30,0 z" />-->-->
+
+        <text class="pi-alt-normal-stroke pi-alt-dark-fill" text-anchor="middle" x="70" y="210" font-size="180px" font-family="monospace" font-weight="bold">A</text>
+    </svg>
+</script>
+<script type="text/html" id="pi_hash_match">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+
+        <rect x="10" y="60" width="120" height="50" class="pi-normal-stroke pi-default-stroke pi-alt3-medium-fill" />
+
+        <rect x="210" y="40" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+        <rect x="210" y="80" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+        <rect x="210" y="120" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+        <rect x="210" y="160" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-alt3-medium-fill" />
+        <rect x="210" y="200" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+        <rect x="210" y="240" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+
+        <path class="pi-normal-stroke pi-dark-fill" d="M200,160 l-35,-35 0,20 -80,0 0,-20 -30,0 0,50 110,0 0,20 z" />
+
+    </svg>
+</script>
+<script type="text/html" id="pi_hash_match_root">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="60" width="40" height="50" class="pi-medium-fill" />
+        <rect x="50" y="60" width="40" height="50" class="pi-alt3-medium-fill" />
+        <rect x="90" y="60" width="40" height="50" class="pi-alt-medium-fill" />
+
+        <rect x="10" y="60" width="120" height="50" fill="none" class="pi-normal-stroke pi-default-stroke " />
+
+        <rect x="210" y="160" width="33" height="40" class="pi-medium-fill" />
+        <rect x="243" y="160" width="33" height="40" class="pi-alt3-medium-fill" />
+        <rect x="276" y="160" width="33" height="40" class="pi-alt-medium-fill" />
+
+
+        <rect x="210" y="40" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+        <rect x="210" y="80" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+        <rect x="210" y="120" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+        <rect x="210" y="160" width="100" height="40" fill="none" class="pi-normal-stroke pi-default-stroke " />
+        <rect x="210" y="200" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+        <rect x="210" y="240" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+
+        <path class="pi-normal-stroke pi-dark-fill" d="M200,160 l-35,-35 0,20 -80,0 0,-20 -30,0 0,50 110,0 0,20 z" />
+
+    </svg>
+</script>
+<script type="text/html" id="pi_hash_match_team">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+
+        <g transform="translate(40,-30)">
+            <rect x="10" y="60" width="120" height="50" class="pi-normal-stroke pi-default-stroke pi-alt3-medium-fill" />
+            <rect x="170" y="40" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="170" y="80" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="170" y="120" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="170" y="160" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-alt3-medium-fill" />
+            <rect x="170" y="200" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="170" y="240" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+        </g>
+
+        <g transform="translate(20,-10)">
+            <rect x="10" y="60" width="120" height="50" class="pi-normal-stroke pi-default-stroke pi-alt3-medium-fill" />
+            <rect x="170" y="40" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="170" y="80" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="170" y="120" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="170" y="160" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-alt3-medium-fill" />
+            <rect x="170" y="200" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="170" y="240" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+        </g>
+
+        <g transform="translate(0,10)">
+            <rect x="10" y="60" width="120" height="50" class="pi-normal-stroke pi-default-stroke pi-alt3-medium-fill" />
+            <rect x="170" y="40" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="170" y="80" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="170" y="120" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="170" y="160" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-alt3-medium-fill" />
+            <rect x="170" y="200" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="170" y="240" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <path class="pi-normal-stroke pi-dark-fill" d="M160,160 l-35,-35 0,20 -60,0 0,-20 -30,0 0,50 90,0 0,20 z" />
+        </g>
+
+    </svg>
+</script>
+<script type="text/html" id="pi_stream_aggregate">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <rect x="40" y="40" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+        <rect x="40" y="80" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+        <rect x="40" y="120" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+        <rect x="40" y="160" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+        <rect x="40" y="200" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+        <rect x="40" y="240" width="100" height="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+
+        <text class="pi-normal-stroke pi-dark-fill" text-anchor="middle" x="220" y="100" font-size="100px" font-family="monospace" font-weight="bold">}Ʃ</text>
+        <text class="pi-normal-stroke pi-dark-fill" text-anchor="middle" x="220" y="180" font-size="100px" font-family="monospace" font-weight="bold">}Ʃ</text>
+        <text class="pi-normal-stroke pi-dark-fill" text-anchor="middle" x="220" y="260" font-size="100px" font-family="monospace" font-weight="bold">}Ʃ</text>
+
+    </svg>
+</script>
+<script type="text/html" id="pi_clustered_index_scan">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+
+        <g>
+            <rect x="20" y="40" width="280" height="240" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="240" fill="none" class="pi-normal-stroke pi-default-stroke" />
+        </g>
+
+        <g transform="scale(0.8) translate(40,90)">
+            <!-- index group -->
+            <rect x="125" y="20" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="30" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="125" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="220" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <path d="m60,150 l0,-20 l100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m260,150 l0,-20 l-100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m160,150 l0,-40" class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+        </g>
+        <!-- scan -->
+        <path class="pi_default-dark-fill" stroke-linecap="round" stroke-linejoin="round" stroke-width="10" d="M280,200 l-50,-50 l0,30 l-150,0 l0,-160 l-40,0 l0,200 l190,0 l0,30 z" />
+
+    </svg>
+</script>
+<script type="text/html" id="pi_clustered_index_seek">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <rect x="20" y="40" width="280" height="240" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="240" fill="none" class="pi-normal-stroke pi-default-stroke" />
+        </g>
+
+        <g transform="scale(0.8) translate(40,90)">
+            <!-- index group -->
+            <rect x="125" y="20" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="30" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="125" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="220" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <path d="m60,150 l0,-20 l100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m260,150 l0,-20 l-100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m160,150 l0,-40" class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+        </g>
+        <!-- seek -->
+        <path class="pi_default-dark-fill" stroke-width="10" d="M260,260 l50,-50 l-30,0 l0,-90 l-100,0 l0,-110 l-40,0 l0,150 l100,0 l0,50 l-30,0 z" />
+
+    </svg>
+</script>
+<script type="text/html" id="pi_clustered_index_delete">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+
+        <g>
+            <!-- index group -->
+            <rect x="125" y="20" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="30" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="125" y="220" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="220" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <path d="m60,150 l0,-20 l100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m260,150 l0,-20 l-100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m160,210 l0,-100" stroke-dasharray="10,20" class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+        </g>
+        <!-- clustered-->
+        <path d="m35,120 l-20,0 l0,140 l20,0 M285,120 l20,0 l0,140 l-20,0" class="pi-normal-stroke" fill="none" stroke-width="15px" stroke-linecap="round" stroke-linejoin="round" />
+
+        <!-- delete-->
+        <g transform="scale(0.6) translate(120,120)">
+            <path class="pi-alt3-light-stroke pi-alt3-medium-fill" d="M240,100 s-180,110,-150,150 s10,-10,90,-100 z" />
+            <path class="pi-alt3-light-stroke pi-alt3-medium-fill" d="M80,80 s180,110,150,150 s10,10,-90,-100 z" />
+        </g>
+    </svg>
+</script>
+<script type="text/html" id="pi_clustered_index_insert">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+
+        <g>
+            <!-- index group -->
+            <rect x="125" y="20" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="30" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="125" y="220" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="220" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <path d="m60,150 l0,-20 l100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m260,150 l0,-20 l-100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m160,210 l0,-100 m0,50 l20,20 l-40,0 l20,-20" class="pi-normal-stroke" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+        </g>
+        <!-- clustered-->
+        <path d="m35,120 l-20,0 l0,140 l20,0 M285,120 l20,0 l0,140 l-20,0" class="pi-normal-stroke" fill="none" stroke-width="15px" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+</script>
+<script type="text/html" id="pi_clustered_index_merge">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <!-- index group -->
+            <rect x="125" y="20" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="30" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="125" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="220" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <path d="m60,150 l0,-20 l100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m260,150 l0,-20 l-100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m160,150 l0,-40" class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+        </g>
+        <!-- clustered-->
+        <path d="m35,120 l-20,0 l0,140 l20,0 M285,120 l20,0 l0,140 l-20,0" class="pi-normal-stroke" fill="none" stroke-width="15px" stroke-linecap="round" stroke-linejoin="round" />
+
+        <path transform="rotate(90,160,160) translate(-100,0)" class="pi-normal-stroke pi-dark-fill" d="M160,170 l-50,-50 l30,0 l0,-80 l40,0 l0,80 l30,0 z" />
+        <path transform="rotate(90,160,160) translate(-100,0)" class="pi-normal-stroke pi-dark-fill" d="M160,150 l50,50 l-30,0 l0,80 l-40,0 l0,-80 l-30,0 z" />
+    </svg>
+</script>
+<script type="text/html" id="pi_clustered_index_update">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <!-- index group -->
+            <rect x="125" y="20" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="30" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="125" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="220" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <path d="m60,150 l0,-20 l100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m260,150 l0,-20 l-100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m160,150 l0,-40" class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+        </g>
+        <!-- clustered-->
+        <path d="m35,120 l-20,0 l0,140 l20,0 M285,120 l20,0 l0,140 l-20,0" class="pi-normal-stroke" fill="none" stroke-width="15px" stroke-linecap="round" stroke-linejoin="round" />
+
+        <g transform="rotate(10,160,160) scale(0.5) translate(-70,0)">
+            <path class="pi-normal-stroke pi-dark-fill" d="M260,100 l-50,-50 l0,30 s-50,-10,-130,50 l20,30 s50,-60,110,-40 l0,30 z" />
+            <path transform="rotate(180,160,160)" class="pi-normal-stroke pi-dark-fill" d="M240,100 l-50,-50 l0,30 s-50,-10,-130,50 l20,30 s50,-60,110,-40 l0,30 z" />
+        </g>
+    </svg>
+</script>
+<script type="text/html" id="pi_clustered_index_spool">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+
+        <g>
+            index group
+            <rect x="125" y="20" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="30" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="125" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="220" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <path d="m60,150 l0,-20 l100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m260,150 l0,-20 l-100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m160,150 l0,-40" class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+        </g>
+        clustered
+        <path d="m35,120 l-20,0 l0,140 l20,0 M285,120 l20,0 l0,140 l-20,0" class="pi-normal-stroke" fill="none" stroke-width="15px" stroke-linecap="round" stroke-linejoin="round" />
+
+        <!-- spool -->
+        <g transform="scale(0.4) translate(450,-50)">
+            <path class="pi-normal-stroke pi-medium-fill" d="M100,300 s100,40,200,0 m0,0 s-100,-40,-200,0" stroke-width="10" stroke-linejoin="round" stroke-linecap="round" />
+            <path class="pi-normal-stroke pi-medium-fill" d="M120,290 s80,30,160,0 M120,275 s80,30,160,0 M120,260 s80,30,160,0 M120,245 s80,30,160,0 M120,230 s80,30,160,0 M120,215 s80,30,160,0 M120,200 s80,30,160,0 M120,185 s80,30,160,0 M120,170 s80,30,160,0 M120,155 s80,30,160,0 M120,140 s80,30,160,0 M120,125 s80,30,160,0 M120,110 s80,30,160,0" stroke-width="10" stroke-linejoin="round" stroke-linecap="round" />
+            <path class="pi-normal-stroke pi-medium-fill" d="M100,100 s100,40,200,0 m0,0 s-100,-40,-200,0" stroke-width="10" stroke-linejoin="round" stroke-linecap="round" />
+        </g>
+    </svg>
+</script>
+<script type="text/html" id="pi_rid_clustered_locate">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <rect x="125" y="20" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="30" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="125" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="220" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <path d="m60,150 l0,-20 l100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m260,150 l0,-20 l-100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m160,150 l0,-40" class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+        </g>
+
+        <path d="m35,120 l-20,0 l0,140 l20,0 M285,120 l20,0 l0,140 l-20,0" class="pi-normal-stroke" fill="none" stroke-width="15px" stroke-linecap="round" stroke-linejoin="round" />
+
+        <circle cx="160" cy="140" r="80" class="pi-normal-stroke" fill="#F0F0f0" opacity="0.8" stroke-width="5" />
+        <rect transform="translate(60,-25) rotate(65, 160,160) translate(20,0)" x="200" y="200" width="100" height="40" class="pi-normal-stroke pi-medium-fill" stroke-width="5" />
+
+
+    </svg>
+</script>
+<script type="text/html" id="pi_index">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+
+        <g>
+            <!-- index group -->
+            <rect x="125" y="20" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="30" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="125" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="220" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <path d="m60,150 l0,-20 l100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m260,150 l0,-20 l-100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m160,150 l0,-40" class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+        </g>
+    </svg>
+</script>
+
+<script type="text/html" id="pi_clustered_index">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+
+        <g>
+            <!-- index group -->
+            <rect x="125" y="20" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="30" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="125" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="220" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <path d="m60,150 l0,-20 l100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m260,150 l0,-20 l-100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m160,150 l0,-40" class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+        </g>
+        <!-- clustered-->
+        <path d="m35,120 l-20,0 l0,140 l20,0 M285,120 l20,0 l0,140 l-20,0" class="pi-normal-stroke" fill="none" stroke-width="15px" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+</script>
+
+
+
+<script type="text/html" id="pi_index_scan">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+
+        <g>
+            <!-- index group -->
+            <rect x="125" y="20" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="30" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="125" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="220" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <path d="m60,150 l0,-20 l100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m260,150 l0,-20 l-100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m160,150 l0,-40" class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+        </g>
+        <!-- scan -->
+        <path class="pi_default-dark-fill" stroke-linecap="round" stroke-linejoin="round" stroke-width="10" d="M280,200 l-50,-50 l0,30 l-150,0 l0,-160 l-40,0 l0,200 l190,0 l0,30 z" />
+
+    </svg>
+</script>
+<script type="text/html" id="pi_index_seek">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <!-- index group -->
+            <rect x="125" y="20" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="30" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="125" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="220" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <path d="m60,150 l0,-20 l100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m260,150 l0,-20 l-100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m160,150 l0,-40" class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+        </g>
+
+        <!-- seek -->
+        <path class="pi_default-dark-fill" stroke-width="10" d="M260,260 l50,-50 l-30,0 l0,-90 l-100,0 l0,-110 l-40,0 l0,150 l100,0 l0,50 l-30,0 z" />
+
+    </svg>
+</script>
+<script type="text/html" id="pi_index_delete">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+
+        <g>
+            <!-- index group -->
+            <rect x="125" y="20" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="30" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="125" y="220" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="220" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <path d="m60,150 l0,-20 l100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m260,150 l0,-20 l-100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m160,210 l0,-100" stroke-dasharray="10,20" class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+        </g>
+        <!-- delete-->
+        <g transform="scale(0.6) translate(120,120)">
+            <path class="pi-alt3-light-stroke pi-alt3-medium-fill" d="M240,100 s-180,110,-150,150 s10,-10,90,-100 z" />
+            <path class="pi-alt3-light-stroke pi-alt3-medium-fill" d="M80,80 s180,110,150,150 s10,10,-90,-100 z" />
+        </g>
+    </svg>
+</script>
+<script type="text/html" id="pi_index_insert">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+
+        <g>
+            <!-- index group -->
+            <rect x="125" y="20" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="30" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="125" y="220" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="220" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <path d="m60,150 l0,-20 l100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m260,150 l0,-20 l-100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m160,210 l0,-100 m0,50 l20,20 l-40,0 l20,-20" class="pi-normal-stroke" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+        </g>
+    </svg>
+</script>
+<script type="text/html" id="pi_index_merge">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <!-- index group -->
+            <rect x="125" y="20" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="30" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="125" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="220" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <path d="m60,150 l0,-20 l100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m260,150 l0,-20 l-100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m160,150 l0,-40" class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+        </g>
+
+        <path transform="rotate(90,160,160) translate(-100,0)" class="pi-normal-stroke pi-dark-fill" d="M160,170 l-50,-50 l30,0 l0,-80 l40,0 l0,80 l30,0 z" />
+        <path transform="rotate(90,160,160) translate(-100,0)" class="pi-normal-stroke pi-dark-fill" d="M160,150 l50,50 l-30,0 l0,80 l-40,0 l0,-80 l-30,0 z" />
+    </svg>
+</script>
+<script type="text/html" id="pi_index_update">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <!-- index group -->
+            <rect x="125" y="20" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="30" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="125" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="220" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <path d="m60,150 l0,-20 l100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m260,150 l0,-20 l-100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m160,150 l0,-40" class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+        </g>
+
+        <g transform="rotate(10,160,160) scale(0.5) translate(-70,0)">
+            <path class="pi-normal-stroke pi-dark-fill" d="M260,100 l-50,-50 l0,30 s-50,-10,-130,50 l20,30 s50,-60,110,-40 l0,30 z" />
+            <path transform="rotate(180,160,160)" class="pi-normal-stroke pi-dark-fill" d="M240,100 l-50,-50 l0,30 s-50,-10,-130,50 l20,30 s50,-60,110,-40 l0,30 z" />
+        </g>
+    </svg>
+</script>
+<script type="text/html" id="pi_index_spool">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+
+        <g>
+            <rect x="125" y="20" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="30" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="125" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="220" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <path d="m60,150 l0,-20 l100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m260,150 l0,-20 l-100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m160,150 l0,-40" class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+        </g>
+
+        <!-- spool -->
+        <g transform="scale(0.4) translate(450,-50)">
+            <path class="pi-normal-stroke pi-medium-fill" d="M100,300 s100,40,200,0 m0,0 s-100,-40,-200,0" stroke-width="10" stroke-linejoin="round" stroke-linecap="round" />
+            <path class="pi-normal-stroke pi-medium-fill" d="M120,290 s80,30,160,0 M120,275 s80,30,160,0 M120,260 s80,30,160,0 M120,245 s80,30,160,0 M120,230 s80,30,160,0 M120,215 s80,30,160,0 M120,200 s80,30,160,0 M120,185 s80,30,160,0 M120,170 s80,30,160,0 M120,155 s80,30,160,0 M120,140 s80,30,160,0 M120,125 s80,30,160,0 M120,110 s80,30,160,0" stroke-width="10" stroke-linejoin="round" stroke-linecap="round" />
+            <path class="pi-normal-stroke pi-medium-fill" d="M100,100 s100,40,200,0 m0,0 s-100,-40,-200,0" stroke-width="10" stroke-linejoin="round" stroke-linecap="round" />
+        </g>
+    </svg>
+</script>
+<script type="text/html" id="pi_rid_nonclustered_locate">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <rect x="125" y="20" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="30" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="125" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <rect x="220" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+            <path d="m60,150 l0,-20 l100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m260,150 l0,-20 l-100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m160,150 l0,-40" class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+        </g>
+
+        <circle cx="160" cy="140" r="80" class="pi-normal-stroke" fill="#F0F0f0" opacity="0.8" stroke-width="5" />
+        <rect transform="translate(60,-25) rotate(65, 160,160) translate(20,0)" x="200" y="200" width="100" height="40" class="pi-normal-stroke pi-medium-fill" stroke-width="5" />
+
+
+    </svg>
+</script>
+<script type="text/html" id="pi_delete">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <rect x="60" y="40" width="200" height="240" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="60" y="40" width="200" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="60" y="40" width="200" height="240" fill="none" class="pi-normal-stroke pi-default-stroke" />
+            <line x1="60" y1="80" x2="260" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+            <line x1="70" y1="110" x2="245" y2="110" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="70" y1="140" x2="245" y2="140" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="70" y1="170" x2="245" y2="170" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="70" y1="200" x2="245" y2="200" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="70" y1="230" x2="245" y2="230" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="70" y1="260" x2="245" y2="260" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+        </g>
+
+
+        <g transform="scale(0.6) translate(120,120)">
+            <path class="pi-alt3-light-stroke pi-alt3-medium-fill" d="M240,100 s-180,110,-150,150 s10,-10,90,-100 z" />
+            <path class="pi-alt3-light-stroke pi-alt3-medium-fill" d="M80,80 s180,110,150,150 s10,10,-90,-100 z" />
+        </g>
+    </svg>
+</script>
+<script type="text/html" id="pi_table_spool">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <rect x="60" y="40" width="200" height="240" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="60" y="40" width="200" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="60" y="40" width="200" height="240" fill="none" class="pi-normal-stroke pi-default-stroke" />
+            <line x1="60" y1="80" x2="260" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+        </g>
+
+        <!-- spool -->
+        <g transform="scale(0.6) translate(70, 90)">
+            <path class="pi-normal-stroke pi-medium-fill" d="M100,300 s100,40,200,0 m0,0 s-100,-40,-200,0" stroke-width="10" stroke-linejoin="round" stroke-linecap="round" />
+            <path class="pi-normal-stroke pi-medium-fill" d="M120,290 s80,30,160,0 M120,275 s80,30,160,0 M120,260 s80,30,160,0 M120,245 s80,30,160,0 M120,230 s80,30,160,0 M120,215 s80,30,160,0 M120,200 s80,30,160,0 M120,185 s80,30,160,0 M120,170 s80,30,160,0 M120,155 s80,30,160,0 M120,140 s80,30,160,0 M120,125 s80,30,160,0 M120,110 s80,30,160,0" stroke-width="10" stroke-linejoin="round" stroke-linecap="round" />
+            <path class="pi-normal-stroke pi-medium-fill" d="M100,100 s100,40,200,0 m0,0 s-100,-40,-200,0" stroke-width="10" stroke-linejoin="round" stroke-linecap="round" />
+        </g>
+    </svg>
+</script>
+<script type="text/html" id="pi_rank">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <rect x="60" y="40" width="200" height="240" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="60" y="40" width="200" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="60" y="40" width="200" height="240" fill="none" class="pi-normal-stroke pi-default-stroke" />
+            <line x1="60" y1="80" x2="260" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+
+            <line x1="170" y1="110" x2="245" y2="110" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="170" y1="140" x2="245" y2="140" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="170" y1="170" x2="245" y2="170" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="170" y1="200" x2="245" y2="200" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="170" y1="230" x2="245" y2="230" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="170" y1="260" x2="245" y2="260" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+
+            <text class="pi-normal-stroke pi-dark-fill" text-anchor="middle" x="120" y="140" font-size="60px" font-family="monospace" font-weight="bold">1</text>
+            <text class="pi-normal-stroke pi-dark-fill" text-anchor="middle" x="120" y="200" font-size="60px" font-family="monospace" font-weight="bold">2</text>
+            <text class="pi-normal-stroke pi-dark-fill" text-anchor="middle" x="120" y="260" font-size="60px" font-family="monospace" font-weight="bold">3</text>
+
+
+        </g>
+    </svg>
+</script>
+<script type="text/html" id="pi_nested_loops">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <path class="pi-normal-stroke" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="20" d="M50,100 l-30,20 l60,0 l-30,-20 l0,200 l250,0 l0,-280 l-250,0 l0,40" />
+        <path class="pi-alt3-light-stroke" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="20" d="M240,160 l-30,-20 l60,0 l-30,20 l0,-100 l-120,0 l0,200 l120,0 l0,-60" />
+    </svg>
+</script>
+<script type="text/html" id="pi_parallelism">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <path class="pi-normal-stroke" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="30" d="M30,160 l20,-30 l0,60 l-20,-30 l260,0 l0,10 l0-20" />
+        <path transform="rotate(-45,160,160)" class="pi-normal-stroke" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="30" d="M160,160 l160,0 l0,10 l0-20" />
+        <path transform="rotate(45,160,160)" class="pi-normal-stroke" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="30" d="M160,160 l160,0 l0,10 l0-20" />
+    </svg>
+</script>
+<script type="text/html" id="pi_parallelism_distribute">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <path class="pi-normal-stroke" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="30" d="M30,160 l20,-30 l0,60 l-20,-30 l260,0 l0,10 l0-20" />
+        <path transform="rotate(-45,160,160)" class="pi-normal-stroke" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="30" d="M0,160 l20,-30 l0,60 l-20,-30 l160,0 l0,10 l0-20" />
+        <path transform="rotate(45,160,160)" class="pi-normal-stroke" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="30" d="M0,160 l20,-30 l0,60 l-20,-30 l160,0 l0,10 l0-20" />
+    </svg>
+</script>
+<script type="text/html" id="pi_parallelism_repartition">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <path class="pi-normal-stroke" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="30" d="M30,160 l20,-30 l0,60 l-20,-30 l260,0 l0,10 l0-20" />
+        <path transform="rotate(-45,160,160)" class="pi-normal-stroke" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="30" d="M0,160 l20,-30 l0,60 l-20,-30 l320,0 l0,10 l0-20" />
+        <path transform="rotate(45,160,160)" class="pi-normal-stroke" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="30" d="M0,160 l20,-30 l0,60 l-20,-30 l320,0 l0,10 l0-20" />
+    </svg>
+</script>
+<script type="text/html" id="pi_print">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <rect x="20" y="20" width="140" height="280" class="pi-light-fill pi-default-stroke" stroke="none" />
+        <rect x="20" y="20" width="140" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+        <rect x="20" y="20" width="140" height="280" fill="none" class="pi-normal-stroke pi-default-stroke" />
+        <line x1="20" y1="60" x2="160" y2="60" class="pi-normal-stroke" stroke-width="4px" />
+
+        <line x1="40" y1="80" x2="140" y2="80" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="40, 10, 60, 10, 70, 10, 10" />
+        <line x1="40" y1="110" x2="140" y2="110" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="40, 10, 60, 10, 70, 10, 10" />
+        <line x1="40" y1="140" x2="140" y2="140" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="40, 10, 60, 10, 70, 10, 10" />
+        <line x1="40" y1="170" x2="140" y2="170" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="40, 10, 60, 10, 70, 10, 10" />
+        <line x1="40" y1="200" x2="140" y2="200" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="40, 10, 60, 10, 70, 10, 10" />
+        <line x1="40" y1="230" x2="140" y2="230" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="40, 10, 60, 10, 70, 10, 10" />
+        <line x1="40" y1="260" x2="140" y2="260" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="40, 10, 60, 10, 70, 10, 10" />
+
+
+        <path d="M140,50 l0,230 l160,0 l0,-180 -50,-50 z" class="pi-light-fill pi-default-stroke pi-normal-stroke" />
+
+        <path transform="rotate(90,160,160) scale(0.7) translate(70,70)" class="pi-normal-stroke pi-dark-fill" d="M160,100 l50,50 l-30,0 l0,80 l-40,0 l0,-80 l-30,0 z" />-->-->
+
+    </svg>
+</script>
+<script type="text/html" id="pi_remote_count_spool">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <rect x="20" y="20" width="140" height="280" class="pi-light-fill pi-default-stroke" stroke="none" />
+        <rect x="20" y="20" width="140" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+        <rect x="20" y="20" width="140" height="280" fill="none" class="pi-normal-stroke pi-default-stroke" />
+        <line x1="20" y1="60" x2="160" y2="60" class="pi-normal-stroke" stroke-width="4px" />
+
+        <line x1="40" y1="80" x2="140" y2="80" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="40, 10, 60, 10, 70, 10, 10" />
+        <line x1="40" y1="110" x2="140" y2="110" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="40, 10, 60, 10, 70, 10, 10" />
+        <line x1="40" y1="140" x2="140" y2="140" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="40, 10, 60, 10, 70, 10, 10" />
+        <line x1="40" y1="170" x2="140" y2="170" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="40, 10, 60, 10, 70, 10, 10" />
+        <line x1="40" y1="200" x2="140" y2="200" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="40, 10, 60, 10, 70, 10, 10" />
+        <line x1="40" y1="230" x2="140" y2="230" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="40, 10, 60, 10, 70, 10, 10" />
+        <line x1="40" y1="260" x2="140" y2="260" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="40, 10, 60, 10, 70, 10, 10" />
+
+
+        <g transform="scale(0.6) translate(200, 190)">
+            <path class="pi-normal-stroke pi-medium-fill" d="M100,300 s100,40,200,0 m0,0 s-100,-40,-200,0" stroke-width="10" stroke-linejoin="round" stroke-linecap="round" />
+            <path class="pi-normal-stroke pi-medium-fill" d="M120,290 s80,30,160,0 M120,275 s80,30,160,0 M120,260 s80,30,160,0 M120,245 s80,30,160,0 M120,230 s80,30,160,0 M120,215 s80,30,160,0 M120,200 s80,30,160,0 M120,185 s80,30,160,0 M120,170 s80,30,160,0 M120,155 s80,30,160,0 M120,140 s80,30,160,0 M120,125 s80,30,160,0 M120,110 s80,30,160,0" stroke-width="10" stroke-linejoin="round" stroke-linecap="round" />
+            <path class="pi-normal-stroke pi-medium-fill" d="M100,100 s100,40,200,0 m0,0 s-100,-40,-200,0" stroke-width="10" stroke-linejoin="round" stroke-linecap="round" />
+        </g>
+
+        <text class="pi-normal-stroke pi-dark-fill" text-anchor="middle" x="240" y="140" font-size="200px" font-family="monospace" font-weight="bold">Ʃ</text>
+
+    </svg>
+</script>
+<script type="text/html" id="pi_sequence_project">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+
+        <g>
+            <rect x="10" y="60" width="100" height="200" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="10" y="60" width="100" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="10" y="60" width="100" height="200" fill="none" class="pi-normal-stroke pi-default-stroke" />
+            <line x1="10" y1="100" x2="110" y2="100" class="pi-normal-stroke" stroke-width="4px" />
+
+            <line x1="25" y1="115" x2="100" y2="115" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="40, 10, 60, 10, 70, 10, 10" />
+            <line x1="25" y1="145" x2="100" y2="145" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="40, 10, 60, 10, 70, 10, 10" />
+            <line x1="25" y1="175" x2="100" y2="175" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="40, 10, 60, 10, 70, 10, 10" />
+            <line x1="25" y1="205" x2="100" y2="205" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="40, 10, 60, 10, 70, 10, 10" />
+            <line x1="25" y1="235" x2="100" y2="235" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="40, 10, 60, 10, 70, 10, 10" />
+        </g>
+
+        <g transform="translate(200,0)">
+            <rect x="10" y="60" width="100" height="200" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="10" y="60" width="100" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="10" y="60" width="100" height="200" fill="none" class="pi-normal-stroke pi-default-stroke" />
+            <line x1="10" y1="100" x2="110" y2="100" class="pi-normal-stroke" stroke-width="4px" />
+
+            <line x1="25" y1="115" x2="100" y2="115" class="pi-alt3-light-stroke" stroke-width="15px" stroke-dasharray="40, 10, 60, 10, 70, 10, 10" />
+            <line x1="25" y1="145" x2="100" y2="145" class="pi-alt3-light-stroke" stroke-width="15px" stroke-dasharray="40, 10, 60, 10, 70, 10, 10" />
+            <line x1="25" y1="175" x2="100" y2="175" class="pi-normal-stroke" stroke-width="15px" stroke-dasharray="40, 10, 60, 10, 70, 10, 10" />
+            <line x1="25" y1="205" x2="100" y2="205" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="40, 10, 60, 10, 70, 10, 10" />
+            <line x1="25" y1="235" x2="100" y2="235" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="40, 10, 60, 10, 70, 10, 10" />
+        </g>
+
+        <path transform="rotate(90,160,160) scale(0.6) translate(110,100)" class="pi-alt3-light-stroke pi-dark-fill " stroke-width="5" d="M160,100 l50,50 l-30,0 l0,80 l-40,0 l0,-80 l-30,0 z" />
+
+    </svg>
+</script>
+<script type="text/html" id="pi_merge_join">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(0,50)">
+            <rect x="10" y="60" width="100" height="200" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="10" y="60" width="100" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="10" y="60" width="100" height="200" fill="none" class="pi-normal-stroke pi-default-stroke" />
+            <line x1="10" y1="100" x2="110" y2="100" class="pi-normal-stroke" stroke-width="4px" />
+
+            <line x1="25" y1="115" x2="100" y2="115" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="40, 10, 60, 10, 70, 10, 10" />
+            <line x1="25" y1="145" x2="100" y2="145" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="40, 10, 60, 10, 70, 10, 10" />
+            <line x1="25" y1="175" x2="100" y2="175" class="pi-normal-stroke" stroke-width="15px" stroke-dasharray="40, 10, 60, 10, 70, 10, 10" />
+            <line x1="25" y1="205" x2="100" y2="205" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="40, 10, 60, 10, 70, 10, 10" />
+            <line x1="25" y1="235" x2="100" y2="235" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="40, 10, 60, 10, 70, 10, 10" />
+        </g>
+
+        <g transform="translate(200,50)">
+            <rect x="10" y="60" width="100" height="200" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="10" y="60" width="100" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="10" y="60" width="100" height="200" fill="none" class="pi-normal-stroke pi-default-stroke" />
+            <line x1="10" y1="100" x2="110" y2="100" class="pi-normal-stroke" stroke-width="4px" />
+
+            <line x1="25" y1="115" x2="100" y2="115" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="40, 10, 60, 10, 70, 10, 10" />
+            <line x1="25" y1="145" x2="100" y2="145" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="40, 10, 60, 10, 70, 10, 10" />
+            <line x1="25" y1="175" x2="100" y2="175" class="pi-normal-stroke" stroke-width="15px" stroke-dasharray="40, 10, 60, 10, 70, 10, 10" />
+            <line x1="25" y1="205" x2="100" y2="205" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="40, 10, 60, 10, 70, 10, 10" />
+            <line x1="25" y1="235" x2="100" y2="235" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="40, 10, 60, 10, 70, 10, 10" />
+        </g>
+
+        <path class="pi-dark-fill" d="M160,10 l50,50 l-30,0 l0,140 l10,10 l10,0 l0,20 l-30,0 l-10,-10 l-10,10 l-30,0 l0,-20 l10,0 l10,-10 l0,-140 l-30,0 z" />
+
+
+    </svg>
+</script>
+<script type="text/html" id="pi_segment">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <rect x="20" y="40" width="280" height="240" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="240" fill="none" class="pi-normal-stroke pi-default-stroke" />
+            <line x1="20" y1="80" x2="300" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+
+            <line x1="160" y1="40" x2="160" y2="280" class="pi-normal-stroke" stroke-width="10px" />
+
+            <path d="M230,100 l0,30 m0,20 l10,10,-10,10,-10,-10, 10,-10 z m0,40 l10,10,-10,10,-10,-10, 10,-10 z m0,40 l10,10,-10,10,-10,-10, 10,-10 z " class="pi-normal-stroke" stroke-width="10px" />
+            <path d="M90,105 l10,0,0,20,-20,0,0,-20,10,0 m0,40 l10,0,0,20,-20,0,0,-20,10,0 m0,40 l10,0,0,20,-20,0,0,-20,10,0 m0,40 l10,0,0,20,-20,0,0,-20,10,0 " class="pi-normal-stroke" stroke-width="10px" />
+        </g>
+    </svg>
+</script>
+<script type="text/html" id="pi_convert">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <path d="M240,185 l50,50,-50,50,-50,-50, 50,-50 z " class="pi-alt-normal-stroke pi-alt-light-fill" stroke-width="10px" />
+            <path d="M70,200 l35,0,0,70,-70,0,0,-70,35,0 " class="pi-alt-normal-stroke pi-alt-light-fill" stroke-width="10px" />
+            <path d="M60,140 s100,-160,200,0 l0,-50,0,50,-50,0" fill="none" class="pi-alt-normal-stroke " stroke-width="30" stroke-linejoin="round" stroke-linecap="round" />
+        </g>
+    </svg>
+</script>
+<script type="text/html" id="pi_set_function">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <path d="M220,35 l50,50,-50,50,-50,-50, 50,-50 z " class="pi-alt-normal-stroke pi-alt-light-fill" stroke-width="10px" />
+            <path d="M90,50 l35,0,0,70,-70,0,0,-70,35,0 " class="pi-alt-normal-stroke pi-alt-light-fill" stroke-width="10px" />
+            <path d="m35,20 l-20,0 l0,140 l20,0 M285,20 l20,0 l0,140 l-20,0" class="pi-alt-normal-stroke" fill="none" stroke-width="15px" stroke-linecap="round" stroke-linejoin="round" />
+        </g>
+
+        <g transform="translate(90,155) scale(1.2)">
+            <rect x="0" y="0" width="120" height="120" class="pi-alt-light-fill pi-default-stroke pi-alt-normal-stroke" />
+            <text class="pi-alt-normal-stroke pi-alt-dark-fill" text-anchor="middle" x="40" y="90" font-size="120px" font-family="monospace" font-weight="bold" font-style="italic">f</text>
+            <text class="pi-alt-normal-stroke pi-alt-dark-fill" text-anchor="middle" x="80" y="100" font-size="80px" font-family="monospace" font-weight="bold">x</text>
+        </g>
+    </svg>
+</script>
+<script type="text/html" id="pi_iterator_catch_all">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <rect x="20" y="20" width="280" height="280" fill="none" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+        <text class="pi-normal-stroke pi-dark-fill" text-anchor="middle" x="160" y="230" font-size="250px" font-family="monospace" font-weight="bold">I</text>
+    </svg>
+</script>
+<script type="text/html" id="pi_cursor_catch_all">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <rect x="20" y="20" width="280" height="280" fill="none" class="pi-alt2-normal-stroke pi-default-stroke pi-alt2-light-fill" />
+        <text class="pi-alt2-normal-stroke pi-alt2-dark-fill" text-anchor="middle" x="160" y="230" font-size="250px" font-family="monospace" font-weight="bold">C</text>
+    </svg>
+</script>
+<script type="text/html" id="pi_spool">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(-40,-10)">
+            <g transform="translate(40,-20)" style="opacity:0.7">
+                <rect x="60" y="40" width="160" height="170" class="pi-light-fill pi-default-stroke" stroke="none" />
+                <rect x="60" y="40" width="160" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+                <rect x="60" y="40" width="160" height="170" fill="none" class="pi-normal-stroke pi-default-stroke" />
+                <line x1="60" y1="80" x2="220" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+
+                <line x1="70" y1="100" x2="200" y2="100" class="pi-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="70" y1="130" x2="200" y2="130" class="pi-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="70" y1="160" x2="200" y2="160" class="pi-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="70" y1="190" x2="200" y2="190" class="pi-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            </g>
+
+
+            <g transform="translate(-10,40)" style="opacity:0.7">
+                <rect x="60" y="40" width="160" height="170" class="pi-light-fill pi-default-stroke" stroke="none" />
+                <rect x="60" y="40" width="160" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+                <rect x="60" y="40" width="160" height="170" fill="none" class="pi-normal-stroke pi-default-stroke" />
+                <line x1="60" y1="80" x2="220" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+
+                <line x1="70" y1="100" x2="200" y2="100" class="pi-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="70" y1="130" x2="200" y2="130" class="pi-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="70" y1="160" x2="200" y2="160" class="pi-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="70" y1="190" x2="200" y2="190" class="pi-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            </g>
+
+
+            <rect x="100" y="80" width="110" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="100" y="80" width="110" height="110" fill="none" class="pi-normal-stroke pi-default-stroke" />
+        </g>
+
+        <g transform="scale(0.7) translate(140, 120)">
+            <path class="pi-normal-stroke pi-medium-fill" d="M100,300 s100,40,200,0 m0,0 s-100,-40,-200,0" stroke-width="10" stroke-linejoin="round" stroke-linecap="round" />
+            <path class="pi-normal-stroke pi-medium-fill" d="M120,290 s80,30,160,0 M120,275 s80,30,160,0 M120,260 s80,30,160,0 M120,245 s80,30,160,0 M120,230 s80,30,160,0 M120,215 s80,30,160,0 M120,200 s80,30,160,0 M120,185 s80,30,160,0 M120,170 s80,30,160,0 M120,155 s80,30,160,0 M120,140 s80,30,160,0 M120,125 s80,30,160,0 M120,110 s80,30,160,0" stroke-width="10" stroke-linejoin="round" stroke-linecap="round" />
+            <path class="pi-normal-stroke pi-medium-fill" d="M100,100 s100,40,200,0 m0,0 s-100,-40,-200,0" stroke-width="10" stroke-linejoin="round" stroke-linecap="round" />
+        </g>
+
+    </svg>
+</script>
+<script type="text/html" id="pi_fetch_query">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(40,25)">
+            <g transform="translate(40,-20)" style="opacity:0.7">
+                <rect x="60" y="40" width="160" height="170" class="pi-alt2-light-fill pi-default-stroke" stroke="none" />
+                <rect x="60" y="40" width="160" height="40" class="pi-alt2-medium-fill pi-default-stroke" stroke="none" />
+                <rect x="60" y="40" width="160" height="170" fill="none" class="pi-alt2-normal-stroke pi-default-stroke" />
+                <line x1="60" y1="80" x2="220" y2="80" class="pi-alt2-normal-stroke" stroke-width="4px" />
+
+                <line x1="70" y1="100" x2="200" y2="100" class="pi-alt2-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="70" y1="130" x2="200" y2="130" class="pi-alt2-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="70" y1="160" x2="200" y2="160" class="pi-alt2-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="70" y1="190" x2="200" y2="190" class="pi-alt2-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            </g>
+
+
+            <g transform="translate(-10,40)" style="opacity:0.7">
+                <rect x="60" y="40" width="160" height="170" class="pi-alt2-light-fill pi-default-stroke" stroke="none" />
+                <rect x="60" y="40" width="160" height="40" class="pi-alt2-medium-fill pi-default-stroke" stroke="none" />
+                <rect x="60" y="40" width="160" height="170" fill="none" class="pi-alt2-normal-stroke pi-default-stroke" />
+                <line x1="60" y1="80" x2="220" y2="80" class="pi-alt2-normal-stroke" stroke-width="4px" />
+
+                <line x1="70" y1="100" x2="200" y2="100" class="pi-alt2-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="70" y1="130" x2="200" y2="130" class="pi-alt2-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="70" y1="160" x2="200" y2="160" class="pi-alt2-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="70" y1="190" x2="200" y2="190" class="pi-alt2-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            </g>
+
+
+            <rect x="100" y="80" width="110" height="40" class="pi-alt2-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="100" y="80" width="110" height="110" fill="none" class="pi-alt2-normal-stroke pi-default-stroke" />
+        </g>
+
+        <path transform="rotate(-90,160,160) translate(0,-80)" stroke-width="5" class="pi-alt-normal-stroke pi-alt-medium-fill" d="M160,100 l50,50 l-30,0 l0,80 l-40,0 l0,-80 l-30,0 z" />
+
+    </svg>
+</script>
+<script type="text/html" id="pi_population_query">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(40,25)">
+            <g transform="translate(40,-20)" style="opacity:0.7">
+                <rect x="60" y="40" width="160" height="170" class="pi-alt2-light-fill pi-default-stroke" stroke="none" />
+                <rect x="60" y="40" width="160" height="40" class="pi-alt2-medium-fill pi-default-stroke" stroke="none" />
+                <rect x="60" y="40" width="160" height="170" fill="none" class="pi-alt2-normal-stroke pi-default-stroke" />
+                <line x1="60" y1="80" x2="220" y2="80" class="pi-alt2-normal-stroke" stroke-width="4px" />
+
+                <line x1="70" y1="100" x2="200" y2="100" class="pi-alt2-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="70" y1="130" x2="200" y2="130" class="pi-alt2-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="70" y1="160" x2="200" y2="160" class="pi-alt2-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="70" y1="190" x2="200" y2="190" class="pi-alt2-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            </g>
+
+
+            <g transform="translate(-10,40)" style="opacity:0.7">
+                <rect x="60" y="40" width="160" height="170" class="pi-alt2-light-fill pi-default-stroke" stroke="none" />
+                <rect x="60" y="40" width="160" height="40" class="pi-alt2-medium-fill pi-default-stroke" stroke="none" />
+                <rect x="60" y="40" width="160" height="170" fill="none" class="pi-alt2-normal-stroke pi-default-stroke" />
+                <line x1="60" y1="80" x2="220" y2="80" class="pi-alt2-normal-stroke" stroke-width="4px" />
+
+                <line x1="70" y1="100" x2="200" y2="100" class="pi-alt2-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="70" y1="130" x2="200" y2="130" class="pi-alt2-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="70" y1="160" x2="200" y2="160" class="pi-alt2-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="70" y1="190" x2="200" y2="190" class="pi-alt2-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            </g>
+
+
+            <rect x="100" y="80" width="110" height="40" class="pi-alt2-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="100" y="80" width="110" height="110" fill="none" class="pi-alt2-normal-stroke pi-default-stroke" />
+        </g>
+
+        <path transform="rotate(90,160,160) translate(0,75)" stroke-width="5" class="pi-alt-normal-stroke pi-alt-medium-fill" d="M160,100 l50,50 l-30,0 l0,80 l-40,0 l0,-80 l-30,0 z" />
+
+    </svg>
+</script>
+<script type="text/html" id="pi_refresh_query">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(45,55)">
+            <g transform="translate(40,-20)" style="opacity:0.7">
+                <rect x="60" y="40" width="160" height="170" class="pi-alt2-light-fill pi-default-stroke" stroke="none" />
+                <rect x="60" y="40" width="160" height="40" class="pi-alt2-medium-fill pi-default-stroke" stroke="none" />
+                <rect x="60" y="40" width="160" height="170" fill="none" class="pi-alt2-normal-stroke pi-default-stroke" />
+                <line x1="60" y1="80" x2="220" y2="80" class="pi-alt2-normal-stroke" stroke-width="4px" />
+
+                <line x1="70" y1="100" x2="200" y2="100" class="pi-alt2-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="70" y1="130" x2="200" y2="130" class="pi-alt2-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="70" y1="160" x2="200" y2="160" class="pi-alt2-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="70" y1="190" x2="200" y2="190" class="pi-alt2-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            </g>
+
+
+            <g transform="translate(-10,40)" style="opacity:0.7">
+                <rect x="60" y="40" width="160" height="170" class="pi-alt2-light-fill pi-default-stroke" stroke="none" />
+                <rect x="60" y="40" width="160" height="40" class="pi-alt2-medium-fill pi-default-stroke" stroke="none" />
+                <rect x="60" y="40" width="160" height="170" fill="none" class="pi-alt2-normal-stroke pi-default-stroke" />
+                <line x1="60" y1="80" x2="220" y2="80" class="pi-alt2-normal-stroke" stroke-width="4px" />
+
+                <line x1="70" y1="100" x2="200" y2="100" class="pi-alt2-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="70" y1="130" x2="200" y2="130" class="pi-alt2-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="70" y1="160" x2="200" y2="160" class="pi-alt2-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="70" y1="190" x2="200" y2="190" class="pi-alt2-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            </g>
+
+
+            <rect x="100" y="80" width="110" height="40" class="pi-alt2-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="100" y="80" width="110" height="110" fill="none" class="pi-alt2-normal-stroke pi-default-stroke" />
+        </g>
+        <g transform="rotate(10,160,160) scale(0.7) translate(-80,-30)">
+            <path class="pi-alt-normal-stroke pi-alt-dark-fill" d="M260,100 l-50,-50 l0,30 s-50,-10,-130,50 l20,30 s50,-60,110,-40 l0,30 z" />
+            <path transform="rotate(180,160,160)" class="pi-alt-normal-stroke pi-alt-dark-fill" d="M240,100 l-50,-50 l0,30 s-50,-10,-130,50 l20,30 s50,-60,110,-40 l0,30 z" />
+        </g>
+
+    </svg>
+</script>
+<script type="text/html" id="pi_workfile_scan">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <path d="M80,50 l0,230 l160,0 l0,-180 -50,-50 z" class="pi-light-fill pi-default-stroke pi-normal-stroke" />
+        <path class="pi-normal-stroke pi-dark-fill" d="M160,260 l-50,-50 l30,0 l0,-200 l40,0 l0,200 l30,0 z" />
+    </svg>
+</script>
+<script type="text/html" id="pi_switch">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <rect x="20" y="100" width="280" height="130" class="pi-light-fill pi-default-stroke pi-normal-stroke" stroke="none" />
+        <path d="M160,30  l-30,20,60,0,-30,-20,0,130, -115,0, 0,130,10,0,-20,0" class="pi-light-stroke" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="14" />
+        <path d="M160,30  l-30,20,60,0,-30,-20,0,130, 35,0, 0,130,10,0,-20,0" class="pi-light-stroke" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="14" />
+        <path d="M160,30  l-30,20,60,0,-30,-20,0,130, 110,0, 0,130,10,0,-20,0" class="pi-light-stroke" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="14" />
+        <path d="M160,30  l-30,20,60,0,-30,-20,0,130, -40,0, 0,130,10,0,-20,0" class="pi-normal-stroke" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="14" />
+
+    </svg>
+</script>
+<script type="text/html" id="pi_sequence">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <rect x="80" y="20" width="220" height="90" class="pi-light-fill pi-default-stroke pi-normal-stroke" stroke="none" />
+        <rect x="100" y="60" width="30" height="30" class="pi-medium-fill pi-light-stroke pi-default-stroke" />
+        <rect x="150" y="60" width="30" height="30" class="pi-medium-fill pi-light-stroke pi-default-stroke" />
+        <rect x="200" y="60" width="30" height="30" class="pi-medium-fill pi-light-stroke pi-default-stroke" />
+        <rect x="250" y="60" width="30" height="30" class="pi-medium-fill pi-light-stroke pi-default-stroke" />
+
+        <rect x="20" y="210" width="220" height="90" class="pi-light-fill pi-default-stroke pi-normal-stroke" stroke="none" />
+        <rect x="40" y="250" width="30" height="30" class="pi-medium-fill pi-light-stroke pi-default-stroke" />
+        <rect x="90" y="250" width="30" height="30" class="pi-medium-fill pi-light-stroke pi-default-stroke" />
+        <rect x="140" y="250" width="30" height="30" class="pi-medium-fill pi-light-stroke pi-default-stroke" />
+        <rect x="190" y="250" width="30" height="30" class="pi-medium-fill pi-light-stroke pi-default-stroke" />
+
+        <path class="pi-focus-stroke pi-dark-fill" d="M100,130 l50,0 l0,-50 l50,0 l0,50 l50,0 l0,50 l-50,0 l0,50 l-50,0 l0,-50 l-50,0 z" stroke-width="1px" />
+
+    </svg>
+</script>
+<script type="text/html" id="pi_intrinsic">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <rect x="30" y="50" width="150" height="260" class="pi-alt-light-fill pi-default-stroke pi-alt-normal-stroke" />
+        <line x1="30" y1="115" x2="180" y2="115" class="pi-alt-normal-stroke" stroke-width="10px" />
+        <line x1="30" y1="180" x2="180" y2="180" class="pi-alt-normal-stroke" stroke-width="10px" />
+
+        <rect x="130" y="270" width="40" height="30" class="pi-alt-medium-fill pi-default-stroke" stroke="none" />
+        <g transform="translate(130,20) scale(1.2)">
+            <rect x="0" y="0" width="120" height="120" class="pi-alt-light-fill pi-default-stroke pi-alt-normal-stroke" />
+            <text class="pi-alt-normal-stroke pi-alt-dark-fill" text-anchor="middle" x="40" y="90" font-size="120px" font-family="monospace" font-weight="bold" font-style="italic">f</text>
+            <text class="pi-alt-normal-stroke pi-alt-dark-fill" text-anchor="middle" x="80" y="100" font-size="80px" font-family="monospace" font-weight="bold">x</text>
+        </g>
+
+    </svg>
+</script>
+<script type="text/html" id="pi_snapshot">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(40,25)">
+            <g transform="translate(0,-20)">
+                <rect x="40" y="20" width="220" height="120" class="pi-alt2-light-fill pi-default-stroke" stroke="none" />
+                <rect x="40" y="20" width="220" height="30" class="pi-alt2-medium-fill pi-default-stroke" stroke="none" />
+                <rect x="40" y="20" width="220" height="120" fill="none" class="pi-alt2-normal-stroke pi-default-stroke" />
+                <line x1="40" y1="50" x2="260" y2="50" class="pi-alt2-normal-stroke" stroke-width="4px" />
+            </g>
+
+
+            <g transform="translate(0,140)">
+                <rect x="40" y="20" width="220" height="120" class="pi-alt2-light-fill pi-default-stroke" stroke="none" />
+                <rect x="40" y="20" width="220" height="30" class="pi-alt2-medium-fill pi-default-stroke" stroke="none" />
+                <rect x="40" y="20" width="220" height="120" fill="none" class="pi-alt2-normal-stroke pi-default-stroke" />
+                <line x1="40" y1="50" x2="260" y2="50" class="pi-alt2-normal-stroke" stroke-width="4px" />
+            </g>
+
+
+        </g>
+
+        <path transform="rotate(-90,160,160) translate(-90,-90)" stroke-width="5" class="pi-alt2-normal-stroke pi-alt2-dark-fill" d="M160,100 l50,50 l-30,0 l0,80 l-40,0 l0,-80 l-30,0 z" />
+        <path transform="rotate(180,160,160) translate(-90,0)" stroke-width="5" class="pi-alt2-normal-stroke pi-alt2-dark-fill" d="M160,100 l50,50 l-30,0 l0,80 l-40,0 l0,-80 l-30,0 z" />
+
+    </svg>
+</script>
+<script type="text/html" id="pi_keyset">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(40,25)">
+            <g transform="translate(0,-20)">
+                <rect x="40" y="20" width="220" height="120" class="pi-alt2-light-fill pi-default-stroke" stroke="none" />
+                <rect x="40" y="20" width="220" height="30" class="pi-alt2-medium-fill pi-default-stroke" stroke="none" />
+                <rect x="40" y="20" width="220" height="120" fill="none" class="pi-alt2-normal-stroke pi-default-stroke" />
+                <line x1="40" y1="50" x2="260" y2="50" class="pi-alt2-normal-stroke" stroke-width="4px" />
+            </g>
+            <g transform="translate(0,140)">
+                <rect x="140" y="20" width="120" height="120" class="pi-alt2-light-fill pi-default-stroke" stroke="none" />
+                <rect x="140" y="20" width="120" height="30" class="pi-alt2-medium-fill pi-default-stroke" stroke="none" />
+                <rect x="140" y="20" width="120" height="120" fill="none" class="pi-alt2-normal-stroke pi-default-stroke" />
+                <line x1="140" y1="50" x2="260" y2="50" class="pi-alt2-normal-stroke" stroke-width="4px" />
+            </g>
+        </g>
+
+        <path transform="rotate(-90,160,160) translate(-90,-70)" stroke-width="5" class="pi-alt2-normal-stroke pi-alt2-dark-fill" d="M160,100 l50,50 l-30,0 l0,80 l-40,0 l0,-80 l-30,0 z" />
+        <path transform="rotate(180,160,160) translate(-90,0)" stroke-width="5" class="pi-alt2-normal-stroke pi-alt2-dark-fill" d="M160,100 l50,50 l-30,0 l0,80 l-40,0 l0,-80 l-30,0 z" />
+    </svg>
+</script>
+<script type="text/html" id="pi_dynamic">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(40,-20)">
+            <rect x="20" y="40" width="240" height="160" class="pi-alt2-light-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="240" height="40" class="pi-alt2-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="240" height="160" fill="none" class="pi-alt2-normal-stroke pi-default-stroke" />
+            <line x1="20" y1="80" x2="260" y2="80" class="pi-alt2-normal-stroke" stroke-width="4px" />
+            <line x1="40" y1="110" x2="240" y2="110" class="pi-alt2-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="140" x2="240" y2="140" class="pi-alt2-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="170" x2="240" y2="170" class="pi-alt2-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+        </g>
+
+        <path transform="translate(-40,70) rotate(90, 160,160)" class="pi-alt2-normal-stroke pi-alt2-dark-fill" d="M180,270 l-50,-50 l30,0 l0,-130 l-100,0,0,-40,100,0 l40,0 l0,170 l30,0 z" />
+
+    </svg>
+</script>
+<script type="text/html" id="pi_bitmap">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <rect x="20" y="40" width="280" height="240" fill="none" class="pi-normal-stroke pi-default-stroke" />
+        <text class="pi-normal-stroke pi-dark-fill" text-anchor="middle" x="160" y="85" font-size="50px" font-family="monospace" font-weight="bold">101010101</text>
+        <text class="pi-normal-stroke pi-dark-fill" text-anchor="middle" x="160" y="145" font-size="50px" font-family="monospace" font-weight="bold">010101010</text>
+        <text class="pi-normal-stroke pi-dark-fill" text-anchor="middle" x="160" y="205" font-size="50px" font-family="monospace" font-weight="bold">101010101</text>
+        <text class="pi-normal-stroke pi-dark-fill" text-anchor="middle" x="160" y="265" font-size="50px" font-family="monospace" font-weight="bold">010101010</text>
+    </svg>
+</script>
+<script type="text/html" id="pi_bookmark_lookup">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(50,0)">
+            <path d="M80,50 l0,230 l160,0 l0,-180 -50,-50 z" class="pi-light-fill pi-default-stroke pi-normal-stroke" />
+            <text class="pi-normal-stroke pi-dark-fill" text-anchor="middle" x="160" y="85" font-size="50px" font-family="monospace" font-weight="bold">10101</text>
+            <text class="pi-normal-stroke pi-dark-fill" text-anchor="middle" x="160" y="145" font-size="50px" font-family="monospace" font-weight="bold">01010</text>
+            <text class="pi-normal-stroke pi-dark-fill" text-anchor="middle" x="160" y="205" font-size="50px" font-family="monospace" font-weight="bold">10101</text>
+            <text class="pi-normal-stroke pi-dark-fill" text-anchor="middle" x="160" y="265" font-size="50px" font-family="monospace" font-weight="bold">01010</text>
+        </g>
+        <path transform="rotate(-90,160,160)" class="pi-normal-stroke pi-dark-fill" d="M160,160 l-50,-50 l30,0 l0,-100 l40,0 l0,100 l30,0 z" />
+    </svg>
+</script>
+<script type="text/html" id="pi_columnstore_index_scan">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <rect x="70" y="90" width="40" height="120" class="pi-light-fill pi-default-stroke pi-light-stroke" />
+        <rect x="110" y="90" width="40" height="180" class="pi-light-fill pi-default-stroke pi-light-stroke" />
+        <rect x="150" y="90" width="40" height="160" class="pi-light-fill pi-default-stroke pi-light-stroke" />
+        <rect x="190" y="90" width="40" height="100" class="pi-light-fill pi-default-stroke pi-light-stroke" />
+        <rect x="230" y="90" width="40" height="130" class="pi-light-fill pi-default-stroke pi-light-stroke" />
+        <rect x="270" y="90" width="40" height="150" class="pi-light-fill pi-default-stroke pi-light-stroke" />
+        <rect x="70" y="50" width="240" height="40" class="pi-medium-fill pi-default-stroke pi-normal-stroke" />
+        <path class="pi-normal-stroke pi-dark-fill" d="M60,280 l-50,-50 l30,0 l0,-120 l40,0 l0,120 l30,0 z" />
+    </svg>
+</script>
+<script type="text/html" id="pi_deleted_scan">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(0,30)">
+            <rect x="20" y="40" width="280" height="240" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="240" fill="none" class="pi-normal-stroke pi-default-stroke" />
+            <line x1="20" y1="80" x2="300" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+        </g>
+        <path class="pi-normal-stroke pi-dark-fill" d="M160,250 l-50,-50 l30,0 l0,-180 l40,0 l0,180 l30,0 z" />
+
+        <g transform="scale(0.7) translate(70,0)">
+            <path class="pi-alt3-light-stroke pi-alt3-medium-fill" d="M240,100 s-180,110,-150,150 s10,-10,90,-100 z" />
+            <path class="pi-alt3-light-stroke pi-alt3-medium-fill" d="M80,80 s180,110,150,150 s10,10,-90,-100 z" />
+        </g>
+    </svg>
+</script>
+<script type="text/html" id="pi_if">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <rect x="100" y="20" width="120" height="120" class="pi-alt-light-fill pi-default-stroke pi-alt-normal-stroke" />
+            <text class="pi-alt-normal-stroke pi-alt-dark-fill" text-anchor="middle" x="160" y="120" font-size="120px" font-family="monospace" font-weight="bold">?</text>
+        </g>
+
+        <g>
+            <rect x="20" y="180" width="120" height="120" class="pi-alt-light-fill pi-default-stroke pi-alt-normal-stroke" />
+            <text class="pi-alt-normal-stroke pi-alt-dark-fill" text-anchor="middle" x="80" y="280" font-size="120px" font-family="monospace" font-weight="bold">T</text>
+        </g>
+        <g>
+            <rect x="180" y="180" width="120" height="120" class="pi-alt-light-fill pi-default-stroke pi-alt-normal-stroke" />
+            <text class="pi-alt-normal-stroke pi-alt-dark-fill" text-anchor="middle" x="240" y="280" font-size="120px" font-family="monospace" font-weight="bold">F</text>
+        </g>
+
+        <path d="M90,40  l-20,-30,0,60,20,-30, m-20,0 l-60,0" class="pi-alt-normal-stroke" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="6" />
+        <path d="M60,180 l-30,-20,60,0,-30,20, m0,-20 l0,-60,40,0" class="pi-alt-normal-stroke" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="6" />
+        <path d="M260,180 l-30,-20,60,0,-30,20, m0,-20 l0,-60,-40,0" class="pi-alt-normal-stroke" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="6" />
+
+    </svg>
+</script>
+<script type="text/html" id="pi_inserted_scan">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g transform="scale(0.7) translate(0,10)">
+            <rect x="20" y="40" width="280" height="240" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="240" fill="none" class="pi-normal-stroke pi-default-stroke" />
+            <line x1="20" y1="80" x2="300" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+            <path class="pi-normal-stroke pi-dark-fill" d="M160,190 l-50,-50 l30,0 l0,-130 l40,0 l0,130 l30,0 z" />
+        </g>
+        <g transform="scale(0.5) translate(320,340)">
+            <rect x="20" y="40" width="280" height="240" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="40" width="280" height="240" fill="none" class="pi-normal-stroke pi-default-stroke" />
+            <line x1="20" y1="80" x2="300" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+            <path class="pi-normal-stroke pi-dark-fill" d="M160,190 l-50,-50 l30,0 l0,-130 l40,0 l0,130 l30,0 z" />
+        </g>
+        <path d="M240,160 l-20,-10,40,0,-20,10, m0,-20 l0,-60,-110,0" class="pi-normal-stroke " fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="14" />
+
+    </svg>
+</script>
+<script type="text/html" id="pi_log_row_scan">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <rect y="190" x="40" height="100" width="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+        <rect y="190" x="80" height="100" width="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+        <rect y="190" x="120" height="100" width="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+        <rect y="190" x="160" height="100" width="40" class="pi-normal-stroke pi-default-stroke pi-medium-fill" />
+        <rect y="190" x="200" height="100" width="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+        <rect y="190" x="240" height="100" width="40" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+        <path class="pi-normal-stroke pi-dark-fill" d="M180,190 l-50,-50 l30,0 l0,-130 l40,0 l0,130 l30,0 z" />
+    </svg>
+</script>
+<script type="text/html" id="pi_merge_interval">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g transform="scale(0.7) translate(0,-180)">
+            <rect x="20" y="200" width="280" height="100" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="200" width="280" height="30" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="200" width="280" height="100" fill="none" class="pi-normal-stroke pi-default-stroke" />
+        </g>
+        <g transform="scale(0.7) translate(140,-60)">
+            <rect x="20" y="200" width="280" height="100" class="pi-light-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="200" width="280" height="30" class="pi-medium-fill pi-default-stroke" stroke="none" />
+            <rect x="20" y="200" width="280" height="100" fill="none" class="pi-normal-stroke pi-default-stroke" />
+        </g>
+
+        <rect x="20" y="200" width="280" height="100" class="pi-light-fill pi-default-stroke" stroke="none" />
+        <rect x="20" y="200" width="280" height="30" class="pi-medium-fill pi-default-stroke" stroke="none" />
+        <rect x="20" y="200" width="280" height="100" fill="none" class="pi-normal-stroke pi-default-stroke" />
+
+        <line x1="110" y1="10" x2="110" y2="175" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="10, 10" />
+        <line x1="130" y1="10" x2="130" y2="175" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="10, 10" />
+        <line x1="150" y1="10" x2="150" y2="175" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="10, 10" />
+        <line x1="170" y1="10" x2="170" y2="175" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="10, 10" />
+        <line x1="190" y1="10" x2="190" y2="175" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="10, 10" />
+        <line x1="210" y1="10" x2="210" y2="175" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="10, 10" />
+
+        <path transform="rotate(180,160,160) translate(0,50)" class="pi-dark-fill" d="M160,10 l50,50 l-30,0 l0,40 l10,10 l10,0 l0,20 l-30,0 l-10,-10 l-10,10 l-30,0 l0,-20 l10,0 l10,-10 l0,-40 l-30,0 z" />
+
+    </svg>
+</script>
+<script type="text/html" id="pi_remote_delete">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g transform="scale(1,0.8)">
+            <g>
+                <rect x="60" y="40" width="200" height="240" class="pi-light-fill pi-default-stroke" stroke="none" />
+                <rect x="60" y="40" width="200" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+                <rect x="60" y="40" width="200" height="240" fill="none" class="pi-normal-stroke pi-default-stroke" />
+                <line x1="60" y1="80" x2="260" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+                <line x1="70" y1="110" x2="245" y2="110" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="70" y1="140" x2="245" y2="140" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="70" y1="170" x2="245" y2="170" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="70" y1="200" x2="245" y2="200" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="70" y1="230" x2="245" y2="230" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="70" y1="260" x2="245" y2="260" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            </g>
+            <g transform="scale(0.6) translate(120,120)">
+                <path class="pi-alt3-light-stroke pi-alt3-medium-fill" d="M240,100 s-180,110,-150,150 s10,-10,90,-100 z" />
+                <path class="pi-alt3-light-stroke pi-alt3-medium-fill" d="M80,80 s180,110,150,150 s10,10,-90,-100 z" />
+            </g>
+        </g>
+
+        <path class="pi-normal-stroke pi-medium-fill" d="M160,240 l0,40,-10,10,10,10,10,-10,-10,-10,-10,10,-120,0,260,0,-140,0 " stroke-width="20" stroke-linejoin="round" stroke-linecap="round" />
+
+    </svg>
+</script>
+<script type="text/html" id="pi_remote_index_scan">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g transform="scale(1,0.8)">
+            <g>
+                <!-- index group -->
+                <rect x="125" y="20" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+                <rect x="30" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+                <rect x="125" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+                <rect x="220" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+                <path d="m60,150 l0,-20 l100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="m260,150 l0,-20 l-100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="m160,150 l0,-40" class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            </g>
+            <!-- scan -->
+            <path class="pi_default-dark-fill" stroke-linecap="round" stroke-linejoin="round" stroke-width="10" d="M280,200 l-50,-50 l0,30 l-150,0 l0,-160 l-40,0 l0,200 l190,0 l0,30 z" />
+        </g>
+
+        <path class="pi-normal-stroke pi-medium-fill" d="M160,240 l0,40,-10,10,10,10,10,-10,-10,-10,-10,10,-120,0,260,0,-140,0 " stroke-width="20" stroke-linejoin="round" stroke-linecap="round" />
+
+    </svg>
+</script>
+<script type="text/html" id="pi_remote_index_seek">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g transform="scale(1,0.8)">
+            <g>
+                <rect x="125" y="20" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+                <rect x="30" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+                <rect x="125" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+                <rect x="220" y="160" width="70" height="80" class="pi-normal-stroke pi-default-stroke pi-light-fill" />
+                <path d="m60,150 l0,-20 l100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="m260,150 l0,-20 l-100,0 l0,-20 " class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="m160,150 l0,-40" class="pi-normal-stroke" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            </g>
+            <path class="pi_default-dark-fill" stroke-width="10" d="M260,260 l50,-50 l-30,0 l0,-90 l-100,0 l0,-110 l-40,0 l0,150 l100,0 l0,50 l-30,0 z" />
+        </g>
+
+        <path class="pi-normal-stroke pi-medium-fill" d="M160,240 l0,40,-10,10,10,10,10,-10,-10,-10,-10,10,-120,0,260,0,-140,0 " stroke-width="20" stroke-linejoin="round" stroke-linecap="round" />
+
+    </svg>
+</script>
+<script type="text/html" id="pi_remote_scan">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g transform="scale(1,0.8)">
+            <g>
+                <rect x="20" y="40" width="280" height="240" class="pi-light-fill pi-default-stroke" stroke="none" />
+                <rect x="20" y="40" width="280" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+                <rect x="20" y="40" width="280" height="240" fill="none" class="pi-normal-stroke pi-default-stroke" />
+                <line x1="20" y1="80" x2="300" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+                <line x1="40" y1="110" x2="280" y2="110" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="40" y1="140" x2="280" y2="140" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="40" y1="170" x2="280" y2="170" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="40" y1="200" x2="280" y2="200" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="40" y1="230" x2="280" y2="230" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            </g>
+            <path class="pi-normal-stroke pi-dark-fill" d="M160,270 l-50,-50 l30,0 l0,-130 l40,0 l0,130 l30,0 z" />
+        </g>
+
+        <path class="pi-normal-stroke pi-medium-fill" d="M160,240 l0,40,-10,10,10,10,10,-10,-10,-10,-10,10,-120,0,260,0,-140,0 " stroke-width="20" stroke-linejoin="round" stroke-linecap="round" />
+
+    </svg>
+</script>
+<script type="text/html" id="pi_remote_update">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g transform="scale(1,0.8)">
+            <g>
+                <rect x="20" y="40" width="280" height="240" class="pi-light-fill pi-default-stroke" stroke="none" />
+                <rect x="20" y="40" width="280" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+                <rect x="20" y="40" width="280" height="240" fill="none" class="pi-normal-stroke pi-default-stroke" />
+                <line x1="20" y1="80" x2="300" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+                <line x1="40" y1="110" x2="280" y2="110" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="40" y1="140" x2="280" y2="140" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="40" y1="170" x2="280" y2="170" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="40" y1="200" x2="280" y2="200" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="40" y1="230" x2="280" y2="230" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            </g>
+
+            <!--refresh -->
+            <g transform="rotate(10,160,160) scale(0.8) translate(30,50)">
+                <path class="pi-normal-stroke pi-dark-fill" d="M260,100 l-50,-50 l0,30 s-50,-10,-130,50 l20,30 s50,-60,110,-40 l0,30 z" />
+                <path transform="rotate(180,160,160)" class="pi-normal-stroke pi-dark-fill" d="M240,100 l-50,-50 l0,30 s-50,-10,-130,50 l20,30 s50,-60,110,-40 l0,30 z" />
+            </g>
+        </g>
+
+        <path class="pi-normal-stroke pi-medium-fill" d="M160,240 l0,40,-10,10,10,10,10,-10,-10,-10,-10,10,-120,0,260,0,-140,0 " stroke-width="20" stroke-linejoin="round" stroke-linecap="round" />
+
+    </svg>
+</script>
+<script type="text/html" id="pi_database">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+    <g>
+        <path stroke-width="8px" class="pi-alt3-light-stroke pi-light-fill" d="m 50,270 l 0,-200 c 20 40, 200 40, 220 0 l 0,200 c -20,40 -200 40 -220,0"/>
+        <path stroke-width="8px" class="pi-alt3-light-stroke pi-alt3-medium-fill" d="m 50,70 c 20 -40, 200 -40, 220 0 c -20,40 -200 40 -220,0"/>
+    </g>
+</svg>
+</script>
+<script type="text/html" id="pi_remote_query">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g transform="scale(1.4,0.8)">
+            <g transform="translate(-40,-10)">
+                <g transform="translate(40,-20)" style="opacity:0.7">
+                    <rect x="60" y="40" width="160" height="170" class="pi-light-fill pi-default-stroke" stroke="none" />
+                    <rect x="60" y="40" width="160" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+                    <rect x="60" y="40" width="160" height="170" fill="none" class="pi-normal-stroke pi-default-stroke" />
+                    <line x1="60" y1="80" x2="220" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+
+                    <line x1="70" y1="100" x2="200" y2="100" class="pi-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                    <line x1="70" y1="130" x2="200" y2="130" class="pi-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                    <line x1="70" y1="160" x2="200" y2="160" class="pi-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                    <line x1="70" y1="190" x2="200" y2="190" class="pi-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                </g>
+
+
+                <g transform="translate(-10,40)" style="opacity:0.7">
+                    <rect x="60" y="40" width="160" height="170" class="pi-light-fill pi-default-stroke" stroke="none" />
+                    <rect x="60" y="40" width="160" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+                    <rect x="60" y="40" width="160" height="170" fill="none" class="pi-normal-stroke pi-default-stroke" />
+                    <line x1="60" y1="80" x2="220" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+
+                    <line x1="70" y1="100" x2="200" y2="100" class="pi-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                    <line x1="70" y1="130" x2="200" y2="130" class="pi-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                    <line x1="70" y1="160" x2="200" y2="160" class="pi-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                    <line x1="70" y1="190" x2="200" y2="190" class="pi-light-stroke" stroke-width="10px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                </g>
+
+
+                <rect x="100" y="80" width="110" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+                <rect x="100" y="80" width="110" height="110" fill="none" class="pi-normal-stroke pi-default-stroke" />
+            </g>
+        </g>
+
+        <path class="pi-normal-stroke pi-medium-fill" d="M160,240 l0,40,-10,10,10,10,10,-10,-10,-10,-10,10,-120,0,260,0,-140,0 " stroke-width="20" stroke-linejoin="round" stroke-linecap="round" />
+
+    </svg>
+</script>
+<script type="text/html" id="pi_remote_insert">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+
+        <g transform="scale(1,0.7)">
+            <g transform="translate(10,-30)">
+                <rect x="20" y="40" width="280" height="240" class="pi-light-fill pi-default-stroke" stroke="none" />
+                <rect x="20" y="40" width="280" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+                <rect x="20" y="40" width="280" height="240" fill="none" class="pi-normal-stroke pi-default-stroke" />
+                <line x1="20" y1="80" x2="300" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+                <line x1="40" y1="110" x2="280" y2="110" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="40" y1="140" x2="280" y2="140" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="40" y1="170" x2="280" y2="170" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="40" y1="200" x2="280" y2="200" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="40" y1="230" x2="280" y2="230" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            </g>
+
+            <g transform="translate(-10,130)">
+                <rect x="20" y="40" width="280" height="140" class="pi-light-fill pi-default-stroke" stroke="none" />
+                <rect x="20" y="40" width="280" height="40" class="pi-medium-fill pi-default-stroke" stroke="none" />
+                <rect x="20" y="40" width="280" height="140" fill="none" class="pi-normal-stroke pi-default-stroke" />
+                <line x1="20" y1="80" x2="300" y2="80" class="pi-normal-stroke" stroke-width="4px" />
+                <line x1="40" y1="110" x2="280" y2="110" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+                <line x1="40" y1="140" x2="280" y2="140" class="pi-light-stroke" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            </g>
+
+            <path class="pi-focus-stroke pi-dark-fill" d="M160,70 l50,50 l-30,0 l0,100 l-40,0 l0,-100 l-30,0 z" stroke-width="14px" />
+
+        </g>
+
+        <path class="pi-normal-stroke pi-medium-fill" d="M160,240 l0,40,-10,10,10,10,10,-10,-10,-10,-10,10,-120,0,260,0,-140,0 " stroke-width="20" stroke-linejoin="round" stroke-linecap="round" />
+    </svg>
+</script>
+<script type="text/html" id="pi_udx">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20,70 l0,230 l160,0 l0,-180 -50,-50 z" class="pi-light-fill pi-default-stroke pi-normal-stroke" />
+        <text class="pi-normal-stroke pi-dark-fill" text-anchor="middle" x="220" y="70" font-size="100px" font-family="monospace" font-weight="bold">XML</text>
+
+        <g transform="translate(80,0)">
+            <circle cx="160" cy="160" r="40" class="pi-medium-fill pi-default-stroke pi-normal-stroke" />
+            <path d="M160,200 s-100,30,-60,110 l120,0 s30,-80,-60,-110 z" class="pi-medium-fill pi-default-stroke pi-normal-stroke" stroke-linejoin="round" />
+        </g>
+
+        <g transform="translate(40,-20)">
+            <circle cx="160" cy="160" r="40" class="pi-medium-fill pi-default-stroke pi-normal-stroke" />
+            <path d="M160,200 s-100,30,-60,110 l120,0 s30,-80,-60,-110 z" class="pi-medium-fill pi-default-stroke pi-normal-stroke" stroke-linejoin="round" />
+        </g>
+    </svg>
+</script>
+
+
+<script type="text/html" id="selector_statements">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <rect x="100" y="170" width="200" height="100" rx="10" ry="10" class="selector-svg" />
+            <rect x="60" y="110" width="200" height="100" rx="10" ry="10" class="selector-svg" />
+            <rect x="20" y="50" width="200" height="100" rx="10" ry="10" class="selector-svg" />
+        </g>
+    </svg>
+</script>
+<script type="text/html" id="selector_default">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <rect x="230" y="230" width="60" height="60" rx="10" ry="10" class="selector-svg"></rect>
+            <rect x="230" y="110" width="60" height="60" rx="10" ry="10" class="selector-svg"></rect>
+            <rect x="230" y="30" width="60" height="60" rx="10" ry="10" class="selector-svg"></rect>
+            <rect x="130" y="60" width="60" height="60" rx="10" ry="10" class="selector-svg"></rect>
+            <rect x="30" y="130" width="60" height="60" rx="10" ry="10" class="selector-svg"></rect>
+            <line x1="100" y1="180" x2="220" y2="260" class="selector-svg"></line>
+            <line x1="100" y1="140" x2="120" y2="100" class="selector-svg"></line>
+            <line x1="200" y1="80" x2="220" y2="60" class="selector-svg"></line>
+            <line x1="200" y1="110" x2="220" y2="130" class="selector-svg"></line>
+        </g>
+    </svg>
+</script>
+<script type="text/html" id="selector_compact">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+
+ <g transform="scale(0.4,1) translate(220,0)">
+        <rect x="230" y="230" width="60" height="60" rx="10" ry="10" class="selector-svg"></rect>
+        <rect x="230" y="110" width="60" height="60" rx="10" ry="10" class="selector-svg"></rect>
+        <rect x="230" y="30" width="60" height="60" rx="10" ry="10" class="selector-svg"></rect>
+        <rect x="130" y="60" width="60" height="60" rx="10" ry="10" class="selector-svg"></rect>
+        <rect x="30" y="130" width="60" height="60" rx="10" ry="10" class="selector-svg"></rect>
+        <line x1="100" y1="180" x2="220" y2="260" class="selector-svg"></line>
+        <line x1="100" y1="140" x2="120" y2="100" class="selector-svg"></line>
+        <line x1="200" y1="80" x2="220" y2="60" class="selector-svg"></line>
+        <line x1="200" y1="110" x2="220" y2="130" class="selector-svg"></line>
+
+    </g>
+    <g>
+    <line x1="70" y1="10" x2="70" y2="310" style="stroke-width:12" class="selector-svg"></line>
+    <path class="selector-svg" d="M60,155 l-25,-25 l0,10 l-30,0 l0,40 l30,0 l0,10 l25,-25 z"/>
+    </g>
+
+    <g transform="translate(320,320) rotate(180)"> 
+    <line x1="70" y1="10" x2="70" y2="310" style="stroke-width:12" class="selector-svg"></line>
+    <path class="selector-svg" d="M60,155 l-25,-25 l0,10 l-30,0 l0,40 l30,0 l0,10 l25,-25 z"/>
+    </g>
+
+ </svg>
+</script>
+<script type="text/html" id="selector_sql">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <rect x="30" y="50" width="260" height="240" rx="30" ry="30" class="selector-svg"></rect>
+
+            <rect x="60" y="210" width="180" height="40" rx="10" ry="10" class="selector-svg"></rect>
+            <rect x="60" y="150" width="180" height="40" rx="10" ry="10" class="selector-svg"></rect>
+            <rect x="60" y="90" width="180" height="40" rx="10" ry="10" class="selector-svg"></rect>
+        </g>
+    </svg>
+</script>
+<script type="text/html" id="selector_join">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(-20,10) scale(1,0.9)">
+            <path class="selector-svg" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="20" d="M50,100 l-30,20 l60,0 l-30,-20 l0,200 l250,0 l0,-280 l-250,0 l0,40"></path>
+            <path class="selector-svg" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="20" d="M240,160 l-30,-20 l60,0 l-30,20 l0,-100 l-120,0 l0,200 l120,0 l0,-60"></path>
+        </g>
+    </svg>
+</script>
+<script type="text/html" id="selector_storage">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+         <g transform="scale(0.9,0.9) translate(-10,-10)">
+        <path class="selector-svg" d="m 50,270 l 0,-200 c 20 40, 200 40, 220 0 l 0,200 c -20,40 -200 40 -220,0"/>
+        <path class="selector-svg" d="m 50,70 c 20 -40, 200 -40, 220 0 c -20,40 -200 40 -220,0"/>
+    </g>
+
+    <g transform="scale(0.7,0.7) translate(120,140)">
+            <rect x="20" y="40" width="280" height="240" class="selector-svg" stroke="none" />
+            <rect x="20" y="40" width="280" height="40" class="selector-svg" stroke="none" />
+            <rect x="20" y="40" width="280" height="240" fill="none" class="selector-svg" />
+            <line x1="20" y1="80" x2="300" y2="80" class="selector-svg" stroke-width="4px" />
+            <line x1="40" y1="110" x2="280" y2="110" class="selector-svg" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="140" x2="280" y2="140" class="selector-svg" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="170" x2="280" y2="170" class="selector-svg" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="200" x2="280" y2="200" class="selector-svg" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+            <line x1="40" y1="230" x2="280" y2="230" class="selector-svg" stroke-width="15px" stroke-dasharray="80, 10, 50, 10, 70, 10, 10" />
+        </g>
+
+    </svg>
+</script>
+<script type="text/html" id="selector_about">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <circle cx="160" cy="160" class="selector-svg" r="120"></circle>
+            <text x="160" y="220" font-weight="bold" font-size="180" text-anchor="middle" class="selector-svg">i</text>
+        </g>
+    </svg>
+</script>
+
+<script type="text/html" id="selector_index">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(0,30)">
+            <!-- index group -->
+            <rect x="125" y="20" width="70" height="80" class="selector-svg" />
+            <rect x="30" y="160" width="70" height="80" class="selector-svg" />
+            <rect x="125" y="160" width="70" height="80" class="selector-svg" />
+            <rect x="220" y="160" width="70" height="80" class="selector-svg" />
+            <path d="m60,150 l0,-20 l100,0 l0,-20 " class="selector-svg" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m260,150 l0,-20 l-100,0 l0,-20 " class="selector-svg" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="m160,150 l0,-40" class="selector-svg" fill="none" stroke-width="10px" stroke-linecap="round" stroke-linejoin="round" />
+        </g>
+    </svg>
+</script>
+
+
+
+<!-- #endregion PlanIcons -->

@@ -1,0 +1,1 @@
+select db_name() + '.' + sfg.groupname, db_id(), db_name(), sfg.groupname from dbo.sysfilegroups sfg with (readpast) 

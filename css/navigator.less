@@ -1,0 +1,106 @@
+@import "colors.less";
+section.plan-navigator {
+    width: @navigator-width;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 10;
+    border-left: 1px solid @actionbarColor;
+    background: @color-light;
+    background-image: url(i/noise.png); //.base-background();
+    .search-box {
+        height: 2em;
+        min-height: 2em;
+        max-height: 2em;
+        display: flex;
+        padding: 0.3em;
+        color: @color-dark;
+        svg {
+            width: 1.5em;
+            height: 1.5em;
+            margin-top: 0.3em;
+        }
+        input {
+            padding: 0;
+            margin: 0;
+            width: 13em;
+        }
+    }
+    .topset-box {
+        flex-grow: 2;
+        justify-content: space-between;
+        display: flex;
+        flex-direction: column;
+        cursor: pointer;
+    }
+    .topset-header {
+        color: @color-dark;
+        padding-top: 0.3em;
+        padding-left: 0.3em;
+        font-weight: bold;
+        border-top: 1px solid @actionbarColor;
+        margin-top: 0.25em;
+        margin-left: 0.2em;
+        margin-right: 0.2em;
+        height: 1.4em;
+        min-height: 1.4em;
+        max-height: 1.4em;
+        font-size: 1.1em;
+        text-transform: uppercase;
+    }
+    .topset-header:first-child {
+        border-top: none;
+    }
+    .topset-header:hover {
+        text-decoration: underline;
+    }
+    .topset-data {
+        flex-grow: 10;
+        overflow: auto;
+        ol {
+            font-size: 0.9em;
+            margin: 0;
+            padding-left: 0;
+            padding-top: 0.5em;
+        }
+        li {
+            border-radius: 3px;
+            padding-top: 0.3em;
+            padding-bottom: 0.3em;
+            padding-left: 0.3em;
+            margin-right: 0.2em;
+            margin-left: 0.2em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+            white-space: nowrap;
+            display: flex;
+            .topset-index {
+                font-weight: bold;
+                width: 1.8em;
+            }
+            .topset-cost {
+                font-weight: bold;
+                color: @color-alt3-4;
+            }
+            .topset-icon {
+                width: 3em;
+            }
+            .topset-names {
+                margin-left: 0.5em;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                div:first-child {
+                    font-weight: bold;
+                }
+            }
+        }
+        li:nth-child(odd) {
+            background-color: desaturate(darken(@color-light, 5%), 60%);
+        }
+        li:hover {
+            background-color: @color-primary-1;
+        }
+    }
+}

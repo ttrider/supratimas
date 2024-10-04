@@ -1,0 +1,41 @@
+@import "colors.less";
+@import "actionbar.less";
+@import "navigator.less";
+@import "graph.less";
+section.plan-view {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: @appHeaderHeight;
+    bottom: 0;
+    display: flex;
+    pre.query-text {
+        font-family: monospace;
+        font-size: 1.2em;
+        overflow: auto;
+        white-space: pre-wrap;
+        pointer-events: auto;
+    }
+    section.plan-view-host {
+        overflow: auto;
+        flex-grow: 1;
+        position: relative;
+        margin-top: 1.1em;
+        display:flex; 
+        flex-direction: row; 
+    }
+    .zoom-map {
+        position: fixed;
+        left: 2em;
+        bottom: 2em;
+        display: none;
+        .zoom-view {
+            fill: none;
+            stroke: blue;
+        }
+        .zoom-canvas {
+            fill: none;
+            stroke: blue;
+        }
+    }
+}

@@ -1,0 +1,28 @@
+import { PlanNode } from "./model";
+
+export declare type ItemFactory = (context: ParserContext, input: InputElement) => void;
+
+export interface InputElement {
+    name: string;
+    attributes: { [key: string]: string };
+}
+export interface ItemContext {
+
+    element?: InputElement;
+    childElements?: {
+        [name: string]: {
+            initializer: ItemFactory,
+            setter: (value: any) => void,
+        }
+    };
+
+    isBatch?: boolean;
+    isStatement?: boolean;
+    isNode?: boolean;
+    planNode?: PlanNode;
+    item: any;
+
+    finalize?: (self: ItemContext, context: ParserContext, ) => void;
+}
+
+export const rootFactory = ShowPlanXMLFactory;

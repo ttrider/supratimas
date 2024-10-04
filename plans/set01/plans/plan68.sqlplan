@@ -1,0 +1,2052 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="CREATE PROCEDURE [Reporting].[BulkAddOrUpdateTestpassBugMapping]&#xD;&#xA;&#x9;@testpassBugs [Reporting].[TestpassBugMappingCollection] READONLY&#xD;&#xA;AS&#xD;&#xA;    DECLARE @stopwatchBeginTime datetime2;&#xD;&#xA;    SELECT @stopwatchBeginTime = [dbo].[fnBeginStopwatch]();&#xD;&#xA;&#xD;&#xA;" StatementId="1" StatementCompId="2" StatementType="ASSIGN WITH QUERY" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;DECLARE @distinctMappings  TABLE (&#xD;&#xA;&#x9;&#x9;Id&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;INT IDENTITY(1,1) NOT NULL,&#xD;&#xA;&#x9;&#x9;BranchTestpassStatusId&#x9;INT NULL,&#xD;&#xA;&#x9;&#x9;BugId&#x9;&#x9;&#x9;&#x9;&#x9;INT NULL,&#xD;&#xA;&#x9;&#x9;BugNumber&#x9;&#x9;&#x9;&#x9;INT NOT NULL,&#xD;&#xA;&#x9;&#x9;BugDatabase&#x9;&#x9;&#x9;&#x9;NVARCHAR(250) NOT NULL,&#xD;&#xA;&#x9;&#x9;BugType&#x9;&#x9;&#x9;&#x9;&#x9;NVARCHAR(250) NOT NULL,&#xD;&#xA;&#x9;&#x9;IsBranchSpecific&#x9;&#x9;BIT NOT NULL, &#xD;&#xA;&#x9;&#x9;SectionEntryId&#x9;&#x9;&#x9;INT NOT NULL,&#xD;&#xA;&#x9;&#x9;TestpassName&#x9;&#x9;&#x9;NVARCHAR(150) NULL,&#xD;&#xA;&#x9;&#x9;[TestpassSignature]     NVARCHAR(750) NOT NULL,&#xD;&#xA;&#x9;&#x9;[TestpassSignatureHash] AS CONVERT(VARBINARY(16), HASHBYTES(N'MD5', [TestpassSignature])) PERSISTED);&#xD;&#xA;&#xD;&#xA;&#x9;INSERT INTO @distinctMappings (&#xD;&#xA;&#x9;&#x9;BugNumber,&#xD;&#xA;&#x9;&#x9;BugDatabase,&#xD;&#xA;&#x9;&#x9;BugType,&#xD;&#xA;&#x9;&#x9;IsBranchSpecific,&#xD;&#xA;&#x9;&#x9;SectionEntryId,&#xD;&#xA;&#x9;&#x9;TestpassName,&#xD;&#xA;&#x9;&#x9;TestPassSignature)&#xD;&#xA;&#x9;SELECT DISTINCT&#xD;&#xA;&#x9;&#x9;BugNumber,&#xD;&#xA;&#x9;&#x9;BugDatabase,&#xD;&#xA;&#x9;&#x9;BugType,&#xD;&#xA;&#x9;&#x9;IsBranchSpecific,&#xD;&#xA;&#x9;&#x9;SectionEntryId,&#xD;&#xA;&#x9;&#x9;TestpassName,&#xD;&#xA;&#x9;&#x9;CONVERT(NVARCHAR(750), LOWER([Product]) + N';' +  LOWER([Branch]) + N';' + CONVERT(NVARCHAR(5), [BuildNumber]) + N';' &#xD;&#xA;&#x9;&#x9;&#x9;+ CONVERT(NVARCHAR(5), [BuildRevision]) + N';' + CONVERT(NVARCHAR(24), [BuildTimestamp], 126) + N';' + LOWER([RunType]) + N';'&#xD;&#xA;&#x9;&#x9;&#x9;+ LOWER([DataSource]))&#xD;&#xA;&#x9;FROM @testpassBugs;&#xD;&#xA;&#xD;&#xA;&#x9;-- get branchtestpassstatus ids&#xD;&#xA;" StatementId="2" StatementCompId="4" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="1.11485" StatementEstRows="891" StatementOptmLevel="FULL" QueryHash="0x79ED00A3F9004338" QueryPlanHash="0x15E63E06ECABA4F6">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="40" CompileTime="3" CompileCPU="3" CompileMemory="528">
+            <MemoryGrantInfo SerialRequiredMemory="512" SerialDesiredMemory="3088" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Table Insert" LogicalOp="Insert" EstimateRows="891" EstimateIO="1.06223" EstimateCPU="0.000891" AvgRowSize="9" EstimatedTotalSubtreeCost="1.11485" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <Update DMLRequestSort="0">
+                <Object Table="[@distinctMappings]" />
+                <SetPredicate>
+                  <ScalarOperator ScalarString="[BugNumber] = [BugNumber],[BugDatabase] = [BugDatabase],[BugType] = [BugType],[IsBranchSpecific] = [IsBranchSpecific],[SectionEntryId] = [SectionEntryId],[TestpassName] = [TestpassName],[TestpassSignature] = RaiseIfNullInsert([Expr1008]),[Id] = [Expr1009],[TestpassSignatureHash] = [Expr1010],[BranchTestpassStatusId] = NULL,[BugId] = NULL">
+                    <ScalarExpressionList>
+                      <ScalarOperator>
+                        <MultipleAssign>
+                          <Assign>
+                            <ColumnReference Column="BugNumber" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="BugNumber" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Column="BugDatabase" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="BugDatabase" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Column="BugType" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="BugType" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Column="IsBranchSpecific" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="IsBranchSpecific" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Column="SectionEntryId" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="SectionEntryId" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Column="TestpassName" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="TestpassName" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Column="TestpassSignature" />
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="RaiseIfNullInsert">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="Expr1008" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Column="Id" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1009" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Column="TestpassSignatureHash" ComputedColumn="1" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1010" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Column="BranchTestpassStatusId" />
+                            <ScalarOperator>
+                              <Const ConstValue="NULL" />
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Column="BugId" />
+                            <ScalarOperator>
+                              <Const ConstValue="NULL" />
+                            </ScalarOperator>
+                          </Assign>
+                        </MultipleAssign>
+                      </ScalarOperator>
+                    </ScalarExpressionList>
+                  </ScalarOperator>
+                </SetPredicate>
+                <RelOp NodeId="1" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="891" EstimateIO="0" EstimateCPU="8.91e-005" AvgRowSize="1441" EstimatedTotalSubtreeCost="0.0517349" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="SectionEntryId" />
+                    <ColumnReference Column="TestpassName" />
+                    <ColumnReference Column="BugNumber" />
+                    <ColumnReference Column="BugDatabase" />
+                    <ColumnReference Column="BugType" />
+                    <ColumnReference Column="IsBranchSpecific" />
+                    <ColumnReference Column="Expr1008" />
+                    <ColumnReference Column="Expr1009" />
+                    <ColumnReference Column="Expr1010" />
+                  </OutputList>
+                  <ComputeScalar>
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1010" />
+                        <ScalarOperator ScalarString="CONVERT(varbinary(16),hashbytes(N'MD5',[Expr1008]),0)">
+                          <Convert DataType="varbinary" Length="16" Style="0" Implicit="0">
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="hashbytes">
+                                <ScalarOperator>
+                                  <Const ConstValue="N'MD5'" />
+                                </ScalarOperator>
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="Expr1008" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </Convert>
+                        </ScalarOperator>
+                      </DefinedValue>
+                    </DefinedValues>
+                    <RelOp NodeId="2" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="891" EstimateIO="0" EstimateCPU="8.91e-005" AvgRowSize="1430" EstimatedTotalSubtreeCost="0.0516458" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Column="SectionEntryId" />
+                        <ColumnReference Column="TestpassName" />
+                        <ColumnReference Column="BugNumber" />
+                        <ColumnReference Column="BugDatabase" />
+                        <ColumnReference Column="BugType" />
+                        <ColumnReference Column="IsBranchSpecific" />
+                        <ColumnReference Column="Expr1008" />
+                        <ColumnReference Column="Expr1009" />
+                      </OutputList>
+                      <ComputeScalar ComputeSequence="1">
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1009" />
+                            <ScalarOperator ScalarString="getidentity((-1191839183),(2),N'@distinctMappings')">
+                              <Intrinsic FunctionName="getidentity">
+                                <ScalarOperator>
+                                  <Const ConstValue="(-1191839183)" />
+                                </ScalarOperator>
+                                <ScalarOperator>
+                                  <Const ConstValue="(2)" />
+                                </ScalarOperator>
+                                <ScalarOperator>
+                                  <Const ConstValue="N'@distinctMappings'" />
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </DefinedValue>
+                        </DefinedValues>
+                        <RelOp NodeId="3" PhysicalOp="Sort" LogicalOp="Distinct Sort" EstimateRows="891" EstimateIO="0.0112613" EstimateCPU="0.013722" AvgRowSize="1426" EstimatedTotalSubtreeCost="0.0515567" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Column="SectionEntryId" />
+                            <ColumnReference Column="TestpassName" />
+                            <ColumnReference Column="BugNumber" />
+                            <ColumnReference Column="BugDatabase" />
+                            <ColumnReference Column="BugType" />
+                            <ColumnReference Column="IsBranchSpecific" />
+                            <ColumnReference Column="Expr1008" />
+                          </OutputList>
+                          <MemoryFractions Input="1" Output="1" />
+                          <Sort Distinct="1">
+                            <OrderBy>
+                              <OrderByColumn Ascending="1">
+                                <ColumnReference Column="BugNumber" />
+                              </OrderByColumn>
+                              <OrderByColumn Ascending="1">
+                                <ColumnReference Column="BugDatabase" />
+                              </OrderByColumn>
+                              <OrderByColumn Ascending="1">
+                                <ColumnReference Column="BugType" />
+                              </OrderByColumn>
+                              <OrderByColumn Ascending="1">
+                                <ColumnReference Column="IsBranchSpecific" />
+                              </OrderByColumn>
+                              <OrderByColumn Ascending="1">
+                                <ColumnReference Column="SectionEntryId" />
+                              </OrderByColumn>
+                              <OrderByColumn Ascending="1">
+                                <ColumnReference Column="TestpassName" />
+                              </OrderByColumn>
+                              <OrderByColumn Ascending="1">
+                                <ColumnReference Column="Expr1008" />
+                              </OrderByColumn>
+                            </OrderBy>
+                            <RelOp NodeId="4" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="891" EstimateIO="0" EstimateCPU="8.91e-005" AvgRowSize="1426" EstimatedTotalSubtreeCost="0.0265734" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Column="SectionEntryId" />
+                                <ColumnReference Column="TestpassName" />
+                                <ColumnReference Column="BugNumber" />
+                                <ColumnReference Column="BugDatabase" />
+                                <ColumnReference Column="BugType" />
+                                <ColumnReference Column="IsBranchSpecific" />
+                                <ColumnReference Column="Expr1008" />
+                              </OutputList>
+                              <ComputeScalar>
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Column="Expr1008" />
+                                    <ScalarOperator ScalarString="CONVERT(nvarchar(750),lower([Product])+N';'+lower([Branch])+N';'+CONVERT(nvarchar(5),[BuildNumber],0)+N';'+CONVERT(nvarchar(5),[BuildRevision],0)+N';'+CONVERT(nvarchar(24),[BuildTimestamp],126)+N';'+lower([RunType])+N';'+lower([DataSource]),0)">
+                                      <Convert DataType="nvarchar" Length="1500" Style="0" Implicit="0">
+                                        <ScalarOperator>
+                                          <Arithmetic Operation="ADD">
+                                            <ScalarOperator>
+                                              <Arithmetic Operation="ADD">
+                                                <ScalarOperator>
+                                                  <Arithmetic Operation="ADD">
+                                                    <ScalarOperator>
+                                                      <Arithmetic Operation="ADD">
+                                                        <ScalarOperator>
+                                                          <Arithmetic Operation="ADD">
+                                                            <ScalarOperator>
+                                                              <Arithmetic Operation="ADD">
+                                                                <ScalarOperator>
+                                                                  <Arithmetic Operation="ADD">
+                                                                    <ScalarOperator>
+                                                                      <Arithmetic Operation="ADD">
+                                                                        <ScalarOperator>
+                                                                          <Arithmetic Operation="ADD">
+                                                                            <ScalarOperator>
+                                                                              <Arithmetic Operation="ADD">
+                                                                                <ScalarOperator>
+                                                                                  <Arithmetic Operation="ADD">
+                                                                                    <ScalarOperator>
+                                                                                      <Arithmetic Operation="ADD">
+                                                                                        <ScalarOperator>
+                                                                                          <Intrinsic FunctionName="lower">
+                                                                                            <ScalarOperator>
+                                                                                              <Identifier>
+                                                                                                <ColumnReference Column="Product" />
+                                                                                              </Identifier>
+                                                                                            </ScalarOperator>
+                                                                                          </Intrinsic>
+                                                                                        </ScalarOperator>
+                                                                                        <ScalarOperator>
+                                                                                          <Const ConstValue="N';'" />
+                                                                                        </ScalarOperator>
+                                                                                      </Arithmetic>
+                                                                                    </ScalarOperator>
+                                                                                    <ScalarOperator>
+                                                                                      <Intrinsic FunctionName="lower">
+                                                                                        <ScalarOperator>
+                                                                                          <Identifier>
+                                                                                            <ColumnReference Column="Branch" />
+                                                                                          </Identifier>
+                                                                                        </ScalarOperator>
+                                                                                      </Intrinsic>
+                                                                                    </ScalarOperator>
+                                                                                  </Arithmetic>
+                                                                                </ScalarOperator>
+                                                                                <ScalarOperator>
+                                                                                  <Const ConstValue="N';'" />
+                                                                                </ScalarOperator>
+                                                                              </Arithmetic>
+                                                                            </ScalarOperator>
+                                                                            <ScalarOperator>
+                                                                              <Convert DataType="nvarchar" Length="10" Style="0" Implicit="0">
+                                                                                <ScalarOperator>
+                                                                                  <Identifier>
+                                                                                    <ColumnReference Column="BuildNumber" />
+                                                                                  </Identifier>
+                                                                                </ScalarOperator>
+                                                                              </Convert>
+                                                                            </ScalarOperator>
+                                                                          </Arithmetic>
+                                                                        </ScalarOperator>
+                                                                        <ScalarOperator>
+                                                                          <Const ConstValue="N';'" />
+                                                                        </ScalarOperator>
+                                                                      </Arithmetic>
+                                                                    </ScalarOperator>
+                                                                    <ScalarOperator>
+                                                                      <Convert DataType="nvarchar" Length="10" Style="0" Implicit="0">
+                                                                        <ScalarOperator>
+                                                                          <Identifier>
+                                                                            <ColumnReference Column="BuildRevision" />
+                                                                          </Identifier>
+                                                                        </ScalarOperator>
+                                                                      </Convert>
+                                                                    </ScalarOperator>
+                                                                  </Arithmetic>
+                                                                </ScalarOperator>
+                                                                <ScalarOperator>
+                                                                  <Const ConstValue="N';'" />
+                                                                </ScalarOperator>
+                                                              </Arithmetic>
+                                                            </ScalarOperator>
+                                                            <ScalarOperator>
+                                                              <Convert DataType="nvarchar" Length="48" Style="126" Implicit="0">
+                                                                <ScalarOperator>
+                                                                  <Identifier>
+                                                                    <ColumnReference Column="BuildTimestamp" />
+                                                                  </Identifier>
+                                                                </ScalarOperator>
+                                                              </Convert>
+                                                            </ScalarOperator>
+                                                          </Arithmetic>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator>
+                                                          <Const ConstValue="N';'" />
+                                                        </ScalarOperator>
+                                                      </Arithmetic>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Intrinsic FunctionName="lower">
+                                                        <ScalarOperator>
+                                                          <Identifier>
+                                                            <ColumnReference Column="RunType" />
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                      </Intrinsic>
+                                                    </ScalarOperator>
+                                                  </Arithmetic>
+                                                </ScalarOperator>
+                                                <ScalarOperator>
+                                                  <Const ConstValue="N';'" />
+                                                </ScalarOperator>
+                                              </Arithmetic>
+                                            </ScalarOperator>
+                                            <ScalarOperator>
+                                              <Intrinsic FunctionName="lower">
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Column="DataSource" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                              </Intrinsic>
+                                            </ScalarOperator>
+                                          </Arithmetic>
+                                        </ScalarOperator>
+                                      </Convert>
+                                    </ScalarOperator>
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <RelOp NodeId="5" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="891" EstimateIO="0.0253472" EstimateCPU="0.0011371" AvgRowSize="1251" EstimatedTotalSubtreeCost="0.0264843" TableCardinality="891" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Column="Product" />
+                                    <ColumnReference Column="Branch" />
+                                    <ColumnReference Column="BuildNumber" />
+                                    <ColumnReference Column="BuildRevision" />
+                                    <ColumnReference Column="BuildTimestamp" />
+                                    <ColumnReference Column="RunType" />
+                                    <ColumnReference Column="SectionEntryId" />
+                                    <ColumnReference Column="TestpassName" />
+                                    <ColumnReference Column="DataSource" />
+                                    <ColumnReference Column="BugNumber" />
+                                    <ColumnReference Column="BugDatabase" />
+                                    <ColumnReference Column="BugType" />
+                                    <ColumnReference Column="IsBranchSpecific" />
+                                  </OutputList>
+                                  <TableScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                                    <DefinedValues>
+                                      <DefinedValue>
+                                        <ColumnReference Column="Product" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Column="Branch" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Column="BuildNumber" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Column="BuildRevision" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Column="BuildTimestamp" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Column="RunType" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Column="SectionEntryId" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Column="TestpassName" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Column="DataSource" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Column="BugNumber" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Column="BugDatabase" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Column="BugType" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Column="IsBranchSpecific" />
+                                      </DefinedValue>
+                                    </DefinedValues>
+                                    <Object Table="[@testpassBugs]" />
+                                  </TableScan>
+                                </RelOp>
+                              </ComputeScalar>
+                            </RelOp>
+                          </Sort>
+                        </RelOp>
+                      </ComputeScalar>
+                    </RelOp>
+                  </ComputeScalar>
+                </RelOp>
+              </Update>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText="&#x9;UPDATE TB&#xD;&#xA;&#x9;&#x9;SET BranchTestpassStatusId = BTS.Id&#xD;&#xA;&#x9;FROM @distinctMappings TB&#xD;&#xA;&#x9;&#x9;INNER JOIN Reporting.BranchTestpassStatus BTS ON &#xD;&#xA;&#x9;&#x9;&#x9;TB.TestpassSignatureHash = BTS.TestpassSignatureHash&#xD;&#xA;&#x9;&#x9;&#x9;AND TB.SectionEntryId = BTS.SectionEntryId&#xD;&#xA;&#x9;WHERE TB.TestpassName = BTS.TestpassName&#xD;&#xA;&#x9;OR (TB.TestpassName IS NULL &#xD;&#xA;&#x9;&#x9;AND BTS.TestpassName IS NULL);&#xD;&#xA;&#xD;&#xA;&#x9;-- add any bugs that haven't made it into the bug table&#xD;&#xA;" StatementId="3" StatementCompId="5" StatementType="UPDATE" RetrievedFromCache="true" StatementSubTreeCost="0.0165717" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0xD310B1F8555C7EA2" QueryPlanHash="0xFAEEF378A78148ED" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="24" CompileTime="10" CompileCPU="10" CompileMemory="1064">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Table Update" LogicalOp="Update" EstimateRows="1" EstimateIO="0.01" EstimateCPU="1e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0165717" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <Update DMLRequestSort="0">
+                <Object Table="[@distinctMappings]" Alias="[TB]" />
+                <SetPredicate>
+                  <ScalarOperator ScalarString="@distinctMappings.[BranchTestpassStatusId] as [TB].[BranchTestpassStatusId] = [OurLabReporting].[Reporting].[BranchTestpassStatus].[Id] as [BTS].[Id]">
+                    <ScalarExpressionList>
+                      <ScalarOperator>
+                        <MultipleAssign>
+                          <Assign>
+                            <ColumnReference Table="@distinctMappings" Alias="[TB]" Column="BranchTestpassStatusId" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[BranchTestpassStatus]" Alias="[BTS]" Column="Id" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                        </MultipleAssign>
+                      </ScalarOperator>
+                    </ScalarExpressionList>
+                  </ScalarOperator>
+                </SetPredicate>
+                <RelOp NodeId="3" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="19" EstimatedTotalSubtreeCost="0.00657048" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Bmk1000" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[BranchTestpassStatus]" Alias="[BTS]" Column="Id" />
+                  </OutputList>
+                  <NestedLoops Optimized="0">
+                    <OuterReferences>
+                      <ColumnReference Table="@distinctMappings" Alias="[TB]" Column="SectionEntryId" />
+                      <ColumnReference Table="@distinctMappings" Alias="[TB]" Column="TestpassName" />
+                      <ColumnReference Column="Expr1011" />
+                    </OuterReferences>
+                    <RelOp NodeId="4" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="183" EstimatedTotalSubtreeCost="0.0032832" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Column="Bmk1000" />
+                        <ColumnReference Table="@distinctMappings" Alias="[TB]" Column="SectionEntryId" />
+                        <ColumnReference Table="@distinctMappings" Alias="[TB]" Column="TestpassName" />
+                        <ColumnReference Column="Expr1011" />
+                      </OutputList>
+                      <ComputeScalar>
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1011" />
+                            <ScalarOperator ScalarString="@distinctMappings.[TestpassSignatureHash] as [TB].[TestpassSignatureHash]">
+                              <Identifier>
+                                <ColumnReference Table="@distinctMappings" Alias="[TB]" Column="TestpassSignatureHash" ComputedColumn="1" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </DefinedValue>
+                        </DefinedValues>
+                        <RelOp NodeId="5" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="183" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Column="Bmk1000" />
+                            <ColumnReference Table="@distinctMappings" Alias="[TB]" Column="SectionEntryId" />
+                            <ColumnReference Table="@distinctMappings" Alias="[TB]" Column="TestpassName" />
+                            <ColumnReference Table="@distinctMappings" Alias="[TB]" Column="TestpassSignatureHash" ComputedColumn="1" />
+                          </OutputList>
+                          <TableScan Ordered="1" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Column="Bmk1000" />
+                              </DefinedValue>
+                              <DefinedValue>
+                                <ColumnReference Table="@distinctMappings" Alias="[TB]" Column="SectionEntryId" />
+                              </DefinedValue>
+                              <DefinedValue>
+                                <ColumnReference Table="@distinctMappings" Alias="[TB]" Column="TestpassName" />
+                              </DefinedValue>
+                              <DefinedValue>
+                                <ColumnReference Table="@distinctMappings" Alias="[TB]" Column="TestpassSignatureHash" ComputedColumn="1" />
+                              </DefinedValue>
+                            </DefinedValues>
+                            <Object Table="[@distinctMappings]" Alias="[TB]" />
+                          </TableScan>
+                        </RelOp>
+                      </ComputeScalar>
+                    </RelOp>
+                    <RelOp NodeId="9" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="918224" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[BranchTestpassStatus]" Alias="[BTS]" Column="Id" />
+                      </OutputList>
+                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[BranchTestpassStatus]" Alias="[BTS]" Column="Id" />
+                          </DefinedValue>
+                        </DefinedValues>
+                        <Object Database="[OurLabReporting]" Schema="[Reporting]" Table="[BranchTestpassStatus]" Index="[UX_BranchTestpassStatus_SectionEntryId_TestpassSignatureHash_TestpassName_INC_Id]" Alias="[BTS]" IndexKind="NonClustered" />
+                        <SeekPredicates>
+                          <SeekPredicateNew>
+                            <SeekKeys>
+                              <Prefix ScanType="EQ">
+                                <RangeColumns>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[BranchTestpassStatus]" Alias="[BTS]" Column="SectionEntryId" />
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[BranchTestpassStatus]" Alias="[BTS]" Column="TestpassSignatureHash" ComputedColumn="1" />
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[BranchTestpassStatus]" Alias="[BTS]" Column="TestpassName" />
+                                </RangeColumns>
+                                <RangeExpressions>
+                                  <ScalarOperator ScalarString="@distinctMappings.[SectionEntryId] as [TB].[SectionEntryId]">
+                                    <Identifier>
+                                      <ColumnReference Table="@distinctMappings" Alias="[TB]" Column="SectionEntryId" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator ScalarString="[Expr1011]">
+                                    <Identifier>
+                                      <ColumnReference Column="Expr1011" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator ScalarString="@distinctMappings.[TestpassName] as [TB].[TestpassName]">
+                                    <Identifier>
+                                      <ColumnReference Table="@distinctMappings" Alias="[TB]" Column="TestpassName" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </RangeExpressions>
+                              </Prefix>
+                            </SeekKeys>
+                          </SeekPredicateNew>
+                        </SeekPredicates>
+                      </IndexScan>
+                    </RelOp>
+                  </NestedLoops>
+                </RelOp>
+              </Update>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText="&#x9;INSERT INTO dbo.Bug (&#xD;&#xA;&#x9;&#x9;Number,&#xD;&#xA;&#x9;&#x9;DatabaseName)&#xD;&#xA;&#x9;SELECT DISTINCT BugNumber,&#xD;&#xA;&#x9;&#x9;BugDatabase &#xD;&#xA;&#x9;FROM @distinctMappings M&#xD;&#xA;&#x9;WHERE NOT EXISTS (&#xD;&#xA;&#x9;&#x9;SELECT TOP 1 1&#xD;&#xA;&#x9;&#x9;FROM dbo.Bug B&#xD;&#xA;&#x9;&#x9;WHERE B.Number = M.BugNumber&#xD;&#xA;&#x9;&#x9;&#x9;AND B.DatabaseName = M.BugDatabase);&#xD;&#xA;&#xD;&#xA;&#x9;-- get the bug ids for the bugs&#xD;&#xA;" StatementId="4" StatementCompId="6" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.0879391" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x7ECCEF7380A779D0" QueryPlanHash="0x7EC92C3FB80879AD" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="64" CompileTime="10" CompileCPU="9" CompileMemory="944">
+            <MemoryGrantInfo SerialRequiredMemory="512" SerialDesiredMemory="544" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Clustered Index Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.07" EstimateCPU="7e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0879391" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <Update DMLRequestSort="0">
+                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Index="[Bug_PK]" IndexKind="Clustered" />
+                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Index="[AK_Database_Number]" IndexKind="NonClustered" />
+                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Index="[Bug_IX_BugDb_INC_BugNo]" IndexKind="NonClustered" />
+                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Index="[Bug_IX_DupNumber_DatabaseName]" IndexKind="NonClustered" />
+                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Index="[Bug_IX_Number_DatabaseName]" IndexKind="NonClustered" />
+                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Index="[Bug_IX_FoundBranch_INC_FoundIn_FoundInEnvironment_BugNo_BugDb]" IndexKind="NonClustered" />
+                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Index="[Bug_IX_FoundInEnvironment]" IndexKind="NonClustered" />
+                <SetPredicate>
+                  <ScalarOperator ScalarString="[OurLabReporting].[dbo].[Bug].[Number] = @distinctMappings.[BugNumber] as [M].[BugNumber],[OurLabReporting].[dbo].[Bug].[DatabaseName] = @distinctMappings.[BugDatabase] as [M].[BugDatabase],[OurLabReporting].[dbo].[Bug].[OpenedUsingTerra] = [Expr1010],[OurLabReporting].[dbo].[Bug].[Id] = [Expr1009],[OurLabReporting].[dbo].[Bug].[DbTimeStamp] = [Expr1011],[OurLabReporting].[dbo].[Bug].[Blocking] = NULL,[OurLabReporting].[dbo].[Bug].[Title] = NULL,[OurLabReporting].[dbo].[Bug].[Status] = NULL,[OurLabReporting].[dbo].[Bug].[AssignedTo] = NULL,[OurLabReporting].[dbo].[Bug].[IssueType] = NULL,[OurLabReporting].[dbo].[Bug].[Priority] = NULL,[OurLabReporting].[dbo].[Bug].[Severity] = NULL,[OurLabReporting].[dbo].[Bug].[ResolvedBy] = NULL,[OurLabReporting].[dbo].[Bug].[ResolvedDate] = NULL,[OurLabReporting].[dbo].[Bug].[Resolution] = NULL,[OurLabReporting].[dbo].[Bug].[OpenedBy] = NULL,[OurLabReporting].[dbo].[Bug].[OpenedDate] = NULL,[OurLabReporting].[dbo].[Bug].[Milestone] = NULL,[OurLabReporting].[dbo].[Bug].[Path] = NULL,[OurLabReporting].[dbo].[Bug].[LastSyncTime] = NULL,[OurLabReporting].[dbo].[Bug].[ClosedBy] = NULL,[OurLabReporting].[dbo].[Bug].[ClosedDate] = NULL,[OurLabReporting].[dbo].[Bug].[NumInstances] = NULL,[OurLabReporting].[dbo].[Bug].[ETAForFix] = NULL,[OurLabReporting].[dbo].[Bug].[SubProduct] = NULL,[OurLabReporting].[dbo].[Bug].[ExternalPartner] = NULL,[OurLabReporting].[dbo].[Bug].[SubStatus] = NULL,[OurLabReporting].[dbo].[Bug].[InMainDate] = NULL,[OurLabReporting].[dbo].[Bug].[WatsonHits] = NULL,[OurLabReporting].[dbo].[Bug].[WatsonHitsWithDupes] = NULL,[OurLabReporting].[dbo].[Bug].[WatsonSelfHostHits] = NULL,[OurLabReporting].[dbo].[Bug].[DuplicateNumber] = NULL,[OurLabReporting].[dbo].[Bug].[HowFound] = NULL,[OurLabReporting].[dbo].[Bug].[FoundInBranch] = NULL,[OurLabReporting].[dbo].[Bug].[FoundIn] = NULL,[OurLabReporting].[dbo].[Bug].[FoundInEnvironment] = NULL">
+                    <ScalarExpressionList>
+                      <ScalarOperator>
+                        <MultipleAssign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="Number" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugNumber" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="DatabaseName" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugDatabase" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="OpenedUsingTerra" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1010" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="Id" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1009" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="DbTimeStamp" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1011" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="Blocking" />
+                            <ScalarOperator>
+                              <Const ConstValue="NULL" />
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="Title" />
+                            <ScalarOperator>
+                              <Const ConstValue="NULL" />
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="Status" />
+                            <ScalarOperator>
+                              <Const ConstValue="NULL" />
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="AssignedTo" />
+                            <ScalarOperator>
+                              <Const ConstValue="NULL" />
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="IssueType" />
+                            <ScalarOperator>
+                              <Const ConstValue="NULL" />
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="Priority" />
+                            <ScalarOperator>
+                              <Const ConstValue="NULL" />
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="Severity" />
+                            <ScalarOperator>
+                              <Const ConstValue="NULL" />
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="ResolvedBy" />
+                            <ScalarOperator>
+                              <Const ConstValue="NULL" />
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="ResolvedDate" />
+                            <ScalarOperator>
+                              <Const ConstValue="NULL" />
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="Resolution" />
+                            <ScalarOperator>
+                              <Const ConstValue="NULL" />
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="OpenedBy" />
+                            <ScalarOperator>
+                              <Const ConstValue="NULL" />
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="OpenedDate" />
+                            <ScalarOperator>
+                              <Const ConstValue="NULL" />
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="Milestone" />
+                            <ScalarOperator>
+                              <Const ConstValue="NULL" />
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="Path" />
+                            <ScalarOperator>
+                              <Const ConstValue="NULL" />
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="LastSyncTime" />
+                            <ScalarOperator>
+                              <Const ConstValue="NULL" />
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="ClosedBy" />
+                            <ScalarOperator>
+                              <Const ConstValue="NULL" />
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="ClosedDate" />
+                            <ScalarOperator>
+                              <Const ConstValue="NULL" />
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="NumInstances" />
+                            <ScalarOperator>
+                              <Const ConstValue="NULL" />
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="ETAForFix" />
+                            <ScalarOperator>
+                              <Const ConstValue="NULL" />
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="SubProduct" />
+                            <ScalarOperator>
+                              <Const ConstValue="NULL" />
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="ExternalPartner" />
+                            <ScalarOperator>
+                              <Const ConstValue="NULL" />
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="SubStatus" />
+                            <ScalarOperator>
+                              <Const ConstValue="NULL" />
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="InMainDate" />
+                            <ScalarOperator>
+                              <Const ConstValue="NULL" />
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="WatsonHits" />
+                            <ScalarOperator>
+                              <Const ConstValue="NULL" />
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="WatsonHitsWithDupes" />
+                            <ScalarOperator>
+                              <Const ConstValue="NULL" />
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="WatsonSelfHostHits" />
+                            <ScalarOperator>
+                              <Const ConstValue="NULL" />
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="DuplicateNumber" />
+                            <ScalarOperator>
+                              <Const ConstValue="NULL" />
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="HowFound" />
+                            <ScalarOperator>
+                              <Const ConstValue="NULL" />
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="FoundInBranch" />
+                            <ScalarOperator>
+                              <Const ConstValue="NULL" />
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="FoundIn" />
+                            <ScalarOperator>
+                              <Const ConstValue="NULL" />
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Column="FoundInEnvironment" />
+                            <ScalarOperator>
+                              <Const ConstValue="NULL" />
+                            </ScalarOperator>
+                          </Assign>
+                        </MultipleAssign>
+                      </ScalarOperator>
+                    </ScalarExpressionList>
+                  </ScalarOperator>
+                </SetPredicate>
+                <RelOp NodeId="1" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="278" EstimatedTotalSubtreeCost="0.0179321" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugNumber" />
+                    <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugDatabase" />
+                    <ColumnReference Column="Expr1009" />
+                    <ColumnReference Column="Expr1010" />
+                    <ColumnReference Column="Expr1011" />
+                  </OutputList>
+                  <ComputeScalar>
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1010" />
+                        <ScalarOperator ScalarString="(0)">
+                          <Const ConstValue="(0)" />
+                        </ScalarOperator>
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1011" />
+                        <ScalarOperator ScalarString="CONVERT_IMPLICIT(datetime2(7),getutcdate(),0)">
+                          <Identifier>
+                            <ColumnReference Column="ConstExpr1028">
+                              <ScalarOperator>
+                                <Convert DataType="datetime2" Style="0" Implicit="1">
+                                  <ScalarOperator>
+                                    <Intrinsic FunctionName="getutcdate" />
+                                  </ScalarOperator>
+                                </Convert>
+                              </ScalarOperator>
+                            </ColumnReference>
+                          </Identifier>
+                        </ScalarOperator>
+                      </DefinedValue>
+                    </DefinedValues>
+                    <RelOp NodeId="2" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="269" EstimatedTotalSubtreeCost="0.017932" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugNumber" />
+                        <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugDatabase" />
+                        <ColumnReference Column="Expr1009" />
+                      </OutputList>
+                      <ComputeScalar ComputeSequence="1">
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1009" />
+                            <ScalarOperator ScalarString="getidentity((789577851),(6),NULL)">
+                              <Intrinsic FunctionName="getidentity">
+                                <ScalarOperator>
+                                  <Const ConstValue="(789577851)" />
+                                </ScalarOperator>
+                                <ScalarOperator>
+                                  <Const ConstValue="(6)" />
+                                </ScalarOperator>
+                                <ScalarOperator>
+                                  <Const ConstValue="NULL" />
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </DefinedValue>
+                        </DefinedValues>
+                        <RelOp NodeId="3" PhysicalOp="Sort" LogicalOp="Distinct Sort" EstimateRows="1" EstimateIO="0.0112613" EstimateCPU="0.000100265" AvgRowSize="265" EstimatedTotalSubtreeCost="0.0179319" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugNumber" />
+                            <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugDatabase" />
+                          </OutputList>
+                          <MemoryFractions Input="1" Output="1" />
+                          <Sort Distinct="1">
+                            <OrderBy>
+                              <OrderByColumn Ascending="1">
+                                <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugNumber" />
+                              </OrderByColumn>
+                              <OrderByColumn Ascending="1">
+                                <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugDatabase" />
+                              </OrderByColumn>
+                            </OrderBy>
+                            <RelOp NodeId="4" PhysicalOp="Nested Loops" LogicalOp="Left Anti Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="265" EstimatedTotalSubtreeCost="0.00657038" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugNumber" />
+                                <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugDatabase" />
+                              </OutputList>
+                              <NestedLoops Optimized="0">
+                                <OuterReferences>
+                                  <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugNumber" />
+                                  <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugDatabase" />
+                                </OuterReferences>
+                                <RelOp NodeId="5" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="265" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugNumber" />
+                                    <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugDatabase" />
+                                  </OutputList>
+                                  <TableScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                                    <DefinedValues>
+                                      <DefinedValue>
+                                        <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugNumber" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugDatabase" />
+                                      </DefinedValue>
+                                    </DefinedValues>
+                                    <Object Table="[@distinctMappings]" Alias="[M]" />
+                                  </TableScan>
+                                </RelOp>
+                                <RelOp NodeId="6" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="37279" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList />
+                                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                    <DefinedValues />
+                                    <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Index="[AK_Database_Number]" Alias="[B]" IndexKind="NonClustered" />
+                                    <SeekPredicates>
+                                      <SeekPredicateNew>
+                                        <SeekKeys>
+                                          <Prefix ScanType="EQ">
+                                            <RangeColumns>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="DatabaseName" />
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Number" />
+                                            </RangeColumns>
+                                            <RangeExpressions>
+                                              <ScalarOperator ScalarString="@distinctMappings.[BugDatabase] as [M].[BugDatabase]">
+                                                <Identifier>
+                                                  <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugDatabase" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                              <ScalarOperator ScalarString="@distinctMappings.[BugNumber] as [M].[BugNumber]">
+                                                <Identifier>
+                                                  <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugNumber" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </RangeExpressions>
+                                          </Prefix>
+                                        </SeekKeys>
+                                      </SeekPredicateNew>
+                                    </SeekPredicates>
+                                  </IndexScan>
+                                </RelOp>
+                              </NestedLoops>
+                            </RelOp>
+                          </Sort>
+                        </RelOp>
+                      </ComputeScalar>
+                    </RelOp>
+                  </ComputeScalar>
+                </RelOp>
+              </Update>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText="&#x9;UPDATE M&#xD;&#xA;&#x9;&#x9;SET BugId = B.Id&#xD;&#xA;&#x9;FROM @distinctMappings M&#xD;&#xA;&#x9;&#x9;INNER JOIN dbo.Bug B WITH (NOLOCK) ON &#xD;&#xA;&#x9;&#x9;&#x9;M.BugNumber = B.Number&#xD;&#xA;&#x9;&#x9;&#x9;AND M.BugDatabase = B.DatabaseName;&#xD;&#xA;&#xD;&#xA;" StatementId="5" StatementCompId="7" StatementType="UPDATE" RetrievedFromCache="true" StatementSubTreeCost="0.0165714" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x4CE466DC3BAB74E5" QueryPlanHash="0xE6452F311BF2B711" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="24" CompileTime="2" CompileCPU="2" CompileMemory="528">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Table Update" LogicalOp="Update" EstimateRows="1" EstimateIO="0.01" EstimateCPU="1e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0165714" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <Update DMLRequestSort="0">
+                <Object Table="[@distinctMappings]" Alias="[M]" />
+                <SetPredicate>
+                  <ScalarOperator ScalarString="@distinctMappings.[BugId] as [M].[BugId] = [OurLabReporting].[dbo].[Bug].[Id] as [B].[Id]">
+                    <ScalarExpressionList>
+                      <ScalarOperator>
+                        <MultipleAssign>
+                          <Assign>
+                            <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugId" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Id" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                        </MultipleAssign>
+                      </ScalarOperator>
+                    </ScalarExpressionList>
+                  </ScalarOperator>
+                </SetPredicate>
+                <RelOp NodeId="1" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="19" EstimatedTotalSubtreeCost="0.00657038" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Bmk1000" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Id" />
+                  </OutputList>
+                  <NestedLoops Optimized="0">
+                    <OuterReferences>
+                      <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugNumber" />
+                      <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugDatabase" />
+                    </OuterReferences>
+                    <RelOp NodeId="2" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="273" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Column="Bmk1000" />
+                        <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugNumber" />
+                        <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugDatabase" />
+                      </OutputList>
+                      <TableScan Ordered="1" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Bmk1000" />
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugNumber" />
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugDatabase" />
+                          </DefinedValue>
+                        </DefinedValues>
+                        <Object Table="[@distinctMappings]" Alias="[M]" />
+                      </TableScan>
+                    </RelOp>
+                    <RelOp NodeId="3" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="37279" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Id" />
+                      </OutputList>
+                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Id" />
+                          </DefinedValue>
+                        </DefinedValues>
+                        <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Index="[AK_Database_Number]" Alias="[B]" IndexKind="NonClustered" />
+                        <SeekPredicates>
+                          <SeekPredicateNew>
+                            <SeekKeys>
+                              <Prefix ScanType="EQ">
+                                <RangeColumns>
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="DatabaseName" />
+                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Bug]" Alias="[B]" Column="Number" />
+                                </RangeColumns>
+                                <RangeExpressions>
+                                  <ScalarOperator ScalarString="@distinctMappings.[BugDatabase] as [M].[BugDatabase]">
+                                    <Identifier>
+                                      <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugDatabase" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator ScalarString="@distinctMappings.[BugNumber] as [M].[BugNumber]">
+                                    <Identifier>
+                                      <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugNumber" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </RangeExpressions>
+                              </Prefix>
+                            </SeekKeys>
+                          </SeekPredicateNew>
+                        </SeekPredicates>
+                      </IndexScan>
+                    </RelOp>
+                  </NestedLoops>
+                </RelOp>
+              </Update>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText="&#x9;DELETE FROM M&#xD;&#xA;&#x9;FROM @distinctMappings M&#xD;&#xA;&#x9;&#x9;LEFT OUTER JOIN (&#xD;&#xA;&#x9;&#x9;SELECT MAX(Id) AS MaxId, BugId, BranchTestpassStatusId&#xD;&#xA;&#x9;&#x9;FROM @distinctMappings&#xD;&#xA;&#x9;&#x9;GROUP BY BugId, BranchTestpassStatusId) AS M2&#xD;&#xA;&#x9;&#x9;ON M.BranchTestpassStatusId = M2.BranchTestpassStatusId AND M.BugId = M2.BugId&#xD;&#xA;&#x9;WHERE M.Id != M2.MaxId&#xD;&#xA;&#xD;&#xA;&#x9;-- delete any bugs that are no longer associated with the test passes&#xD;&#xA;" StatementId="6" StatementCompId="8" StatementType="DELETE" RetrievedFromCache="true" StatementSubTreeCost="0.0246743" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0xCB18928A487D76D0" QueryPlanHash="0x91D1CA1B92D92A31" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="32" CompileTime="3" CompileCPU="3" CompileMemory="552">
+            <MemoryGrantInfo SerialRequiredMemory="512" SerialDesiredMemory="544" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Table Delete" LogicalOp="Delete" EstimateRows="1" EstimateIO="0.01" EstimateCPU="1e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0246743" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <Update DMLRequestSort="0">
+                <Object Table="[@distinctMappings]" Alias="[M]" />
+                <RelOp NodeId="2" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="2.156e-005" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0146733" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Bmk1000" />
+                  </OutputList>
+                  <NestedLoops Optimized="0">
+                    <RelOp NodeId="3" PhysicalOp="Table Spool" LogicalOp="Lazy Spool" EstimateRows="1" EstimateIO="0" EstimateCPU="0" AvgRowSize="27" EstimatedTotalSubtreeCost="0.0146509" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Column="Bmk1000" />
+                        <ColumnReference Table="@distinctMappings" Alias="[M]" Column="Id" />
+                        <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BranchTestpassStatusId" />
+                        <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugId" />
+                      </OutputList>
+                      <Spool>
+                        <RelOp NodeId="4" PhysicalOp="Segment" LogicalOp="Segment" EstimateRows="1" EstimateIO="0" EstimateCPU="2.8e-006" AvgRowSize="27" EstimatedTotalSubtreeCost="0.0146481" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Column="Bmk1000" />
+                            <ColumnReference Table="@distinctMappings" Alias="[M]" Column="Id" />
+                            <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BranchTestpassStatusId" />
+                            <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugId" />
+                            <ColumnReference Column="Segment1015" />
+                          </OutputList>
+                          <Segment>
+                            <GroupBy>
+                              <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BranchTestpassStatusId" />
+                              <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugId" />
+                            </GroupBy>
+                            <SegmentColumn>
+                              <ColumnReference Column="Segment1015" />
+                            </SegmentColumn>
+                            <RelOp NodeId="5" PhysicalOp="Sort" LogicalOp="Sort" EstimateRows="1" EstimateIO="0.0112613" EstimateCPU="0.000100027" AvgRowSize="27" EstimatedTotalSubtreeCost="0.0146453" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Column="Bmk1000" />
+                                <ColumnReference Table="@distinctMappings" Alias="[M]" Column="Id" />
+                                <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BranchTestpassStatusId" />
+                                <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugId" />
+                              </OutputList>
+                              <MemoryFractions Input="1" Output="1" />
+                              <Sort Distinct="0">
+                                <OrderBy>
+                                  <OrderByColumn Ascending="1">
+                                    <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BranchTestpassStatusId" />
+                                  </OrderByColumn>
+                                  <OrderByColumn Ascending="1">
+                                    <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugId" />
+                                  </OrderByColumn>
+                                </OrderBy>
+                                <RelOp NodeId="6" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="27" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Column="Bmk1000" />
+                                    <ColumnReference Table="@distinctMappings" Alias="[M]" Column="Id" />
+                                    <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BranchTestpassStatusId" />
+                                    <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugId" />
+                                  </OutputList>
+                                  <TableScan Ordered="1" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                                    <DefinedValues>
+                                      <DefinedValue>
+                                        <ColumnReference Column="Bmk1000" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Table="@distinctMappings" Alias="[M]" Column="Id" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BranchTestpassStatusId" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugId" />
+                                      </DefinedValue>
+                                    </DefinedValues>
+                                    <Object Table="[@distinctMappings]" Alias="[M]" />
+                                    <Predicate>
+                                      <ScalarOperator ScalarString="@distinctMappings.[BranchTestpassStatusId] as [M].[BranchTestpassStatusId] IS NOT NULL AND @distinctMappings.[BugId] as [M].[BugId] IS NOT NULL">
+                                        <Logical Operation="AND">
+                                          <ScalarOperator>
+                                            <Compare CompareOp="IS NOT">
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BranchTestpassStatusId" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="NULL" />
+                                              </ScalarOperator>
+                                            </Compare>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Compare CompareOp="IS NOT">
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugId" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="NULL" />
+                                              </ScalarOperator>
+                                            </Compare>
+                                          </ScalarOperator>
+                                        </Logical>
+                                      </ScalarOperator>
+                                    </Predicate>
+                                  </TableScan>
+                                </RelOp>
+                              </Sort>
+                            </RelOp>
+                          </Segment>
+                        </RelOp>
+                      </Spool>
+                    </RelOp>
+                    <RelOp NodeId="7" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="2.8e-007" AvgRowSize="27" EstimatedTotalSubtreeCost="5.6e-007" Parallel="0" EstimateRebinds="1" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Column="Bmk1000" />
+                      </OutputList>
+                      <NestedLoops Optimized="0">
+                        <Predicate>
+                          <ScalarOperator ScalarString="@distinctMappings.[Id] as [M].[Id]&lt;&gt;[Expr1007]">
+                            <Compare CompareOp="NE">
+                              <ScalarOperator>
+                                <Identifier>
+                                  <ColumnReference Table="@distinctMappings" Alias="[M]" Column="Id" />
+                                </Identifier>
+                              </ScalarOperator>
+                              <ScalarOperator>
+                                <Identifier>
+                                  <ColumnReference Column="Expr1007" />
+                                </Identifier>
+                              </ScalarOperator>
+                            </Compare>
+                          </ScalarOperator>
+                        </Predicate>
+                        <RelOp NodeId="8" PhysicalOp="Stream Aggregate" LogicalOp="Aggregate" EstimateRows="1" EstimateIO="0" EstimateCPU="2.8e-007" AvgRowSize="27" EstimatedTotalSubtreeCost="2.8e-007" Parallel="0" EstimateRebinds="1" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Column="Expr1007" />
+                          </OutputList>
+                          <StreamAggregate>
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Column="Expr1007" />
+                                <ScalarOperator ScalarString="MAX(@distinctMappings.[Id] as [M].[Id])">
+                                  <Aggregate Distinct="0" AggType="MAX">
+                                    <ScalarOperator>
+                                      <Identifier>
+                                        <ColumnReference Table="@distinctMappings" Alias="[M]" Column="Id" />
+                                      </Identifier>
+                                    </ScalarOperator>
+                                  </Aggregate>
+                                </ScalarOperator>
+                              </DefinedValue>
+                            </DefinedValues>
+                            <RelOp NodeId="9" PhysicalOp="Table Spool" LogicalOp="Lazy Spool" EstimateRows="1" EstimateIO="0" EstimateCPU="0" AvgRowSize="27" EstimatedTotalSubtreeCost="0" Parallel="0" EstimateRebinds="1" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Column="Bmk1000" />
+                                <ColumnReference Table="@distinctMappings" Alias="[M]" Column="Id" />
+                                <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BranchTestpassStatusId" />
+                                <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugId" />
+                              </OutputList>
+                              <Spool PrimaryNodeId="3" />
+                            </RelOp>
+                          </StreamAggregate>
+                        </RelOp>
+                        <RelOp NodeId="13" PhysicalOp="Table Spool" LogicalOp="Lazy Spool" EstimateRows="1" EstimateIO="0" EstimateCPU="0" AvgRowSize="27" EstimatedTotalSubtreeCost="0" Parallel="0" EstimateRebinds="1" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Column="Bmk1000" />
+                            <ColumnReference Table="@distinctMappings" Alias="[M]" Column="Id" />
+                            <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BranchTestpassStatusId" />
+                            <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugId" />
+                          </OutputList>
+                          <Spool PrimaryNodeId="3" />
+                        </RelOp>
+                      </NestedLoops>
+                    </RelOp>
+                  </NestedLoops>
+                </RelOp>
+              </Update>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText="&#x9;UPDATE TBM&#xD;&#xA;&#x9;SET IsDeleted = 1,&#xD;&#xA;&#x9;RecordLastUpdated = GETDATE()&#xD;&#xA;&#x9;FROM Reporting.TestpassBugMapping TBM&#xD;&#xA;&#x9;&#x9;INNER JOIN @distinctMappings M2 ON TBM.BranchTestpassStatusId = M2.BranchTestpassStatusId&#xD;&#xA;&#x9;WHERE NOT EXISTS (&#xD;&#xA;&#x9;&#x9;SELECT TOP 1 1&#xD;&#xA;&#x9;&#x9;FROM @distinctMappings M&#xD;&#xA;&#x9;&#x9;WHERE TBM.BugId = M.BugId&#xD;&#xA;&#x9;&#x9;&#x9;AND TBM.BranchTestpassStatusId = M.BranchTestpassStatusId);&#xD;&#xA;&#xD;&#xA;&#x9;-- update BugType and BranchSpecific for existing mappings&#xD;&#xA;" StatementId="7" StatementCompId="9" StatementType="UPDATE" RetrievedFromCache="true" StatementSubTreeCost="0.109597" StatementEstRows="2.31758" StatementOptmLevel="FULL" QueryHash="0x9C5561A8B5CB540E" QueryPlanHash="0x656D27B4B2A03C8F" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="32" CompileTime="36" CompileCPU="36" CompileMemory="1008">
+            <MemoryGrantInfo SerialRequiredMemory="512" SerialDesiredMemory="560" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Clustered Index Update" LogicalOp="Update" EstimateRows="2.31758" EstimateIO="0.01" EstimateCPU="2.31758e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.109597" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <Update DMLRequestSort="0">
+                <Object Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Index="[PK_TestpassBugMapping]" Alias="[TBM]" IndexKind="Clustered" />
+                <SetPredicate>
+                  <ScalarOperator ScalarString="[OurLabReporting].[Reporting].[TestpassBugMapping].[IsDeleted] as [TBM].[IsDeleted] = [Expr1009],[OurLabReporting].[Reporting].[TestpassBugMapping].[RecordLastUpdated] as [TBM].[RecordLastUpdated] = RaiseIfNullUpdate([Expr1010])">
+                    <ScalarExpressionList>
+                      <ScalarOperator>
+                        <MultipleAssign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="IsDeleted" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1009" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="RecordLastUpdated" />
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="RaiseIfNullUpdate">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="Expr1010" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </Assign>
+                        </MultipleAssign>
+                      </ScalarOperator>
+                    </ScalarExpressionList>
+                  </ScalarOperator>
+                </SetPredicate>
+                <RelOp NodeId="1" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="2.31758" EstimateIO="0" EstimateCPU="2.31758e-007" AvgRowSize="23" EstimatedTotalSubtreeCost="0.0995944" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="BranchTestpassStatusId" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="BugId" />
+                    <ColumnReference Column="Expr1009" />
+                    <ColumnReference Column="Expr1010" />
+                  </OutputList>
+                  <ComputeScalar>
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1009" />
+                        <ScalarOperator ScalarString="(1)">
+                          <Const ConstValue="(1)" />
+                        </ScalarOperator>
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1010" />
+                        <ScalarOperator ScalarString="CONVERT_IMPLICIT(datetime2(3),getdate(),0)">
+                          <Identifier>
+                            <ColumnReference Column="ConstExpr1015">
+                              <ScalarOperator>
+                                <Convert DataType="datetime2" Style="0" Implicit="1">
+                                  <ScalarOperator>
+                                    <Intrinsic FunctionName="getdate" />
+                                  </ScalarOperator>
+                                </Convert>
+                              </ScalarOperator>
+                            </ColumnReference>
+                          </Identifier>
+                        </ScalarOperator>
+                      </DefinedValue>
+                    </DefinedValues>
+                    <RelOp NodeId="3" PhysicalOp="Nested Loops" LogicalOp="Left Anti Semi Join" EstimateRows="44.3379" EstimateIO="0" EstimateCPU="0.000185333" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0995942" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="BranchTestpassStatusId" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="BugId" />
+                      </OutputList>
+                      <NestedLoops Optimized="0">
+                        <OuterReferences>
+                          <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="BranchTestpassStatusId" />
+                          <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="BugId" />
+                        </OuterReferences>
+                        <RelOp NodeId="4" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="44.3379" EstimateIO="0" EstimateCPU="0.000185333" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0919769" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="BranchTestpassStatusId" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="BugId" />
+                          </OutputList>
+                          <NestedLoops Optimized="0">
+                            <OuterReferences>
+                              <ColumnReference Table="@distinctMappings" Alias="[M2]" Column="BranchTestpassStatusId" />
+                            </OuterReferences>
+                            <RelOp NodeId="5" PhysicalOp="Sort" LogicalOp="Distinct Sort" EstimateRows="19.1311" EstimateIO="0.0112613" EstimateCPU="0.00496213" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0325006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Table="@distinctMappings" Alias="[M2]" Column="BranchTestpassStatusId" />
+                              </OutputList>
+                              <MemoryFractions Input="1" Output="1" />
+                              <Sort Distinct="1">
+                                <OrderBy>
+                                  <OrderByColumn Ascending="1">
+                                    <ColumnReference Table="@distinctMappings" Alias="[M2]" Column="BranchTestpassStatusId" />
+                                  </OrderByColumn>
+                                </OrderBy>
+                                <RelOp NodeId="6" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="366" EstimateIO="0.0157176" EstimateCPU="0.0005596" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0162772" TableCardinality="366" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Table="@distinctMappings" Alias="[M2]" Column="BranchTestpassStatusId" />
+                                  </OutputList>
+                                  <TableScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                                    <DefinedValues>
+                                      <DefinedValue>
+                                        <ColumnReference Table="@distinctMappings" Alias="[M2]" Column="BranchTestpassStatusId" />
+                                      </DefinedValue>
+                                    </DefinedValues>
+                                    <Object Table="[@distinctMappings]" Alias="[M2]" />
+                                  </TableScan>
+                                </RelOp>
+                              </Sort>
+                            </RelOp>
+                            <RelOp NodeId="7" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="2.31758" EstimateIO="0.003125" EstimateCPU="0.000159549" AvgRowSize="15" EstimatedTotalSubtreeCost="0.059291" TableCardinality="84499" Parallel="0" EstimateRebinds="18.1311" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="BranchTestpassStatusId" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="BugId" />
+                              </OutputList>
+                              <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="BranchTestpassStatusId" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="BugId" />
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <Object Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Index="[PK_TestpassBugMapping]" Alias="[TBM]" IndexKind="Clustered" />
+                                <SeekPredicates>
+                                  <SeekPredicateNew>
+                                    <SeekKeys>
+                                      <Prefix ScanType="EQ">
+                                        <RangeColumns>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="BranchTestpassStatusId" />
+                                        </RangeColumns>
+                                        <RangeExpressions>
+                                          <ScalarOperator ScalarString="@distinctMappings.[BranchTestpassStatusId] as [M2].[BranchTestpassStatusId]">
+                                            <Identifier>
+                                              <ColumnReference Table="@distinctMappings" Alias="[M2]" Column="BranchTestpassStatusId" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </RangeExpressions>
+                                      </Prefix>
+                                    </SeekKeys>
+                                  </SeekPredicateNew>
+                                </SeekPredicates>
+                              </IndexScan>
+                            </RelOp>
+                          </NestedLoops>
+                        </RelOp>
+                        <RelOp NodeId="9" PhysicalOp="Top" LogicalOp="Top" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="9" EstimatedTotalSubtreeCost="0.00742749" Parallel="0" EstimateRebinds="43.3379" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList />
+                          <Top RowCount="0" IsPercent="0" WithTies="0">
+                            <TopExpression>
+                              <ScalarOperator ScalarString="(1)">
+                                <Const ConstValue="(1)" />
+                              </ScalarOperator>
+                            </TopExpression>
+                            <RelOp NodeId="10" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="1" EstimateIO="0.0157961" EstimateCPU="0.0004811" AvgRowSize="15" EstimatedTotalSubtreeCost="0.00717626" TableCardinality="366" Parallel="0" EstimateRebinds="0" EstimateRewinds="43.3379" EstimatedExecutionMode="Row">
+                              <OutputList />
+                              <TableScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                                <DefinedValues />
+                                <Object Table="[@distinctMappings]" Alias="[M]" />
+                                <Predicate>
+                                  <ScalarOperator ScalarString="[OurLabReporting].[Reporting].[TestpassBugMapping].[BugId] as [TBM].[BugId]=@distinctMappings.[BugId] as [M].[BugId] AND [OurLabReporting].[Reporting].[TestpassBugMapping].[BranchTestpassStatusId] as [TBM].[BranchTestpassStatusId]=@distinctMappings.[BranchTestpassStatusId] as [M].[BranchTestpassStatusId]">
+                                    <Logical Operation="AND">
+                                      <ScalarOperator>
+                                        <Compare CompareOp="EQ">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="BugId" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugId" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </Compare>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Compare CompareOp="EQ">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="BranchTestpassStatusId" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BranchTestpassStatusId" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </Compare>
+                                      </ScalarOperator>
+                                    </Logical>
+                                  </ScalarOperator>
+                                </Predicate>
+                              </TableScan>
+                            </RelOp>
+                          </Top>
+                        </RelOp>
+                      </NestedLoops>
+                    </RelOp>
+                  </ComputeScalar>
+                </RelOp>
+              </Update>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText="&#x9;UPDATE TBM&#xD;&#xA;&#x9;&#x9;SET BugType = M.BugType,&#xD;&#xA;&#x9;&#x9;IsBranchSpecific = M.IsBranchSpecific,&#xD;&#xA;&#x9;&#x9;RecordLastUpdated = GETDATE(),&#xD;&#xA;&#x9;&#x9;IsDeleted = 0&#xD;&#xA;&#x9;FROM Reporting.TestpassBugMapping TBM&#xD;&#xA;&#x9;&#x9;INNER JOIN @distinctMappings M ON &#xD;&#xA;&#x9;&#x9;&#x9;TBM.BranchTestpassStatusId = M.BranchTestpassStatusId&#xD;&#xA;&#x9;&#x9;&#x9;AND TBM.BugId = M.BugId;&#xD;&#xA;&#xD;&#xA;&#x9;-- insert new mappings&#xD;&#xA;" StatementId="8" StatementCompId="10" StatementType="UPDATE" RetrievedFromCache="true" StatementSubTreeCost="0.027933" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x636C28932AC42F4A" QueryPlanHash="0x26D49F07001E6C3D" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="32" CompileTime="6" CompileCPU="5" CompileMemory="672">
+            <MemoryGrantInfo SerialRequiredMemory="512" SerialDesiredMemory="544" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Clustered Index Update" LogicalOp="Update" EstimateRows="1" EstimateIO="0.01" EstimateCPU="1e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.027933" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <Update DMLRequestSort="0">
+                <Object Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Index="[PK_TestpassBugMapping]" Alias="[TBM]" IndexKind="Clustered" />
+                <SetPredicate>
+                  <ScalarOperator ScalarString="[OurLabReporting].[Reporting].[TestpassBugMapping].[BugType] as [TBM].[BugType] = @distinctMappings.[BugType] as [M].[BugType],[OurLabReporting].[Reporting].[TestpassBugMapping].[IsBranchSpecific] as [TBM].[IsBranchSpecific] = @distinctMappings.[IsBranchSpecific] as [M].[IsBranchSpecific],[OurLabReporting].[Reporting].[TestpassBugMapping].[RecordLastUpdated] as [TBM].[RecordLastUpdated] = RaiseIfNullUpdate([Expr1005]),[OurLabReporting].[Reporting].[TestpassBugMapping].[IsDeleted] as [TBM].[IsDeleted] = [Expr1006]">
+                    <ScalarExpressionList>
+                      <ScalarOperator>
+                        <MultipleAssign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="BugType" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugType" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="IsBranchSpecific" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Table="@distinctMappings" Alias="[M]" Column="IsBranchSpecific" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="RecordLastUpdated" />
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="RaiseIfNullUpdate">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="Expr1005" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="IsDeleted" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1006" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                        </MultipleAssign>
+                      </ScalarOperator>
+                    </ScalarExpressionList>
+                  </ScalarOperator>
+                </SetPredicate>
+                <RelOp NodeId="1" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="277" EstimatedTotalSubtreeCost="0.017932" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="BranchTestpassStatusId" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="BugId" />
+                    <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugType" />
+                    <ColumnReference Table="@distinctMappings" Alias="[M]" Column="IsBranchSpecific" />
+                    <ColumnReference Column="Expr1005" />
+                    <ColumnReference Column="Expr1006" />
+                  </OutputList>
+                  <ComputeScalar>
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1005" />
+                        <ScalarOperator ScalarString="CONVERT_IMPLICIT(datetime2(3),getdate(),0)">
+                          <Identifier>
+                            <ColumnReference Column="ConstExpr1013">
+                              <ScalarOperator>
+                                <Convert DataType="datetime2" Style="0" Implicit="1">
+                                  <ScalarOperator>
+                                    <Intrinsic FunctionName="getdate" />
+                                  </ScalarOperator>
+                                </Convert>
+                              </ScalarOperator>
+                            </ColumnReference>
+                          </Identifier>
+                        </ScalarOperator>
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1006" />
+                        <ScalarOperator ScalarString="(0)">
+                          <Const ConstValue="(0)" />
+                        </ScalarOperator>
+                      </DefinedValue>
+                    </DefinedValues>
+                    <RelOp NodeId="2" PhysicalOp="Sort" LogicalOp="Distinct Sort" EstimateRows="1" EstimateIO="0.0112613" EstimateCPU="0.00010027" AvgRowSize="270" EstimatedTotalSubtreeCost="0.0179319" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="BranchTestpassStatusId" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="BugId" />
+                        <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugType" />
+                        <ColumnReference Table="@distinctMappings" Alias="[M]" Column="IsBranchSpecific" />
+                      </OutputList>
+                      <MemoryFractions Input="1" Output="1" />
+                      <Sort Distinct="1">
+                        <OrderBy>
+                          <OrderByColumn Ascending="1">
+                            <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="BranchTestpassStatusId" />
+                          </OrderByColumn>
+                          <OrderByColumn Ascending="1">
+                            <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="BugId" />
+                          </OrderByColumn>
+                        </OrderBy>
+                        <RelOp NodeId="3" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="270" EstimatedTotalSubtreeCost="0.00657038" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="BranchTestpassStatusId" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="BugId" />
+                            <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugType" />
+                            <ColumnReference Table="@distinctMappings" Alias="[M]" Column="IsBranchSpecific" />
+                          </OutputList>
+                          <NestedLoops Optimized="0">
+                            <OuterReferences>
+                              <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BranchTestpassStatusId" />
+                              <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugId" />
+                            </OuterReferences>
+                            <RelOp NodeId="4" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="270" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BranchTestpassStatusId" />
+                                <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugId" />
+                                <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugType" />
+                                <ColumnReference Table="@distinctMappings" Alias="[M]" Column="IsBranchSpecific" />
+                              </OutputList>
+                              <TableScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BranchTestpassStatusId" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugId" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugType" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Table="@distinctMappings" Alias="[M]" Column="IsBranchSpecific" />
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <Object Table="[@distinctMappings]" Alias="[M]" />
+                              </TableScan>
+                            </RelOp>
+                            <RelOp NodeId="5" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="84422" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="BranchTestpassStatusId" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="BugId" />
+                              </OutputList>
+                              <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="BranchTestpassStatusId" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="BugId" />
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <Object Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Index="[PK_TestpassBugMapping]" Alias="[TBM]" IndexKind="Clustered" />
+                                <SeekPredicates>
+                                  <SeekPredicateNew>
+                                    <SeekKeys>
+                                      <Prefix ScanType="EQ">
+                                        <RangeColumns>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="BranchTestpassStatusId" />
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="BugId" />
+                                        </RangeColumns>
+                                        <RangeExpressions>
+                                          <ScalarOperator ScalarString="@distinctMappings.[BranchTestpassStatusId] as [M].[BranchTestpassStatusId]">
+                                            <Identifier>
+                                              <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BranchTestpassStatusId" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                          <ScalarOperator ScalarString="@distinctMappings.[BugId] as [M].[BugId]">
+                                            <Identifier>
+                                              <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugId" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </RangeExpressions>
+                                      </Prefix>
+                                    </SeekKeys>
+                                  </SeekPredicateNew>
+                                </SeekPredicates>
+                              </IndexScan>
+                            </RelOp>
+                          </NestedLoops>
+                        </RelOp>
+                      </Sort>
+                    </RelOp>
+                  </ComputeScalar>
+                </RelOp>
+              </Update>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText="&#x9;INSERT INTO Reporting.TestpassBugMapping (&#xD;&#xA;&#x9;&#x9;BranchTestpassStatusId,&#xD;&#xA;&#x9;&#x9;BugId,&#xD;&#xA;&#x9;&#x9;BugNumber,&#xD;&#xA;&#x9;&#x9;BugDatabase,&#xD;&#xA;&#x9;&#x9;BugType,&#xD;&#xA;&#x9;&#x9;IsBranchSpecific,&#xD;&#xA;&#x9;&#x9;RecordLastUpdated)&#xD;&#xA;&#x9;SELECT M.BranchTestpassStatusId,&#xD;&#xA;&#x9;&#x9;M.BugId,&#xD;&#xA;&#x9;&#x9;M.BugNumber,&#xD;&#xA;&#x9;&#x9;M.BugDatabase,&#xD;&#xA;&#x9;&#x9;M.BugType,&#xD;&#xA;&#x9;&#x9;M.IsBranchSpecific,&#xD;&#xA;&#x9;&#x9;GETDATE()&#xD;&#xA;&#x9;FROM @distinctMappings M&#xD;&#xA;&#x9;WHERE NOT EXISTS (&#xD;&#xA;&#x9;&#x9;SELECT TOP 1 1&#xD;&#xA;&#x9;&#x9;FROM Reporting.TestpassBugMapping TBM&#xD;&#xA;&#x9;&#x9;WHERE TBM.BugId = M.BugId AND TBM.BranchTestpassStatusId = M.BranchTestpassStatusId)&#xD;&#xA;&#x9;&#x9;AND M.BranchTestpassStatusId IS NOT NULL;&#xD;&#xA;&#xD;&#xA;" StatementId="9" StatementCompId="11" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="0.0297979" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x783DF36B1119679F" QueryPlanHash="0xB77EE9211F516B8D" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="32" CompileTime="4" CompileCPU="3" CompileMemory="608">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Clustered Index Insert" LogicalOp="Insert" EstimateRows="1" EstimateIO="0.01" EstimateCPU="1e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0297979" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <Update DMLRequestSort="0">
+                <Object Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Index="[PK_TestpassBugMapping]" IndexKind="Clustered" />
+                <SetPredicate>
+                  <ScalarOperator ScalarString="[OurLabReporting].[Reporting].[TestpassBugMapping].[BranchTestpassStatusId] = @distinctMappings.[BranchTestpassStatusId] as [M].[BranchTestpassStatusId],[OurLabReporting].[Reporting].[TestpassBugMapping].[BugId] = RaiseIfNullInsert(@distinctMappings.[BugId] as [M].[BugId]),[OurLabReporting].[Reporting].[TestpassBugMapping].[BugNumber] = @distinctMappings.[BugNumber] as [M].[BugNumber],[OurLabReporting].[Reporting].[TestpassBugMapping].[BugDatabase] = @distinctMappings.[BugDatabase] as [M].[BugDatabase],[OurLabReporting].[Reporting].[TestpassBugMapping].[BugType] = @distinctMappings.[BugType] as [M].[BugType],[OurLabReporting].[Reporting].[TestpassBugMapping].[IsBranchSpecific] = @distinctMappings.[IsBranchSpecific] as [M].[IsBranchSpecific],[OurLabReporting].[Reporting].[TestpassBugMapping].[RecordLastUpdated] = RaiseIfNullInsert([Expr1009]),[OurLabReporting].[Reporting].[TestpassBugMapping].[RecordInsertedUtc] = RaiseIfNullInsert([Expr1010]),[OurLabReporting].[Reporting].[TestpassBugMapping].[IsDeleted] = [Expr1011]">
+                    <ScalarExpressionList>
+                      <ScalarOperator>
+                        <MultipleAssign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Column="BranchTestpassStatusId" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BranchTestpassStatusId" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Column="BugId" />
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="RaiseIfNullInsert">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugId" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Column="BugNumber" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugNumber" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Column="BugDatabase" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugDatabase" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Column="BugType" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugType" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Column="IsBranchSpecific" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Table="@distinctMappings" Alias="[M]" Column="IsBranchSpecific" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Column="RecordLastUpdated" />
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="RaiseIfNullInsert">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="Expr1009" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Column="RecordInsertedUtc" />
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="RaiseIfNullInsert">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="Expr1010" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Column="IsDeleted" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1011" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                        </MultipleAssign>
+                      </ScalarOperator>
+                    </ScalarExpressionList>
+                  </ScalarOperator>
+                </SetPredicate>
+                <RelOp NodeId="1" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="541" EstimatedTotalSubtreeCost="0.0197969" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BranchTestpassStatusId" />
+                    <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugId" />
+                    <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugNumber" />
+                    <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugDatabase" />
+                    <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugType" />
+                    <ColumnReference Table="@distinctMappings" Alias="[M]" Column="IsBranchSpecific" />
+                    <ColumnReference Column="Expr1009" />
+                    <ColumnReference Column="Expr1010" />
+                    <ColumnReference Column="Expr1011" />
+                  </OutputList>
+                  <ComputeScalar>
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1009" />
+                        <ScalarOperator ScalarString="CONVERT_IMPLICIT(datetime2(3),getdate(),0)">
+                          <Identifier>
+                            <ColumnReference Column="ConstExpr1012">
+                              <ScalarOperator>
+                                <Convert DataType="datetime2" Style="0" Implicit="1">
+                                  <ScalarOperator>
+                                    <Intrinsic FunctionName="getdate" />
+                                  </ScalarOperator>
+                                </Convert>
+                              </ScalarOperator>
+                            </ColumnReference>
+                          </Identifier>
+                        </ScalarOperator>
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1010" />
+                        <ScalarOperator ScalarString="CONVERT_IMPLICIT(datetime2(3),getutcdate(),0)">
+                          <Identifier>
+                            <ColumnReference Column="ConstExpr1013">
+                              <ScalarOperator>
+                                <Convert DataType="datetime2" Style="0" Implicit="1">
+                                  <ScalarOperator>
+                                    <Intrinsic FunctionName="getutcdate" />
+                                  </ScalarOperator>
+                                </Convert>
+                              </ScalarOperator>
+                            </ColumnReference>
+                          </Identifier>
+                        </ScalarOperator>
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1011" />
+                        <ScalarOperator ScalarString="(0)">
+                          <Const ConstValue="(0)" />
+                        </ScalarOperator>
+                      </DefinedValue>
+                    </DefinedValues>
+                    <RelOp NodeId="2" PhysicalOp="Table Spool" LogicalOp="Eager Spool" EstimateRows="1" EstimateIO="0.013125" EstimateCPU="0.00010096" AvgRowSize="526" EstimatedTotalSubtreeCost="0.0197968" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BranchTestpassStatusId" />
+                        <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugId" />
+                        <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugNumber" />
+                        <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugDatabase" />
+                        <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugType" />
+                        <ColumnReference Table="@distinctMappings" Alias="[M]" Column="IsBranchSpecific" />
+                      </OutputList>
+                      <Spool>
+                        <RelOp NodeId="3" PhysicalOp="Nested Loops" LogicalOp="Left Anti Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="526" EstimatedTotalSubtreeCost="0.00657086" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BranchTestpassStatusId" />
+                            <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugId" />
+                            <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugNumber" />
+                            <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugDatabase" />
+                            <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugType" />
+                            <ColumnReference Table="@distinctMappings" Alias="[M]" Column="IsBranchSpecific" />
+                          </OutputList>
+                          <NestedLoops Optimized="0">
+                            <OuterReferences>
+                              <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BranchTestpassStatusId" />
+                              <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugId" />
+                            </OuterReferences>
+                            <RelOp NodeId="4" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="526" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BranchTestpassStatusId" />
+                                <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugId" />
+                                <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugNumber" />
+                                <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugDatabase" />
+                                <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugType" />
+                                <ColumnReference Table="@distinctMappings" Alias="[M]" Column="IsBranchSpecific" />
+                              </OutputList>
+                              <TableScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BranchTestpassStatusId" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugId" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugNumber" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugDatabase" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugType" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Table="@distinctMappings" Alias="[M]" Column="IsBranchSpecific" />
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <Object Table="[@distinctMappings]" Alias="[M]" />
+                                <Predicate>
+                                  <ScalarOperator ScalarString="@distinctMappings.[BranchTestpassStatusId] as [M].[BranchTestpassStatusId] IS NOT NULL">
+                                    <Compare CompareOp="IS NOT">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BranchTestpassStatusId" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="NULL" />
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                </Predicate>
+                              </TableScan>
+                            </RelOp>
+                            <RelOp NodeId="5" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="84422" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList />
+                              <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                <DefinedValues />
+                                <Object Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Index="[PK_TestpassBugMapping]" Alias="[TBM]" IndexKind="Clustered" />
+                                <SeekPredicates>
+                                  <SeekPredicateNew>
+                                    <SeekKeys>
+                                      <Prefix ScanType="EQ">
+                                        <RangeColumns>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="BranchTestpassStatusId" />
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[Reporting]" Table="[TestpassBugMapping]" Alias="[TBM]" Column="BugId" />
+                                        </RangeColumns>
+                                        <RangeExpressions>
+                                          <ScalarOperator ScalarString="@distinctMappings.[BranchTestpassStatusId] as [M].[BranchTestpassStatusId]">
+                                            <Identifier>
+                                              <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BranchTestpassStatusId" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                          <ScalarOperator ScalarString="@distinctMappings.[BugId] as [M].[BugId]">
+                                            <Identifier>
+                                              <ColumnReference Table="@distinctMappings" Alias="[M]" Column="BugId" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </RangeExpressions>
+                                      </Prefix>
+                                    </SeekKeys>
+                                  </SeekPredicateNew>
+                                </SeekPredicates>
+                              </IndexScan>
+                            </RelOp>
+                          </NestedLoops>
+                        </RelOp>
+                      </Spool>
+                    </RelOp>
+                  </ComputeScalar>
+                </RelOp>
+              </Update>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText="&#x9;DECLARE @MetaData NVARCHAR(1024);&#xD;&#xA;    SELECT @MetaData = 'RC:' + CONVERT(NVARCHAR, COUNT(1)) FROM @distinctMappings;&#xD;&#xA;&#xD;&#xA;   " StatementId="10" StatementCompId="12" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032843" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0xEEFA4F31CBEF6C23" QueryPlanHash="0x1BE66E4D95E728D3">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="0" CompileCPU="0" CompileMemory="328">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="44" EstimatedTotalSubtreeCost="0.0032843" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Column="Expr1005" />
+              </OutputList>
+              <ComputeScalar>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1005" />
+                    <ScalarOperator ScalarString="N'RC:'+CONVERT(nvarchar(30),[Expr1004],0)">
+                      <Arithmetic Operation="ADD">
+                        <ScalarOperator>
+                          <Const ConstValue="N'RC:'" />
+                        </ScalarOperator>
+                        <ScalarOperator>
+                          <Convert DataType="nvarchar" Length="60" Style="0" Implicit="0">
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1004" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Convert>
+                        </ScalarOperator>
+                      </Arithmetic>
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp NodeId="1" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1.1e-006" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032842" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Expr1004" />
+                  </OutputList>
+                  <ComputeScalar>
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1004" />
+                        <ScalarOperator ScalarString="CONVERT_IMPLICIT(int,[Expr1006],0)">
+                          <Convert DataType="int" Style="0" Implicit="1">
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1006" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Convert>
+                        </ScalarOperator>
+                      </DefinedValue>
+                    </DefinedValues>
+                    <RelOp NodeId="2" PhysicalOp="Stream Aggregate" LogicalOp="Aggregate" EstimateRows="1" EstimateIO="0" EstimateCPU="1.1e-006" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032842" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Column="Expr1006" />
+                      </OutputList>
+                      <StreamAggregate>
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1006" />
+                            <ScalarOperator ScalarString="Count(*)">
+                              <Aggregate AggType="countstar" Distinct="0" />
+                            </ScalarOperator>
+                          </DefinedValue>
+                        </DefinedValues>
+                        <RelOp NodeId="3" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="1" EstimateIO="0.0032035" EstimateCPU="7.96e-005" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList />
+                          <TableScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                            <DefinedValues />
+                            <Object Table="[@distinctMappings]" />
+                          </TableScan>
+                        </RelOp>
+                      </StreamAggregate>
+                    </RelOp>
+                  </ComputeScalar>
+                </RelOp>
+              </ComputeScalar>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText=" DECLARE @objectName varchar(128) = (SELECT OBJECT_NAME(@@PROCID));&#xD;&#xA;   " StatementId="11" StatementCompId="13" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="1.257e-006" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x830C952D7490168E" QueryPlanHash="0x3B1EAEC0618BFE3F" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="0" CompileCPU="0" CompileMemory="344">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="75" EstimatedTotalSubtreeCost="1.257e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Column="Expr1001" />
+              </OutputList>
+              <ComputeScalar>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1001" />
+                    <ScalarOperator ScalarString="CONVERT_IMPLICIT(varchar(128),[Expr1000],0)">
+                      <Convert DataType="varchar" Length="128" Style="0" Implicit="1">
+                        <ScalarOperator>
+                          <Identifier>
+                            <ColumnReference Column="Expr1000" />
+                          </Identifier>
+                        </ScalarOperator>
+                      </Convert>
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp NodeId="1" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="139" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Expr1000" />
+                  </OutputList>
+                  <ConstantScan>
+                    <Values>
+                      <Row>
+                        <ScalarOperator ScalarString="object_name(@@procid)">
+                          <Intrinsic FunctionName="object_name">
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="@@procid" />
+                            </ScalarOperator>
+                            <ScalarOperator>
+                              <Const ConstValue="" />
+                            </ScalarOperator>
+                          </Intrinsic>
+                        </ScalarOperator>
+                      </Row>
+                    </Values>
+                  </ConstantScan>
+                </RelOp>
+              </ComputeScalar>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText=" EXEC [dbo].[spEndStopwatch] @objectName, @stopwatchBeginTime, @MetaData;&#xD;" StatementId="12" StatementCompId="14" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#xA;RETURN 0" StatementId="13" StatementCompId="15" StatementType="RETURN" RetrievedFromCache="true" />
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

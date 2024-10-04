@@ -1,0 +1,623 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="CREATE PROCEDURE [dbo].[Web_GetResourceDetailsForMachineSet]&#xD;&#xA;@MachineSetId INT&#xD;&#xA;AS&#xD;&#xA;BEGIN&#xD;&#xA;&#x9;SET NOCOUNT ON;&#xD;&#xA;&#xD;&#xA;    -- Get the list of machines and their details&#xD;&#xA;       " StatementId="1" StatementCompId="2" StatementType="SET ON/OFF" RetrievedFromCache="true" />
+        <StmtSimple StatementText=" SELECT a.MachineName, a.Name AS RoleName, c.FullBuildNumber,&#xD;&#xA;               b.Architecture + b.Type AS Flavor, b.Language + '-' + b.Culture AS LanguageCulture,&#xD;&#xA;               b.SKU, a.RemoteDebuggingCmd AS KDLink, d.RunLogDirectory AS MachineSetFolder,&#xD;&#xA;               e.[Status] AS MachineSetStatus, d.StartDate AS MachineSetStartDate,&#xD;&#xA;               d.EndDate AS MachineSetEndDate, a.Id as RoleId,&#xD;&#xA;               implementationdetails.value('(/Implementation/TargetExecutionInfo/@Datastore)[1]', 'nvarchar(100)') as Datastore&#xD;&#xA;&#x9;FROM dbo.Role AS a WITH (NOLOCK) INNER JOIN&#xD;&#xA;             dbo.MachineSet AS d WITH (NOLOCK) ON a.MachineSetId = d.Id left outer JOIN &#xD;&#xA;             dbo.BuildFlavor AS b WITH (NOLOCK) ON b.Id = a.BuildFlavorId left outer JOIN&#xD;&#xA;         dbo.BuildVersion AS c WITH (NOLOCK) ON c.Id = b.BuildVersionId INNER JOIN&#xD;&#xA;         dbo.[Status] AS e WITH (NOLOCK) ON e.Id = d.StatusId  &#xD;&#xA;        WHERE a.MachineSetId = @MachineSetId  &#xD;&#xA;&#xD;" StatementId="2" StatementCompId="3" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0279375" StatementEstRows="1.34701" StatementOptmLevel="FULL" QueryHash="0xA364BD5FE93222E1" QueryPlanHash="0x1E86F2D0BEF92CE" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="80" CompileTime="26" CompileCPU="26" CompileMemory="1504">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1.34701" EstimateIO="0" EstimateCPU="1.34701e-007" AvgRowSize="1292" EstimatedTotalSubtreeCost="0.0279375" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="Id" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="Name" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="MachineName" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="RemoteDebuggingCmd" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="StartDate" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="EndDate" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="RunLogDirectory" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Alias="[b]" Column="Sku" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Alias="[c]" Column="FullBuildNumber" />
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Alias="[e]" Column="Status" />
+                <ColumnReference Column="Expr1010" />
+                <ColumnReference Column="Expr1011" />
+                <ColumnReference Column="Expr1018" />
+              </OutputList>
+              <ComputeScalar>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1018" />
+                    <ScalarOperator ScalarString="[Expr1017]">
+                      <Identifier>
+                        <ColumnReference Column="Expr1017" />
+                      </Identifier>
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp NodeId="1" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1.34701" EstimateIO="0" EstimateCPU="5.63049e-006" AvgRowSize="1292" EstimatedTotalSubtreeCost="0.0279374" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="Id" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="Name" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="MachineName" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="RemoteDebuggingCmd" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="StartDate" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="EndDate" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="RunLogDirectory" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Alias="[b]" Column="Sku" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Alias="[c]" Column="FullBuildNumber" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Alias="[e]" Column="Status" />
+                    <ColumnReference Column="Expr1010" />
+                    <ColumnReference Column="Expr1011" />
+                    <ColumnReference Column="Expr1017" />
+                  </OutputList>
+                  <NestedLoops Optimized="0">
+                    <OuterReferences>
+                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="ImplementationDetails" />
+                    </OuterReferences>
+                    <RelOp NodeId="2" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1.34701" EstimateIO="0" EstimateCPU="5.63049e-006" AvgRowSize="5216" EstimatedTotalSubtreeCost="0.0211679" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="Id" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="Name" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="MachineName" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="RemoteDebuggingCmd" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="StartDate" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="EndDate" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="ImplementationDetails" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="RunLogDirectory" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Alias="[b]" Column="Sku" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Alias="[c]" Column="FullBuildNumber" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Alias="[e]" Column="Status" />
+                        <ColumnReference Column="Expr1010" />
+                        <ColumnReference Column="Expr1011" />
+                      </OutputList>
+                      <NestedLoops Optimized="0">
+                        <OuterReferences>
+                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="StatusId" />
+                        </OuterReferences>
+                        <RelOp NodeId="3" PhysicalOp="Nested Loops" LogicalOp="Left Outer Join" EstimateRows="1.34701" EstimateIO="0" EstimateCPU="5.63049e-006" AvgRowSize="5118" EstimatedTotalSubtreeCost="0.0178243" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="Id" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="Name" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="MachineName" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="RemoteDebuggingCmd" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="StartDate" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="EndDate" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="ImplementationDetails" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="RunLogDirectory" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="StatusId" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Alias="[b]" Column="Sku" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Alias="[c]" Column="FullBuildNumber" />
+                            <ColumnReference Column="Expr1010" />
+                            <ColumnReference Column="Expr1011" />
+                          </OutputList>
+                          <NestedLoops Optimized="0">
+                            <OuterReferences>
+                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Alias="[b]" Column="BuildVersionId" />
+                            </OuterReferences>
+                            <RelOp NodeId="4" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1.34701" EstimateIO="0" EstimateCPU="1.34701e-007" AvgRowSize="4864" EstimatedTotalSubtreeCost="0.0140737" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="Id" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="Name" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="MachineName" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="RemoteDebuggingCmd" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="StartDate" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="EndDate" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="ImplementationDetails" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="RunLogDirectory" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="StatusId" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Alias="[b]" Column="BuildVersionId" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Alias="[b]" Column="Sku" />
+                                <ColumnReference Column="Expr1010" />
+                                <ColumnReference Column="Expr1011" />
+                              </OutputList>
+                              <ComputeScalar>
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Column="Expr1010" />
+                                    <ScalarOperator ScalarString="[OurLabReporting].[dbo].[BuildFlavor].[Architecture] as [b].[Architecture]+[OurLabReporting].[dbo].[BuildFlavor].[Type] as [b].[Type]">
+                                      <Arithmetic Operation="ADD">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Alias="[b]" Column="Architecture" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Alias="[b]" Column="Type" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Arithmetic>
+                                    </ScalarOperator>
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Column="Expr1011" />
+                                    <ScalarOperator ScalarString="[OurLabReporting].[dbo].[BuildFlavor].[Language] as [b].[Language]+N'-'+[OurLabReporting].[dbo].[BuildFlavor].[Culture] as [b].[Culture]">
+                                      <Arithmetic Operation="ADD">
+                                        <ScalarOperator>
+                                          <Arithmetic Operation="ADD">
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Alias="[b]" Column="Language" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                            <ScalarOperator>
+                                              <Const ConstValue="N'-'" />
+                                            </ScalarOperator>
+                                          </Arithmetic>
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Alias="[b]" Column="Culture" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Arithmetic>
+                                    </ScalarOperator>
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <RelOp NodeId="5" PhysicalOp="Nested Loops" LogicalOp="Left Outer Join" EstimateRows="1.34701" EstimateIO="0" EstimateCPU="5.63049e-006" AvgRowSize="4867" EstimatedTotalSubtreeCost="0.0140736" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="Id" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="Name" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="MachineName" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="RemoteDebuggingCmd" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="StartDate" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="EndDate" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="ImplementationDetails" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="RunLogDirectory" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="StatusId" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Alias="[b]" Column="BuildVersionId" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Alias="[b]" Column="Sku" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Alias="[b]" Column="Architecture" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Alias="[b]" Column="Type" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Alias="[b]" Column="Culture" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Alias="[b]" Column="Language" />
+                                  </OutputList>
+                                  <NestedLoops Optimized="0">
+                                    <OuterReferences>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="BuildFlavorId" />
+                                    </OuterReferences>
+                                    <RelOp NodeId="6" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1.34701" EstimateIO="0" EstimateCPU="5.63049e-006" AvgRowSize="4582" EstimatedTotalSubtreeCost="0.0103229" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="Id" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="Name" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="MachineName" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="RemoteDebuggingCmd" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="BuildFlavorId" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="StartDate" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="EndDate" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="ImplementationDetails" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="RunLogDirectory" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="StatusId" />
+                                      </OutputList>
+                                      <NestedLoops Optimized="0">
+                                        <RelOp NodeId="7" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="4317" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1.23247e+007" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                          <OutputList>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="StartDate" />
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="EndDate" />
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="ImplementationDetails" />
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="RunLogDirectory" />
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="StatusId" />
+                                          </OutputList>
+                                          <Warnings>
+                                            <ColumnsWithNoStatistics>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="ImplementationDetails" />
+                                            </ColumnsWithNoStatistics>
+                                          </Warnings>
+                                          <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                            <DefinedValues>
+                                              <DefinedValue>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="StartDate" />
+                                              </DefinedValue>
+                                              <DefinedValue>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="EndDate" />
+                                              </DefinedValue>
+                                              <DefinedValue>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="ImplementationDetails" />
+                                              </DefinedValue>
+                                              <DefinedValue>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="RunLogDirectory" />
+                                              </DefinedValue>
+                                              <DefinedValue>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="StatusId" />
+                                              </DefinedValue>
+                                            </DefinedValues>
+                                            <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Index="[MachineSet_PK]" Alias="[d]" IndexKind="Clustered" />
+                                            <SeekPredicates>
+                                              <SeekPredicateNew>
+                                                <SeekKeys>
+                                                  <Prefix ScanType="EQ">
+                                                    <RangeColumns>
+                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="Id" />
+                                                    </RangeColumns>
+                                                    <RangeExpressions>
+                                                      <ScalarOperator ScalarString="[@MachineSetId]">
+                                                        <Identifier>
+                                                          <ColumnReference Column="@MachineSetId" />
+                                                        </Identifier>
+                                                      </ScalarOperator>
+                                                    </RangeExpressions>
+                                                  </Prefix>
+                                                </SeekKeys>
+                                              </SeekPredicateNew>
+                                            </SeekPredicates>
+                                          </IndexScan>
+                                        </RelOp>
+                                        <RelOp NodeId="8" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1.34701" EstimateIO="0" EstimateCPU="5.63049e-006" AvgRowSize="273" EstimatedTotalSubtreeCost="0.00703416" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                          <OutputList>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="Id" />
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="Name" />
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="MachineName" />
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="RemoteDebuggingCmd" />
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="BuildFlavorId" />
+                                          </OutputList>
+                                          <NestedLoops Optimized="0">
+                                            <OuterReferences>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="Id" />
+                                            </OuterReferences>
+                                            <RelOp NodeId="9" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1.34701" EstimateIO="0.003125" EstimateCPU="0.000158482" AvgRowSize="11" EstimatedTotalSubtreeCost="0.00328348" TableCardinality="1.2143e+007" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                              <OutputList>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="Id" />
+                                              </OutputList>
+                                              <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                                <DefinedValues>
+                                                  <DefinedValue>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="Id" />
+                                                  </DefinedValue>
+                                                </DefinedValues>
+                                                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Index="[Role_IDX_MachineSet]" Alias="[a]" IndexKind="NonClustered" />
+                                                <SeekPredicates>
+                                                  <SeekPredicateNew>
+                                                    <SeekKeys>
+                                                      <Prefix ScanType="EQ">
+                                                        <RangeColumns>
+                                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="MachineSetId" />
+                                                        </RangeColumns>
+                                                        <RangeExpressions>
+                                                          <ScalarOperator ScalarString="[@MachineSetId]">
+                                                            <Identifier>
+                                                              <ColumnReference Column="@MachineSetId" />
+                                                            </Identifier>
+                                                          </ScalarOperator>
+                                                        </RangeExpressions>
+                                                      </Prefix>
+                                                    </SeekKeys>
+                                                  </SeekPredicateNew>
+                                                </SeekPredicates>
+                                              </IndexScan>
+                                            </RelOp>
+                                            <RelOp NodeId="11" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="269" EstimatedTotalSubtreeCost="0.00374505" TableCardinality="1.2143e+007" Parallel="0" EstimateRebinds="0.347008" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                              <OutputList>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="Name" />
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="MachineName" />
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="RemoteDebuggingCmd" />
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="BuildFlavorId" />
+                                              </OutputList>
+                                              <IndexScan Lookup="1" Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                                <DefinedValues>
+                                                  <DefinedValue>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="Name" />
+                                                  </DefinedValue>
+                                                  <DefinedValue>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="MachineName" />
+                                                  </DefinedValue>
+                                                  <DefinedValue>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="RemoteDebuggingCmd" />
+                                                  </DefinedValue>
+                                                  <DefinedValue>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="BuildFlavorId" />
+                                                  </DefinedValue>
+                                                </DefinedValues>
+                                                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Index="[Role_PK]" Alias="[a]" TableReferenceId="-1" IndexKind="Clustered" />
+                                                <SeekPredicates>
+                                                  <SeekPredicateNew>
+                                                    <SeekKeys>
+                                                      <Prefix ScanType="EQ">
+                                                        <RangeColumns>
+                                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="Id" />
+                                                        </RangeColumns>
+                                                        <RangeExpressions>
+                                                          <ScalarOperator ScalarString="[OurLabReporting].[dbo].[Role].[Id] as [a].[Id]">
+                                                            <Identifier>
+                                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="Id" />
+                                                            </Identifier>
+                                                          </ScalarOperator>
+                                                        </RangeExpressions>
+                                                      </Prefix>
+                                                    </SeekKeys>
+                                                  </SeekPredicateNew>
+                                                </SeekPredicates>
+                                              </IndexScan>
+                                            </RelOp>
+                                          </NestedLoops>
+                                        </RelOp>
+                                      </NestedLoops>
+                                    </RelOp>
+                                    <RelOp NodeId="21" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="298" EstimatedTotalSubtreeCost="0.00374504" TableCardinality="805176" Parallel="0" EstimateRebinds="0.347008" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Alias="[b]" Column="BuildVersionId" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Alias="[b]" Column="Sku" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Alias="[b]" Column="Architecture" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Alias="[b]" Column="Type" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Alias="[b]" Column="Culture" />
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Alias="[b]" Column="Language" />
+                                      </OutputList>
+                                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                        <DefinedValues>
+                                          <DefinedValue>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Alias="[b]" Column="BuildVersionId" />
+                                          </DefinedValue>
+                                          <DefinedValue>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Alias="[b]" Column="Sku" />
+                                          </DefinedValue>
+                                          <DefinedValue>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Alias="[b]" Column="Architecture" />
+                                          </DefinedValue>
+                                          <DefinedValue>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Alias="[b]" Column="Type" />
+                                          </DefinedValue>
+                                          <DefinedValue>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Alias="[b]" Column="Culture" />
+                                          </DefinedValue>
+                                          <DefinedValue>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Alias="[b]" Column="Language" />
+                                          </DefinedValue>
+                                        </DefinedValues>
+                                        <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Index="[BuildFlavor_PK]" Alias="[b]" IndexKind="Clustered" />
+                                        <SeekPredicates>
+                                          <SeekPredicateNew>
+                                            <SeekKeys>
+                                              <Prefix ScanType="EQ">
+                                                <RangeColumns>
+                                                  <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Alias="[b]" Column="Id" />
+                                                </RangeColumns>
+                                                <RangeExpressions>
+                                                  <ScalarOperator ScalarString="[OurLabReporting].[dbo].[Role].[BuildFlavorId] as [a].[BuildFlavorId]">
+                                                    <Identifier>
+                                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Role]" Alias="[a]" Column="BuildFlavorId" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </RangeExpressions>
+                                              </Prefix>
+                                            </SeekKeys>
+                                          </SeekPredicateNew>
+                                        </SeekPredicates>
+                                      </IndexScan>
+                                    </RelOp>
+                                  </NestedLoops>
+                                </RelOp>
+                              </ComputeScalar>
+                            </RelOp>
+                            <RelOp NodeId="27" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="267" EstimatedTotalSubtreeCost="0.00374494" TableCardinality="78971" Parallel="0" EstimateRebinds="0.347008" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Alias="[c]" Column="FullBuildNumber" />
+                              </OutputList>
+                              <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Alias="[c]" Column="FullBuildNumber" />
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Index="[BuildVersion_PK]" Alias="[c]" IndexKind="Clustered" />
+                                <SeekPredicates>
+                                  <SeekPredicateNew>
+                                    <SeekKeys>
+                                      <Prefix ScanType="EQ">
+                                        <RangeColumns>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Alias="[c]" Column="Id" />
+                                        </RangeColumns>
+                                        <RangeExpressions>
+                                          <ScalarOperator ScalarString="[OurLabReporting].[dbo].[BuildFlavor].[BuildVersionId] as [b].[BuildVersionId]">
+                                            <Identifier>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildFlavor]" Alias="[b]" Column="BuildVersionId" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </RangeExpressions>
+                                      </Prefix>
+                                    </SeekKeys>
+                                  </SeekPredicateNew>
+                                </SeekPredicates>
+                              </IndexScan>
+                            </RelOp>
+                          </NestedLoops>
+                        </RelOp>
+                        <RelOp NodeId="28" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="111" EstimatedTotalSubtreeCost="0.00333796" TableCardinality="96" Parallel="0" EstimateRebinds="0" EstimateRewinds="0.347008" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Alias="[e]" Column="Status" />
+                          </OutputList>
+                          <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Alias="[e]" Column="Status" />
+                              </DefinedValue>
+                            </DefinedValues>
+                            <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Index="[Status_PK]" Alias="[e]" IndexKind="Clustered" />
+                            <SeekPredicates>
+                              <SeekPredicateNew>
+                                <SeekKeys>
+                                  <Prefix ScanType="EQ">
+                                    <RangeColumns>
+                                      <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[Status]" Alias="[e]" Column="Id" />
+                                    </RangeColumns>
+                                    <RangeExpressions>
+                                      <ScalarOperator ScalarString="[OurLabReporting].[dbo].[MachineSet].[StatusId] as [d].[StatusId]">
+                                        <Identifier>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="StatusId" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </RangeExpressions>
+                                  </Prefix>
+                                </SeekKeys>
+                              </SeekPredicateNew>
+                            </SeekPredicates>
+                          </IndexScan>
+                        </RelOp>
+                      </NestedLoops>
+                    </RelOp>
+                    <RelOp NodeId="29" PhysicalOp="Stream Aggregate" LogicalOp="Aggregate" EstimateRows="1" EstimateIO="0" EstimateCPU="1.1e-006" AvgRowSize="111" EstimatedTotalSubtreeCost="0.00676389" Parallel="0" EstimateRebinds="0.347008" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Column="Expr1017" />
+                      </OutputList>
+                      <StreamAggregate>
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1017" />
+                            <ScalarOperator ScalarString="MIN(CASE WHEN [OurLabReporting].[dbo].[MachineSet].[ImplementationDetails] as [d].[ImplementationDetails] IS NULL THEN NULL ELSE CASE WHEN datalength(XML Reader with XPath filter.[value])&gt;=(128) THEN CONVERT_IMPLICIT(nvarchar(100),XML Reader with XPath filter.[lvalue],0) ELSE CONVERT_IMPLICIT(nvarchar(100),XML Reader with XPath filter.[value],0) END END)">
+                              <Aggregate Distinct="0" AggType="MIN">
+                                <ScalarOperator>
+                                  <IF>
+                                    <Condition>
+                                      <ScalarOperator>
+                                        <Compare CompareOp="IS">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="ImplementationDetails" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="NULL" />
+                                          </ScalarOperator>
+                                        </Compare>
+                                      </ScalarOperator>
+                                    </Condition>
+                                    <Then>
+                                      <ScalarOperator>
+                                        <Const ConstValue="NULL" />
+                                      </ScalarOperator>
+                                    </Then>
+                                    <Else>
+                                      <ScalarOperator>
+                                        <IF>
+                                          <Condition>
+                                            <ScalarOperator>
+                                              <Compare CompareOp="GE">
+                                                <ScalarOperator>
+                                                  <Intrinsic FunctionName="datalength">
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Table="[XML Reader with XPath filter]" Column="value" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                  </Intrinsic>
+                                                </ScalarOperator>
+                                                <ScalarOperator>
+                                                  <Const ConstValue="(128)" />
+                                                </ScalarOperator>
+                                              </Compare>
+                                            </ScalarOperator>
+                                          </Condition>
+                                          <Then>
+                                            <ScalarOperator>
+                                              <Convert DataType="nvarchar" Length="200" Style="0" Implicit="1">
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Table="[XML Reader with XPath filter]" Column="lvalue" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                              </Convert>
+                                            </ScalarOperator>
+                                          </Then>
+                                          <Else>
+                                            <ScalarOperator>
+                                              <Convert DataType="nvarchar" Length="200" Style="0" Implicit="1">
+                                                <ScalarOperator>
+                                                  <Identifier>
+                                                    <ColumnReference Table="[XML Reader with XPath filter]" Column="value" />
+                                                  </Identifier>
+                                                </ScalarOperator>
+                                              </Convert>
+                                            </ScalarOperator>
+                                          </Else>
+                                        </IF>
+                                      </ScalarOperator>
+                                    </Else>
+                                  </IF>
+                                </ScalarOperator>
+                              </Aggregate>
+                            </ScalarOperator>
+                          </DefinedValue>
+                        </DefinedValues>
+                        <RelOp NodeId="30" PhysicalOp="Top" LogicalOp="Top" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="4057" EstimatedTotalSubtreeCost="0.00676241" Parallel="0" EstimateRebinds="0.347008" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Table="[XML Reader with XPath filter]" Column="value" />
+                            <ColumnReference Table="[XML Reader with XPath filter]" Column="lvalue" />
+                          </OutputList>
+                          <Top RowCount="0" IsPercent="0" WithTies="0">
+                            <TopExpression>
+                              <ScalarOperator ScalarString="(1)">
+                                <Const ConstValue="(1)" />
+                              </ScalarOperator>
+                            </TopExpression>
+                            <RelOp NodeId="31" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="2e-005" AvgRowSize="4517" EstimatedTotalSubtreeCost="0.00676227" Parallel="0" EstimateRebinds="0.347008" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Table="[XML Reader with XPath filter]" Column="id" />
+                                <ColumnReference Table="[XML Reader with XPath filter]" Column="value" />
+                                <ColumnReference Table="[XML Reader with XPath filter]" Column="lvalue" />
+                                <ColumnReference Column="Expr1016" />
+                              </OutputList>
+                              <ComputeScalar>
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Column="Expr1016" />
+                                    <ScalarOperator ScalarString="0x58">
+                                      <Const ConstValue="0x58" />
+                                    </ScalarOperator>
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <RelOp NodeId="32" PhysicalOp="Table-valued function" LogicalOp="Table-valued function" EstimateRows="1" EstimateIO="0" EstimateCPU="1.004" AvgRowSize="4065" EstimatedTotalSubtreeCost="0.00676214" Parallel="0" EstimateRebinds="0.347008" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Table="[XML Reader with XPath filter]" Column="id" />
+                                    <ColumnReference Table="[XML Reader with XPath filter]" Column="value" />
+                                    <ColumnReference Table="[XML Reader with XPath filter]" Column="lvalue" />
+                                  </OutputList>
+                                  <TableValuedFunction>
+                                    <DefinedValues>
+                                      <DefinedValue>
+                                        <ColumnReference Table="[XML Reader with XPath filter]" Column="id" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Table="[XML Reader with XPath filter]" Column="value" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Table="[XML Reader with XPath filter]" Column="lvalue" />
+                                      </DefinedValue>
+                                    </DefinedValues>
+                                    <Object Table="[XML Reader with XPath filter]" />
+                                    <ParameterList>
+                                      <ScalarOperator ScalarString="[OurLabReporting].[dbo].[MachineSet].[ImplementationDetails] as [d].[ImplementationDetails]">
+                                        <Identifier>
+                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[MachineSet]" Alias="[d]" Column="ImplementationDetails" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator ScalarString="(0)">
+                                        <Const ConstValue="(0)" />
+                                      </ScalarOperator>
+                                      <ScalarOperator ScalarString="NULL">
+                                        <Const ConstValue="NULL" />
+                                      </ScalarOperator>
+                                      <ScalarOperator ScalarString="NULL">
+                                        <Const ConstValue="NULL" />
+                                      </ScalarOperator>
+                                    </ParameterList>
+                                  </TableValuedFunction>
+                                </RelOp>
+                              </ComputeScalar>
+                            </RelOp>
+                          </Top>
+                        </RelOp>
+                      </StreamAggregate>
+                    </RelOp>
+                  </NestedLoops>
+                </RelOp>
+              </ComputeScalar>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@MachineSetId" ParameterCompiledValue="(12456404)" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

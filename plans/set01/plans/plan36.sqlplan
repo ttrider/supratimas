@@ -1,0 +1,600 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="CREATE PROCEDURE [dbo].[Uploader_GetOrCreateBuildVersionId] @branch NVARCHAR(100)&#xD;&#xA;&#x9;,@majorVer SMALLINT&#xD;&#xA;&#x9;,@minorVer SMALLINT&#xD;&#xA;&#x9;,@buildNo SMALLINT&#xD;&#xA;&#x9;,@revision SMALLINT&#xD;&#xA;&#x9;,@timestamp DATETIME&#xD;&#xA;&#x9;,@suffix NVARCHAR(5)&#xD;&#xA;&#x9;,@isPrivateBuild BIT&#xD;&#xA;&#x9;,@buildVersionId INT OUTPUT&#xD;&#xA;AS&#xD;&#xA;BEGIN&#xD;&#xA;&#x9;DECLARE @stopwatchBeginTime DATETIME2&#xD;&#xA;&#xD;&#xA;&#x9;SELECT @stopwatchBeginTime = [dbo].[fnBeginStopwatch]()&#xD;&#xA;&#xD;&#xA;" StatementId="1" StatementCompId="2" StatementType="ASSIGN WITH QUERY" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;DECLARE @fullbuildnumber NVARCHAR(256)&#xD;&#xA;&#x9;SET @fullbuildnumber = CAST(@buildNo AS VARCHAR) + '.' + CAST(@revision AS VARCHAR) + '.' + LOWER(@branch) + '.' + CONVERT(VARCHAR, @timestamp, 12) + '-' + RIGHT('0' + CAST(DATEPART(hh, @timestamp) AS VARCHAR(2)), 2) + RIGHT('0' + CAST(DATEPART(mi, @timestamp) AS VARCHAR(2)), 2) + ISNULL(@suffix, '')&#xD;&#xA;" StatementId="2" StatementCompId="3" StatementType="ASSIGN" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;MERGE INTO dbo.BuildVersion WITH (HOLDLOCK) AS TGT&#xD;&#xA;&#x9;USING (&#xD;&#xA;&#x9;&#x9;SELECT LOWER(@branch) AS Branch&#xD;&#xA;&#x9;&#x9;&#x9;,@majorVer AS [MajorVer]&#xD;&#xA;&#x9;&#x9;&#x9;,@minorVer AS [MinorVer]&#xD;&#xA;&#x9;&#x9;&#x9;,@buildNo AS [BuildNo]&#xD;&#xA;&#x9;&#x9;&#x9;,@revision AS [Revision]&#xD;&#xA;&#x9;&#x9;&#x9;,@timestamp AS [TimeStamp]&#xD;&#xA;&#x9;&#x9;&#x9;,ISNULL(@suffix, '') AS [Suffix]&#xD;&#xA;&#x9;&#x9;&#x9;,@isPrivateBuild AS IsPrivateBuild&#xD;&#xA;&#x9;&#x9;&#x9;,@fullbuildnumber AS FullBuildNumber&#xD;&#xA;&#x9;&#x9;) AS SRC&#xD;&#xA;&#x9;&#x9;ON SRC.[FullBuildNumber] = TGT.[FullBuildNumber]&#xD;&#xA;&#x9;WHEN NOT MATCHED&#xD;&#xA;&#x9;&#x9;THEN&#xD;&#xA;&#x9;&#x9;&#x9;INSERT (&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;[Branch]&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;,[MajorVer]&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;,[MinorVer]&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;,[BuildNo]&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;,[Revision]&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;,[Timestamp]&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;,[Suffix]&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;,[IsPrivateBuild]&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;,[FullBuildNumber]&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;)&#xD;&#xA;&#x9;&#x9;&#x9;VALUES (&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;SRC.[Branch]&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;,SRC.[MajorVer]&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;,SRC.[MinorVer]&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;,SRC.[BuildNo]&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;,SRC.[Revision]&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;,SRC.[Timestamp]&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;,SRC.[Suffix]&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;,SRC.[IsPrivateBuild]&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;,SRC.[FullBuildNumber]&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;);&#xD;&#xA;   " StatementId="3" StatementCompId="4" StatementType="MERGE" RetrievedFromCache="true" StatementSubTreeCost="0.0532944" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0xA4F4C5F6A01FB17C" QueryPlanHash="0x507845B240FD0EB6" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="64" CompileTime="15" CompileCPU="15" CompileMemory="1512">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="1" PhysicalOp="Clustered Index Merge" LogicalOp="Merge" EstimateRows="1" EstimateIO="0.05" EstimateCPU="5e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0532944" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <Update DMLRequestSort="0">
+                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Index="[BuildVersion_PK]" Alias="[TGT]" IndexKind="Clustered" />
+                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Index="[BuildVersion_IDX_Branch]" Alias="[TGT]" IndexKind="NonClustered" />
+                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Index="[BuildVersion_IDX_BuildNo_Revision]" Alias="[TGT]" IndexKind="NonClustered" />
+                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Index="[BuildVersion_IDX_BuildString]" Alias="[TGT]" IndexKind="NonClustered" />
+                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Index="[BuildVersion_IDX_FullBuildNumber]" Alias="[TGT]" IndexKind="NonClustered" />
+                <SetPredicate>
+                  <ScalarOperator ScalarString="[OurLabReporting].[dbo].[BuildVersion].[Suffix] as [TGT].[Suffix] = [Expr1001],[OurLabReporting].[dbo].[BuildVersion].[IsPrivateBuild] as [TGT].[IsPrivateBuild] = RaiseIfNullUpdate([@isPrivateBuild]),[OurLabReporting].[dbo].[BuildVersion].[Branch] as [TGT].[Branch] = RaiseIfNullUpdate([Expr1000]),[OurLabReporting].[dbo].[BuildVersion].[Timestamp] as [TGT].[Timestamp] = RaiseIfNullUpdate([@timestamp]),[OurLabReporting].[dbo].[BuildVersion].[BuildNo] as [TGT].[BuildNo] = RaiseIfNullUpdate([@buildNo]),[OurLabReporting].[dbo].[BuildVersion].[Revision] as [TGT].[Revision] = RaiseIfNullUpdate([@revision]),[OurLabReporting].[dbo].[BuildVersion].[MajorVer] as [TGT].[MajorVer] = RaiseIfNullUpdate([@majorVer]),[OurLabReporting].[dbo].[BuildVersion].[FullBuildNumber] as [TGT].[FullBuildNumber] = [@fullbuildnumber],[OurLabReporting].[dbo].[BuildVersion].[MinorVer] as [TGT].[MinorVer] = RaiseIfNullUpdate([@minorVer]),[OurLabReporting].[dbo].[BuildVersion].[Id] as [TGT].[Id] = RaiseIfNullUpdate([Expr1007]),[OurLabReporting].[dbo].[BuildVersion].[BuildString] as [TGT].[BuildString] = [Expr1051]">
+                    <ScalarExpressionList>
+                      <ScalarOperator>
+                        <MultipleAssign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Alias="[TGT]" Column="Suffix" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1001" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Alias="[TGT]" Column="IsPrivateBuild" />
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="RaiseIfNullUpdate">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="@isPrivateBuild" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Alias="[TGT]" Column="Branch" />
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="RaiseIfNullUpdate">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="Expr1000" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Alias="[TGT]" Column="Timestamp" />
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="RaiseIfNullUpdate">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="@timestamp" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Alias="[TGT]" Column="BuildNo" />
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="RaiseIfNullUpdate">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="@buildNo" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Alias="[TGT]" Column="Revision" />
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="RaiseIfNullUpdate">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="@revision" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Alias="[TGT]" Column="MajorVer" />
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="RaiseIfNullUpdate">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="@majorVer" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Alias="[TGT]" Column="FullBuildNumber" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="@fullbuildnumber" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Alias="[TGT]" Column="MinorVer" />
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="RaiseIfNullUpdate">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="@minorVer" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Alias="[TGT]" Column="Id" />
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="RaiseIfNullUpdate">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="Expr1007" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </Assign>
+                          <Assign>
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Alias="[TGT]" Column="BuildString" ComputedColumn="1" />
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1051" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                        </MultipleAssign>
+                      </ScalarOperator>
+                    </ScalarExpressionList>
+                  </ScalarOperator>
+                </SetPredicate>
+                <ActionColumn>
+                  <ColumnReference Column="Action1006" />
+                </ActionColumn>
+                <RelOp NodeId="2" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="4132" EstimatedTotalSubtreeCost="0.00328942" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Expr1000" />
+                    <ColumnReference Column="Expr1001" />
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Alias="[TGT]" Column="Id" />
+                    <ColumnReference Column="Action1006" />
+                    <ColumnReference Column="Expr1007" />
+                    <ColumnReference Column="Expr1051" />
+                  </OutputList>
+                  <ComputeScalar>
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1051" />
+                        <ScalarOperator ScalarString="[Expr1000]+N'.'+CONVERT_IMPLICIT(nvarchar(30),CONVERT(varchar(30),[@buildNo],0),0)+N'.'+CONVERT_IMPLICIT(nvarchar(30),CONVERT(varchar(30),[@revision],0),0)+N'.'+CONVERT_IMPLICIT(nvarchar(8),CONVERT(varchar(8),[@timestamp],112),0)+N'-'+CONVERT_IMPLICIT(nvarchar(4000),replace(CONVERT(varchar(5),[@timestamp],108),':',''),0)">
+                          <Arithmetic Operation="ADD">
+                            <ScalarOperator>
+                              <Arithmetic Operation="ADD">
+                                <ScalarOperator>
+                                  <Arithmetic Operation="ADD">
+                                    <ScalarOperator>
+                                      <Arithmetic Operation="ADD">
+                                        <ScalarOperator>
+                                          <Arithmetic Operation="ADD">
+                                            <ScalarOperator>
+                                              <Arithmetic Operation="ADD">
+                                                <ScalarOperator>
+                                                  <Arithmetic Operation="ADD">
+                                                    <ScalarOperator>
+                                                      <Arithmetic Operation="ADD">
+                                                        <ScalarOperator>
+                                                          <Identifier>
+                                                            <ColumnReference Column="Expr1000" />
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                        <ScalarOperator>
+                                                          <Const ConstValue="N'.'" />
+                                                        </ScalarOperator>
+                                                      </Arithmetic>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Convert DataType="nvarchar" Length="60" Style="0" Implicit="1">
+                                                        <ScalarOperator>
+                                                          <Convert DataType="varchar" Length="30" Style="0" Implicit="0">
+                                                            <ScalarOperator>
+                                                              <Identifier>
+                                                                <ColumnReference Column="@buildNo" />
+                                                              </Identifier>
+                                                            </ScalarOperator>
+                                                          </Convert>
+                                                        </ScalarOperator>
+                                                      </Convert>
+                                                    </ScalarOperator>
+                                                  </Arithmetic>
+                                                </ScalarOperator>
+                                                <ScalarOperator>
+                                                  <Const ConstValue="N'.'" />
+                                                </ScalarOperator>
+                                              </Arithmetic>
+                                            </ScalarOperator>
+                                            <ScalarOperator>
+                                              <Convert DataType="nvarchar" Length="60" Style="0" Implicit="1">
+                                                <ScalarOperator>
+                                                  <Convert DataType="varchar" Length="30" Style="0" Implicit="0">
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Column="@revision" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                  </Convert>
+                                                </ScalarOperator>
+                                              </Convert>
+                                            </ScalarOperator>
+                                          </Arithmetic>
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="N'.'" />
+                                        </ScalarOperator>
+                                      </Arithmetic>
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Convert DataType="nvarchar" Length="16" Style="0" Implicit="1">
+                                        <ScalarOperator>
+                                          <Convert DataType="varchar" Length="8" Style="112" Implicit="0">
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Column="@timestamp" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </Convert>
+                                        </ScalarOperator>
+                                      </Convert>
+                                    </ScalarOperator>
+                                  </Arithmetic>
+                                </ScalarOperator>
+                                <ScalarOperator>
+                                  <Const ConstValue="N'-'" />
+                                </ScalarOperator>
+                              </Arithmetic>
+                            </ScalarOperator>
+                            <ScalarOperator>
+                              <Convert DataType="nvarchar" Length="8000" Style="0" Implicit="1">
+                                <ScalarOperator>
+                                  <Intrinsic FunctionName="replace">
+                                    <ScalarOperator>
+                                      <Convert DataType="varchar" Length="5" Style="108" Implicit="0">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="@timestamp" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Convert>
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Const ConstValue="':'" />
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Const ConstValue="''" />
+                                    </ScalarOperator>
+                                  </Intrinsic>
+                                </ScalarOperator>
+                              </Convert>
+                            </ScalarOperator>
+                          </Arithmetic>
+                        </ScalarOperator>
+                      </DefinedValue>
+                    </DefinedValues>
+                    <RelOp NodeId="3" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="130" EstimatedTotalSubtreeCost="0.00328932" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Column="Expr1000" />
+                        <ColumnReference Column="Expr1001" />
+                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Alias="[TGT]" Column="Id" />
+                        <ColumnReference Column="Action1006" />
+                        <ColumnReference Column="Expr1007" />
+                      </OutputList>
+                      <ComputeScalar ComputeSequence="1">
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1007" />
+                            <ScalarOperator ScalarString="getconditionalidentity((949578421),(6),NULL,[Action1006]=(4))">
+                              <Intrinsic FunctionName="getconditionalidentity">
+                                <ScalarOperator>
+                                  <Const ConstValue="(949578421)" />
+                                </ScalarOperator>
+                                <ScalarOperator>
+                                  <Const ConstValue="(6)" />
+                                </ScalarOperator>
+                                <ScalarOperator>
+                                  <Const ConstValue="NULL" />
+                                </ScalarOperator>
+                                <ScalarOperator>
+                                  <Compare CompareOp="EQ">
+                                    <ScalarOperator>
+                                      <Identifier>
+                                        <ColumnReference Column="Action1006" />
+                                      </Identifier>
+                                    </ScalarOperator>
+                                    <ScalarOperator>
+                                      <Const ConstValue="(4)" />
+                                    </ScalarOperator>
+                                  </Compare>
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </DefinedValue>
+                        </DefinedValues>
+                        <RelOp NodeId="4" PhysicalOp="Filter" LogicalOp="Filter" EstimateRows="1" EstimateIO="0" EstimateCPU="4.8e-007" AvgRowSize="126" EstimatedTotalSubtreeCost="0.00328922" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Column="Expr1000" />
+                            <ColumnReference Column="Expr1001" />
+                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Alias="[TGT]" Column="Id" />
+                            <ColumnReference Column="Action1006" />
+                          </OutputList>
+                          <Filter StartupExpression="0">
+                            <RelOp NodeId="5" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="126" EstimatedTotalSubtreeCost="0.00328874" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Column="Expr1000" />
+                                <ColumnReference Column="Expr1001" />
+                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Alias="[TGT]" Column="Id" />
+                                <ColumnReference Column="Action1006" />
+                              </OutputList>
+                              <ComputeScalar ComputeSequence="1">
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Column="Action1006" />
+                                    <ScalarOperator ScalarString="ForceOrder(CASE WHEN [TrgPrb1004] IS NOT NULL THEN NULL ELSE (4) END)">
+                                      <Intrinsic FunctionName="ForceOrder">
+                                        <ScalarOperator>
+                                          <IF>
+                                            <Condition>
+                                              <ScalarOperator>
+                                                <Compare CompareOp="IS NOT">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="TrgPrb1004" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                  <ScalarOperator>
+                                                    <Const ConstValue="NULL" />
+                                                  </ScalarOperator>
+                                                </Compare>
+                                              </ScalarOperator>
+                                            </Condition>
+                                            <Then>
+                                              <ScalarOperator>
+                                                <Const ConstValue="NULL" />
+                                              </ScalarOperator>
+                                            </Then>
+                                            <Else>
+                                              <ScalarOperator>
+                                                <Const ConstValue="(4)" />
+                                              </ScalarOperator>
+                                            </Else>
+                                          </IF>
+                                        </ScalarOperator>
+                                      </Intrinsic>
+                                    </ScalarOperator>
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <RelOp NodeId="6" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="126" EstimatedTotalSubtreeCost="0.00328864" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Column="Expr1000" />
+                                    <ColumnReference Column="Expr1001" />
+                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Alias="[TGT]" Column="Id" />
+                                    <ColumnReference Column="TrgPrb1004" />
+                                  </OutputList>
+                                  <ComputeScalar>
+                                    <DefinedValues>
+                                      <DefinedValue>
+                                        <ColumnReference Column="Expr1000" />
+                                        <ScalarOperator ScalarString="lower([@branch])">
+                                          <Intrinsic FunctionName="lower">
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Column="@branch" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </Intrinsic>
+                                        </ScalarOperator>
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Column="Expr1001" />
+                                        <ScalarOperator ScalarString="isnull([@suffix],N'')">
+                                          <Intrinsic FunctionName="isnull">
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Column="@suffix" />
+                                              </Identifier>
+                                            </ScalarOperator>
+                                            <ScalarOperator>
+                                              <Const ConstValue="N''" />
+                                            </ScalarOperator>
+                                          </Intrinsic>
+                                        </ScalarOperator>
+                                      </DefinedValue>
+                                    </DefinedValues>
+                                    <RelOp NodeId="7" PhysicalOp="Nested Loops" LogicalOp="Left Outer Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="15" EstimatedTotalSubtreeCost="0.00328854" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList>
+                                        <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Alias="[TGT]" Column="Id" />
+                                        <ColumnReference Column="TrgPrb1004" />
+                                      </OutputList>
+                                      <NestedLoops Optimized="0">
+                                        <RelOp NodeId="8" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                          <OutputList />
+                                          <ConstantScan />
+                                        </RelOp>
+                                        <RelOp NodeId="9" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0032832" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                          <OutputList>
+                                            <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Alias="[TGT]" Column="Id" />
+                                            <ColumnReference Column="TrgPrb1004" />
+                                          </OutputList>
+                                          <ComputeScalar>
+                                            <DefinedValues>
+                                              <DefinedValue>
+                                                <ColumnReference Column="TrgPrb1004" />
+                                                <ScalarOperator ScalarString="(1)">
+                                                  <Const ConstValue="(1)" />
+                                                </ScalarOperator>
+                                              </DefinedValue>
+                                            </DefinedValues>
+                                            <RelOp NodeId="10" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="78971" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                              <OutputList>
+                                                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Alias="[TGT]" Column="Id" />
+                                              </OutputList>
+                                              <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                                <DefinedValues>
+                                                  <DefinedValue>
+                                                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Alias="[TGT]" Column="Id" />
+                                                  </DefinedValue>
+                                                </DefinedValues>
+                                                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Index="[BuildVersion_IDX_FullBuildNumber]" Alias="[TGT]" IndexKind="NonClustered" />
+                                                <SeekPredicates>
+                                                  <SeekPredicateNew>
+                                                    <SeekKeys>
+                                                      <Prefix ScanType="EQ">
+                                                        <RangeColumns>
+                                                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Alias="[TGT]" Column="FullBuildNumber" />
+                                                        </RangeColumns>
+                                                        <RangeExpressions>
+                                                          <ScalarOperator ScalarString="[@fullbuildnumber]">
+                                                            <Identifier>
+                                                              <ColumnReference Column="@fullbuildnumber" />
+                                                            </Identifier>
+                                                          </ScalarOperator>
+                                                        </RangeExpressions>
+                                                      </Prefix>
+                                                    </SeekKeys>
+                                                  </SeekPredicateNew>
+                                                </SeekPredicates>
+                                              </IndexScan>
+                                            </RelOp>
+                                          </ComputeScalar>
+                                        </RelOp>
+                                      </NestedLoops>
+                                    </RelOp>
+                                  </ComputeScalar>
+                                </RelOp>
+                              </ComputeScalar>
+                            </RelOp>
+                            <Predicate>
+                              <ScalarOperator ScalarString="[Action1006] IS NOT NULL">
+                                <Compare CompareOp="IS NOT">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Action1006" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Const ConstValue="NULL" />
+                                  </ScalarOperator>
+                                </Compare>
+                              </ScalarOperator>
+                            </Predicate>
+                          </Filter>
+                        </RelOp>
+                      </ComputeScalar>
+                    </RelOp>
+                  </ComputeScalar>
+                </RelOp>
+              </Update>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@isPrivateBuild" ParameterCompiledValue="(0)" />
+              <ColumnReference Column="@suffix" ParameterCompiledValue="N''" />
+              <ColumnReference Column="@timestamp" ParameterCompiledValue="'2015-01-29 01:50:00.000'" />
+              <ColumnReference Column="@revision" ParameterCompiledValue="(12490)" />
+              <ColumnReference Column="@buildNo" ParameterCompiledValue="(10007)" />
+              <ColumnReference Column="@minorVer" ParameterCompiledValue="(1)" />
+              <ColumnReference Column="@majorVer" ParameterCompiledValue="(1)" />
+              <ColumnReference Column="@branch" ParameterCompiledValue="N'FBL_SPEECH_DEV01'" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText=" SELECT @buildVersionId = BV.Id&#xD;&#xA;    FROM dbo.BuildVersion AS BV WITH (NOLOCK)&#xD;&#xA;    WHERE BV.FullBuildNumber = @fullbuildnumber&#xD;&#xA;&#xD;&#xA;" StatementId="4" StatementCompId="5" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.0032831" StatementEstRows="1" StatementOptmLevel="TRIVIAL" QueryHash="0xD5D7729C463AF18D" QueryPlanHash="0x61D1C77D0E1B7B20">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="1" CompileCPU="1" CompileMemory="288">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="11" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="78971" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Alias="[BV]" Column="Id" />
+              </OutputList>
+              <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Alias="[BV]" Column="Id" />
+                  </DefinedValue>
+                </DefinedValues>
+                <Object Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Index="[BuildVersion_IDX_FullBuildNumber]" Alias="[BV]" IndexKind="NonClustered" />
+                <SeekPredicates>
+                  <SeekPredicateNew>
+                    <SeekKeys>
+                      <Prefix ScanType="EQ">
+                        <RangeColumns>
+                          <ColumnReference Database="[OurLabReporting]" Schema="[dbo]" Table="[BuildVersion]" Alias="[BV]" Column="FullBuildNumber" />
+                        </RangeColumns>
+                        <RangeExpressions>
+                          <ScalarOperator ScalarString="[@fullbuildnumber]">
+                            <Identifier>
+                              <ColumnReference Column="@fullbuildnumber" />
+                            </Identifier>
+                          </ScalarOperator>
+                        </RangeExpressions>
+                      </Prefix>
+                    </SeekKeys>
+                  </SeekPredicateNew>
+                </SeekPredicates>
+              </IndexScan>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@buildVersionId" ParameterCompiledValue="NULL" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText="&#x9;DECLARE @objectName VARCHAR(128) = (&#xD;&#xA;&#x9;&#x9;&#x9;SELECT OBJECT_NAME(@@PROCID)&#xD;&#xA;&#x9;&#x9;&#x9;)&#xD;&#xA;&#xD;&#xA;" StatementId="5" StatementCompId="6" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="1.257e-006" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x830C952D7490168E" QueryPlanHash="0x3B1EAEC0618BFE3F" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="8" CompileTime="0" CompileCPU="0" CompileMemory="208">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="75" EstimatedTotalSubtreeCost="1.257e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Column="Expr1001" />
+              </OutputList>
+              <ComputeScalar>
+                <DefinedValues>
+                  <DefinedValue>
+                    <ColumnReference Column="Expr1001" />
+                    <ScalarOperator ScalarString="CONVERT_IMPLICIT(varchar(128),[Expr1000],0)">
+                      <Convert DataType="varchar" Length="128" Style="0" Implicit="1">
+                        <ScalarOperator>
+                          <Identifier>
+                            <ColumnReference Column="Expr1000" />
+                          </Identifier>
+                        </ScalarOperator>
+                      </Convert>
+                    </ScalarOperator>
+                  </DefinedValue>
+                </DefinedValues>
+                <RelOp NodeId="1" PhysicalOp="Constant Scan" LogicalOp="Constant Scan" EstimateRows="1" EstimateIO="0" EstimateCPU="1.157e-006" AvgRowSize="139" EstimatedTotalSubtreeCost="1.157e-006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Expr1000" />
+                  </OutputList>
+                  <ConstantScan>
+                    <Values>
+                      <Row>
+                        <ScalarOperator ScalarString="object_name(@@procid)">
+                          <Intrinsic FunctionName="object_name">
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="@@procid" />
+                            </ScalarOperator>
+                            <ScalarOperator>
+                              <Const ConstValue="" />
+                            </ScalarOperator>
+                          </Intrinsic>
+                        </ScalarOperator>
+                      </Row>
+                    </Values>
+                  </ConstantScan>
+                </RelOp>
+              </ComputeScalar>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText="&#x9;EXEC [dbo].[spEndStopwatch] @objectName&#xD;&#xA;&#x9;&#x9;,@stopwatchBeginTime&#xD;" StatementId="6" StatementCompId="7" StatementType="EXECUTE PROC" RetrievedFromCache="true" />
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>

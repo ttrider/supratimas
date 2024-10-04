@@ -1,0 +1,481 @@
+<script id="plan-view-template" type="text/html">
+    <section class="plan-view" data-bind="initLayout: plan, with: plan.nodeView, as: 'nodeView'">
+        <section class="plan-view-action-workarea" data-bind="with: nodeView">
+            <section class="actionbar">
+                <section class="actionbar-group" style="flex-grow:1">
+                    <div class="button" data-bind="clickToScrollToPanel: 'plan'">PLAN</div>
+                    <!-- ko if: layoutManager.storagePanelLeft  -->
+                    <div>●</div>
+                    <div class="button" data-bind="clickToScrollToPanel: 'storage'">STORAGE</div>
+                    <!-- /ko -->
+                    <!-- ko if: layoutManager.queryPanelLeft -->
+                    <div>●</div>
+                    <div class="button" data-bind="clickToScrollToPanel: 'query'">STATEMENT</div>
+                    <!-- /ko -->
+                    <!-- ko if: layoutManager.indexPanelLeft -->
+                    <div>●</div>
+                    <div class="button" data-bind="clickToScrollToPanel: 'index'">INDEX RECOMENDATION</div>
+                    <!-- /ko -->
+                </section>
+                <!-- ko if: isAddToWorkspace -->
+                <section class="actionbar-group" style="justify-content: flex-center; padding-left:1em; padding-right:1em;">
+                    <div class="button" data-bind="clickAddToWorkspace: ''">ADD TO WORKSPACE</div>
+                </section>
+                <!-- /ko -->
+                <section class="actionbar-group" style="flex-grow:1; justify-content: flex-end;">
+                    <div style="font-size:0.7em;">VIEW NODES:</div>
+                    <!-- ko foreach: viewModelSelector.items -->
+                    <div data-bind="if: $index() > 0">●</div>
+                    <div class="button" data-bind="text: title, css: { 'selected': selected }, click:$parent.viewModelSelector.select, attr:{'title':title}"></div>
+                    <!-- /ko -->
+                </section>
+                <section class="actionbar-group bl">
+                    <div style="font-size:0.7em;">ZOOM:</div>
+                    <div class="button" data-bind="clickToZoom: 'zoomOut', template: 'zoomout-button'"></div>
+                    <div class="button" data-bind="clickToZoom: 'reset'" style="min-width: 2.5em;
+                    text-align: center;"></div>
+                    <div class="button" data-bind="clickToZoom: 'zoomIn', template: 'zoomin-button'"></div>
+                    <div class="button" style="margin-left:0.3em;" data-bind="clickToZoom: 'fit'">fit</div>
+                </section>
+
+                <section class="actionbar-group bl">
+                    <div class="button" data-bind="text: infobarVisible()?'hide &gt;':'&lt; search', clickBubble: false, click:function(){infobarVisible(!infobarVisible());}"></div>
+                </section>
+            </section>
+            <section class="plan-view-host" data-bind="viewLayout: viewModel, with: viewModel">
+
+                <svg class="join-drawings" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <marker id="target-arrow" viewBox="0 0 10 10" refX="4" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                            <path d="M9,5 l-8,-4 l3,4 l-3,4 l8,-4 z" class="join-connector-marker" />
+                        </marker>
+
+                        <marker id="source-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="5" orient="auto">
+                            <path d="M9,5 l-8,-4 l3,4 l-3,4 l8,-4 z" class="join-connector-marker" />
+                        </marker>
+
+                        <filter id="dropShadow" x="0" y="0" width="200%" height="200%">
+                            <feOffset result="offOut" in="SourceGraphic" dx="20" dy="20" />
+                            <feColorMatrix result="matrixOut" in="offOut" type="matrix" values="0.2 0 0 0 0 0 0.2 0 0 0 0 0 0.2 0 0 0 0 0 1 0" />
+                            <feGaussianBlur result="blurOut" in="matrixOut" stdDeviation="10" />
+                            <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+                        </filter>
+                    </defs>
+
+                    <!-- ko foreach: nodes -->
+                    <!-- ko foreach: children -->
+
+                    <g class="join-connector-group" data-bind="attr: { id: parentNodeId+'_'+nodeId }">
+                        <polyline points="" class="join-connector-path" marker-end="url(#target-arrow)" data-bind="clickToSelectNodes: {leftNode: parentNodeId, rightNode: nodeId },attr: { 'marker-end': layoutManager.scale <= 0.7 ? 'none' : 'url(#target-arrow)' }, style: {'stroke-width': layoutManager.scale <= 0.5 ? layoutManager.scale*2+'px' : '2px'}"
+                        />
+
+                        <!-- ko if: (column - $parent.column) > 1 -->
+                        <g class="join-connector-button join-connector-right" data-bind="clickToSelectNode: {nodeId: nodeId, left: -120, top: -10, anchor: 'element'}">
+                            <circle cx="10" cy="10" r="9" />
+                            <path d="M7,10 l-1,-4 l8,4 l0,-4 l1,0 l0,8 l-1,0 l0,-4 l-8,4 l1,-4" />
+                        </g>
+                        <g class="join-connector-button join-connector-left" data-bind="clickToSelectNode: {nodeId: parentNodeId, left: 25, top: -10, anchor: 'element'}">
+                            <circle cx="10" cy="10" r="9" />
+                            <path transform="rotate(180,10,10)" d="M7,10 l-1,-4 l8,4 l0,-4 l1,0 l0,8 l-1,0 l0,-4 l-8,4 l1,-4" />
+                        </g>
+                        <!-- /ko -->
+
+                        <!-- ko if: (row - $parent.row) > 1 -->
+                        <g class="join-connector-button join-connector-top" data-bind="clickToSelectNode: {nodeId: parentNodeId, left: 1, top: 25, anchor: 'element'}">
+                            <circle cx="10" cy="10" r="9" />
+                            <path transform="rotate(270,10,10)" d="M7,10 l-1,-4 l8,4 l0,-4 l1,0 l0,8 l-1,0 l0,-4 l-8,4 l1,-4" />
+                        </g>
+                        <g class="join-connector-button join-connector-bottom" data-bind="clickToSelectNode: {nodeId: nodeId, left: 1, top: -125, anchor: 'element'}">
+                            <circle cx="10" cy="10" r="9" />
+                            <path transform="rotate(90,10,10)" d="M7,10 l-1,-4 l8,4 l0,-4 l1,0 l0,8 l-1,0 l0,-4 l-8,4 l1,-4" />
+                        </g>
+                        <!-- /ko -->
+                    </g>
+
+                    <!-- /ko -->
+                    <!-- /ko -->
+
+                    <!-- ko foreach: storage.nodes -->
+                    <g class="st-connector" data-bind="clickToSelectNodes: {leftNode: 'Node'+nodeId, storageNode: 'storageLine_'+nodeId }, attr: { id: 'storageLine_'+nodeId, nodeId: 'Node'+nodeId, storageNodeId: 'storage_'+nodeId }, visible:visible">
+                        <path d="" class="join-connector-storage-path" marker-end="url(#target-arrow)" />
+                        <g class="join-connector-database-icon" data-bind="clickToSelectStorageNode: 'storage_'+nodeId" transform="translate(-100,-100)">
+                            <g transform="scale(0.6)">
+                                <path class="pi-normal-stroke pi-medium-fill" d="M 0,20 l 0,-20 c 2 4, 20 4, 22 0 l 0,20 c -2,4 -20 4 -22,0" />
+                                <path class="pi-normal-stroke pi-light-fill" d="M 0,0 c 2 -4, 20 -4, 22 0 c -2,4 -20 4 -22,0" />
+                            </g>
+                        </g>
+                    </g>
+                    <!-- /ko -->
+                </svg>
+
+
+                <section class="smt-list">
+                    <!-- ko if: plan.statementSelector.length() > 1 -->
+                    <section>
+                        <div class="checkbox" data-bind="click: toggleAll">
+                            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                <g>
+                                    <title>Toggle selection</title>
+                                    <rect x="10" y="10" width="80" height="80" rx="10" ry="10" fill="transparent" stroke-width="7" class="pi-normal-stroke" />
+                                    <rect x="30" y="30" width="40" height="40" rx="10" ry="10" stroke-width="7" class="pi-normal-stroke pi-medium-fill" />
+                                </g>
+                            </svg>
+                        </div>
+                        <div data-bind="text: statementNodes.length"></div>
+                        <div>statements</div>
+                        <hr class="header-line" />
+                    </section>
+                    <!-- /ko -->
+
+                    <!-- ko foreach: batches -->
+
+                    <!-- ko if: $data -->
+
+                    <!-- ko template: {name: 'statement-node', foreach: $data} -->
+                    <!-- /ko -->
+                    <section>
+                        <div>GO</div>
+                        <hr class="header-line" />
+                    </section>
+                    <!-- /ko -->
+                    <!-- /ko -->
+
+                </section>
+                <section>
+
+                    <section class="join-manual">
+
+                        <section class="join-nodes" data-bind="template: {name: 'plan-node-info-template', foreach: planNodes}, style: {'font-size': layoutManager.scale() + 'em'}">
+                        </section>
+
+                        <section class="join-storage" data-bind="template:{name: 'plan-storage-info-template', data: storage}">
+                        </section>
+
+
+                        <!-- ko if: plan.queryText -->
+                        <section class="join-querytext">
+                            <pre class="query-text" data-bind="text: plan.queryText"></pre>
+                        </section>
+                        <!-- /ko -->
+
+                        <!-- ko if: plan.indexText -->
+                        <section class="join-indextext">
+                            <pre class="query-text" data-bind="text: plan.indexText"></pre>
+                        </section>
+                        <!-- /ko -->
+                    </section>
+
+                    <!-- ko with: layoutManager.previewNode -->
+                    <section class="node-preview" data-bind="visible: visible, style: {left: left, top: top }">
+
+                        <div class="" data-bind="css:{'join-node-costly':isCostly}">
+
+                            <div class="marked join-node-cost" style="text-align: center;" data-bind="text: formattedCost">
+                            </div>
+                            <div class="join-node-info">
+                                <div class="join-node-icon" style="align-self: center;" data-bind="template:iconTemplate"></div>
+                            </div>
+                            <!-- ko with: nameSet -->
+                            <div class="join-node-nameset" data-bind="foreach: items">
+                                <div class="join-node-name" data-bind="text:value, attr:{'title':originalValue}"></div>
+                            </div>
+                            <!-- /ko -->
+                        </div>
+                    </section>
+                    <!-- /ko -->
+
+                </section>
+
+            </section>
+            <svg class="zoom-map" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+                <g>
+                    <rect class="zoom-view" x="0" y="0" width="100" height="100" />
+                    <rect class="zoom-canvas" x="10" y="10" width="60" height="60" />
+                </g>
+            </svg>
+        </section>
+
+
+        <!-- ko with: nodeView -->
+
+        <section class=plan-navigator data-bind="visible: infobarVisible">
+
+            <div class="topset-box" data-bind="foreach: infoBarSelector.items">
+                <!-- ko if: data().length > 0 -->
+                <div class="topset-header" data-bind="click: function(data,e){$parent.infoBarSelector.select(data,e);}">
+                    <span data-bind="text: title"></span>
+                    <span>[</span>
+                    <span data-bind="text: data().length"></span>
+                    <span>]</span>
+                </div>
+                <!-- ko if: selected -->
+                <div class="topset-data">
+                    <ol class="" data-bind="template:{name: template, foreach: data}">
+                    </ol>
+                </div>
+                <!-- /ko -->
+                <!-- /ko -->
+            </div>
+        </section>
+        <!-- /ko -->
+
+    </section>
+</script>
+
+<script id="statement-node" type="text/html">
+    <div class="smt-node" data-bind="attr: { id: nodeId }, clickToSelectItem: 'alwaysSelect'">
+        <div class="flexrow clickable frame" data-bind="css: {'frame-sel-back': selected(), 'frame-back': !selected() }">
+            <!-- <div class="icon" data-bind="template:iconTemplate"></div> -->
+            <!-- ko if: plan.statementSelector.length() > 1 -->
+            <div>
+                <div class="checkbox" data-bind="clickToSelectItem: 'toggle'">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <g>
+                            <title>Toggle selection</title>
+                            <rect x="10" y="10" width="80" height="80" rx="10" ry="10" fill="transparent" stroke-width="7" class="pi-normal-stroke" />
+                            <rect x="30" y="30" width="40" height="40" rx="10" ry="10" stroke-width="7" class="pi-normal-stroke pi-medium-fill" data-bind="visible: selected"
+                            />
+                        </g>
+                    </svg>
+                </div>
+                <div class="cost" data-bind="text: formattedCost, costColor: formattedCost">
+                </div>
+            </div>
+            <!-- /ko -->
+            <div class="flexcolumn-grow">
+                <div class="join-smt-node-info">
+                    <div class="join-node-icon" data-bind="template:iconTemplate"></div>
+
+                    <!-- ko if: statementCommandName -->
+                    <div class="join-smt-cmd" data-bind="template:statementCommandName, statementCommandClick:0"></div>
+                    <!-- /ko -->
+                </div>
+
+                <div class="name-set" data-bind="foreach: nameSet.items">
+                    <div class="query-box" style="min-height:1.1em;">
+                        <div data-bind="text: originalValue, attr:{title:originalValue}"></div>
+                    </div>
+                </div>
+                <!-- ko template: {name:'metrics-template', data:metrics} -->
+                <!-- /ko -->
+
+                <!-- ko template: {name:'warnings-template', data:warnings} -->
+                <!-- /ko -->
+            </div>
+        </div>
+        <!-- ko if: attachedNodes.length > 0 -->
+        <div class="join-node-small-icons" data-bind="foreach: attachedNodes">
+            <div class="join-node-small-icon" data-bind="template:iconTemplate"></div>
+        </div>
+        <!-- /ko -->
+        <!-- ko if: children.length > 0 -->
+        <div class="join-node-incoming" data-bind="foreach: children">
+            <div class="join-node-incoming-item" data-bind="clickToSelectNode: {nodeId: nodeId, left: 10, top: 10}">
+                <span data-bind="text: formattedSubtreeCost"></span>
+                <span>❯</span>
+            </div>
+        </div>
+        <!-- /ko -->
+    </div>
+</script>
+
+
+
+<script id="plan-node-info-template" type="text/html">
+    <div class="join-node join-manual-node" data-bind="attr: { id: nodeId }">
+
+        <!-- ko if: showOutputColumns-->
+        <div class="node-output-panel" data-bind="foreach:columnsInfo">
+            <div class="node-inputoutput-header" data-bind="text:title"></div>
+            <!-- ko foreach: columns-->
+            <div class="node-inputoutput-item" data-bind="text: $data"></div>
+            <!-- /ko -->
+        </div>
+        <!-- /ko -->
+        <div class="join-node-main join-node-border" data-bind="css:{'join-node-costly':isCostly}, style:{ background: showOutputColumns()?'#fff':'none'}">
+            <div class="join-node-infoset" data-bind="css:{'join-node-infoset-centered':statistics.length===0}">
+                <!-- ko if: selectable -->
+                <div data-bind="text: selected()?'sel':'notsel',clickBubble: false, click: function(data, event){ data.toggle(); }"></div>
+                <!-- /ko -->
+                <div class="marked join-node-cost" data-bind="clickToSelectNode: {nodeId: parentNodeId, left: -100, top: -10, anchor: 'element'}, style:{'font-size': layoutManager.iconScale}">
+                    <span>❮</span>
+                    <span data-bind="text: formattedCost"></span>
+                </div>
+            </div>
+            <div class="join-node-infoset" data-bind="css:{'join-node-infoset-centered':statistics.length===0}">
+                <!-- cost + icon -->
+                <div class="join-node-info">
+                    <div class="join-node-icon" data-bind="clickToSelectNode: {nodeId: nodeId, scale:1},template:iconTemplate, style:{'font-size': layoutManager.iconScale}"></div>
+                </div>
+                <!-- ko if: statistics.length > 0 -->
+                <!-- info names -->
+                <div class="join-node-info join-node-stat-name" data-bind="foreach: statistics">
+                    <div data-bind="text:name, css: {'join-node-stat-warning': warning}"></div>
+                </div>
+                <!-- info values -->
+                <div class="join-node-info join-node-stat-value" data-bind="foreach: statistics">
+                    <div data-bind="text: value, css: {'join-node-stat-warning': warning}"></div>
+                </div>
+                <!-- /ko -->
+            </div>
+
+            <!-- ko with: nameSet -->
+            <div class="join-node-nameset" data-bind="foreach: items, click:toggle, cancelBubble:true, css:{'clickable':collapsable}">
+                <div class="join-node-name" data-bind="text:value, attr:{'title':originalValue}"></div>
+            </div>
+            <!-- /ko -->
+            <div class="join-node-flags" data-bind="text:flags"></div>
+
+            <!-- ko template: {name:'metrics-template', data:metrics} -->
+            <!-- /ko -->
+
+            <!-- ko template: {name:'warnings-template', data:warnings} -->
+            <!-- /ko -->
+
+            <svg data-bind="click: toggleInputColumns, style:{'font-size': layoutManager.iconScale}, visible: hasInputPanelData" class="node-inputoutput-button" style="top:-0.8em; right:-0.8em;" viewBox="0 0 20 20" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+                <g>
+                    <circle cx="10" cy="10" r="9" />
+                    <path d="M4,10 l5,5 l0,-3 l7,0 l0,-4 l-7,0 l0,-3 z" />
+                </g>
+            </svg>
+
+        </div>
+        <!-- ko if: showInputColumns-->
+        <div class="node-input-panel" data-bind="foreach: inputPanelData">
+            <div class="node-inputoutput-header" data-bind="text: title"></div>
+            <!-- ko if: hasColumns -->
+            <div class="node-inputoutput-item" style="fornt-weight:bold; font-size:0.9em;" data-bind="text: columnsTitle, visible: !!columnsTitle"></div>
+            <!-- ko foreach: columns -->
+            <div class="node-inputoutput-item" data-bind="text: displayName"></div>
+            <!-- /ko -->
+            <!-- /ko -->
+            <!-- ko if: hasExpressions -->
+            <div class="node-inputoutput-item" style="fornt-weight:bold; font-size:0.9em;" data-bind="text: expressionTitle, visible: !!expressionTitle"></div>
+            <!-- ko foreach: expressions -->
+            <div class="node-inputoutput-item" data-bind="text: $data"></div>
+            <!-- /ko -->
+            <!-- /ko -->
+        </div>
+        <!-- /ko -->
+
+        <svg data-bind="click: toggleOutputColumns, style:{'font-size': layoutManager.iconScale}, visible: hasOutputPanelData" class="node-inputoutput-button" style="top:-0.8em; left:-0.8em;" viewBox="0 0 20 20" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+            <g>
+                <circle cx="10" cy="10" r="9" />
+                <path d="M4,10 l5,5 l0,-3 l7,0 l0,-4 l-7,0 l0,-3 z" />
+            </g>
+        </svg>
+
+        <!-- ko if: attachedNodes.length > 0 -->
+        <div class="join-node-small-icons" data-bind="foreach: attachedNodes">
+            <div class="join-node-small-icon" data-bind="template:iconTemplate"></div>
+        </div>
+        <!-- /ko -->
+
+        <!-- ko if: children.length > 0 -->
+        <div class="join-node-incoming" data-bind="foreach: children">
+            <div class="join-node-incoming-item" data-bind="clickToSelectNode: {nodeId: nodeId, left: 50, top: -10, anchor: 'element'}, style:{'font-size': layoutManager.iconScale}">
+                <span data-bind="text: formattedSubtreeCost"></span>
+                <span>❯</span>
+            </div>
+        </div>
+        <!-- /ko -->
+        <!-- </div> -->
+    </div>
+
+</script>
+
+<script id="warnings-template" type="text/html">
+    <!-- ko if: enabled -->
+    <div class="join-node-propertyset" data-bind="click:toggle, cancelBubble:true">Warnings</div>
+    <!-- ko if: visible -->
+    <div data-bind="foreach: content">
+        <div data-bind="text: title" class="join-node-propheader"></div>
+        <!-- ko foreach: properties-->
+        <div class="join-node-proprow">
+            <div data-bind="text: name"></div>
+            <div data-bind="text: value"></div>
+        </div>
+        <!-- /ko -->
+    </div>
+    <!-- /ko -->
+    <!-- /ko -->
+</script>
+
+<script id="metrics-template" type="text/html">
+    <!-- ko if: enabled -->
+    <div class="join-node-propertyset" data-bind="click:toggle, cancelBubble:true">Properties</div>
+    <!-- ko if: visible -->
+    <div class="join-node-metrics" data-bind="foreach: content">
+        <div class="join-node-metrics-row" data-bind="css:{'join-node-metrics-hrow' : $data.lenght==1 }, foreach: $data">
+            <div class="join-node-metrics-cell" data-bind="html: $data, style:{fontWeight: $parent.length===1?'bold':'inherit', paddingTop:$parent.length===1?'0.6em':'inherit', background:$parent.length===1?'white':'inherit'}"></div>
+        </div>
+    </div>
+    <!-- /ko -->
+    <!-- /ko -->
+</script>
+
+<script id="navigator-dataheavy-node" type="text/html">
+    <li data-bind="clickToSelectNode: {nodeId: nodeId}">
+        <div class="topset-index">
+            <span data-bind="text: ($index())+1"></span>.</div>
+        <div>
+            <div class="topset-cost">
+                <span data-bind="text: formattedDataSize"></span>
+                <span>-</span>
+                <span data-bind="text: formattedRecords"></span>
+            </div>
+            <div style="display:flex;">
+                <div class="topset-icon" data-bind="template:iconTemplate">
+                </div>
+                <!-- ko with: nameSet -->
+                <div class="topset-names" data-bind="foreach: items">
+                    <div data-bind="text:value, attr:{'title':originalValue}"></div>
+                </div>
+                <!-- /ko -->
+            </div>
+        </div>
+    </li>
+</script>
+<script id="navigator-expensive-node" type="text/html">
+    <li data-bind="clickToSelectNode: {nodeId: nodeId}">
+        <div class="topset-index">
+            <span data-bind="text: ($index())+1"></span>.</div>
+        <div class="topset-cost">
+            <div data-bind="text: formattedCost"></div>
+            <div data-bind="template:iconTemplate"></div>
+        </div>
+        <!-- ko with: nameSet -->
+        <div class="topset-names" data-bind="foreach: items">
+            <div data-bind="text:value, attr:{'title':originalValue}"></div>
+        </div>
+        <!-- /ko -->
+    </li>
+</script>
+<script id="navigator-warning-node" type="text/html">
+    <li data-bind="clickToSelectNode: {nodeId: nodeId}">
+        <div class="topset-index">
+            <span data-bind="text: ($index())+1"></span>.</div>
+        <div>
+            <div style="display:flex;">
+                <div class="topset-icon" data-bind="template:iconTemplate">
+                </div>
+                <!-- ko with: nameSet -->
+                <div class="topset-names" data-bind="foreach: items">
+                    <div data-bind="text:value, attr:{'title':originalValue}"></div>
+                </div>
+                <!-- /ko -->
+            </div>
+            <div data-bind="foreach: warnings.content">
+                <div data-bind="text: title" class="join-node-propheader"></div>
+                <!-- ko foreach: properties-->
+                <div class="join-node-proprow">
+                    <div data-bind="text: name"></div>
+                    <div data-bind="text: value"></div>
+                </div>
+                <!-- /ko -->
+            </div>
+
+        </div>
+    </li>
+
+</script>

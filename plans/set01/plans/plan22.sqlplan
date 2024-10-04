@@ -1,0 +1,824 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.2" Build="11.0.3412.0">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="&#xD;&#xA;CREATE PROCEDURE [dbo].[spReserveMessages] &#xD;&#xA;(&#xD;&#xA;&#x9;@agentId INT,&#xD;&#xA;&#x9;@endpointId UNIQUEIDENTIFIER,&#xD;&#xA;&#x9;@isRetry BIT,&#xD;&#xA;&#x9;@xmlMessages XML&#xD;&#xA;)&#xD;&#xA;AS&#xD;&#xA;BEGIN&#xD;&#xA;&#x9;-- Reserves messages for an agent to enable multiple agents work on same endpoint. The collection of messages are sent as XML: &lt;Ms&gt;&lt;M Id=1234/&gt;&lt;M Id=5678/&gt;&lt;/Ms&gt;&#xD;&#xA;&#x9;SET NOCOUNT ON;&#xD;&#xA;&#xD;&#xA;&#x9;-- Fail fast on error and abort the batch.&#xD;&#xA;" StatementId="1" StatementCompId="2" StatementType="SET ON/OFF" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;SET XACT_ABORT ON; &#xD;&#xA;&#xD;&#xA;" StatementId="2" StatementCompId="3" StatementType="SET ON/OFF" RetrievedFromCache="true" />
+        <StmtSimple StatementText="&#x9;DECLARE @messages TABLE (MessageId BIGINT NOT NULL)&#xD;&#xA;&#x9;&#x9;&#xD;&#xA;&#x9;INSERT INTO @messages(MessageId)&#xD;&#xA;&#x9;SELECT xmlMessage.Item.value('@Id[1]', 'BIGINT')&#xD;&#xA;&#x9;FROM @xmlMessages.nodes('/Ms/M') AS xmlMessage(Item)&#xD;&#xA;&#xD;&#xA;" StatementId="3" StatementCompId="5" StatementType="INSERT" RetrievedFromCache="true" StatementSubTreeCost="42.8154" StatementEstRows="200" StatementOptmLevel="FULL" QueryHash="0xC64815258069FA0" QueryPlanHash="0x8130B0456E8CADDC">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="false" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="40" CompileTime="7" CompileCPU="7" CompileMemory="712">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Table Insert" LogicalOp="Insert" EstimateRows="200" EstimateIO="0.01" EstimateCPU="0.0002" AvgRowSize="9" EstimatedTotalSubtreeCost="42.8154" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <Update DMLRequestSort="0">
+                <Object Table="[@messages]" />
+                <SetPredicate>
+                  <ScalarOperator ScalarString="[MessageId] = RaiseIfNullInsert([Expr1014])">
+                    <ScalarExpressionList>
+                      <ScalarOperator>
+                        <MultipleAssign>
+                          <Assign>
+                            <ColumnReference Column="MessageId" />
+                            <ScalarOperator>
+                              <Intrinsic FunctionName="RaiseIfNullInsert">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="Expr1014" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Intrinsic>
+                            </ScalarOperator>
+                          </Assign>
+                        </MultipleAssign>
+                      </ScalarOperator>
+                    </ScalarExpressionList>
+                  </ScalarOperator>
+                </SetPredicate>
+                <RelOp NodeId="1" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="200" EstimateIO="0" EstimateCPU="2e-005" AvgRowSize="15" EstimatedTotalSubtreeCost="42.8052" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Expr1014" />
+                  </OutputList>
+                  <ComputeScalar>
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1014" />
+                        <ScalarOperator ScalarString="[Expr1013]">
+                          <Identifier>
+                            <ColumnReference Column="Expr1013" />
+                          </Identifier>
+                        </ScalarOperator>
+                      </DefinedValue>
+                    </DefinedValues>
+                    <RelOp NodeId="2" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="200" EstimateIO="0" EstimateCPU="0.000836" AvgRowSize="15" EstimatedTotalSubtreeCost="42.8052" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Column="Expr1013" />
+                      </OutputList>
+                      <NestedLoops Optimized="0">
+                        <OuterReferences>
+                          <ColumnReference Table="[XML Reader with XPath filter]" Column="id" />
+                        </OuterReferences>
+                        <RelOp NodeId="3" PhysicalOp="Filter" LogicalOp="Filter" EstimateRows="200" EstimateIO="0" EstimateCPU="5.6e-005" AvgRowSize="17" EstimatedTotalSubtreeCost="1.00406" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Table="[XML Reader with XPath filter]" Column="id" />
+                          </OutputList>
+                          <Filter StartupExpression="1">
+                            <RelOp NodeId="4" PhysicalOp="Table-valued function" LogicalOp="Table-valued function" EstimateRows="200" EstimateIO="0" EstimateCPU="1.004" AvgRowSize="17" EstimatedTotalSubtreeCost="1.004" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Table="[XML Reader with XPath filter]" Column="id" />
+                              </OutputList>
+                              <TableValuedFunction>
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Table="[XML Reader with XPath filter]" Column="id" />
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <Object Table="[XML Reader with XPath filter]" />
+                                <ParameterList>
+                                  <ScalarOperator ScalarString="[@xmlMessages]">
+                                    <Identifier>
+                                      <ColumnReference Column="@xmlMessages" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator ScalarString="(0)">
+                                    <Const ConstValue="(0)" />
+                                  </ScalarOperator>
+                                  <ScalarOperator ScalarString="NULL">
+                                    <Const ConstValue="NULL" />
+                                  </ScalarOperator>
+                                  <ScalarOperator ScalarString="NULL">
+                                    <Const ConstValue="NULL" />
+                                  </ScalarOperator>
+                                </ParameterList>
+                              </TableValuedFunction>
+                            </RelOp>
+                            <Predicate>
+                              <ScalarOperator ScalarString="[@xmlMessages] IS NOT NULL">
+                                <Identifier>
+                                  <ColumnReference Column="ConstExpr1015">
+                                    <ScalarOperator>
+                                      <Compare CompareOp="IS NOT">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="@xmlMessages" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                        <ScalarOperator>
+                                          <Const ConstValue="NULL" />
+                                        </ScalarOperator>
+                                      </Compare>
+                                    </ScalarOperator>
+                                  </ColumnReference>
+                                </Identifier>
+                              </ScalarOperator>
+                            </Predicate>
+                          </Filter>
+                        </RelOp>
+                        <RelOp NodeId="10" PhysicalOp="Stream Aggregate" LogicalOp="Aggregate" EstimateRows="1" EstimateIO="0" EstimateCPU="1.1e-006" AvgRowSize="15" EstimatedTotalSubtreeCost="41.8003" Parallel="0" EstimateRebinds="199" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Column="Expr1013" />
+                          </OutputList>
+                          <StreamAggregate>
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Column="Expr1013" />
+                                <ScalarOperator ScalarString="MIN(CASE WHEN [@xmlMessages] IS NULL THEN NULL ELSE CASE WHEN datalength(XML Reader with XPath filter.[value])&gt;=(128) THEN CONVERT_IMPLICIT(bigint,XML Reader with XPath filter.[lvalue],0) ELSE CONVERT_IMPLICIT(bigint,XML Reader with XPath filter.[value],0) END END)">
+                                  <Aggregate Distinct="0" AggType="MIN">
+                                    <ScalarOperator>
+                                      <IF>
+                                        <Condition>
+                                          <ScalarOperator>
+                                            <Compare CompareOp="IS">
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="@xmlMessages" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="NULL" />
+                                              </ScalarOperator>
+                                            </Compare>
+                                          </ScalarOperator>
+                                        </Condition>
+                                        <Then>
+                                          <ScalarOperator>
+                                            <Const ConstValue="NULL" />
+                                          </ScalarOperator>
+                                        </Then>
+                                        <Else>
+                                          <ScalarOperator>
+                                            <IF>
+                                              <Condition>
+                                                <ScalarOperator>
+                                                  <Compare CompareOp="GE">
+                                                    <ScalarOperator>
+                                                      <Intrinsic FunctionName="datalength">
+                                                        <ScalarOperator>
+                                                          <Identifier>
+                                                            <ColumnReference Table="[XML Reader with XPath filter]" Column="value" />
+                                                          </Identifier>
+                                                        </ScalarOperator>
+                                                      </Intrinsic>
+                                                    </ScalarOperator>
+                                                    <ScalarOperator>
+                                                      <Const ConstValue="(128)" />
+                                                    </ScalarOperator>
+                                                  </Compare>
+                                                </ScalarOperator>
+                                              </Condition>
+                                              <Then>
+                                                <ScalarOperator>
+                                                  <Convert DataType="bigint" Style="0" Implicit="1">
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Table="[XML Reader with XPath filter]" Column="lvalue" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                  </Convert>
+                                                </ScalarOperator>
+                                              </Then>
+                                              <Else>
+                                                <ScalarOperator>
+                                                  <Convert DataType="bigint" Style="0" Implicit="1">
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Table="[XML Reader with XPath filter]" Column="value" />
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                  </Convert>
+                                                </ScalarOperator>
+                                              </Else>
+                                            </IF>
+                                          </ScalarOperator>
+                                        </Else>
+                                      </IF>
+                                    </ScalarOperator>
+                                  </Aggregate>
+                                </ScalarOperator>
+                              </DefinedValue>
+                            </DefinedValues>
+                            <RelOp NodeId="11" PhysicalOp="Top" LogicalOp="Top" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="4057" EstimatedTotalSubtreeCost="41.8001" Parallel="0" EstimateRebinds="199" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Table="[XML Reader with XPath filter]" Column="value" />
+                                <ColumnReference Table="[XML Reader with XPath filter]" Column="lvalue" />
+                              </OutputList>
+                              <Top RowCount="0" IsPercent="0" WithTies="0">
+                                <TopExpression>
+                                  <ScalarOperator ScalarString="(1)">
+                                    <Const ConstValue="(1)" />
+                                  </ScalarOperator>
+                                </TopExpression>
+                                <RelOp NodeId="12" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="4.78647e-007" AvgRowSize="4517" EstimatedTotalSubtreeCost="41.8" Parallel="0" EstimateRebinds="199" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Table="[XML Reader with XPath filter]" Column="id" />
+                                    <ColumnReference Table="[XML Reader with XPath filter]" Column="value" />
+                                    <ColumnReference Table="[XML Reader with XPath filter]" Column="lvalue" />
+                                    <ColumnReference Column="Expr1012" />
+                                  </OutputList>
+                                  <ComputeScalar>
+                                    <DefinedValues>
+                                      <DefinedValue>
+                                        <ColumnReference Column="Expr1012" />
+                                        <ScalarOperator ScalarString="0x58">
+                                          <Const ConstValue="0x58" />
+                                        </ScalarOperator>
+                                      </DefinedValue>
+                                    </DefinedValues>
+                                    <RelOp NodeId="13" PhysicalOp="Filter" LogicalOp="Filter" EstimateRows="1" EstimateIO="0" EstimateCPU="1.224e-005" AvgRowSize="4065" EstimatedTotalSubtreeCost="41.8" Parallel="0" EstimateRebinds="199" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList>
+                                        <ColumnReference Table="[XML Reader with XPath filter]" Column="id" />
+                                        <ColumnReference Table="[XML Reader with XPath filter]" Column="value" />
+                                        <ColumnReference Table="[XML Reader with XPath filter]" Column="lvalue" />
+                                      </OutputList>
+                                      <Filter StartupExpression="0">
+                                        <RelOp NodeId="14" PhysicalOp="Table-valued function" LogicalOp="Table-valued function" EstimateRows="3.7606" EstimateIO="0" EstimateCPU="1.00036" AvgRowSize="4065" EstimatedTotalSubtreeCost="41.7995" Parallel="0" EstimateRebinds="199" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                          <OutputList>
+                                            <ColumnReference Table="[XML Reader with XPath filter]" Column="id" />
+                                            <ColumnReference Table="[XML Reader with XPath filter]" Column="value" />
+                                            <ColumnReference Table="[XML Reader with XPath filter]" Column="lvalue" />
+                                          </OutputList>
+                                          <TableValuedFunction>
+                                            <DefinedValues>
+                                              <DefinedValue>
+                                                <ColumnReference Table="[XML Reader with XPath filter]" Column="id" />
+                                              </DefinedValue>
+                                              <DefinedValue>
+                                                <ColumnReference Table="[XML Reader with XPath filter]" Column="value" />
+                                              </DefinedValue>
+                                              <DefinedValue>
+                                                <ColumnReference Table="[XML Reader with XPath filter]" Column="lvalue" />
+                                              </DefinedValue>
+                                            </DefinedValues>
+                                            <Object Table="[XML Reader with XPath filter]" />
+                                            <ParameterList>
+                                              <ScalarOperator ScalarString="[@xmlMessages]">
+                                                <Identifier>
+                                                  <ColumnReference Column="@xmlMessages" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                              <ScalarOperator ScalarString="(7)">
+                                                <Const ConstValue="(7)" />
+                                              </ScalarOperator>
+                                              <ScalarOperator ScalarString="XML Reader with XPath filter.[id]">
+                                                <Identifier>
+                                                  <ColumnReference Table="[XML Reader with XPath filter]" Column="id" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                              <ScalarOperator ScalarString="getdescendantlimit(XML Reader with XPath filter.[id])">
+                                                <Intrinsic FunctionName="getdescendantlimit">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Table="[XML Reader with XPath filter]" Column="id" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </ParameterList>
+                                          </TableValuedFunction>
+                                        </RelOp>
+                                        <Predicate>
+                                          <ScalarOperator ScalarString="XML Reader with XPath filter.[id]=getancestor(XML Reader with XPath filter.[id],(1))">
+                                            <Compare CompareOp="EQ">
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Table="[XML Reader with XPath filter]" Column="id" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="getancestor">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Table="[XML Reader with XPath filter]" Column="id" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                  <ScalarOperator>
+                                                    <Const ConstValue="(1)" />
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Compare>
+                                          </ScalarOperator>
+                                        </Predicate>
+                                      </Filter>
+                                    </RelOp>
+                                  </ComputeScalar>
+                                </RelOp>
+                              </Top>
+                            </RelOp>
+                          </StreamAggregate>
+                        </RelOp>
+                      </NestedLoops>
+                    </RelOp>
+                  </ComputeScalar>
+                </RelOp>
+              </Update>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@xmlMessages" ParameterCompiledValue="N'&lt;Ms&gt;&lt;M Id=&quot;288230376340279299&quot;/&gt;&lt;M Id=&quot;288230376340279303&quot;/&gt;&lt;M Id=&quot;288230376340279304&quot;/&gt;&lt;M Id=&quot;288230376340281191&quot;/&gt;&lt;M Id=&quot;288230376340281192&quot;/&gt;&lt;M Id=&quot;288230376340281193&quot;/&gt;&lt;M Id=&quot;288230376340281194&quot;/&gt;&lt;M Id=&quot;288230376340281195&quot;/&gt;&lt;M Id=&quot;288230376340281196&quot;/&gt;'" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText="&#x9;MERGE INTO [DatamartMessage] AS TRGT&#xD;&#xA;&#x9;USING (SELECT [MessageId], @endpointId AS EndpointId, @isRetry AS IsRetry, @agentId AS AgentId FROM @messages) AS SRC&#xD;&#xA;&#x9;ON &#xD;&#xA;&#x9;(&#xD;&#xA;&#x9;&#x9;SRC.[MessageId] = TRGT.[MessageId] AND &#xD;&#xA;&#x9;&#x9;SRC.[EndpointId] = TRGT.[EndpointId]&#xD;&#xA;&#x9;)&#xD;&#xA;&#x9;WHEN NOT MATCHED THEN &#xD;&#xA;&#x9;&#x9;INSERT (&#xD;&#xA;&#x9;&#x9;&#x9;[MessageId],&#xD;&#xA;&#x9;&#x9;&#x9;[EndpointId],&#xD;&#xA;&#x9;&#x9;&#x9;[IsRetry],&#xD;&#xA;&#x9;&#x9;&#x9;[AgentId])  &#xD;&#xA;&#x9;&#x9;VALUES (&#xD;&#xA;&#x9;&#x9;&#x9;SRC.[MessageId],&#xD;&#xA;&#x9;&#x9;&#x9;SRC.[EndpointId],&#xD;&#xA;&#x9;&#x9;&#x9;SRC.[IsRetry],&#xD;&#xA;&#x9;&#x9;&#x9;SRC.[AgentId]);&#xD;&#xA;&#xD;&#xA;" StatementId="4" StatementCompId="6" StatementType="MERGE" RetrievedFromCache="true" StatementSubTreeCost="0.0430873" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0xC1541630F5EB6A5" QueryPlanHash="0xDE47901B7CAF6BA7" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="false" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="48" CompileTime="18" CompileCPU="18" CompileMemory="704">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="1" PhysicalOp="Assert" LogicalOp="Assert" EstimateRows="1" EstimateIO="0" EstimateCPU="7.8e-007" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0430873" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList />
+              <Assert StartupExpression="0">
+                <RelOp NodeId="2" PhysicalOp="Nested Loops" LogicalOp="Left Semi Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0430865" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Column="Expr1032" />
+                    <ColumnReference Column="Pass1033" />
+                  </OutputList>
+                  <NestedLoops Optimized="0">
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="Expr1032" />
+                      </DefinedValue>
+                      <DefinedValue>
+                        <ColumnReference Column="Pass1033" />
+                      </DefinedValue>
+                    </DefinedValues>
+                    <PassThru>
+                      <ScalarOperator ScalarString="[Action1008]&lt;&gt;(4)">
+                        <Compare CompareOp="NE">
+                          <ScalarOperator>
+                            <Identifier>
+                              <ColumnReference Column="Action1008" />
+                            </Identifier>
+                          </ScalarOperator>
+                          <ScalarOperator>
+                            <Const ConstValue="(4)" />
+                          </ScalarOperator>
+                        </Compare>
+                      </ScalarOperator>
+                    </PassThru>
+                    <OuterReferences>
+                      <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Alias="[TRGT]" Column="AgentId" />
+                    </OuterReferences>
+                    <ProbeColumn>
+                      <ColumnReference Column="Expr1032" />
+                    </ProbeColumn>
+                    <RelOp NodeId="3" PhysicalOp="Clustered Index Merge" LogicalOp="Merge" EstimateRows="1" EstimateIO="0.02" EstimateCPU="2e-006" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0397989" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Column="Action1008" />
+                        <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Alias="[TRGT]" Column="AgentId" />
+                      </OutputList>
+                      <Update DMLRequestSort="0">
+                        <Object Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Index="[PK_DatamartMessage]" Alias="[TRGT]" IndexKind="Clustered" />
+                        <Object Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Index="[DatamartMessage_IDX_CreateTime]" Alias="[TRGT]" IndexKind="NonClustered" />
+                        <SetPredicate>
+                          <ScalarOperator ScalarString="[TexusResults].[dbo].[DatamartMessage].[MessageId] as [TRGT].[MessageId] = [MessageId],[TexusResults].[dbo].[DatamartMessage].[IsRetry] as [TRGT].[IsRetry] = RaiseIfNullUpdate([@isRetry]),[TexusResults].[dbo].[DatamartMessage].[EndpointId] as [TRGT].[EndpointId] = RaiseIfNullUpdate([@endpointId]),[TexusResults].[dbo].[DatamartMessage].[AgentId] as [TRGT].[AgentId] = RaiseIfNullUpdate([@agentId]),[TexusResults].[dbo].[DatamartMessage].[CreateTime] as [TRGT].[CreateTime] = RaiseIfNullUpdate([Expr1009])">
+                            <ScalarExpressionList>
+                              <ScalarOperator>
+                                <MultipleAssign>
+                                  <Assign>
+                                    <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Alias="[TRGT]" Column="MessageId" />
+                                    <ScalarOperator>
+                                      <Identifier>
+                                        <ColumnReference Column="MessageId" />
+                                      </Identifier>
+                                    </ScalarOperator>
+                                  </Assign>
+                                  <Assign>
+                                    <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Alias="[TRGT]" Column="IsRetry" />
+                                    <ScalarOperator>
+                                      <Intrinsic FunctionName="RaiseIfNullUpdate">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="@isRetry" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Intrinsic>
+                                    </ScalarOperator>
+                                  </Assign>
+                                  <Assign>
+                                    <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Alias="[TRGT]" Column="EndpointId" />
+                                    <ScalarOperator>
+                                      <Intrinsic FunctionName="RaiseIfNullUpdate">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="@endpointId" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Intrinsic>
+                                    </ScalarOperator>
+                                  </Assign>
+                                  <Assign>
+                                    <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Alias="[TRGT]" Column="AgentId" />
+                                    <ScalarOperator>
+                                      <Intrinsic FunctionName="RaiseIfNullUpdate">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="@agentId" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Intrinsic>
+                                    </ScalarOperator>
+                                  </Assign>
+                                  <Assign>
+                                    <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Alias="[TRGT]" Column="CreateTime" />
+                                    <ScalarOperator>
+                                      <Intrinsic FunctionName="RaiseIfNullUpdate">
+                                        <ScalarOperator>
+                                          <Identifier>
+                                            <ColumnReference Column="Expr1009" />
+                                          </Identifier>
+                                        </ScalarOperator>
+                                      </Intrinsic>
+                                    </ScalarOperator>
+                                  </Assign>
+                                </MultipleAssign>
+                              </ScalarOperator>
+                            </ScalarExpressionList>
+                          </ScalarOperator>
+                        </SetPredicate>
+                        <ActionColumn>
+                          <ColumnReference Column="Action1008" />
+                        </ActionColumn>
+                        <RelOp NodeId="4" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="0" AvgRowSize="51" EstimatedTotalSubtreeCost="0.0197969" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Column="MessageId" />
+                            <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Alias="[TRGT]" Column="MessageId" />
+                            <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Alias="[TRGT]" Column="EndpointId" />
+                            <ColumnReference Column="Action1008" />
+                            <ColumnReference Column="Expr1009" />
+                          </OutputList>
+                          <ComputeScalar>
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Column="Action1008" />
+                                <ScalarOperator ScalarString="[Action1008]">
+                                  <Identifier>
+                                    <ColumnReference Column="Action1008" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </DefinedValue>
+                            </DefinedValues>
+                            <RelOp NodeId="5" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="51" EstimatedTotalSubtreeCost="0.0197969" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Column="MessageId" />
+                                <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Alias="[TRGT]" Column="MessageId" />
+                                <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Alias="[TRGT]" Column="EndpointId" />
+                                <ColumnReference Column="Action1008" />
+                                <ColumnReference Column="Expr1009" />
+                              </OutputList>
+                              <ComputeScalar>
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Column="Expr1009" />
+                                    <ScalarOperator ScalarString="CONVERT_IMPLICIT(datetime,sysutcdatetime(),0)">
+                                      <Identifier>
+                                        <ColumnReference Column="ConstExpr1020">
+                                          <ScalarOperator>
+                                            <Convert DataType="datetime" Style="0" Implicit="1">
+                                              <ScalarOperator>
+                                                <Intrinsic FunctionName="sysutcdatetime" />
+                                              </ScalarOperator>
+                                            </Convert>
+                                          </ScalarOperator>
+                                        </ColumnReference>
+                                      </Identifier>
+                                    </ScalarOperator>
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <RelOp NodeId="6" PhysicalOp="Table Spool" LogicalOp="Eager Spool" EstimateRows="1" EstimateIO="0.013125" EstimateCPU="0.00010076" AvgRowSize="43" EstimatedTotalSubtreeCost="0.0197968" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Column="MessageId" />
+                                    <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Alias="[TRGT]" Column="MessageId" />
+                                    <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Alias="[TRGT]" Column="EndpointId" />
+                                    <ColumnReference Column="Action1008" />
+                                  </OutputList>
+                                  <Spool>
+                                    <RelOp NodeId="7" PhysicalOp="Filter" LogicalOp="Filter" EstimateRows="1" EstimateIO="0" EstimateCPU="4.8e-007" AvgRowSize="43" EstimatedTotalSubtreeCost="0.00657106" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList>
+                                        <ColumnReference Column="MessageId" />
+                                        <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Alias="[TRGT]" Column="MessageId" />
+                                        <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Alias="[TRGT]" Column="EndpointId" />
+                                        <ColumnReference Column="Action1008" />
+                                      </OutputList>
+                                      <Filter StartupExpression="0">
+                                        <RelOp NodeId="8" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="43" EstimatedTotalSubtreeCost="0.00657058" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                          <OutputList>
+                                            <ColumnReference Column="MessageId" />
+                                            <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Alias="[TRGT]" Column="MessageId" />
+                                            <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Alias="[TRGT]" Column="EndpointId" />
+                                            <ColumnReference Column="Action1008" />
+                                          </OutputList>
+                                          <ComputeScalar ComputeSequence="1">
+                                            <DefinedValues>
+                                              <DefinedValue>
+                                                <ColumnReference Column="Action1008" />
+                                                <ScalarOperator ScalarString="ForceOrder(CASE WHEN [TrgPrb1006] IS NOT NULL THEN NULL ELSE (4) END)">
+                                                  <Intrinsic FunctionName="ForceOrder">
+                                                    <ScalarOperator>
+                                                      <IF>
+                                                        <Condition>
+                                                          <ScalarOperator>
+                                                            <Compare CompareOp="IS NOT">
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Column="TrgPrb1006" />
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                              <ScalarOperator>
+                                                                <Const ConstValue="NULL" />
+                                                              </ScalarOperator>
+                                                            </Compare>
+                                                          </ScalarOperator>
+                                                        </Condition>
+                                                        <Then>
+                                                          <ScalarOperator>
+                                                            <Const ConstValue="NULL" />
+                                                          </ScalarOperator>
+                                                        </Then>
+                                                        <Else>
+                                                          <ScalarOperator>
+                                                            <Const ConstValue="(4)" />
+                                                          </ScalarOperator>
+                                                        </Else>
+                                                      </IF>
+                                                    </ScalarOperator>
+                                                  </Intrinsic>
+                                                </ScalarOperator>
+                                              </DefinedValue>
+                                            </DefinedValues>
+                                            <RelOp NodeId="9" PhysicalOp="Nested Loops" LogicalOp="Left Outer Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="43" EstimatedTotalSubtreeCost="0.00657048" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                              <OutputList>
+                                                <ColumnReference Column="MessageId" />
+                                                <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Alias="[TRGT]" Column="MessageId" />
+                                                <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Alias="[TRGT]" Column="EndpointId" />
+                                                <ColumnReference Column="TrgPrb1006" />
+                                              </OutputList>
+                                              <NestedLoops Optimized="0">
+                                                <OuterReferences>
+                                                  <ColumnReference Column="MessageId" />
+                                                </OuterReferences>
+                                                <RelOp NodeId="10" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                  <OutputList>
+                                                    <ColumnReference Column="MessageId" />
+                                                  </OutputList>
+                                                  <TableScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                                                    <DefinedValues>
+                                                      <DefinedValue>
+                                                        <ColumnReference Column="MessageId" />
+                                                      </DefinedValue>
+                                                    </DefinedValues>
+                                                    <Object Table="[@messages]" />
+                                                  </TableScan>
+                                                </RelOp>
+                                                <RelOp NodeId="11" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1e-007" AvgRowSize="35" EstimatedTotalSubtreeCost="0.0032832" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                  <OutputList>
+                                                    <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Alias="[TRGT]" Column="MessageId" />
+                                                    <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Alias="[TRGT]" Column="EndpointId" />
+                                                    <ColumnReference Column="TrgPrb1006" />
+                                                  </OutputList>
+                                                  <ComputeScalar>
+                                                    <DefinedValues>
+                                                      <DefinedValue>
+                                                        <ColumnReference Column="TrgPrb1006" />
+                                                        <ScalarOperator ScalarString="(1)">
+                                                          <Const ConstValue="(1)" />
+                                                        </ScalarOperator>
+                                                      </DefinedValue>
+                                                    </DefinedValues>
+                                                    <RelOp NodeId="12" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="31" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="3.31602e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                                      <OutputList>
+                                                        <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Alias="[TRGT]" Column="MessageId" />
+                                                        <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Alias="[TRGT]" Column="EndpointId" />
+                                                      </OutputList>
+                                                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                                        <DefinedValues>
+                                                          <DefinedValue>
+                                                            <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Alias="[TRGT]" Column="MessageId" />
+                                                          </DefinedValue>
+                                                          <DefinedValue>
+                                                            <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Alias="[TRGT]" Column="EndpointId" />
+                                                          </DefinedValue>
+                                                        </DefinedValues>
+                                                        <Object Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Index="[PK_DatamartMessage]" Alias="[TRGT]" IndexKind="Clustered" />
+                                                        <SeekPredicates>
+                                                          <SeekPredicateNew>
+                                                            <SeekKeys>
+                                                              <Prefix ScanType="EQ">
+                                                                <RangeColumns>
+                                                                  <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Alias="[TRGT]" Column="MessageId" />
+                                                                  <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Alias="[TRGT]" Column="EndpointId" />
+                                                                </RangeColumns>
+                                                                <RangeExpressions>
+                                                                  <ScalarOperator ScalarString="[MessageId]">
+                                                                    <Identifier>
+                                                                      <ColumnReference Column="MessageId" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                  <ScalarOperator ScalarString="[@endpointId]">
+                                                                    <Identifier>
+                                                                      <ColumnReference Column="@endpointId" />
+                                                                    </Identifier>
+                                                                  </ScalarOperator>
+                                                                </RangeExpressions>
+                                                              </Prefix>
+                                                            </SeekKeys>
+                                                          </SeekPredicateNew>
+                                                        </SeekPredicates>
+                                                      </IndexScan>
+                                                    </RelOp>
+                                                  </ComputeScalar>
+                                                </RelOp>
+                                              </NestedLoops>
+                                            </RelOp>
+                                          </ComputeScalar>
+                                        </RelOp>
+                                        <Predicate>
+                                          <ScalarOperator ScalarString="[Action1008] IS NOT NULL">
+                                            <Compare CompareOp="IS NOT">
+                                              <ScalarOperator>
+                                                <Identifier>
+                                                  <ColumnReference Column="Action1008" />
+                                                </Identifier>
+                                              </ScalarOperator>
+                                              <ScalarOperator>
+                                                <Const ConstValue="NULL" />
+                                              </ScalarOperator>
+                                            </Compare>
+                                          </ScalarOperator>
+                                        </Predicate>
+                                      </Filter>
+                                    </RelOp>
+                                  </Spool>
+                                </RelOp>
+                              </ComputeScalar>
+                            </RelOp>
+                          </ComputeScalar>
+                        </RelOp>
+                      </Update>
+                    </RelOp>
+                    <RelOp NodeId="26" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="9" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="1" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList />
+                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="1" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                        <DefinedValues />
+                        <Object Database="[TexusResults]" Schema="[dbo]" Table="[DatamartAgent]" Index="[PK_DatamartAgent]" IndexKind="Clustered" />
+                        <SeekPredicates>
+                          <SeekPredicateNew>
+                            <SeekKeys>
+                              <Prefix ScanType="EQ">
+                                <RangeColumns>
+                                  <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartAgent]" Column="Id" />
+                                </RangeColumns>
+                                <RangeExpressions>
+                                  <ScalarOperator ScalarString="[TexusResults].[dbo].[DatamartMessage].[AgentId] as [TRGT].[AgentId]">
+                                    <Identifier>
+                                      <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Alias="[TRGT]" Column="AgentId" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </RangeExpressions>
+                              </Prefix>
+                            </SeekKeys>
+                          </SeekPredicateNew>
+                        </SeekPredicates>
+                      </IndexScan>
+                    </RelOp>
+                  </NestedLoops>
+                </RelOp>
+                <Predicate>
+                  <ScalarOperator ScalarString="CASE WHEN NOT [Pass1033] AND [Expr1032] IS NULL THEN (0) ELSE NULL END">
+                    <IF>
+                      <Condition>
+                        <ScalarOperator>
+                          <Logical Operation="AND">
+                            <ScalarOperator>
+                              <Logical Operation="NOT">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="Pass1033" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Logical>
+                            </ScalarOperator>
+                            <ScalarOperator>
+                              <Logical Operation="IS NULL">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="Expr1032" />
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Logical>
+                            </ScalarOperator>
+                          </Logical>
+                        </ScalarOperator>
+                      </Condition>
+                      <Then>
+                        <ScalarOperator>
+                          <Const ConstValue="(0)" />
+                        </ScalarOperator>
+                      </Then>
+                      <Else>
+                        <ScalarOperator>
+                          <Const ConstValue="NULL" />
+                        </ScalarOperator>
+                      </Else>
+                    </IF>
+                  </ScalarOperator>
+                </Predicate>
+              </Assert>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@agentId" ParameterCompiledValue="(1)" />
+              <ColumnReference Column="@isRetry" ParameterCompiledValue="(1)" />
+              <ColumnReference Column="@endpointId" ParameterCompiledValue="{guid'84E84A6E-8CA6-CE1F-871B-561F524F107E'}" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+        <StmtSimple StatementText="&#x9;SELECT DM.MessageId&#xD;&#xA;&#x9;FROM [DatamartMessage] AS DM&#xD;&#xA;&#x9;JOIN @messages AS M ON M.MessageId = DM.MessageId &#xD;&#xA;&#x9;WHERE DM.EndpointId = @endpointId AND DM.AgentId = @agentId&#xD;&#xA;&#xD;" StatementId="5" StatementCompId="7" StatementType="SELECT" RetrievedFromCache="true" StatementSubTreeCost="0.00657086" StatementEstRows="1" StatementOptmLevel="FULL" QueryHash="0x2FAFD26354C7B671" QueryPlanHash="0x4134EA9E99EA630A" StatementOptmEarlyAbortReason="GoodEnoughPlanFound">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="false" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false" />
+          <QueryPlan NonParallelPlanReason="MaxDOPSetToOne" CachedPlanSize="16" CompileTime="5" CompileCPU="5" CompileMemory="264">
+            <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="193313" EstimatedPagesCached="773254" EstimatedAvailableDegreeOfParallelism="1" />
+            <RelOp NodeId="0" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="4.18e-006" AvgRowSize="15" EstimatedTotalSubtreeCost="0.00657086" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Alias="[DM]" Column="MessageId" />
+              </OutputList>
+              <NestedLoops Optimized="0">
+                <OuterReferences>
+                  <ColumnReference Table="@messages" Alias="[M]" Column="MessageId" />
+                </OuterReferences>
+                <RelOp NodeId="1" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="0" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Table="@messages" Alias="[M]" Column="MessageId" />
+                  </OutputList>
+                  <TableScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0">
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Table="@messages" Alias="[M]" Column="MessageId" />
+                      </DefinedValue>
+                    </DefinedValues>
+                    <Object Table="[@messages]" Alias="[M]" />
+                  </TableScan>
+                </RelOp>
+                <RelOp NodeId="2" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="19" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="3.31602e+006" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Alias="[DM]" Column="MessageId" />
+                  </OutputList>
+                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Alias="[DM]" Column="MessageId" />
+                      </DefinedValue>
+                    </DefinedValues>
+                    <Object Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Index="[PK_DatamartMessage]" Alias="[DM]" IndexKind="Clustered" />
+                    <SeekPredicates>
+                      <SeekPredicateNew>
+                        <SeekKeys>
+                          <Prefix ScanType="EQ">
+                            <RangeColumns>
+                              <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Alias="[DM]" Column="MessageId" />
+                              <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Alias="[DM]" Column="EndpointId" />
+                            </RangeColumns>
+                            <RangeExpressions>
+                              <ScalarOperator ScalarString="@messages.[MessageId] as [M].[MessageId]">
+                                <Identifier>
+                                  <ColumnReference Table="@messages" Alias="[M]" Column="MessageId" />
+                                </Identifier>
+                              </ScalarOperator>
+                              <ScalarOperator ScalarString="[@endpointId]">
+                                <Identifier>
+                                  <ColumnReference Column="@endpointId" />
+                                </Identifier>
+                              </ScalarOperator>
+                            </RangeExpressions>
+                          </Prefix>
+                        </SeekKeys>
+                      </SeekPredicateNew>
+                    </SeekPredicates>
+                    <Predicate>
+                      <ScalarOperator ScalarString="[TexusResults].[dbo].[DatamartMessage].[AgentId] as [DM].[AgentId]=[@agentId]">
+                        <Compare CompareOp="EQ">
+                          <ScalarOperator>
+                            <Identifier>
+                              <ColumnReference Database="[TexusResults]" Schema="[dbo]" Table="[DatamartMessage]" Alias="[DM]" Column="AgentId" />
+                            </Identifier>
+                          </ScalarOperator>
+                          <ScalarOperator>
+                            <Identifier>
+                              <ColumnReference Column="@agentId" />
+                            </Identifier>
+                          </ScalarOperator>
+                        </Compare>
+                      </ScalarOperator>
+                    </Predicate>
+                  </IndexScan>
+                </RelOp>
+              </NestedLoops>
+            </RelOp>
+            <ParameterList>
+              <ColumnReference Column="@agentId" ParameterCompiledValue="(1)" />
+              <ColumnReference Column="@endpointId" ParameterCompiledValue="{guid'84E84A6E-8CA6-CE1F-871B-561F524F107E'}" />
+            </ParameterList>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>
